@@ -595,4 +595,26 @@ export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColo
 	</Icon>
 );
 
+export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
+		<path d="M12 8v4l2 2" />
+	</Icon>
+);
+
+
+
 export default Icon;
+ 
+
