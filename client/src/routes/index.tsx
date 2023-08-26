@@ -49,6 +49,10 @@ const routes: RouteObject[] = [
           },
           {
             path: ":slug",
+            element: <SlugView />,
+          },
+          {
+            path: ":slug/:slug",
             element: <ProductDetailView />,
           },
           {
