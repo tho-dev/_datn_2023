@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, GridItem } from '@chakra-ui/layout';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Link, Text, Heading } from '@chakra-ui/layout';
-import { Image } from '@chakra-ui/react';
+import { Image, color } from '@chakra-ui/react';
 import { Navigation } from 'swiper/modules';
 import { Link as ReactRouterLink } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ const NewsCategory = () => {
           modules={[Navigation]}
           speed={400}
           slidesPerView={8}
-          spaceBetween={16}
+          spaceBetween={20}
           loop={true}
           navigation={{
             nextEl: '.btn-next',
@@ -65,26 +65,32 @@ const NewsCategory = () => {
           {newsCategories.map((item: any, index: number) => {
             return (
               <SwiperSlide key={index}>
-                <Box
+                <Link
                   as={ReactRouterLink}
                   h='full'
                   role='group'
-                  rounded='lg'
                   cursor='pointer'
+                  rounded='lg'
                   overflow='hidden'
+                  display='inline-flex'
+                  flexDir='column'
                   backgroundColor='bg.white'
                   _hover={{
                     transition: 'all 0.3s ease-in',
                     backgroundColor: 'bg.blue',
+                    '& > *': {
+                      // Chọn phần thay đổi màu của thẻ con
+                      color: 'text.white', // Đổi màu chữ của thẻ con khi hover vào thẻ cha
+                    },
                   }}
                 >
                   <Box>
                     <Image src={item?.image} w='full' h='120px' objectFit='cover' />
                   </Box>
-                  <Text color='text.black' p='10px' fontSize='lg' fontWeight='bold'>
+                  <Text color='text.black' p='10px' fontSize='md' fontWeight='bold'>
                     {item.title}
                   </Text>
-                </Box>
+                </Link>
               </SwiperSlide>
             );
           })}
