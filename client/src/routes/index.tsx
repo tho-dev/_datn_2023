@@ -15,6 +15,8 @@ import { CartView } from "~/views/public/CartView/";
 import { OrderView } from "~/views/public/OrderView";
 import { ProfileView } from "~/views/public/ProfileView/";
 import { ProductDetailView } from "~/views/public/ProductDetailView";
+import { NewsView } from "~/views/public/NewsView";
+import { ContentView } from "~/views/public/ContentView";
 import { NotFoundView } from "~/views/public/NotFoundView";
 
 // view admin
@@ -53,6 +55,14 @@ const routes: RouteObject[] = [
             path: ":slug/:slug",
             element: <ProductDetailView />,
           },
+          {
+            path: "tin-tuc",
+            element: <NewsView />,
+          },
+          { 
+            path: "noi-dung",
+            element: <ContentView />
+          }
         ],
       },
       {
