@@ -23,76 +23,80 @@ import { ProductManagerView } from "~/views/private/ProductManagerView";
 import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 
 const routes: RouteObject[] = [
-	{
-		path: "/",
-		children: [
-			{
-				element: <MainLayout />,
-				children: [
-					{
-						index: true,
-						element: <HomeView />,
-					},
-					{
-						path: "gio-hang",
-						element: <CartView />,
-					},
-					{
-						path: "don-hang",
-						element: <OrderView />,
-					},
-					{
-						path: "thong-tin",
-						element: <ProfileView />,
-					},
-					{
-						path: ":slug",
-						element: <ProductDetailView />,
-					},
-				],
-			},
-			{
-				element: <DefaultLayout />,
-				children: [
-					{
-						element: <AuthLayout />,
-						children: [
-							{
-								path: "dang-nhap",
-								element: <SignInView />,
-							},
-							{
-								path: "dang-ky",
-								element: <SignUpView />,
-							},
-						],
-					},
-					{
-						path: "*",
-						element: <NotFoundView />,
-					},
-				],
-			},
-		],
-	},
-	{
-		path: "/admin",
-		element: <AdminLayout />,
-		children: [
-			{
-				index: true,
-				element: <DashboardView />,
-			},
-			{
-				path: "products",
-				element: <ProductManagerView />,
-			},
-			{
-				path: "categories",
-				element: <CategoryManagerView />,
-			},
-		],
-	},
+  {
+    path: "/",
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: <HomeView />,
+          },
+          {
+            path: "gio-hang",
+            element: <CartView />,
+          },
+          {
+            path: "don-hang",
+            element: <OrderView />,
+          },
+          {
+            path: "thong-tin",
+            element: <ProfileView />,
+          },
+          {
+            path: ":slug",
+            element: <SlugView />,
+          },
+          {
+            path: ":slug/:slug",
+            element: <ProductDetailView />,
+          },
+        ],
+      },
+      {
+        element: <DefaultLayout />,
+        children: [
+          {
+            element: <AuthLayout />,
+            children: [
+              {
+                path: "dang-nhap",
+                element: <SignInView />,
+              },
+              {
+                path: "dang-ky",
+                element: <SignUpView />,
+              },
+            ],
+          },
+          {
+            path: "*",
+            element: <NotFoundView />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <DashboardView />,
+      },
+      {
+        path: "products",
+        element: <ProductManagerView />,
+      },
+      {
+        path: "categories",
+        element: <CategoryManagerView />,
+      },
+    ],
+  },
 ];
 
 export default routes;
