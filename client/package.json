@@ -19,6 +19,7 @@
     "@fontsource/quicksand": "^5.0.3",
     "@hookform/resolvers": "^3.1.1",
     "@saas-ui/react": "^1.9.3",
+    "@tanstack/react-table": "^8.9.3",
     "axios": "^1.4.0",
     "framer-motion": "^10.12.17",
     "html-react-parser": "^4.2.0",
