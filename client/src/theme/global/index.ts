@@ -21,6 +21,8 @@ const GlobalStyles = {
 			red: "#fe3464",
 			blue: "#0065ee",
 			gray: "#6b7075",
+			admin1: "#f1f4f9",
+			admin2: "#809FB8",
 		},
 		// màu background
 		bg: {
@@ -29,6 +31,8 @@ const GlobalStyles = {
 			blue: "#0065ee",
 			gray: "#f6f9fc",
 			pink: "#fff3f5",
+			admin1: "#f1f4f9",
+			admin2: "#809FB8",
 		},
 	},
 };
