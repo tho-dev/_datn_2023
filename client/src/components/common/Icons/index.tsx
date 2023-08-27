@@ -35,7 +35,21 @@ export const ArrowRightUpIcon = ({ size = 33, strokeWidth = 1.5, color = "curren
 		<path d="M5.772 18.228 18.5 5.5" />
 	</Icon>
 );
-
+export const ArrowUpIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path d="m6 9 6 6 6-6"></path>
+	</Icon>
+);
 export const ArrowRightIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -595,6 +609,41 @@ export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColo
 	</Icon>
 );
 
+export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path d="M12 5v14"></path>
+		<path d="M5 12h14"></path>
+	</Icon>
+);
+
+export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
+		<path d="M12 8v4l2 2" />
+	</Icon>
+);
+
 export const DownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -914,7 +963,7 @@ export const CheveronUpIcon = ({ size = 35, strokeWidth = 1.5, color = "currentC
 	</Icon>
 );
 
-export const ArrowUpIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+export const ArrowUpAdminIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -950,19 +999,6 @@ export const ArrowDownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentCo
 	</Icon>
 );
 
-export const ArrowUpAdminIcon = ({ size = 35, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill={color}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path d="M16.21 16.003H7.79a1.76 1.76 0 0 1-1.59-1 2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1a2.1 2.1 0 0 1 .26 2.21 1.76 1.76 0 0 1-1.59 1Z" />
-	</Icon>
-);
-
 export const ArrowDownAdminIcon = ({ size = 35, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -988,3 +1024,5 @@ export const TraskIcon = ({ size = 35, color = "currentColor", ...props }) => (
 		<path d="M9.96 3.6h3.6a.6.6 0 0 1 .6.6v1.2h-4.8V4.2a.6.6 0 0 1 .6-.6Zm5.4 1.8V4.2a1.8 1.8 0 0 0-1.8-1.8h-3.6a1.8 1.8 0 0 0-1.8 1.8v1.2H5.168a.6.6 0 0 0-.012 0H3.96a.6.6 0 0 0 0 1.2h.646L5.63 19.392A2.4 2.4 0 0 0 8.022 21.6h7.476a2.4 2.4 0 0 0 2.393-2.208L18.915 6.6h.645a.6.6 0 0 0 0-1.2h-1.194a.61.61 0 0 0-.012 0H15.36Zm2.35 1.2-1.015 12.696a1.2 1.2 0 0 1-1.197 1.104H8.022a1.2 1.2 0 0 1-1.196-1.104L5.811 6.6H17.71ZM8.726 7.8a.6.6 0 0 1 .633.564l.6 10.2a.6.6 0 0 1-1.197.072l-.602-10.2a.6.6 0 0 1 .564-.636h.002Zm6.07 0a.6.6 0 0 1 .563.636l-.6 10.2a.6.6 0 1 1-1.197-.072l.6-10.2a.6.6 0 0 1 .633-.564Zm-3.036 0a.6.6 0 0 1 .6.6v10.2a.6.6 0 1 1-1.2 0V8.4a.6.6 0 0 1 .6-.6Z" />
 	</Icon>
 );
+
+export default Icon;
