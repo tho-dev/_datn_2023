@@ -609,6 +609,29 @@ export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColo
 	</Icon>
 );
 
+export const ArrowLeftCirleIcon = (props: any) => (
+	// <Icon
+	// 	fill="currentColor"
+	null
+)
+export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path d="M12 5v14"></path>
+		<path d="M5 12h14"></path>
+	</Icon>
+);
+
+
 export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -627,18 +650,18 @@ export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ..
 	</Icon>
 );
 
-export const CodeIcon = (props: any) => (
+export const CodeIcon = ({...props }) => (
+	<>
 	<Icon
 		fill="none"
 		stroke="currentColor"
 		strokeLinecap="round"
 		strokeLinejoin="round"
-		strokeWidth={1.5}
-	>
-		<path d="M13.5 6 10 18.5" />
-		<path d="M6.5 8.5 3 12l3.5 3.5" />
-		<path d="M17.5 8.5 21 12l-3.5 3.5" />
-	</Icon>
+		strokeWidth={1.5} >
+		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
+		<path d="M12 8v4l2 2" />
+	</Icon>	
+	</>
 );
 
 export const DownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
@@ -726,6 +749,7 @@ export const FbIcon = (props: any) => (
 				d="M29.315 16.9578C28.6917 16.8331 27.8498 16.74 27.3204 16.74C25.8867 16.74 25.7936 17.3633 25.7936 18.3607V20.1361H29.3774L29.065 23.8137H25.7936V35H21.3063V23.8137H19V20.1361H21.3063V17.8613C21.3063 14.7453 22.7708 13 26.4477 13C27.7252 13 28.6602 13.187 29.8753 13.4363L29.315 16.9578Z"
 				fill="white"
 			></path>{" "}
+
 			<path d="m18.5 9-6 6-6-6" />
 		</g>
 	</Icon>
