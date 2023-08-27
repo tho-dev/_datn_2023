@@ -6,7 +6,7 @@ const NewsView = () => {
 	return (
 		<Box>
 			<NewsCategory />
-			<Divider />
+			<Divider my="12" />
 			<Grid
 				my="10"
 				gap={{
@@ -34,26 +34,39 @@ const NewsView = () => {
 								<Box
 									rounded="lg"
 									overflow="hidden"
+									position="relative"
+									paddingBottom="55%"
 								>
-									<Image src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg" />
+									<Box
+										position="absolute"
+										w="full"
+										h="full"
+									>
+										<Image
+											w="full"
+											h="full"
+											objectFit="cover"
+											src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg"
+										/>
+									</Box>
 								</Box>
 							</GridItem>
 							<GridItem>
 								<Box>
 									<Text
 										fontSize="xl"
-										fontWeight="bold"
+										fontWeight="semibold"
 									>
 										Windows 11 vừa cập nhật, vá lỗi chậm SSD tới nhiều người dùng
 									</Text>
 									<Text
-										fontSize="lg"
+										fontSize="md"
 										my="4"
 									>
 										Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng
 										Microsoft vẫn âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục.
 									</Text>
-									<Flex>
+									<Flex fontSize="sm">
 										<Text>Nguyen Cong Minh</Text>
 										<Text mx={2}>|</Text>
 										<Text>5 ngay</Text>
@@ -75,26 +88,39 @@ const NewsView = () => {
 								<Box
 									rounded="lg"
 									overflow="hidden"
+									position="relative"
+									paddingBottom="55%"
 								>
-									<Image src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg" />
+									<Box
+										position="absolute"
+										w="full"
+										h="full"
+									>
+										<Image
+											w="full"
+											h="full"
+											objectFit="cover"
+											src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg"
+										/>
+									</Box>
 								</Box>
 							</GridItem>
 							<GridItem>
 								<Box>
 									<Text
 										fontSize="xl"
-										fontWeight="bold"
+										fontWeight="semibold"
 									>
 										Windows 11 vừa cập nhật, vá lỗi chậm SSD tới nhiều người dùng
 									</Text>
 									<Text
-										fontSize="lg"
+										fontSize="md"
 										my="4"
 									>
 										Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng
 										Microsoft vẫn âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục.
 									</Text>
-									<Flex>
+									<Flex fontSize="sm">
 										<Text>Nguyen Cong Minh</Text>
 										<Text mx={2}>|</Text>
 										<Text>5 ngay</Text>
@@ -118,7 +144,7 @@ const NewsView = () => {
 							my="4"
 							fontSize="2xl"
 							color="text.black"
-							fontWeight="bold"
+							fontWeight="semibold"
 						>
 							Hot nhất trong tuần
 						</Heading>
@@ -128,8 +154,8 @@ const NewsView = () => {
 									backgroundColor="bg.white"
 									rounded="lg"
 									py="2"
-									px="4"
-									fontSize="sm"
+									px="3"
+									fontSize="xs"
 								>
 									lenovo yoga book 9i
 								</Box>
@@ -139,8 +165,8 @@ const NewsView = () => {
 									backgroundColor="bg.white"
 									rounded="lg"
 									py="2"
-									px="4"
-									fontSize="sm"
+									px="3"
+									fontSize="xs"
 								>
 									lenovo yoga book 9i
 								</Box>
@@ -150,8 +176,8 @@ const NewsView = () => {
 									backgroundColor="bg.white"
 									rounded="lg"
 									py="2"
-									px="4"
-									fontSize="sm"
+									px="3"
+									fontSize="xs"
 								>
 									lenovo yoga book 9i
 								</Box>
@@ -161,19 +187,20 @@ const NewsView = () => {
 									backgroundColor="bg.white"
 									rounded="lg"
 									py="2"
-									px="4"
-									fontSize="sm"
+									px="3"
+									fontSize="xs"
 								>
-									Slim 7 Pro X
+									lenovo yoga book 9i
 								</Box>
 							</WrapItem>
+
 							<WrapItem>
 								<Box
 									backgroundColor="bg.white"
 									rounded="lg"
 									py="2"
-									px="4"
-									fontSize="sm"
+									px="3"
+									fontSize="xs"
 								>
 									lenovo yoga book 9i
 								</Box>
@@ -183,8 +210,19 @@ const NewsView = () => {
 									backgroundColor="bg.white"
 									rounded="lg"
 									py="2"
-									px="4"
-									fontSize="sm"
+									px="3"
+									fontSize="xs"
+								>
+									lenovo yoga book 9i
+								</Box>
+							</WrapItem>
+							<WrapItem>
+								<Box
+									backgroundColor="bg.white"
+									rounded="lg"
+									py="2"
+									px="3"
+									fontSize="xs"
 								>
 									lenovo yoga book 9i
 								</Box>
@@ -193,384 +231,91 @@ const NewsView = () => {
 						<Box>
 							<Heading
 								as="h2"
-								pt="6"
+								mt="10"
 								fontSize="2xl"
 								color="text.black"
-								fontWeight="bold"
+								fontWeight="semibold"
 							>
 								Có thể bạn thích
 							</Heading>
-							<Flex
-								gap={4}
-								my="6"
-							>
-								<Box>
-									<Image src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/10/21/tai-nghe-chup-tai-marshall-major-4-1.jpeg" />
-								</Box>
-								<Box>
-									<Text
-										fontSize="md"
-										fontWeight="bold"
-									>
-										Tai nghe chụp tai Marshall Major 4
-									</Text>
-									<Flex
-										my={2}
-										alignItems="center"
-									>
-										<Text
-											fontSize="xl"
-											color="text.red"
-											fontWeight="bold"
-										>
-											3.249.000
-										</Text>
-										<Text
-											ml={2}
-											fontSize="lg"
-											textDecoration="line-through"
-										>
-											3.999.000
-										</Text>
-										<Text
-											rounded="lg"
-											ml="2"
-											color="text.white"
-											p="1"
-											w="50px"
-											textAlign="center"
-											backgroundColor="bg.red"
-										>
-											-18%
-										</Text>
-									</Flex>
-									<Flex alignItems="center">
-										<Text
-											color="text.slate"
-											fontSize="md"
-											fontWeight="semibold"
-										>
-											Màu
-										</Text>
-										<Box
-											h="4"
-											rounded="sm"
-											w="4"
-											ml="2"
-											backgroundColor="bg.blue"
-										></Box>
-									</Flex>
-								</Box>
-							</Flex>
-							<Flex
-								gap={4}
-								my="6"
-							>
-								<Box>
-									<Image src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/11/K2%20Pro_04.png" />
-								</Box>
-								<Box>
-									<Text
-										fontSize="md"
-										fontWeight="bold"
-									>
-										Tai nghe chụp tai Marshall Major 4
-									</Text>
-									<Flex
-										my={2}
-										alignItems="center"
-									>
-										<Text
-											fontSize="xl"
-											color="text.red"
-											fontWeight="bold"
-										>
-											3.249.000
-										</Text>
-										<Text
-											ml={2}
-											fontSize="lg"
-											textDecoration="line-through"
-										>
-											3.999.000
-										</Text>
-										<Text
-											rounded="lg"
-											ml="2"
-											color="text.white"
-											p="1"
-											w="50px"
-											textAlign="center"
-											backgroundColor="bg.red"
-										>
-											-18%
-										</Text>
-									</Flex>
-									<Flex alignItems="center">
-										<Text
-											color="text.slate"
-											fontSize="md"
-											fontWeight="semibold"
-										>
-											Màu
-										</Text>
-										<Box
-											h="4"
-											rounded="sm"
-											w="4"
-											ml="2"
-											backgroundColor="bg.blue"
-										></Box>
-									</Flex>
-								</Box>
-							</Flex>
-							<Flex
-								gap={4}
-								my="6"
-							>
-								<Box>
-									<Image src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/11/K2%20Pro_04.png" />
-								</Box>
-								<Box>
-									<Text
-										fontSize="md"
-										fontWeight="bold"
-									>
-										Tai nghe chụp tai Marshall Major 4
-									</Text>
-									<Flex
-										my={2}
-										alignItems="center"
-									>
-										<Text
-											fontSize="xl"
-											color="text.red"
-											fontWeight="bold"
-										>
-											3.249.000
-										</Text>
-										<Text
-											ml={2}
-											fontSize="lg"
-											textDecoration="line-through"
-										>
-											3.999.000
-										</Text>
-										<Text
-											rounded="lg"
-											ml="2"
-											color="text.white"
-											p="1"
-											w="50px"
-											textAlign="center"
-											backgroundColor="bg.red"
-										>
-											-18%
-										</Text>
-									</Flex>
-									<Flex alignItems="center">
-										<Text
-											color="text.slate"
-											fontSize="md"
-											fontWeight="semibold"
-										>
-											Màu
-										</Text>
-										<Box
-											h="4"
-											rounded="sm"
-											w="4"
-											ml="2"
-											backgroundColor="bg.blue"
-										></Box>
-									</Flex>
-								</Box>
-							</Flex>
-							<Flex
-								gap={4}
-								my="6"
-							>
-								<Box>
-									<Image src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/11/K2%20Pro_04.png" />
-								</Box>
-								<Box>
-									<Text
-										fontSize="md"
-										fontWeight="bold"
-									>
-										Tai nghe chụp tai Marshall Major 4
-									</Text>
-									<Flex
-										my={2}
-										alignItems="center"
-									>
-										<Text
-											fontSize="xl"
-											color="text.red"
-											fontWeight="bold"
-										>
-											3.249.000
-										</Text>
-										<Text
-											ml={2}
-											fontSize="lg"
-											textDecoration="line-through"
-										>
-											3.999.000
-										</Text>
-										<Text
-											rounded="lg"
-											ml="2"
-											color="text.white"
-											p="1"
-											w="50px"
-											textAlign="center"
-											backgroundColor="bg.red"
-										>
-											-18%
-										</Text>
-									</Flex>
-									<Flex alignItems="center">
-										<Text
-											color="text.slate"
-											fontSize="md"
-											fontWeight="semibold"
-										>
-											Màu
-										</Text>
-										<Box
-											h="4"
-											rounded="sm"
-											w="4"
-											ml="2"
-											backgroundColor="bg.blue"
-										></Box>
-									</Flex>
-								</Box>
-							</Flex>
-							<Flex
-								gap={4}
-								my="6"
-							>
-								<Box>
-									<Image src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/11/K2%20Pro_04.png" />
-								</Box>
-								<Box>
-									<Text
-										fontSize="md"
-										fontWeight="bold"
-									>
-										Tai nghe chụp tai Marshall Major 4
-									</Text>
-									<Flex
-										my={2}
-										alignItems="center"
-									>
-										<Text
-											fontSize="xl"
-											color="text.red"
-											fontWeight="bold"
-										>
-											3.249.000
-										</Text>
-										<Text
-											ml={2}
-											fontSize="lg"
-											textDecoration="line-through"
-										>
-											3.999.000
-										</Text>
-										<Text
-											rounded="lg"
-											ml="2"
-											color="text.white"
-											p="1"
-											w="50px"
-											textAlign="center"
-											backgroundColor="bg.red"
-										>
-											-18%
-										</Text>
-									</Flex>
-									<Flex alignItems="center">
-										<Text
-											color="text.slate"
-											fontSize="md"
-											fontWeight="semibold"
-										>
-											Màu
-										</Text>
-										<Box
-											h="4"
-											rounded="sm"
-											w="4"
-											ml="2"
-											backgroundColor="bg.blue"
-										></Box>
-									</Flex>
-								</Box>
-							</Flex>
-							<Flex
-								gap={4}
-								my="6"
-							>
-								<Box>
-									<Image src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/11/K2%20Pro_04.png" />
-								</Box>
-								<Box>
-									<Text
-										fontSize="md"
-										fontWeight="bold"
-									>
-										Tai nghe chụp tai Marshall Major 4
-									</Text>
-									<Flex
-										my={2}
-										alignItems="center"
-									>
-										<Text
-											fontSize="xl"
-											color="text.red"
-											fontWeight="bold"
-										>
-											3.249.000
-										</Text>
-										<Text
-											ml={2}
-											fontSize="lg"
-											textDecoration="line-through"
-										>
-											3.999.000
-										</Text>
-										<Text
-											rounded="lg"
-											ml="2"
-											color="text.white"
-											p="1"
-											w="50px"
-											textAlign="center"
-											backgroundColor="bg.red"
-										>
-											-18%
-										</Text>
-									</Flex>
-									<Flex alignItems="center">
-										<Text
-											color="text.slate"
-											fontSize="md"
-											fontWeight="semibold"
-										>
-											Màu
-										</Text>
-										<Box
-											h="4"
-											rounded="sm"
-											w="4"
-											ml="2"
-											backgroundColor="bg.blue"
-										></Box>
-									</Flex>
-								</Box>
+							<Flex flexDir="column">
+								{Array(6)
+									.fill(0)
+									.map(() => {
+										return (
+											<Flex
+												gap={4}
+												mt="6"
+											>
+												<Box
+													w="100px"
+													h="100px"
+												>
+													<Image
+														w="100%"
+														h="100%"
+														objectFit="cover"
+														src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/10/21/tai-nghe-chup-tai-marshall-major-4-1.jpeg"
+													/>
+												</Box>
+												<Box>
+													<Text
+														fontSize="sm"
+														fontWeight="bold"
+													>
+														Tai nghe chụp tai Marshall Major 4
+													</Text>
+													<Flex
+														my={2}
+														alignItems="center"
+													>
+														<Text
+															fontSize="lg"
+															color="text.red"
+															fontWeight="bold"
+														>
+															3.249.000
+														</Text>
+														<Text
+															ml={2}
+															fontSize="md"
+															textDecoration="line-through"
+														>
+															3.999.000
+														</Text>
+														<Text
+															rounded="sm"
+															ml="2"
+															color="text.white"
+															px="1"
+															py="2px"
+															fontSize="xs"
+															textAlign="center"
+															backgroundColor="bg.red"
+														>
+															-18%
+														</Text>
+													</Flex>
+													<Flex alignItems="center">
+														<Text
+															color="text.slate"
+															fontSize="sm"
+															fontWeight="semibold"
+														>
+															Màu
+														</Text>
+														<Box
+															h="4"
+															rounded="sm"
+															w="4"
+															ml="2"
+															backgroundColor="bg.blue"
+														></Box>
+													</Flex>
+												</Box>
+											</Flex>
+										);
+									})}
 							</Flex>
 						</Box>
 					</Box>

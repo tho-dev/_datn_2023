@@ -11,8 +11,8 @@ type Props = {
 	mt?: any; // khoảng cái margin-top
 	items?: any; // ....
 	isArrow?: any; // hiển thị nút
-	nextEl: string; // className của nút next
-	prevEl: string; // className của nút prev
+	nextEl?: string; // className của nút next
+	prevEl?: string; // className của nút prev
 };
 
 const ScrollableThinkPro = ({ items = [], mt = 4, isArrow = false, nextEl, prevEl }: Props) => {

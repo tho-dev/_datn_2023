@@ -64,7 +64,8 @@ const DashboardView = (props: Props) => {
 						</MenuButton>
 						<MenuList>
 							<MenuItem onClick={onOpen}>Xóa</MenuItem>
-							<MenuItem>Payments </MenuItem>
+							<MenuItem>Xem chi tiết</MenuItem>
+							<MenuItem>Cập nhật</MenuItem>
 						</MenuList>
 					</Menu>
 				);
@@ -112,9 +113,8 @@ const DashboardView = (props: Props) => {
 				/>
 			</Box>
 			<ConfirmThinkPro
-				isOpen={true}
+				isOpen={isOpen}
 				onClose={onClose}
-				onOpen={onOpen}
 			/>
 		</Box>
 	);
