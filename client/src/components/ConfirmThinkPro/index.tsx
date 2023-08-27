@@ -15,12 +15,33 @@ import {
 import { TraskIcon } from "~/components/common/Icons";
 
 type Props = {
-	isOpen?: any;
-	onOpen?: any;
+	isOpen?: boolean;
 	onClose?: any;
+	handleClick?: any;
+	icon?: React.ReactNode;
+	size?: string;
+	title?: string;
+	content?: string;
+	textBtnClose?: string;
+	textBtnNext?: string;
 };
 
-const ConfirmThinkPro = ({ onClose, isOpen, onOpen }: Props) => {
+const ConfirmThinkPro = ({
+	isOpen = false,
+	onClose,
+	handleClick,
+	icon = (
+		<TraskIcon
+			size={14}
+			color="bg.red"
+		/>
+	),
+	size = "lg",
+	title = "Bạn có chắc không?",
+	content = "Bạn có chắc muốn xóa bản ghi này không?",
+	textBtnClose = "Hủy",
+	textBtnNext = "Oki, Tôi muốn",
+}: Props) => {
 	const cancelRef = React.useRef();
 
 	return (
@@ -30,7 +51,7 @@ const ConfirmThinkPro = ({ onClose, isOpen, onOpen }: Props) => {
 			onClose={onClose}
 			isOpen={isOpen}
 			isCentered
-			size="lg"
+			size={size}
 		>
 			<AlertDialogOverlay />
 
@@ -46,24 +67,20 @@ const ConfirmThinkPro = ({ onClose, isOpen, onOpen }: Props) => {
 						alignItems="center"
 						justifyContent="center"
 					>
-						<TraskIcon
-							size={14}
-							color="bg.red"
-						/>
-
+						{icon}
 						<Box mt="6">
 							<Text
 								fontSize="lg"
 								textAlign="center"
 								fontWeight="bold"
 							>
-								Bạn có chắc chắn không?
+								{title}
 							</Text>
 							<Text
 								fontSize="md"
 								textAlign="center"
 							>
-								Bạn có chắc muốn xóa bản ghi này không?
+								{content}
 							</Text>
 						</Box>
 					</Flex>
@@ -84,7 +101,7 @@ const ConfirmThinkPro = ({ onClose, isOpen, onOpen }: Props) => {
 							bgColor: "#cfd1d4",
 						}}
 					>
-						Hủy
+						{textBtnClose}
 					</Button>
 					<Button
 						colorScheme="red"
@@ -94,8 +111,9 @@ const ConfirmThinkPro = ({ onClose, isOpen, onOpen }: Props) => {
 							transform: "translateY(-5px)",
 							bgColor: "#cb3c5e",
 						}}
+						onClick={handleClick}
 					>
-						Có tôi muốn
+						{textBtnNext}
 					</Button>
 				</AlertDialogFooter>
 			</AlertDialogContent>

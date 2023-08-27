@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink as ReactRouterLink, useLocation } from "react-router-dom";
 import { Link, Image, Collapse, useDisclosure } from "@chakra-ui/react";
 import { Flex, Box, Text } from "@chakra-ui/layout";
-import { DownIcon } from "~/components/common/Icons";
+import { ChevronDownIcon } from "~/components/common/Icons";
 
 type Props = {
 	item?: any;
@@ -88,7 +88,7 @@ const NavItem = ({ item }: Props) => {
 							"2xl": "flex",
 						}}
 					>
-						<DownIcon
+						<ChevronDownIcon
 							size={5}
 							strokeWidth={0.5}
 							color={location.pathname == item?.to ? "#12AFF0" : "#809FB8"}
