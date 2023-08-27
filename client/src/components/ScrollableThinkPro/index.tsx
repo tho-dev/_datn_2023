@@ -11,16 +11,13 @@ type Props = {
 	mt?: any; // khoảng cái margin-top
 	items?: any; // ....
 	isArrow?: any; // hiển thị nút
-	nextEl: string; // className của nút next
-	prevEl: string; // className của nút prev
+	nextEl?: string; // className của nút next
+	prevEl?: string; // className của nút prev
 };
 
 const ScrollableThinkPro = ({ items = [], mt = 4, isArrow = false, nextEl, prevEl }: Props) => {
 	return (
-		<Flex
-			mt={mt}
-			gap="4"
-		>
+		<Flex mt={mt} gap="4">
 			<Swiper
 				modules={[Navigation]}
 				slidesPerView="auto"
@@ -74,11 +71,7 @@ const ScrollableThinkPro = ({ items = [], mt = 4, isArrow = false, nextEl, prevE
 						backgroundColor="bg.white"
 						className={prevEl}
 					>
-						<NavArrowLeflIcon
-							size={4}
-							strokeWidth={3}
-							color="text.black"
-						/>
+						<NavArrowLeflIcon size={4} strokeWidth={3} color="text.black" />
 					</Flex>
 
 					<Flex
@@ -91,11 +84,7 @@ const ScrollableThinkPro = ({ items = [], mt = 4, isArrow = false, nextEl, prevE
 						backgroundColor="bg.white"
 						className={nextEl}
 					>
-						<NavArrowRightIcon
-							size={4}
-							strokeWidth={3}
-							color="text.black"
-						/>
+						<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
 					</Flex>
 				</Flex>
 			)}
