@@ -5,6 +5,7 @@ import Banner from "./components/Banner";
 import Category from "./components/Category";
 import USP from "./components/USP";
 import SuggestionProduct from "./components/SuggestionProduct";
+import DiscountSection from './components/Discount'
 
 type Props = {};
 
@@ -22,6 +23,7 @@ const HomeView = (props: Props) => {
 
 				{/* Danh mục */}
 				<Category title="Danh mục" />
+				<DiscountSection title="Khuyến mãi"/>
 
 				{/* USP */}
 				<USP

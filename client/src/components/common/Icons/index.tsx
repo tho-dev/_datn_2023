@@ -610,9 +610,10 @@ export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColo
 );
 
 export const ArrowLeftCirleIcon = (props: any) => (
-	<Icon
-		fill="currentColor"
-=======
+	// <Icon
+	// 	fill="currentColor"
+	null
+)
 export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -648,16 +649,18 @@ export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ..
 	</Icon>
 );
 
-export const CodeIcon = (props: any) => (
+export const CodeIcon = ({...props }) => (
+	<>
 	<Icon
 		fill="none"
 		stroke="currentColor"
 		strokeLinecap="round"
 		strokeLinejoin="round"
-		strokeWidth={1.5}
+		strokeWidth={1.5} >
 		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
 		<path d="M12 8v4l2 2" />
-	</Icon>
+	</Icon>	
+	</>
 );
 
 export const DownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
@@ -748,7 +751,7 @@ export const FbIcon = (props: any) => (
 				d="M29.315 16.9578C28.6917 16.8331 27.8498 16.74 27.3204 16.74C25.8867 16.74 25.7936 17.3633 25.7936 18.3607V20.1361H29.3774L29.065 23.8137H25.7936V35H21.3063V23.8137H19V20.1361H21.3063V17.8613C21.3063 14.7453 22.7708 13 26.4477 13C27.7252 13 28.6602 13.187 29.8753 13.4363L29.315 16.9578Z"
 				fill="white"
 			></path>{" "}
-=======
+		</g>
 		<path d="m18.5 9-6 6-6-6" />
 	</Icon>
 );
@@ -866,7 +869,7 @@ export const SearchAdminIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 				id="Shape_2"
 				d="M20.5497 21.4999C20.3597 21.4999 20.1697 21.4299 20.0197 21.2799L17.0197 18.2799C16.7297 17.9899 16.7297 17.5099 17.0197 17.2199C17.3097 16.9299 17.7897 16.9299 18.0797 17.2199L21.0797 20.2199C21.3697 20.5099 21.3697 20.9899 21.0797 21.2799C20.9297 21.4299 20.7397 21.4999 20.5497 21.4999Z"
 				fill={color}
-			/
+			/>
 		</g>
 	</Icon>
 );
