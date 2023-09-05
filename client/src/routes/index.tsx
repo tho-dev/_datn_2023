@@ -23,6 +23,9 @@ import { NotFoundView } from "~/views/public/NotFoundView";
 import { DashboardView } from "~/views/private/DashboardView";
 import { ProductManagerView } from "~/views/private/ProductManagerView";
 import { CategoryManagerView } from "~/views/private/CategoryManagerView";
+import OrderManagementView from "~/views/private/OrderManagementView";
+import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
+import SubCategoryView from "~/views/private/SubCategoryView";
 
 const routes: RouteObject[] = [
 	{
@@ -105,6 +108,18 @@ const routes: RouteObject[] = [
 				path: "danh-muc",
 				element: <CategoryManagerView />,
 			},
+			{
+				path: "danh-muc-con",
+				element: <SubCategoryView/>
+			},
+			{
+				path: "don-hang",
+				element: <OrderManagementView/>
+			},
+			{
+				path: "don-hang/:id",
+				element: <OrderDetailView/>
+			}
 		],
 	},
 ];

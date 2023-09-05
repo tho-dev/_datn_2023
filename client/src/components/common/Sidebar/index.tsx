@@ -1,5 +1,5 @@
 import { Flex, Heading, Text, Box } from "@chakra-ui/layout";
-import { Switch } from "@chakra-ui/react";
+import { StepIcon, Switch } from "@chakra-ui/react";
 import NavItem from "./components/NavItem";
 import {
 	DashboardIcon,
@@ -11,6 +11,8 @@ import {
 	ProfileIcon,
 	SettingsIcon,
 	LightDarkIcon,
+	InfoIcon,
+	OrderIcon,
 } from "~/components/common/Icons";
 
 type Props = {};
@@ -32,10 +34,16 @@ const MENU = [
 		icon: WalletIcon,
 	},
 	{
+		title: "Đơn hàng",
+		to: "/admin/don-hang",
+		icon: OrderIcon,
+	},
+	{
 		title: "Danh mục",
 		to: "/admin/danh-muc",
 		icon: InboxIcon,
 		children: [
+			{ title: "Danh mục con", to: "/admin/danh-muc-con" },
 			{ title: "Sản phẩm", to: "/admin/danh-muc-san-pham" },
 			{ title: "Bài viết", to: "/admin/danh-muc-bai-viet" },
 			{ title: "Thương hiệu", to: "/admin/thuong-hieu" },

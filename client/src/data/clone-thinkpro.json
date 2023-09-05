@@ -9206,5 +9206,34 @@
 				}
 			]
 		}
+	],
+	"orders":[
+		{
+			"id":"111",
+			"customerName": "Demo customer 1",
+			"amount": "1000",
+			"orderDate": "31/12/2023",
+			"deliveryDate": "1/1/2024",
+			"payment": "VISA",
+			"deliveryStatus": "pending"
+		},
+		{
+			"id":"222",
+			"customerName": "Demo customer 2",
+			"amount": "2000",
+			"orderDate": "31/12/2023",
+			"deliveryDate": "1/1/2024",
+			"payment": "VISA",
+			"deliveryStatus": "pending"
+		},
+		{
+			"id":"333",
+			"customerName": "Demo customer 3",
+			"amount": "1500",
+			"orderDate": "31/12/2023",
+			"deliveryDate": "1/1/2024",
+			"payment": "VISA",
+			"deliveryStatus": "pending"
+		}
 	]
 }
