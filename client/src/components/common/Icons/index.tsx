@@ -609,27 +609,27 @@ export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColo
 	</Icon>
 );
 
-export const ArrowLeftCirleIcon = (props: any) => (
-	// <Icon
-	// 	fill="currentColor"
-	null
-)
-export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill="none"
-		stroke={color}
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		strokeWidth={strokeWidth}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-	>
-		<path d="M12 5v14"></path>
-		<path d="M5 12h14"></path>
-	</Icon>
-);
+// export const ArrowLeftCirleIcon = (props: any) => (
+// 	// <Icon
+// 	// 	fill="currentColor"
+// 	null
+// )
+// export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+// 	<Icon
+// 		width={size}
+// 		height={size}
+// 		fill="none"
+// 		stroke={color}
+// 		strokeLinecap="round"
+// 		strokeLinejoin="round"
+// 		strokeWidth={strokeWidth}
+// 		viewBox="0 0 24 24"
+// 		xmlns="http://www.w3.org/2000/svg"
+// 	>
+// 		<path d="M12 5v14"></path>
+// 		<path d="M5 12h14"></path>
+// 	</Icon>
+// );
 
 
 export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
@@ -1145,4 +1145,64 @@ export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor",
 		<path d="M12 5v14"></path>
 		<path d="M5 12h14"></path>
 	</Icon>
+);
+
+export const DownloadIcon = ({ size = 32, color = "currentColor", ...props }) => (
+  <svg
+    width={size}
+    height={size}
+    fill={color}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="m12 16 4-5h-3V4h-2v7H8l4 5Z" />
+    <path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7Z" />
+  </svg>
+);
+
+export const LocationIcon = ({ size = 46, color = "currentColor", ...props }) => (
+  <svg
+    width={size}
+    height={size}
+    fill={color}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M12 14c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4Zm0-6c1.103 0 2 .897 2 2s-.897 2-2 2-2-.897-2-2 .897-2 2-2Z" />
+    <path d="M11.42 21.814a.998.998 0 0 0 1.16 0C12.884 21.599 20.03 16.44 20 10c0-4.411-3.589-8-8-8-4.41 0-8 3.589-8 7.995-.029 6.445 7.116 11.604 7.42 11.819ZM12 4c3.31 0 6 2.691 6 6.005.021 4.438-4.388 8.423-6 9.73-1.61-1.308-6.02-5.294-6-9.735 0-3.309 2.691-6 6-6Z" />
+  </svg>
+);
+
+export const CarIcon = ({ size = 46, color = "currentColor", ...props }) => (
+  <svg
+    width={size}
+    height={size}
+    fill={color}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M19.15 8a2 2 0 0 0-1.72-1H15V5a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 1 1.73 3.503 3.503 0 1 0 7 .27h3.1a3.48 3.48 0 0 0 6.9 0 2 2 0 0 0 2-2v-3a1.07 1.07 0 0 0-.14-.52L19.15 8ZM15 9h2.43l1.8 3H15V9ZM6.5 19a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm10 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z" />
+  </svg>
+);
+
+
+export const OrderIcon = ({ size = 32, color = "currentColor", ...props }) => (
+	<Icon
+	width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		
+		<path d="M4 6h2v2H4V6Zm0 5h2v2H4v-2Zm0 5h2v2H4v-2Zm16-8V6H8.023v2H20ZM8 11h12v2H8v-2Zm0 5h12v2H8v-2Z" />
+	</Icon>
+
 );
