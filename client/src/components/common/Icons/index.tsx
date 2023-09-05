@@ -1395,3 +1395,37 @@ export const PlusCircleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentC
 );
 
 
+export const PictureIcon = ({
+	size = 46,
+	strokeWidth = 1.5,
+	color = "currentColor",
+	...props
+}) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			d="M6.286 4h11.428A2.286 2.286 0 0 1 20 6.286v11.428A2.286 2.286 0 0 1 17.714 20H6.286A2.286 2.286 0 0 1 4 17.714V6.286A2.286 2.286 0 0 1 6.286 4Z"
+			clipRule="evenodd"
+		/>
+		<path d="M20 15.429 16.571 12l-3.428 3.411" />
+		<path d="M17.714 20 7.43 9.714 4 13.143" />
+		<path
+			fill={color}
+			stroke="none"
+			d="M16 9.143a1.143 1.143 0 1 0 0-2.286 1.143 1.143 0 0 0 0 2.286Z"
+		/>
+	</Icon>
+);
+
+
+
