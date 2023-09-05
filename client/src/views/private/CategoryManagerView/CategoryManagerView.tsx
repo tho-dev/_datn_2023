@@ -75,7 +75,7 @@ const CategoryManagerView = (props: Props) => {
   } = useForm<any>({
     resolver: joiResolver(categorySchema),
   });
-  const itemsPerPage = 6;
+  const itemsPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const [displayedItems, setDisplayedItems] = useState(listCategory.slice(0, itemsPerPage));
   const totalPages = Math.ceil(listCategory.length / itemsPerPage);
@@ -118,23 +118,23 @@ const CategoryManagerView = (props: Props) => {
               onSubmit={handleSubmit(onSubmit)}
             >
               <FormControl isInvalid={errors.category_title as any}>
-                <FormLabel fontWeight='semibold'>Category Title</FormLabel>
-                <Input id='category_title' type='text' placeholder='Enter title' size='lager' border='1px solid #eff2f7' />
+                <FormLabel fontWeight='semibold'>Tiêu đề</FormLabel>
+                <Input id='category_title' type='text' placeholder='Nhận tiêu đề' size='lager' border='1px solid #eff2f7' />
                 <FormErrorMessage>{(errors.category_title as any) && (errors?.email?.message as any)}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={errors.category_title as any}>
+              <FormControl isInvalid={errors.category_title as any} my='4'>
                 <FormLabel fontWeight='semibold'>Slug</FormLabel>
                 <Input id='slug' type='text' placeholder='Enter slug' size='lager' border='1px solid #eff2f7' />
                 <FormErrorMessage>{(errors.category_title as any) && (errors?.email?.message as any)}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={errors.category_title as any}>
-                <FormLabel fontWeight='semibold'>Image</FormLabel>
-                <Input id='image' type='file' placeholder='Enter image' size='lager' border='1px solid #eff2f7' py='2' />
+              <FormControl isInvalid={errors.category_title as any} my='4'>
+                <FormLabel fontWeight='semibold'>Ảnh</FormLabel>
+                <Input id='image' type='file' placeholder='Nhập ảnh' size='lager' border='1px solid #eff2f7' py='2' />
                 <FormErrorMessage>{(errors.category_title as any) && (errors?.email?.message as any)}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={errors.category_title as any}>
-                <FormLabel fontWeight='semibold'>Description</FormLabel>
-                <Textarea value={value} id='description' onChange={handleInputChange} placeholder='Enter description' size='sm' border='1px solid #eff2f7' />
+                <FormLabel fontWeight='semibold'>Mô tả</FormLabel>
+                <Textarea value={value} id='description' onChange={handleInputChange} placeholder='Nhập mô tả' size='sm' border='1px solid #eff2f7' />
                 <FormErrorMessage>{(errors.category_title as any) && (errors?.email?.message as any)}</FormErrorMessage>
               </FormControl>
               <Flex justifyContent='end'>
