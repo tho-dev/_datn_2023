@@ -1,4 +1,5 @@
-import { Box, Heading, Text } from "@chakra-ui/layout";
+import React from "react";
+import { Box, Flex } from "@chakra-ui/layout";
 import {
   Menu,
   MenuButton,
@@ -6,18 +7,18 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
-import { createColumnHelper } from "@tanstack/react-table";
-import TableThinkPro from "~/components/TableThinkPro";
-import Metrics from "./components/Metrics";
 import thinkpro from "~/data/clone-thinkpro.json";
+import TableThinkPro from "~/components/TableThinkPro";
+import { createColumnHelper } from "@tanstack/react-table";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 
-type Props = {};
+type Props = {
+  dataProducts: any[];
+};
 
-const DashboardView = (props: Props) => {
+const TableProduct = (props: Props) => {
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
-
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -26,15 +27,36 @@ const DashboardView = (props: Props) => {
       },
       header: "#",
     }),
-    columnHelper.accessor("thumbnail", {
+    columnHelper.accessor("name", {
       cell: (info) => {
-        return <h1>{info.getValue()?.filename}</h1>;
+        return <h1>{info.getValue()}</h1>;
       },
       header: "Tên sản phẩm",
     }),
-    columnHelper.accessor("slug", {
+    columnHelper.accessor("thumbnail", {
+      cell: (info) => {
+        return (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={info.getValue()?.path}
+              alt=""
+              width="50px"
+              height="50px"
+            />
+          </div>
+        );
+      },
+      header: "Hình ảnh",
+    }),
+    columnHelper.accessor("price", {
       cell: (info) => info.getValue(),
-      header: "Slug",
+      header: "Price",
     }),
     columnHelper.accessor("desc", {
       cell: (info) => info.getValue(),
@@ -81,17 +103,11 @@ const DashboardView = (props: Props) => {
   ];
 
   return (
-    <Box w="full" h="full">
-      {/* Số liệu */}
-      <Metrics />
-
-      {/* Test table */}
-      <Box bgColor="bg.white" mt="6" p="6">
-        <TableThinkPro columns={columns} data={thinkpro.data} />
-      </Box>
+    <Box>
+      <TableThinkPro columns={columns} data={props.dataProducts} />
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };
 
-export default DashboardView;
+export default TableProduct;
