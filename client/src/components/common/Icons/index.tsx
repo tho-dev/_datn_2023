@@ -82,22 +82,10 @@ export const MoneyIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor"
 		{...props}
 	>
 		<path d="M2 6.5h20v12H2v-12Z" />
-		<path
-			d="M2 10.5a4 4 0 0 0 4-4H2v4Z"
-			clipRule="evenodd"
-		/>
-		<path
-			d="M2 14.5a4 4 0 0 1 4 4H2v-4Z"
-			clipRule="evenodd"
-		/>
-		<path
-			d="M22 14.5v4h-4a4 4 0 0 1 4-4Z"
-			clipRule="evenodd"
-		/>
-		<path
-			d="M22 10.5a4 4 0 0 1-4-4h4v4Z"
-			clipRule="evenodd"
-		/>
+		<path d="M2 10.5a4 4 0 0 0 4-4H2v4Z" clipRule="evenodd" />
+		<path d="M2 14.5a4 4 0 0 1 4 4H2v-4Z" clipRule="evenodd" />
+		<path d="M22 14.5v4h-4a4 4 0 0 1 4-4Z" clipRule="evenodd" />
+		<path d="M22 10.5a4 4 0 0 1-4-4h4v4Z" clipRule="evenodd" />
 		<path d="M12 15.5c1.38 0 2.5-1.343 2.5-3s-1.12-3-2.5-3-2.5 1.343-2.5 3 1.12 3 2.5 3Z" />
 	</Icon>
 );
@@ -115,10 +103,7 @@ export const WaletIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor"
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<path
-			d="M8.991 5.984 15.892 2 18.2 5.994l-9.208-.01Z"
-			clipRule="evenodd"
-		/>
+		<path d="M8.991 5.984 15.892 2 18.2 5.994l-9.208-.01Z" clipRule="evenodd" />
 		<path d="M2 7a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7Z" />
 		<path d="M17.625 16.5H22v-5h-4.375C16.175 11.5 15 12.62 15 14s1.175 2.5 2.625 2.5Z" />
 		<path d="M22 8.25v12" />
@@ -361,10 +346,7 @@ export const YoutubeIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColo
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<path
-			fill={color}
-			d="m14 12-3.5 2v-4l3.5 2Z"
-		/>
+		<path fill={color} d="m14 12-3.5 2v-4l3.5 2Z" />
 		<path d="M2 12.706v-1.415c0-2.895 0-4.343.905-5.275.906-.931 2.332-.971 5.183-1.052 1.35-.038 2.73-.066 3.912-.066 1.181 0 2.561.028 3.912.066 2.851.08 4.277.121 5.182 1.052.906.932.906 2.38.906 5.275v1.415c0 2.895 0 4.343-.905 5.274-.906.932-2.331.972-5.183 1.053-1.35.038-2.73.066-3.912.066-1.181 0-2.561-.028-3.912-.066-2.851-.08-4.277-.121-5.183-1.053C2 17.05 2 15.601 2 12.706Z" />
 	</Icon>
 );
@@ -459,14 +441,7 @@ export const CheckOneIcon = ({ size = 33, strokeWidth = 1.5, color = "currentCol
 );
 
 export const FilterIcon = ({ size = 33, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill={color}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path d="M4.8 15.6a.6.6 0 0 1 .6-.6H9a.6.6 0 1 1 0 1.2H5.4a.6.6 0 0 1-.6-.6Zm0-3.6a.6.6 0 0 1 .6-.6h8.4a.599.599 0 1 1 0 1.2H5.4a.6.6 0 0 1-.6-.6Zm0-3.6a.6.6 0 0 1 .6-.6h13.2a.6.6 0 1 1 0 1.2H5.4a.6.6 0 0 1-.6-.6Z" />
 	</Icon>
 );
@@ -560,14 +535,8 @@ export const CartIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor",
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<path
-			fill={color}
-			d="M19.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
-		/>
-		<path
-			fill={color}
-			d="M9.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
-		/>
+		<path fill={color} d="M19.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+		<path fill={color} d="M9.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
 		<path d="M5 4c-.167-.667-1-2-3-2m3 2h17l-2 11H7L5 4Z" />
 		<path d="M20 15H5.23c-1.784 0-2.73.781-2.73 2 0 1.219.946 2 2.73 2H19.5" />
 	</Icon>
@@ -609,11 +578,10 @@ export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColo
 	</Icon>
 );
 
-export const ArrowLeftCirleIcon = (props: any) => (
+export const ArrowLeftCirleIcon = (props: any) =>
 	// <Icon
 	// 	fill="currentColor"
-	null
-)
+	null;
 export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -630,7 +598,6 @@ export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor",
 		<path d="M5 12h14"></path>
 	</Icon>
 );
-
 
 export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
@@ -650,17 +617,12 @@ export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ..
 	</Icon>
 );
 
-export const CodeIcon = ({...props }) => (
+export const CodeIcon = ({ ...props }) => (
 	<>
-	<Icon
-		fill="none"
-		stroke="currentColor"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		strokeWidth={1.5} >
-		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
-		<path d="M12 8v4l2 2" />
-	</Icon>	
+		<Icon fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}>
+			<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
+			<path d="M12 8v4l2 2" />
+		</Icon>
 	</>
 );
 
@@ -683,21 +645,9 @@ export const DownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor",
 );
 
 export const GoogleIcon = (props: any) => (
-	<Icon
-		viewBox="0 0 32 32"
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<g
-			id="SVGRepo_bgCarrier"
-			strokeWidth="0"
-		></g>
-		<g
-			id="SVGRepo_tracerCarrier"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		></g>
+	<Icon viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+		<g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
 		<g id="SVGRepo_iconCarrier">
 			{" "}
 			<path
@@ -721,49 +671,24 @@ export const GoogleIcon = (props: any) => (
 );
 
 export const FbIcon = (props: any) => (
-	<Icon
-		viewBox="0 0 48 48"
-		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<g
-			id="SVGRepo_bgCarrier"
-			strokeWidth="0"
-		></g>
-		<g
-			id="SVGRepo_tracerCarrier"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		></g>
+	<Icon viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+		<g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
 		<g id="SVGRepo_iconCarrier">
-			<circle
-				cx="24"
-				cy="24"
-				r="20"
-				fill="#3B5998"
-			></circle>{" "}
+			<circle cx="24" cy="24" r="20" fill="#3B5998"></circle>{" "}
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
 				d="M29.315 16.9578C28.6917 16.8331 27.8498 16.74 27.3204 16.74C25.8867 16.74 25.7936 17.3633 25.7936 18.3607V20.1361H29.3774L29.065 23.8137H25.7936V35H21.3063V23.8137H19V20.1361H21.3063V17.8613C21.3063 14.7453 22.7708 13 26.4477 13C27.7252 13 28.6602 13.187 29.8753 13.4363L29.315 16.9578Z"
 				fill="white"
 			></path>{" "}
-
 			<path d="m18.5 9-6 6-6-6" />
 		</g>
 	</Icon>
 );
 
 export const DashboardIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 27 30"
-		fill="none"
-		{...props}
-	>
+	<Icon width={size} height={size} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 30" fill="none" {...props}>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -774,14 +699,7 @@ export const DashboardIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const InboxIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -792,14 +710,7 @@ export const InboxIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const NewsFeedIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="newsfeed"
 			fillRule="evenodd"
@@ -811,14 +722,7 @@ export const NewsFeedIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const AddIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="add"
 			fillRule="evenodd"
@@ -830,14 +734,7 @@ export const AddIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const InfoCheckIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -848,14 +745,7 @@ export const InfoCheckIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const SearchAdminIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<g id="svg">
 			<path
 				id="Shape"
@@ -874,14 +764,7 @@ export const SearchAdminIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const SettingsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="settings"
 			fillRule="evenodd"
@@ -893,14 +776,7 @@ export const SettingsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const ProfileIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="profile"
 			fillRule="evenodd"
@@ -912,14 +788,7 @@ export const ProfileIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const LightDarkIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="icons-2"
 			fillRule="evenodd"
@@ -931,14 +800,7 @@ export const LightDarkIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const AnalyticsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="analytics"
 			fillRule="evenodd"
@@ -950,14 +812,7 @@ export const AnalyticsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const MarketIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="market"
 			fillRule="evenodd"
@@ -969,14 +824,7 @@ export const MarketIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const WalletIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon
-		xmlns="http://www.w3.org/2000/svg"
-		width={size}
-		height={size}
-		viewBox="0 0 29 30"
-		fill="none"
-		{...props}
-	>
+	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
 		<path
 			id="wallet"
 			fillRule="evenodd"
@@ -984,18 +832,6 @@ export const WalletIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 			d="M8.40501 25.0708C3.97301 25.0708 0.997009 21.9518 0.997009 17.3068V7.85483C0.997009 3.69482 3.44501 0.684814 7.24601 0.184814C7.62936 0.123718 8.01682 0.09198 8.40501 0.0898438L20 0.0898132C20.3752 0.0868225 20.75 0.113586 21.121 0.16983C24.921 0.629791 27.407 3.65479 27.407 7.85379V9.04379C28.2081 9.45767 28.7069 10.2882 28.696 11.1898V13.9718C28.7053 14.8745 28.2072 15.706 27.407 16.1238L27.407 17.2928C27.407 21.9508 24.432 25.0708 19.999 25.0708L8.40501 25.0708ZM7.50501 2.18283C4.67101 2.56082 2.93201 4.72183 2.93201 7.85483V17.3068C2.93201 20.7908 5.08301 23.0458 8.40701 23.0458H20C23.324 23.0458 25.476 20.7908 25.476 17.3068V16.3618H23.917C22.3942 16.3426 21.0287 15.4195 20.4433 14.0135C19.8579 12.6075 20.1648 10.9881 21.224 9.89383C21.8749 9.19107 22.7911 8.79413 23.749 8.79984H25.475V7.85483C25.475 4.69482 23.71 2.52081 20.85 2.16983C20.5686 2.12607 20.2837 2.108 19.999 2.11584H8.40501C8.10216 2.1174 7.79979 2.1398 7.50002 2.18286L7.50501 2.18283ZM22.105 12.7158C22.2103 13.6371 22.9938 14.3304 23.921 14.3228H26.446C26.4713 14.3228 26.4967 14.3228 26.522 14.3228C26.672 14.2711 26.7715 14.1284 26.768 13.9698V11.1878C26.768 10.9881 26.6076 10.8255 26.408 10.8228H23.762C23.3222 10.8171 22.9007 10.999 22.603 11.3228L22.59 11.3358L22.561 11.3658C22.442 11.4942 22.3426 11.6394 22.266 11.7968C22.1312 12.0833 22.0739 12.4002 22.1 12.7158H22.105ZM8.40501 9.54282C7.86303 9.51874 7.43602 9.07233 7.43602 8.52982C7.43602 7.9873 7.86303 7.54089 8.40501 7.51682H16.135C16.677 7.54089 17.104 7.9873 17.104 8.52982C17.104 9.07233 16.677 9.51874 16.135 9.54282H8.40501Z"
 			fill={color}
 		/>
-	</Icon>
-);
-
-export const ArrowLeftCirleIcon = (props: any) => (
-	<Icon
-		fill="currentColor"
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path d="M16.828 11.736a27.683 27.683 0 0 1-.198-.019 9.873 9.873 0 0 0-.83-.057 813.608 813.608 0 0 0-4.187-.037 850.334 850.334 0 0 1-3.131-.025 1.463 1.463 0 0 1-.185-.019l-.041-.006.053-.057c.06-.066.11-.12.162-.172a10.121 10.121 0 0 0 1.819-2.54l.015-.028a1.21 1.21 0 0 0 .109-.257.353.353 0 0 0-.01-.16.619.619 0 0 1-.013-.062l-.005-.042-.042.008a.718.718 0 0 1-.074.01.304.304 0 0 0-.178.051c-.058.055-.11.116-.155.181-.035.05-.073.097-.115.141-.338.346-.676.69-1.016 1.035-.436.443-.871.887-1.305 1.332a4.047 4.047 0 0 0-.522.612c-.218.339-.185.62.111.943.284.309.582.643.91 1.023.24.276.477.554.714.832.257.302.515.603.774.903.1.12.215.226.345.313a.32.32 0 0 0 .16.039.229.229 0 0 0 .15-.044.323.323 0 0 0 .057-.313 2.116 2.116 0 0 0-.248-.361l-.062-.08-.896-1.152-1.043-1.344a.87.87 0 0 1-.076-.127l-.016-.03.566.028c.46.023.895.046 1.335.063.936.035 2.303.07 3.625.104 1.138.028 2.212.056 3.002.083.154.004.31-.007.462-.033.233-.037.351-.157.35-.356 0-.223-.132-.357-.37-.38Z" />
-		<path d="M2.938 9.451c-.832 3.27-.103 6.155 2.167 8.575l.18.186c1.22 1.22 2.738 1.972 3.942 2.496.517.226 3.167.5 3.885.393 4.262-.636 7.066-3.04 8.043-7.062.187-.788.28-1.595.277-2.405.005-1.907-.798-4.124-2.454-5.784-.17-.141-.34-.287-.505-.429-.356-.306-.724-.623-1.11-.894-2.943-2.071-6-2.083-9.088-.984-2.796.993-4.591 2.982-5.337 5.908Zm5.349-4.93c2.709-1.125 5.427-1.324 8.078.362.485.309 1.777 1.353 1.98 1.51l.013.01.011.012c1.034 1.096 2.219 3.102 2.192 5.163a10.516 10.516 0 0 1-.355 2.61c-.673 2.448-2.283 4.232-4.921 5.452-2.683 1.284-6.53-.014-7.553-.69a11.952 11.952 0 0 1-2.926-2.844c-1.263-1.788-1.546-4.358-.868-6.707a7.617 7.617 0 0 1 4.349-4.878Z" />
 	</Icon>
 );
 
@@ -1106,31 +942,31 @@ export const ArrowDownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentCo
 );
 
 export const ArrowDownAdminIcon = ({ size = 35, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill={color}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path d="M12 17a1.72 1.72 0 0 1-1.33-.64l-4.21-5.1a2.1 2.1 0 0 1-.26-2.21A1.76 1.76 0 0 1 7.79 8h8.42a1.76 1.76 0 0 1 1.59 1.05 2.101 2.101 0 0 1-.26 2.21l-4.21 5.1A1.72 1.72 0 0 1 12 17Z" />
 	</Icon>
 );
 
 export const TraskIcon = ({ size = 35, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill={color}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
+	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
 		<path d="M9.96 3.6h3.6a.6.6 0 0 1 .6.6v1.2h-4.8V4.2a.6.6 0 0 1 .6-.6Zm5.4 1.8V4.2a1.8 1.8 0 0 0-1.8-1.8h-3.6a1.8 1.8 0 0 0-1.8 1.8v1.2H5.168a.6.6 0 0 0-.012 0H3.96a.6.6 0 0 0 0 1.2h.646L5.63 19.392A2.4 2.4 0 0 0 8.022 21.6h7.476a2.4 2.4 0 0 0 2.393-2.208L18.915 6.6h.645a.6.6 0 0 0 0-1.2h-1.194a.61.61 0 0 0-.012 0H15.36Zm2.35 1.2-1.015 12.696a1.2 1.2 0 0 1-1.197 1.104H8.022a1.2 1.2 0 0 1-1.196-1.104L5.811 6.6H17.71ZM8.726 7.8a.6.6 0 0 1 .633.564l.6 10.2a.6.6 0 0 1-1.197.072l-.602-10.2a.6.6 0 0 1 .564-.636h.002Zm6.07 0a.6.6 0 0 1 .563.636l-.6 10.2a.6.6 0 1 1-1.197-.072l.6-10.2a.6.6 0 0 1 .633-.564Zm-3.036 0a.6.6 0 0 1 .6.6v10.2a.6.6 0 1 1-1.2 0V8.4a.6.6 0 0 1 .6-.6Z" />
 	</Icon>
 );
-export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+export const TimeIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
+		<path d="M12 8v4l2 2" />
+	</Icon>
+);
+
+export const TagIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+		<path fill="currentColor" stroke="none" d="M15 8a1 1 0 1 0 0 2 1 1 0 1 0 0-2z" />
+		<path d="M12 4.75h7.25V12l-6.697 6.67a2 2 0 0 1-2.87-.047L5.29 13.94a2 2 0 0 1 .072-2.81L12 4.75Z" />
+	</Icon>
+);
+
+export const WarningIcon = ({ size = 46, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1141,8 +977,48 @@ export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor",
 		strokeWidth={strokeWidth}
 		viewBox="0 0 24 24"
 		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
-		<path d="M12 5v14"></path>
-		<path d="M5 12h14"></path>
+		<path d="M12 13v2" />
+		<path fill={color} stroke="none" d="M12 8a1 1 0 1 0 0 2 1 1 0 1 0 0-2z" />
+		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
+	</Icon>
+);
+
+export const MinusIcon = ({ size = 46, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M18.25 12.25H5.75" />
+	</Icon>
+);
+
+export const GiftIcon = ({ size = 46, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M4 13h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7Z" />
+		<path d="M2 9h20v4H2V9Z" />
+		<path d="M12 5v17" />
+		<path d="M12 5.5A3.5 3.5 0 1 0 8.5 9" />
+		<path d="M15.5 9A3.5 3.5 0 1 0 12 5.5" />
 	</Icon>
 );

@@ -1,113 +1,155 @@
-import { Box, Flex, Grid, GridItem, LinkBox, Spacer, Text } from "@chakra-ui/layout";
-import { Image, Button } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Image, Img } from "@chakra-ui/react";
+import { Flex, Grid, Box } from "@chakra-ui/layout";
+import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Thumbs, Navigation, Pagination, Scrollbar, A11y, Mousewheel, FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { A11y, FreeMode, Mousewheel, Navigation, Pagination, Scrollbar, Thumbs } from "swiper/modules";
-import { Link } from "react-router-dom";
-const SwiperProduct = () => {
-	const data = {
-		name: "Bàn phím",
-		slug: "ban-phim",
-		thumbnail: {
-			path: "https://res.cloudinary.com/dgpzzy5sg/image/upload/v1681573390/thinkpro/categories/owmv3uyns2zjpgbs6thb.png",
-			filename: "thinkpro/categories/owmv3uyns2zjpgbs6thb",
-		},
-	};
+import "swiper/css/scrollbar";
+import { NavArrowLeflIcon, NavArrowRightIcon } from "~/components/common/Icons";
+function Gallery() {
 	const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+	const swiperRef = useRef<any>(null);
+
+	// Hàm để di chuyển đến slide trước
+	const previousSlide = () => {
+		if (swiperRef.current && swiperRef.current.swiper) {
+			swiperRef.current.swiper.slidePrev();
+		}
+	};
+
+	// Hàm để di chuyển đến slide kế tiếp
+	const nextSlide = () => {
+		if (swiperRef.current && swiperRef.current.swiper) {
+			swiperRef.current.swiper.slideNext();
+		}
+	};
 	return (
-		<Box>
-			<Swiper
-				modules={[Navigation]}
-				speed={400}
-				slidesPerView={1}
-				spaceBetween={16}
-				loop={true}
-				navigation={{
-					nextEl: ".btn-next",
-					prevEl: ".btn-prev",
-				}}
-			>
-				<SwiperSlide key={1}>
-					<LinkBox
-						as={"a"}
-						w="full"
-						px="4"
-						py="2"
-						rounded="lg"
-						display="inline-flex"
-						alignItems="center"
-						flexDir="column"
-						_hover={{
-							transition: "all 0.3s ease-in",
-							textDecoration: "none",
-							backgroundColor: "bg.gray",
-						}}
-					>
-						<Box>
-							<Image src={"https://picsum.photos/200/300.jpg"} w={"full"} h={"full"} objectFit="cover" />
+		<Flex backgroundColor={"white"} borderRadius={"6px"} py={5} px={5}>
+			<Box w={"30%"} display={{ base: "none", md: "block" }}>
+				<Swiper
+					modules={[Navigation, Pagination, Scrollbar, A11y, Mousewheel, FreeMode, Thumbs]}
+					onSwiper={(swiper) => setThumbsSwiper(swiper)}
+					direction="vertical"
+					mousewheel={true}
+					slidesPerView={4}
+					watchSlidesProgress={true}
+					spaceBetween={10}
+					style={{
+						maxHeight: "548px",
+					}}
+				>
+					<SwiperSlide>
+						<Box w={"90px"} h={"90px"}>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
 						</Box>
-
-						<Text mt="1" color="text.black" fontSize="xs" fontWeight="medium" textAlign="center">
-							125 san pham
-						</Text>
-					</LinkBox>
-				</SwiperSlide>
-				<SwiperSlide key={1}>
-					<LinkBox
-						as={"a"}
-						w="full"
-						px="4"
-						py="2"
-						rounded="lg"
-						display="inline-flex"
-						alignItems="center"
-						flexDir="column"
-						_hover={{
-							transition: "all 0.3s ease-in",
-							textDecoration: "none",
-							backgroundColor: "bg.gray",
-						}}
-					>
-						<Box>
-							<Image src={"https://picsum.photos/200/300.jpg"} w={"full"} h={"full"} objectFit="cover" />
+					</SwiperSlide>
+					<SwiperSlide>
+						<Box w={"90px"} h={"90px"}>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
 						</Box>
-
-						<Text mt="1" color="text.black" fontSize="xs" fontWeight="medium" textAlign="center">
-							125 san pham
-						</Text>
-					</LinkBox>
-				</SwiperSlide>
-				<SwiperSlide key={1}>
-					<LinkBox
-						as={"a"}
-						w="full"
-						px="4"
-						py="2"
-						rounded="lg"
-						display="inline-flex"
-						alignItems="center"
-						flexDir="column"
-						_hover={{
-							transition: "all 0.3s ease-in",
-							textDecoration: "none",
-							backgroundColor: "bg.gray",
-						}}
-					>
-						<Box>
-							<Image src={"https://picsum.photos/200/300.jpg"} w={"full"} h={"full"} objectFit="cover" />
+					</SwiperSlide>
+					<SwiperSlide>
+						<Box w={"90px"} h={"90px"}>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
 						</Box>
-
-						<Text mt="1" color="text.black" fontSize="xs" fontWeight="medium" textAlign="center">
-							125 san pham
-						</Text>
-					</LinkBox>
-				</SwiperSlide>
-			</Swiper>
-		</Box>
+					</SwiperSlide>
+					<SwiperSlide>
+						<Box w={"90px"} h={"90px"}>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
+						</Box>
+					</SwiperSlide>
+					<SwiperSlide>
+						<Box w={"90px"} h={"90px"}>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
+						</Box>
+					</SwiperSlide>
+					<SwiperSlide>
+						<Box w={"90px"} h={"90px"}>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
+						</Box>
+					</SwiperSlide>
+					<SwiperSlide>
+						<Box w={"90px"} h={"90px"}>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
+						</Box>
+					</SwiperSlide>
+				</Swiper>
+			</Box>
+			{thumbsSwiper && (
+				<Box w={"80%"}>
+					<Swiper
+						spaceBetween={10}
+						modules={[Navigation, FreeMode, Thumbs]}
+						thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+						watchSlidesProgress={true}
+						slidesPerView={1}
+						style={{
+							maxHeight: "548px",
+						}}
+						navigation={false}
+						ref={swiperRef}
+					>
+						<SwiperSlide>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
+						</SwiperSlide>
+						<SwiperSlide>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
+						</SwiperSlide>
+						<SwiperSlide>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
+						</SwiperSlide>
+						<SwiperSlide>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
+						</SwiperSlide>
+						<SwiperSlide>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
+						</SwiperSlide>
+						<SwiperSlide>
+							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
+						</SwiperSlide>
+					</Swiper>
+					<Flex justifyContent={"end"} mt={"2"}>
+						<Flex
+							w="9"
+							h="9"
+							left="4"
+							top={"calc(50% - 24px)"}
+							translateY="-50%"
+							zIndex="5"
+							rounded="full"
+							cursor="pointer"
+							alignItems="center"
+							justifyContent="center"
+							backgroundColor="bg.gray"
+							className="btn-prev"
+							onClick={previousSlide}
+						>
+							<NavArrowLeflIcon size={4} strokeWidth={3} color="text.black" />
+						</Flex>
+						<Flex
+							w="9"
+							h="9"
+							right="4"
+							top={"calc(50% - 24px)"}
+							translateY="-50%"
+							zIndex="5"
+							rounded="full"
+							cursor="pointer"
+							alignItems="center"
+							justifyContent="center"
+							backgroundColor="bg.gray"
+							className="btn-next"
+							onClick={nextSlide}
+						>
+							<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
+						</Flex>
+					</Flex>
+				</Box>
+			)}
+		</Flex>
 	);
-};
+}
 
-export default SwiperProduct;
+export default Gallery;
