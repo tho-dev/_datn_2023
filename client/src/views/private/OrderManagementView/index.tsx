@@ -8,13 +8,14 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
-import Metrics from "./components/Metrics";
 import thinkpro from "~/data/clone-thinkpro.json";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import Metrics from "./components/Metrics";
+import { Link } from "react-router-dom";
 
 type Props = {};
 
-const DashboardView = (props: Props) => {
+const OrderManagementView = (props: Props) => {
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -26,22 +27,38 @@ const DashboardView = (props: Props) => {
       },
       header: "#",
     }),
-    columnHelper.accessor("thumbnail", {
+    columnHelper.accessor("id", {
       cell: (info) => {
-        return <h1>{info.getValue()?.filename}</h1>;
+        return <h1>{info.getValue()}</h1>;
       },
-      header: "Tên sản phẩm",
+      header: "ID đơn hàng",
     }),
-    columnHelper.accessor("slug", {
+    columnHelper.accessor("customerName", {
       cell: (info) => info.getValue(),
-      header: "Slug",
+      header: "Tên khách hàng",
     }),
-    columnHelper.accessor("desc", {
+    columnHelper.accessor("amount", {
       cell: (info) => info.getValue(),
-      header: "Mô tả",
+      header: "Tổng tiền",
       meta: {
         isNumeric: true,
       },
+    }),
+    columnHelper.accessor("orderDate", {
+      cell: (info) => info.getValue(),
+      header: "Ngày đặt",
+    }),
+    columnHelper.accessor("deliveryDate", {
+      cell: (info) => info.getValue(),
+      header: "Ngày giao",
+    }),
+    columnHelper.accessor("payment", {
+      cell: (info) => info.getValue(),
+      header: "Phương thức",
+    }),
+    columnHelper.accessor("deliveryStatus", {
+      cell: (info) => info.getValue(),
+      header: "Trạng thái",
     }),
     columnHelper.accessor("action", {
       cell: () => {
@@ -70,7 +87,9 @@ const DashboardView = (props: Props) => {
             </MenuButton>
             <MenuList>
               <MenuItem onClick={onOpen}>Xóa</MenuItem>
-              <MenuItem>Xem chi tiết</MenuItem>
+              <MenuItem>
+                <Link to="/admin/don-hang/id">Xem chi tiết</Link>
+              </MenuItem>
               <MenuItem>Cập nhật</MenuItem>
             </MenuList>
           </Menu>
@@ -82,16 +101,16 @@ const DashboardView = (props: Props) => {
 
   return (
     <Box w="full" h="full">
-      {/* Số liệu */}
+      <Heading as="h1" fontSize={24} textTransform="uppercase">
+        <Text>Danh sách đơn hàng</Text>
+      </Heading>
       <Metrics />
-
-      {/* Test table */}
       <Box bgColor="bg.white" mt="6" p="6">
-        <TableThinkPro columns={columns} data={thinkpro.data} />
+        <TableThinkPro columns={columns} data={thinkpro.orders} />
       </Box>
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };
 
-export default DashboardView;
+export default OrderManagementView;
