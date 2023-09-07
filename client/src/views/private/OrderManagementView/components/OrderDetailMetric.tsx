@@ -9,7 +9,7 @@ type Props = {
   color: string;
 };
 
-const MetricItem = ({ heading, text, icon, color }: Props) => {
+const OrderDetailMetricItem = ({ heading, text, icon, color }: Props) => {
   return (
     <GridItem
       borderWidth={{
@@ -19,43 +19,40 @@ const MetricItem = ({ heading, text, icon, color }: Props) => {
         xl: "1px",
         "2xl": "1px",
       }}
+      minH={32}
       borderColor="#F1F4F9"
       rounded="md"
-      bgColor="bg.lightGray"
+      bgColor={color+".50"}
       transition="all .8s ease"
       _hover={{
         transform: "translateY(-10px)",
-        bgColor: "gray.200"
+        bgColor: "gray.200",
       }}
     >
-      <Flex padding={4} alignItems="center" gap={4}>
+      <Flex padding={4} justifyContent="space-between" gap={4}>
         <Box>
-          <Flex gap="3">
-            <Flex
-              w="12"
-              h="12"
-              rounded="md"
-              bgColor={color + ".100"}
-              alignItems="center"
-              justifyContent="center"
-            >
-              {icon}
-            </Flex>
-          </Flex>
-        </Box>
-        <Box>
-          <Heading as="h3" fontSize="xl" my="2" textTransform="uppercase">
+          <Heading as="h3" fontSize="xl" my="2">
             {heading}
           </Heading>
           <Flex gap="1" alignItems="center">
-            <Text color="#1AD598" fontSize="md" fontWeight="semibold">
+            <Text fontSize="sm" fontWeight="semibold">
               {text}
             </Text>
           </Flex>
+        </Box>
+        <Box>
+            <Flex
+             p={3}
+              rounded="md"
+              bgColor={color+".100"}
+              justifyContent="start"
+            >
+              {icon}
+            </Flex>
         </Box>
       </Flex>
     </GridItem>
   );
 };
 
-export default MetricItem;
+export default OrderDetailMetricItem;

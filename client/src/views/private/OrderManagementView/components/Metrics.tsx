@@ -16,15 +16,16 @@ const Metrics = (props: Props) => {
 			bgColor="bg.white"
 			rounded="md"
 			templateColumns={{
-				sm: "repeat(1, 1fr)",
-				md: "repeat(2, 1fr)",
+				sm: "repeat(3, 1fr)",
+				md: "repeat(5, 1fr)",
 			}}
 			textTransform="uppercase"
 		>
-			<MetricItem icon={<CheckIcon color="white"/>} heading={"200"} text={"Đơn hàng mới"}/>
-			<MetricItem icon={<UserIcon color="white"/>} heading={"30"} text={"Khách hàng mới"}/>
-			<MetricItem icon={<MoneyIcon color="white"/>} heading={"200.000$"} text={"Doanh thu"}/>
-			<MetricItem icon={<NewIcon color="white"/>} heading={"200"} text={"Sản phẩm mới"}/>
+			<MetricItem color="blue" icon={<CheckIcon color="blue.400"/>} heading={"200"} text={"Đơn hàng mới"}/>
+			<MetricItem color="yellow" icon={<UserIcon color="yellow.400"/>} heading={"30"} text={"Khách hàng mới"}/>
+			<MetricItem color="green" icon={<MoneyIcon color="green.400"/>} heading={"200.000$"} text={"Doanh thu"}/>
+			<MetricItem color="purple" icon={<NewIcon color="purple.400"/>} heading={"200"} text={"Sản phẩm mới"}/>
+			<MetricItem color="red" icon={<NewIcon color="red.400"/>} heading={"200"} text={"Sản phẩm mới"}/>
 		</Grid>
 	);
 };
