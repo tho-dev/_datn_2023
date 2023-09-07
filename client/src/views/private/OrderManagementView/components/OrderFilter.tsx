@@ -5,10 +5,9 @@ import Datepicker from "./Datepicker";
 import { Button, Select } from "@chakra-ui/react";
 
 type Props = {
-  showFilteredOrders: (filter: string)=> void
 };
 
-const OrderFilter = ({showFilteredOrders}: Props) => {
+const OrderFilter = (props: Props) => {
   const [filter, setFilter] = useState<{
     search: string;
     status: string;
@@ -18,9 +17,9 @@ const OrderFilter = ({showFilteredOrders}: Props) => {
     status:"",
     payment: ""
   });
-  useEffect(()=>{
-    showFilteredOrders(filter)
-  },[filter])
+  // useEffect(()=>{
+  //   showFilteredOrders(filter)
+  // },[filter])
   return (
     <Box mt="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
       <Flex gap={4} justifyContent={"space-between"}>

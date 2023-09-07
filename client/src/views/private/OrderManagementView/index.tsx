@@ -100,21 +100,21 @@ const OrderManagementView = (props: Props) => {
       header: "Action",
     }),
   ];
-  const showFilteredOrders = (filter: {
-    search: string;
-    status: string;
-    payment: string;
-  }) => {
-   let filteredOrders = orders.filter(order => Object.values())
-    setOrders(filteredOrders)
-  };
+  // const showFilteredOrders = (filter: {
+  //   search: string;
+  //   status: string;
+  //   payment: string;
+  // }) => {
+  //  let filteredOrders = orders.filter(order => Object.values())
+  //   setOrders(filteredOrders)
+  // };
   return (
     <Box w="full" h="full">
       <Heading as="h1" fontSize={"2xl"}>
         <Text>Danh sách đơn hàng</Text>
       </Heading>
       <Metrics />
-      <OrderFilter showFilteredOrders={showFilteredOrders} />
+      <OrderFilter />
       <Box bgColor="bg.white" mt="6" p="6">
         <TableThinkPro columns={columns} data={orders} />
       </Box>
