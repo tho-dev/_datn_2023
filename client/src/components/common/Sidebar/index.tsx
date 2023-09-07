@@ -63,7 +63,7 @@ const MENU = [
 	},
 	{
 		title: "Users",
-		to: "/admin/user",
+		to: "/admin/tai-khoan",
 		icon: ProfileIcon,
 		children: [
 			{ title: "Khách hàng", to: "/admin/test" },
