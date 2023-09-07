@@ -26,6 +26,7 @@ import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
 import SubCategoryView from "~/views/private/SubCategoryView";
+import { BrandView } from "~/views/private/BrandView";
 
 const routes: RouteObject[] = [
 	{
@@ -110,16 +111,20 @@ const routes: RouteObject[] = [
 			},
 			{
 				path: "danh-muc-con",
-				element: <SubCategoryView/>
+				element: <SubCategoryView />
 			},
 			{
 				path: "don-hang",
-				element: <OrderManagementView/>
+				element: <OrderManagementView />
 			},
 			{
 				path: "don-hang/:id",
-				element: <OrderDetailView/>
-			}
+				element: <OrderDetailView />
+			},
+			{
+				path: "thuong-hieu",
+				element: <BrandView />,
+			},
 		],
 	},
 ];
