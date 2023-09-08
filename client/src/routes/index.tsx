@@ -28,6 +28,7 @@ import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/O
 import SubCategoryView from "~/views/private/SubCategoryView";
 import { BrandView } from "~/views/private/BrandView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
+import PostManagementView from "~/views/private/PostManagementView";
 
 const routes: RouteObject[] = [
 	{
@@ -114,7 +115,10 @@ const routes: RouteObject[] = [
 				path: "danh-muc-bai-viet",
 				element: <PostCategoryManagement/>
 			},
-
+			{
+				path: "bai-viet",
+				element: <PostManagementView/>
+			},
 			{
 				path: "danh-muc-con",
 				element: <SubCategoryView />
