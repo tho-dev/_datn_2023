@@ -26,7 +26,9 @@ import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
 import SubCategoryView from "~/views/private/SubCategoryView";
+import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { BrandView } from "~/views/private/BrandView";
+import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { CompareView } from "~/views/public/CompareView";
 
 const routes: RouteObject[] = [
@@ -98,40 +100,49 @@ const routes: RouteObject[] = [
       },
     ],
   },
-  {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-      {
-        index: true,
-        element: <DashboardView />,
-      },
-      {
-        path: "san-pham",
-        element: <ProductManagerView />,
-      },
-      {
-        path: "danh-muc",
-        element: <CategoryManagerView />,
-      },
-      {
-        path: "danh-muc-con",
-        element: <SubCategoryView />,
-      },
-      {
-        path: "don-hang",
-        element: <OrderManagementView />,
-      },
-      {
-        path: "don-hang/:id",
-        element: <OrderDetailView />,
-      },
-      {
-        path: "thuong-hieu",
-        element: <BrandView />,
-      },
-    ],
-  },
+ {
+		path: "/admin",
+		element: <AdminLayout />,
+		children: [
+			{
+				index: true,
+				element: <DashboardView />,
+			},
+			{
+				path: "san-pham",
+				element: <ProductManagerView />,
+			},
+			{
+				path: "danh-muc",
+				element: <CategoryManagerView />,
+			},
+			{
+				path: "danh-muc-bai-viet",
+				element: <PostCategoryManagement/>
+			},
+
+			{
+				path: "danh-muc-con",
+				element: <SubCategoryView />
+			},
+			{
+				path: "don-hang",
+				element: <OrderManagementView />
+			},
+			{
+				path: "don-hang/:id",
+				element: <OrderDetailView/>
+			},
+			{
+				path: "tai-khoan",
+				element: <UserListManagerView/>
+			},
+			{
+				path: "thuong-hieu",
+				element: <BrandView />,
+			},
+		],
+	},
 ];
 
 export default routes;
