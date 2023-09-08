@@ -42,10 +42,12 @@ const Sku = (props: Props) => {
 						w={"121px"}
 						style={{ whiteSpace: "normal" }}
 						fontSize={"12px"}
-						py={"4"}
 						my={"2"}
 						fontWeight={600}
-						
+						px={3}
+						py={"6px"}
+						lineHeight={"150%"}
+						h={"max-content"}
 					>
 						i5 1340P, QHD+ 16GB, 512GB
 					</Button>
@@ -59,9 +61,12 @@ const Sku = (props: Props) => {
 						w={"121px"}
 						style={{ whiteSpace: "normal" }}
 						fontSize={"12px"}
-						py={"4"}
 						my={"2"}
 						fontWeight={600}
+						px={3}
+						py={"6px"}
+						lineHeight={"150%"}
+						h={"max-content"}
 					>
 						Plantium Silver
 					</Button>
@@ -81,7 +86,6 @@ const Sku = (props: Props) => {
 								py={"6px"}
 								lineHeight={"150%"}
 								h={"max-content"}
-								
 							>
 								Mới, full box, nhập khẩu
 								<WarningIcon size={4} />
@@ -94,13 +98,12 @@ const Sku = (props: Props) => {
 							fontSize={"12px"}
 							my={"2"}
 							px={3}
-								py={"6px"}
-								lineHeight={"150%"}
-								h={"max-content"}
-							
+							py={"6px"}
+							lineHeight={"150%"}
+							h={"max-content"}
 						>
 							Mới, full box, nhập khẩu
-							<WarningIcon size={5} />
+							<WarningIcon size={4} />
 						</Button>
 						<Button
 							bg={"white"}
@@ -109,13 +112,12 @@ const Sku = (props: Props) => {
 							fontSize={"12px"}
 							my={"2"}
 							px={3}
-								py={"6px"}
-								lineHeight={"150%"}
-								h={"max-content"}
-							
+							py={"6px"}
+							lineHeight={"150%"}
+							h={"max-content"}
 						>
 							Mới, full box, nhập khẩu
-							<WarningIcon size={5} />
+							<WarningIcon size={4} />
 						</Button>
 					</Flex>
 					<Text fontSize={"14px"} fontWeight={600} color={"#6B7075"}>
@@ -131,7 +133,7 @@ const Sku = (props: Props) => {
 							color={"black"}
 							onClick={() => dercement()}
 						>
-							<MinusIcon size={5}/>
+							<MinusIcon size={5} />
 						</Button>
 						<Input value={quantity} w={"70px"} textAlign={"center"} borderRadius={"0px"} />
 						<Button
