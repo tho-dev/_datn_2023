@@ -27,106 +27,111 @@ import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
 import SubCategoryView from "~/views/private/SubCategoryView";
 import { BrandView } from "~/views/private/BrandView";
+import { CompareView } from "~/views/public/CompareView";
 
 const routes: RouteObject[] = [
-	{
-		path: "/",
-		children: [
-			{
-				element: <MainLayout />,
-				children: [
-					{
-						index: true,
-						element: <HomeView />,
-					},
-					{
-						path: "gio-hang",
-						element: <CartView />,
-					},
-					{
-						path: "don-hang",
-						element: <OrderView />,
-					},
-					{
-						path: "thong-tin",
-						element: <ProfileView />,
-					},
-					{
-						path: ":slug",
-						element: <SlugView />,
-					},
-					{
-						path: ":slug/:slug",
-						element: <ProductDetailView />,
-					},
-					{
-						path: "tin-tuc",
-						element: <NewsView />,
-					},
-					{
-						path: "noi-dung",
-						element: <ContentView />,
-					},
-				],
-			},
-			{
-				element: <DefaultLayout />,
-				children: [
-					{
-						element: <AuthLayout />,
-						children: [
-							{
-								path: "dang-nhap",
-								element: <SignInView />,
-							},
-							{
-								path: "dang-ky",
-								element: <SignUpView />,
-							},
-						],
-					},
-					{
-						path: "*",
-						element: <NotFoundView />,
-					},
-				],
-			},
-		],
-	},
-	{
-		path: "/admin",
-		element: <AdminLayout />,
-		children: [
-			{
-				index: true,
-				element: <DashboardView />,
-			},
-			{
-				path: "san-pham",
-				element: <ProductManagerView />,
-			},
-			{
-				path: "danh-muc",
-				element: <CategoryManagerView />,
-			},
-			{
-				path: "danh-muc-con",
-				element: <SubCategoryView />
-			},
-			{
-				path: "don-hang",
-				element: <OrderManagementView />
-			},
-			{
-				path: "don-hang/:id",
-				element: <OrderDetailView />
-			},
-			{
-				path: "thuong-hieu",
-				element: <BrandView />,
-			},
-		],
-	},
+  {
+    path: "/",
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: <HomeView />,
+          },
+          {
+            path: "gio-hang",
+            element: <CartView />,
+          },
+          {
+            path: "don-hang",
+            element: <OrderView />,
+          },
+          {
+            path: "thong-tin",
+            element: <ProfileView />,
+          },
+          {
+            path: ":slug",
+            element: <SlugView />,
+          },
+          {
+            path: ":slug/:slug",
+            element: <ProductDetailView />,
+          },
+          {
+            path: "tin-tuc",
+            element: <NewsView />,
+          },
+          {
+            path: "noi-dung",
+            element: <ContentView />,
+          },
+          {
+            path: "so-sanh",
+            element: <CompareView />,
+          },
+        ],
+      },
+      {
+        element: <DefaultLayout />,
+        children: [
+          {
+            element: <AuthLayout />,
+            children: [
+              {
+                path: "dang-nhap",
+                element: <SignInView />,
+              },
+              {
+                path: "dang-ky",
+                element: <SignUpView />,
+              },
+            ],
+          },
+          {
+            path: "*",
+            element: <NotFoundView />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <DashboardView />,
+      },
+      {
+        path: "san-pham",
+        element: <ProductManagerView />,
+      },
+      {
+        path: "danh-muc",
+        element: <CategoryManagerView />,
+      },
+      {
+        path: "danh-muc-con",
+        element: <SubCategoryView />,
+      },
+      {
+        path: "don-hang",
+        element: <OrderManagementView />,
+      },
+      {
+        path: "don-hang/:id",
+        element: <OrderDetailView />,
+      },
+      {
+        path: "thuong-hieu",
+        element: <BrandView />,
+      },
+    ],
+  },
 ];
 
 export default routes;
