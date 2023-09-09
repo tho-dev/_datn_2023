@@ -34,7 +34,7 @@ const ProfileView = (props: Props) => {
 
           <TabPanels>
             <TabPanel>
-              <Box>
+              <form>
                 <Grid
                   templateColumns={{
                     sm: 'repeat(1, 1fr)',
@@ -66,7 +66,7 @@ const ProfileView = (props: Props) => {
                     <Text fontWeight='semibold'>Tên tài khoản</Text>
                   </GridItem>
                   <GridItem colSpan={4}>
-                    <Input placeholder='Nhập tên tài khoản' border='none' />
+                    <Input placeholder='Nhập tên tài khoản' border='none' id='name' />
                   </GridItem>
                 </Grid>
                 <Grid
@@ -82,7 +82,7 @@ const ProfileView = (props: Props) => {
                     <Text fontWeight='semibold'>Email</Text>
                   </GridItem>
                   <GridItem colSpan={4}>
-                    <Input placeholder='Nhập email' border='none' />
+                    <Input placeholder='Nhập email' border='none' id='email' />
                   </GridItem>
                 </Grid>
                 <Divider my='6' />
@@ -94,10 +94,10 @@ const ProfileView = (props: Props) => {
                     Hủy
                   </Button>
                 </Stack>
-              </Box>
+              </form>
             </TabPanel>
             <TabPanel>
-              <Box>
+              <form>
                 <Grid
                   templateColumns={{
                     sm: 'repeat(1, 1fr)',
@@ -112,7 +112,7 @@ const ProfileView = (props: Props) => {
                     <Text fontWeight='semibold'>Mật khẩu</Text>
                   </GridItem>
                   <GridItem colSpan={4}>
-                    <Input placeholder='Mật khẩu' border='none' />
+                    <Input placeholder='Mật khẩu' border='none' id='' type='text' />
                   </GridItem>
                 </Grid>
                 <Grid
@@ -129,7 +129,7 @@ const ProfileView = (props: Props) => {
                     <Text fontWeight='semibold'>Mật khẩu mới</Text>
                   </GridItem>
                   <GridItem colSpan={4}>
-                    <Input placeholder='Nhập mật khẩu mới' border='none' />
+                    <Input placeholder='Nhập mật khẩu mới' border='none' id='password' type='text' />
                   </GridItem>
                 </Grid>
                 <Grid
@@ -145,7 +145,7 @@ const ProfileView = (props: Props) => {
                     <Text fontWeight='semibold'>Xác nhận mật khẩu</Text>
                   </GridItem>
                   <GridItem colSpan={4}>
-                    <Input placeholder='Xác nhận mật khẩu mới' border='none' />
+                    <Input placeholder='Xác nhận mật khẩu mới' border='none' id='repassword' type='password' />
                   </GridItem>
                 </Grid>
                 <Divider my='6' />
@@ -157,7 +157,7 @@ const ProfileView = (props: Props) => {
                     Hủy
                   </Button>
                 </Stack>
-              </Box>
+              </form>
             </TabPanel>
           </TabPanels>
         </Tabs>
