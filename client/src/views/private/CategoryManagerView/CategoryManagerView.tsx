@@ -10,6 +10,7 @@ type Props = {};
 const CategoryManagerView = (props: Props) => {
   const [value, setValue] = useState('');
   const handleInputChange = (e: any) => {
+    console.log(e);
     const inputValue = e.target.value;
     setValue(inputValue);
   };
