@@ -9210,30 +9210,30 @@
 	"orders":[
 		{
 			"id":"111",
-			"customerName": "Demo customer 1",
+			"customerName": "Nguyễn Văn Đức",
 			"amount": "1000",
 			"orderDate": "31/12/2023",
 			"deliveryDate": "1/1/2024",
-			"payment": "VISA",
-			"deliveryStatus": "pending"
+			"payment": "credit",
+			"deliveryStatus": "delivered"
 		},
 		{
 			"id":"222",
-			"customerName": "Demo customer 2",
+			"customerName": "Dương Văn Toàn",
 			"amount": "2000",
 			"orderDate": "31/12/2023",
 			"deliveryDate": "1/1/2024",
-			"payment": "VISA",
+			"payment": "visa",
 			"deliveryStatus": "pending"
 		},
 		{
 			"id":"333",
-			"customerName": "Demo customer 3",
+			"customerName": "Hà Viết Hiệp",
 			"amount": "1500",
-			"orderDate": "31/12/2023",
+			"orderDate": "31/8/2023",
 			"deliveryDate": "1/1/2024",
-			"payment": "VISA",
-			"deliveryStatus": "pending"
+			"payment": "cod",
+			"deliveryStatus": "canceled"
 		}
 	]
 }

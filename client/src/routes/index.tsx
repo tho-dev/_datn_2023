@@ -26,8 +26,12 @@ import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
 import SubCategoryView from "~/views/private/SubCategoryView";
+import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { BrandView } from "~/views/private/BrandView";
 import SearchView from "~/views/public/SearchView/SearchView";
+import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
+import { CompareView } from "~/views/public/CompareView";
+import { Payment } from "~/views/public/PaymentView";
 
 const routes: RouteObject[] = [
 	{
@@ -43,6 +47,10 @@ const routes: RouteObject[] = [
 					{
 						path: "gio-hang",
 						element: <CartView />,
+					},
+					{
+						path: "thanh-toan",
+						element: <Payment />,
 					},
 					{
 						path: "don-hang",
@@ -69,9 +77,13 @@ const routes: RouteObject[] = [
 						element: <ContentView />,
 					},
 					{
+						path: "so-sanh",
+						element: <CompareView />,
+					},
+					{
 						path: "tim-kiem",
 						element: <SearchView />,
-					},
+					}
 				],
 			},
 			{
@@ -115,6 +127,11 @@ const routes: RouteObject[] = [
 				element: <CategoryManagerView />,
 			},
 			{
+				path: "danh-muc-bai-viet",
+				element: <PostCategoryManagement />
+			},
+
+			{
 				path: "danh-muc-con",
 				element: <SubCategoryView />
 			},
@@ -125,6 +142,10 @@ const routes: RouteObject[] = [
 			{
 				path: "don-hang/:id",
 				element: <OrderDetailView />
+			},
+			{
+				path: "tai-khoan",
+				element: <UserListManagerView />
 			},
 			{
 				path: "thuong-hieu",
