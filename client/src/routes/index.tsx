@@ -30,6 +30,7 @@ import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { BrandView } from "~/views/private/BrandView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { CompareView } from "~/views/public/CompareView";
+import { CommentView } from "~/views/public/Comment";
 
 const routes: RouteObject[] = [
   {
@@ -74,6 +75,10 @@ const routes: RouteObject[] = [
             path: "so-sanh",
             element: <CompareView />,
           },
+          {
+            path: "comment",
+            element: <CommentView />,
+          }
         ],
       },
       {

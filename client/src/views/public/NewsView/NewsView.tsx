@@ -103,7 +103,7 @@ const NewsView = () => {
 											src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg"
 										/>
 									</Box>
-								</Box>
+								</Box>1/
 							</GridItem>
 							<GridItem>
 								<Box>

@@ -1381,3 +1381,139 @@ export const PlusCircleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentC
 		/>
 	</Icon>
 );
+
+export const Annotation = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M4.75 6.75a2 2 0 0 1 2-2h10.5a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-2.625l-2.625 3-2.625-3H6.75a2 2 0 0 1-2-2v-7.5Z" />
+		<path d="M9.5 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
+		<path d="M12.5 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
+		<path d="M15.5 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
+	</Icon>
+);
+export const Thumbs = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+	</Icon>
+);
+
+export const Chat = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.862 9.862 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8Z" />
+	</Icon>
+);
+export const Share = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 1 1 0-2.684m0 2.684 6.632 3.316m-6.632-6 6.632-3.316m0 9.316a3 3 0 1 0 5.368 2.684 3 3 0 0 0-5.368-2.684Zm0-9.316a3.003 3.003 0 0 0 4.025 1.341 3 3 0 1 0-4.025-1.341Z" />
+	</Icon>
+);
+
+export const Check = ({ size = 7, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="m5 13 4 4L19 7" />
+	</Icon>
+);
+
+export const Star = ({size = 30,  strokeWidth = 1.5, color = "rgb(255, 196, 0)", ...props }) => (
+	<Icon
+		stroke="currentColor" 
+		fill="currentColor" 
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"  
+		color="#FFC400" 
+		width={size}
+		height={size}
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M6.255 20.452c-.464.237-.99-.18-.896-.71l.996-5.677-4.227-4.027c-.395-.377-.19-1.065.34-1.14l5.877-.835 2.62-5.192a.616.616 0 0 1 1.113 0L14.7 8.063l5.878.835c.529.075.734.763.338 1.14l-4.226 4.027.996 5.676c.093.532-.432.948-.896.71l-5.269-2.707-5.267 2.708h.002Z" />
+	</Icon>
+);
+
+export const Star_Nocolor = ({size = 7,  strokeWidth = 1.5, color = "#c7c7ca", ...props }) => (
+	<Icon
+		stroke="#c7c7ca" 
+		fill="#c7c7ca" 
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"  
+		color="#FFC400" 
+		width={size}
+		height={size}
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M6.255 20.452c-.464.237-.99-.18-.896-.71l.996-5.677-4.227-4.027c-.395-.377-.19-1.065.34-1.14l5.877-.835 2.62-5.192a.616.616 0 0 1 1.113 0L14.7 8.063l5.878.835c.529.075.734.763.338 1.14l-4.226 4.027.996 5.676c.093.532-.432.948-.896.71l-5.269-2.707-5.267 2.708h.002Z" />
+	</Icon>
+);
+
+export const Star_Half = ({size = 7,  strokeWidth = 1.5, color = "rgb(255, 196, 0)", ...props }) => (
+	<Icon
+		stroke="rgb(255, 196, 0)" 
+		fill="rgb(255, 196, 0)" 
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"  
+		// color="#FFC400" 
+		width={size}
+		height={size}
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z" />
+	</Icon>
+); 
+
+ 
