@@ -4,18 +4,26 @@ import { Image, Text, Input, Button } from "@chakra-ui/react";
 
 type Props = {};
 
-const OrderSummary = (props: Props) => {
+const PaySummary = (props: Props) => {
 	return (
 		<Box>
 			<Text as={"h5"} fontSize={"18px"} fontWeight={"600"} lineHeight={"27px"}>
 				Tóm tắt đơn hàng
 			</Text>
-			<Flex justifyContent={"space-between"} py={"4"} borderBottom={"dashed 1px"}>
+			<Flex justifyContent={"space-between"} py={"16px"}>
 				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"}>
-					Giảm giá:
+					Tạm tính:
 				</Box>
-				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight={"600"}>
+				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight={600}>
 					9.300.000
+				</Box>
+			</Flex>
+			<Flex justifyContent={"space-between"} pb={"16px"} borderBottom={"dashed 1px"}>
+				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"}>
+					Vận chuyển:
+				</Box>
+				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight={600}>
+					0
 				</Box>
 			</Flex>
 			<Flex justifyContent={"space-between"} py={"4"}>
@@ -33,4 +41,4 @@ const OrderSummary = (props: Props) => {
 	);
 };
 
-export default OrderSummary;
+export default PaySummary;

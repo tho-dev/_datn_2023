@@ -30,6 +30,7 @@ import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { BrandView } from "~/views/private/BrandView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { CompareView } from "~/views/public/CompareView";
+import { Payment } from "~/views/public/PaymentView";
 
 const routes: RouteObject[] = [
   {
@@ -45,6 +46,10 @@ const routes: RouteObject[] = [
           {
             path: "gio-hang",
             element: <CartView />,
+          },
+          {
+            path: "thanh-toan",
+            element: <Payment />,
           },
           {
             path: "don-hang",
