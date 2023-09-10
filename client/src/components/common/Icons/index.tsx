@@ -35,6 +35,7 @@ export const ArrowRightUpIcon = ({ size = 33, strokeWidth = 1.5, color = "curren
 		<path d="M5.772 18.228 18.5 5.5" />
 	</Icon>
 );
+
 export const ArrowUpIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -606,23 +607,6 @@ export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColo
 	>
 		<path d="M6 17.507H2v-13.5a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v13.5h-4" />
 		<path d="m12 16-5 5h10l-5-5Z" />
-	</Icon>
-);
-
-export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill="none"
-		stroke={color}
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		strokeWidth={strokeWidth}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-	>
-		<path d="M12 5v14"></path>
-		<path d="M5 12h14"></path>
 	</Icon>
 );
 
@@ -1352,5 +1336,83 @@ export const CopyIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor",
 	>
 		<path d="M6.5 6.216v-2.31c0-.776.63-1.406 1.406-1.406h12.188c.776 0 1.406.63 1.406 1.406v12.188c0 .776-.63 1.406-1.406 1.406h-2.336" />
 		<path d="M16.094 6.5H3.906C3.13 6.5 2.5 7.13 2.5 7.906v12.188c0 .776.63 1.406 1.406 1.406h12.188c.776 0 1.406-.63 1.406-1.406V7.906c0-.776-.63-1.406-1.406-1.406Z" />
+	</Icon>
+);
+
+export const AddAdminIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 28 27"
+		fill="none"
+		{...props}
+	>
+		<path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M10.3634 26.4156C3.79041 26.4156 0.982422 23.6076 0.982422 17.0346V9.7726C0.982422 3.1996 3.79041 0.391602 10.3634 0.391602H17.6254C24.1984 0.391602 27.0063 3.1996 27.0063 9.7726V17.0346C27.0063 23.6076 24.1984 26.4156 17.6254 26.4156H10.3634ZM2.79846 9.77258V17.0346C2.79846 22.6146 4.78345 24.5996 10.3634 24.5996H17.6254C23.2053 24.5996 25.1903 22.6146 25.1903 17.0346V9.77258C25.1903 4.19258 23.2063 2.20758 17.6254 2.20758H10.3634C4.78333 2.2076 2.80042 4.19359 2.80042 9.77359L2.79846 9.77258ZM13.0874 18.2456V14.3116H9.15344C8.82202 14.3226 8.51099 14.1521 8.34204 13.8667C8.1731 13.5814 8.1731 13.2267 8.34204 12.9414C8.51099 12.6561 8.82202 12.4856 9.15332 12.4966H13.0874V8.56258C13.076 8.23097 13.2465 7.9196 13.532 7.75044C13.8174 7.58128 14.1724 7.58128 14.4578 7.75044C14.7433 7.91959 14.9137 8.23097 14.9023 8.56256V12.5006H18.8363C19.3257 12.5168 19.7141 12.9183 19.7141 13.4081C19.7141 13.8979 19.3257 14.2994 18.8363 14.3156H14.9004V18.2496C14.9117 18.5812 14.7413 18.8926 14.4558 19.0617C14.1704 19.2309 13.8154 19.2309 13.53 19.0617C13.2445 18.8926 13.0741 18.5812 13.0854 18.2496L13.0874 18.2456Z"
+			fill={color}
+		/>
+	</Icon>
+);
+
+export const ArrowTopRightIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M16.571 15.429v-8h-8" />
+		<path d="M16.571 7.429 7.43 16.57" />
+	</Icon>
+);
+
+export const EditIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			d="M19.429 4.571a2.424 2.424 0 0 1 0 3.429L8.57 18.857 4 20l1.143-4.507L16.004 4.576a2.418 2.418 0 0 1 3.274-.143l.15.138Z"
+			clipRule="evenodd"
+		/>
+		<path d="m17.714 7.429 1.143 1.143" />
+	</Icon>
+);
+
+export const AirplayIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="m7.429 16.572-1.143-.04C5.026 16.528 4 15.466 4 14.207V7.389a2.286 2.286 0 0 1 2.286-2.286l11.428-.002A2.286 2.286 0 0 1 20 7.386v6.86a2.286 2.286 0 0 1-2.286 2.286l-1.143.042" />
+		<path
+			d="m12 15.429-3.429 3.428h6.858L12 15.43Z"
+			clipRule="evenodd"
+		/>
 	</Icon>
 );

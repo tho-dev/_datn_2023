@@ -33,6 +33,7 @@ const TopBar = (props: Props) => {
 			backgroundColor="bg.white"
 			position="fixed"
 			top="0"
+			zIndex="100"
 			alignItems="center"
 			justifyContent="space-between"
 		>

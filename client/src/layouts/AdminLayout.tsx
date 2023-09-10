@@ -42,7 +42,6 @@ const AdminLayout = (props: Props) => {
 					<TopBar />
 					<Box
 						w="full"
-						h="2000px"
 						pl="6"
 						pr="8"
 						pt="6"

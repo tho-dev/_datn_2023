@@ -5,17 +5,34 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const plugins = [slug, mongoosePaginate, mongooseDelete]
 
-const brandSchema = new Schema({
-	category_id: {
+const demandValueSchema = new Schema({
+	product_id: {
 		type: Schema.Types.ObjectId,
-		ref: 'Category'
+		ref: 'Product'
 	},
-	sub_brands: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'Brand'
-		}
-	],
+	demand_id: {
+		type: Schema.Types.ObjectId,
+		ref: 'Demand'
+	},
+	point: {
+		type: Number,
+		default: 0
+	},
+	created_at: {
+		type: Date,
+		default: Date.now
+	},
+	updated_at: {
+		type: Date,
+		default: Date.now
+	}
+}, {
+	collection: 'demand_values',
+	timestamps: false,
+	versionKey: false
+})
+
+const demandSchema = new Schema({
 	name: {
 		type: String
 	},
@@ -26,13 +43,6 @@ const brandSchema = new Schema({
 		index: true,
 		sparse: true,
 		slugOn: { save: true, update: true, updateOne: true, updateMany: true, findOneAndUpdate: true },
-	},
-	thumbnail: {
-		id: String,
-		url: String,
-	},
-	description: {
-		type: String
 	},
 	deleted: {
 		type: Boolean,
@@ -51,11 +61,14 @@ const brandSchema = new Schema({
 		default: Date.now
 	}
 }, {
-	collection: 'brands',
+	collection: 'demands',
 	timestamps: false,
 	versionKey: false
 })
 
-plugins.forEach((item) => brandSchema.plugin(item, { overrideMethods: true }));
+plugins.forEach((item) => demandSchema.plugin(item, { overrideMethods: true }));
 
-export default model('Brand', brandSchema)
+const Demand = model('Demand', demandSchema)
+const DemandValue = model('DemandValue', demandValueSchema)
+
+export { Demand, DemandValue }

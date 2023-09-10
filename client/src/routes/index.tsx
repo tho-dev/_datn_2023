@@ -22,6 +22,8 @@ import { NotFoundView } from "~/views/public/NotFoundView";
 // view admin
 import { DashboardView } from "~/views/private/DashboardView";
 import { ProductManagerView } from "~/views/private/ProductManagerView";
+import { AddProductManagerView } from "~/views/private/ProductManagerView/components/AddProductMangerView";
+import { UpdateProductManagerView } from "~/views/private/ProductManagerView/components/UpdateProductMangerView";
 import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
@@ -122,6 +124,14 @@ const routes: RouteObject[] = [
 			{
 				path: "san-pham",
 				element: <ProductManagerView />,
+			},
+			{
+				path: "san-pham/add",
+				element: <AddProductManagerView />,
+			},
+			{
+				path: "san-pham/:id/update",
+				element: <UpdateProductManagerView />,
 			},
 			{
 				path: "danh-muc",
