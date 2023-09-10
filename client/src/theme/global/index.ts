@@ -52,10 +52,6 @@ const GlobalStyles = {
 			primary: "#ced4da",
 			error: "#E53E3E",
 		},
-		border: {
-			primary: "#ced4da",
-			error: "#E53E3E",
-		},
 	},
 };
 
