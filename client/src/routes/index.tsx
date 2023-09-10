@@ -32,6 +32,7 @@ import SearchView from "~/views/public/SearchView/SearchView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { CompareView } from "~/views/public/CompareView";
 import { Payment } from "~/views/public/PaymentView";
+import PostManagementView from "~/views/private/PostManagementView";
 
 const routes: RouteObject[] = [
 	{
@@ -128,9 +129,12 @@ const routes: RouteObject[] = [
 			},
 			{
 				path: "danh-muc-bai-viet",
-				element: <PostCategoryManagement />
+				element: <PostCategoryManagement/>
 			},
-
+			{
+				path: "bai-viet",
+				element: <PostManagementView/>
+			},
 			{
 				path: "danh-muc-con",
 				element: <SubCategoryView />
