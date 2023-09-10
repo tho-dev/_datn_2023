@@ -27,6 +27,7 @@ import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
 import SubCategoryView from "~/views/private/SubCategoryView";
 import { BrandView } from "~/views/private/BrandView";
+import SearchView from "~/views/public/SearchView/SearchView";
 
 const routes: RouteObject[] = [
 	{
@@ -66,6 +67,10 @@ const routes: RouteObject[] = [
 					{
 						path: "noi-dung",
 						element: <ContentView />,
+					},
+					{
+						path: "tim-kiem",
+						element: <SearchView />,
 					},
 				],
 			},
