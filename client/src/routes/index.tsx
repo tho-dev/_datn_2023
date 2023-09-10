@@ -28,9 +28,11 @@ import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/O
 import SubCategoryView from "~/views/private/SubCategoryView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { BrandView } from "~/views/private/BrandView";
+import SearchView from "~/views/public/SearchView/SearchView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { CompareView } from "~/views/public/CompareView";
 import { Payment } from "~/views/public/PaymentView";
+import PostManagementView from "~/views/private/PostManagementView";
 
 const routes: RouteObject[] = [
 	{
@@ -79,6 +81,10 @@ const routes: RouteObject[] = [
 						path: "so-sanh",
 						element: <CompareView />,
 					},
+					{
+						path: "tim-kiem",
+						element: <SearchView />,
+					},
 				],
 			},
 			{
@@ -124,6 +130,10 @@ const routes: RouteObject[] = [
 			{
 				path: "danh-muc-bai-viet",
 				element: <PostCategoryManagement />,
+			},
+			{
+				path: "bai-viet",
+				element: <PostManagementView />,
 			},
 			{
 				path: "danh-muc-con",
