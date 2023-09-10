@@ -1,5 +1,6 @@
 
 
+
 export async function getAllProduct(req, res, next) {
 	try {
 		return res.json({

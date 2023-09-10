@@ -1,7 +1,9 @@
 import { Schema, model } from "mongoose"
 import slug from "mongoose-slug-updater";
+import mongooseDelete from "mongoose-delete";
+import mongoosePaginate from "mongoose-paginate-v2";
 
-const plugins = [slug]
+const plugins = [slug, mongoosePaginate, mongooseDelete]
 
 const brandSchema = new Schema({
 	category_id: {
@@ -31,6 +33,14 @@ const brandSchema = new Schema({
 	},
 	description: {
 		type: String
+	},
+	deleted: {
+		type: Boolean,
+		default: false,
+	},
+	deleted_at: {
+		type: Date,
+		default: null,
 	},
 	created_at: {
 		type: Date,

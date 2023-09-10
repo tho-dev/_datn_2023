@@ -1,13 +1,17 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Box, Center } from "@chakra-ui/layout";
 import { TheHeader } from "~/components/common/TheHeader";
 import { TheNav } from "~/components/common/TheNav";
 import { TheFooter } from "~/components/common/TheFooter";
+import CompareThinkPro from "~/components/CompareThinkPro";
 
 type Props = {};
 
 const MainLayout = (props: Props) => {
+	const path = useLocation();
+	const checkRouter = path?.pathname !== "/so-sanh";
+
 	return (
 		<Box w="full">
 			{/* Header */}
@@ -68,7 +72,7 @@ const MainLayout = (props: Props) => {
 			<Box
 				w="full"
 				as="main"
-				backgroundColor="bg.gray"
+				backgroundColor={checkRouter ? "bg.gray" : "bg.white"}
 			>
 				<Center>
 					<Box
@@ -105,6 +109,14 @@ const MainLayout = (props: Props) => {
 						<TheFooter />
 					</Box>
 				</Center>
+			</Box>
+			<Box
+				position="fixed"
+				bottom="0"
+				width="full"
+				zIndex="90"
+			>
+				<CompareThinkPro />
 			</Box>
 		</Box>
 	);

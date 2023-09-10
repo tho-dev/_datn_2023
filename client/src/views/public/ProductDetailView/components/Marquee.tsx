@@ -12,68 +12,45 @@ import {
 	Text,
 	Flex,
 	Box,
+	Divider,
 } from "@chakra-ui/react";
 import Marquee from "react-fast-marquee";
 import { BellIcon, NavArrowRightIcon, TimeIcon } from "~/components/common/Icons";
 type Props = {};
+
 const dataFake = [
 	{
 		id: 1,
 		title: "Tận tâm tư vấn",
-		icon: (
-			<BellIcon
-				size={5}
-				color="black"
-			/>
-		),
+		icon: BellIcon,
 		description:
 			"Giúp khách hàng lựa chọn sản phẩm đúng nhu cầu là trách nhiệm đầu tiên của Nhân viên tư vấn tại ThinkPro.",
 	},
 	{
 		id: 1,
 		title: "Tận tâm tư vấn",
-		icon: (
-			<BellIcon
-				size={5}
-				color="black"
-			/>
-		),
+		icon: BellIcon,
 		description:
 			"Giúp khách hàng lựa chọn sản phẩm đúng nhu cầu là trách nhiệm đầu tiên của Nhân viên tư vấn tại ThinkPro.",
 	},
 	{
 		id: 1,
 		title: "Tận tâm tư vấn",
-		icon: (
-			<BellIcon
-				size={5}
-				color="black"
-			/>
-		),
+		icon: BellIcon,
 		description:
 			"Giúp khách hàng lựa chọn sản phẩm đúng nhu cầu là trách nhiệm đầu tiên của Nhân viên tư vấn tại ThinkPro.",
 	},
 	{
 		id: 1,
 		title: "Tận tâm tư vấn",
-		icon: (
-			<BellIcon
-				size={5}
-				color="black"
-			/>
-		),
+		icon: BellIcon,
 		description:
 			"Giúp khách hàng lựa chọn sản phẩm đúng nhu cầu là trách nhiệm đầu tiên của Nhân viên tư vấn tại ThinkPro.",
 	},
 	{
 		id: 1,
 		title: "Tận tâm tư vấn",
-		icon: (
-			<BellIcon
-				size={5}
-				color="black"
-			/>
-		),
+		icon: BellIcon,
 		description:
 			"Giúp khách hàng lựa chọn sản phẩm đúng nhu cầu là trách nhiệm đầu tiên của Nhân viên tư vấn tại ThinkPro.",
 	},
@@ -85,29 +62,37 @@ const MarqueeReact = (props: Props) => {
 	return (
 		<>
 			<Flex
+				onClick={onOpen}
 				borderRadius={"3px"}
 				bg={"#F5FDFF"}
 				as={"button"}
-				onClick={onOpen}
 				mt={"3"}
+				alignItems="center"
 			>
 				<Marquee>
-					{dataFake.map((data) => (
-						<Flex
-							alignItems={"center"}
-							fontSize={"12px"}
-							mx={"2"}
-						>
-							<Box
-								bg={"blue.400"}
-								borderRadius={"full"}
-								p={"1"}
+					{dataFake.map((data, index: number) => {
+						const Icon = data.icon;
+
+						return (
+							<Flex
+								alignItems={"center"}
+								fontSize={"xs"}
+								mx={"2"}
+								key={index}
+								gap="2"
 							>
-								{data.icon}
-							</Box>
-							{data.title}
-						</Flex>
-					))}
+								<Box
+									w="5"
+									h="5"
+									bg={"blue.400"}
+									rounded={"full"}
+								>
+									<Icon size={3} />
+								</Box>
+								{data.title}
+							</Flex>
+						);
+					})}
 				</Marquee>
 				<Flex
 					w="9"
@@ -170,32 +155,42 @@ const MarqueeReact = (props: Props) => {
 							</Text>
 						</Box>
 						<Box
-							bg={"#FDF5FF"}
-							borderRadius={"3px"}
+							bg={"#f5fdff"}
+							rounded="6px"
+							p="4"
+							mt="6"
 						>
 							{/* Item */}
-							{dataFake.map((data: any) => (
-								<Flex
-									gap={"2"}
-									my={"16px"}
-									pl={"2"}
-									pb={"4"}
-									pt={"2"}
-									mx={"2"}
-									borderBottom={"1px solid black"}
-								>
-									<Box w={"5%"}>{data.icon}</Box>
-									<Box w={"80%"}>
-										<Text
-											fontSize={"14px"}
-											fontWeight={600}
+							{dataFake.map((data: any, index: number) => {
+								const Icon = data.icon;
+
+								return (
+									<>
+										{index != 0 && <Divider />}
+										<Flex
+											gap={"3"}
+											pl={"2"}
+											pb={"4"}
+											pt={"2"}
+											mx={"2"}
+											key={index}
 										>
-											{data.title}
-										</Text>
-										<Text fontSize={"12px"}>{data.description}</Text>
-									</Box>
-								</Flex>
-							))}
+											<Box>
+												<Icon size={5} />
+											</Box>
+											<Box flex="1">
+												<Text
+													fontSize={"14px"}
+													fontWeight={600}
+												>
+													{data.title}
+												</Text>
+												<Text fontSize={"12px"}>{data.description}</Text>
+											</Box>
+										</Flex>
+									</>
+								);
+							})}
 						</Box>
 					</ModalBody>
 					<ModalFooter>

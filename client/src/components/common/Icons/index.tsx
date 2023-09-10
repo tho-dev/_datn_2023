@@ -1,11 +1,6 @@
 import { Icon } from "@chakra-ui/react";
 
-export const SearchIcon = ({
-	size = 46,
-	strokeWidth = 2,
-	color = "currentColor",
-	...props
-}) => (
+export const SearchIcon = ({ size = 46, strokeWidth = 2, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -23,12 +18,7 @@ export const SearchIcon = ({
 	</Icon>
 );
 
-export const ArrowRightUpIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ArrowRightUpIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -45,12 +35,8 @@ export const ArrowRightUpIcon = ({
 		<path d="M5.772 18.228 18.5 5.5" />
 	</Icon>
 );
-export const ArrowUpIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+
+export const ArrowUpIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -65,12 +51,7 @@ export const ArrowUpIcon = ({
 		<path d="m6 9 6 6 6-6"></path>
 	</Icon>
 );
-export const ArrowRightIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ArrowRightIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -88,12 +69,7 @@ export const ArrowRightIcon = ({
 	</Icon>
 );
 
-export const MoneyIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const MoneyIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -107,20 +83,27 @@ export const MoneyIcon = ({
 		{...props}
 	>
 		<path d="M2 6.5h20v12H2v-12Z" />
-		<path d="M2 10.5a4 4 0 0 0 4-4H2v4Z" clipRule="evenodd" />
-		<path d="M2 14.5a4 4 0 0 1 4 4H2v-4Z" clipRule="evenodd" />
-		<path d="M22 14.5v4h-4a4 4 0 0 1 4-4Z" clipRule="evenodd" />
-		<path d="M22 10.5a4 4 0 0 1-4-4h4v4Z" clipRule="evenodd" />
+		<path
+			d="M2 10.5a4 4 0 0 0 4-4H2v4Z"
+			clipRule="evenodd"
+		/>
+		<path
+			d="M2 14.5a4 4 0 0 1 4 4H2v-4Z"
+			clipRule="evenodd"
+		/>
+		<path
+			d="M22 14.5v4h-4a4 4 0 0 1 4-4Z"
+			clipRule="evenodd"
+		/>
+		<path
+			d="M22 10.5a4 4 0 0 1-4-4h4v4Z"
+			clipRule="evenodd"
+		/>
 		<path d="M12 15.5c1.38 0 2.5-1.343 2.5-3s-1.12-3-2.5-3-2.5 1.343-2.5 3 1.12 3 2.5 3Z" />
 	</Icon>
 );
 
-export const WaletIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const WaletIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -133,19 +116,17 @@ export const WaletIcon = ({
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<path d="M8.991 5.984 15.892 2 18.2 5.994l-9.208-.01Z" clipRule="evenodd" />
+		<path
+			d="M8.991 5.984 15.892 2 18.2 5.994l-9.208-.01Z"
+			clipRule="evenodd"
+		/>
 		<path d="M2 7a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7Z" />
 		<path d="M17.625 16.5H22v-5h-4.375C16.175 11.5 15 12.62 15 14s1.175 2.5 2.625 2.5Z" />
 		<path d="M22 8.25v12" />
 	</Icon>
 );
 
-export const GlobalIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const GlobalIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -166,12 +147,7 @@ export const GlobalIcon = ({
 	</Icon>
 );
 
-export const QRCodeIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const QRCodeIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -207,12 +183,7 @@ export const QRCodeIcon = ({
 	</Icon>
 );
 
-export const BounceRightIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const BounceRightIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -230,12 +201,7 @@ export const BounceRightIcon = ({
 	</Icon>
 );
 
-export const CheckIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const CheckIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -253,12 +219,7 @@ export const CheckIcon = ({
 	</Icon>
 );
 
-export const ShieldIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ShieldIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -276,12 +237,7 @@ export const ShieldIcon = ({
 	</Icon>
 );
 
-export const TrunkIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const TrunkIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -304,12 +260,7 @@ export const TrunkIcon = ({
 	</Icon>
 );
 
-export const ScanQRCodeIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ScanQRCodeIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -342,12 +293,7 @@ export const ScanQRCodeIcon = ({
 	</Icon>
 );
 
-export const ShoppingIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ShoppingIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -365,12 +311,7 @@ export const ShoppingIcon = ({
 	</Icon>
 );
 
-export const InfoIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const InfoIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -389,12 +330,7 @@ export const InfoIcon = ({
 	</Icon>
 );
 
-export const FacebookIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const FacebookIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -413,12 +349,7 @@ export const FacebookIcon = ({
 	</Icon>
 );
 
-export const YoutubeIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const YoutubeIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -431,17 +362,15 @@ export const YoutubeIcon = ({
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<path fill={color} d="m14 12-3.5 2v-4l3.5 2Z" />
+		<path
+			fill={color}
+			d="m14 12-3.5 2v-4l3.5 2Z"
+		/>
 		<path d="M2 12.706v-1.415c0-2.895 0-4.343.905-5.275.906-.931 2.332-.971 5.183-1.052 1.35-.038 2.73-.066 3.912-.066 1.181 0 2.561.028 3.912.066 2.851.08 4.277.121 5.182 1.052.906.932.906 2.38.906 5.275v1.415c0 2.895 0 4.343-.905 5.274-.906.932-2.331.972-5.183 1.053-1.35.038-2.73.066-3.912.066-1.181 0-2.561-.028-3.912-.066-2.851-.08-4.277-.121-5.183-1.053C2 17.05 2 15.601 2 12.706Z" />
 	</Icon>
 );
 
-export const InstagramIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const InstagramIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -460,12 +389,7 @@ export const InstagramIcon = ({
 	</Icon>
 );
 
-export const TiktokIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const TiktokIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -483,12 +407,7 @@ export const TiktokIcon = ({
 	</Icon>
 );
 
-export const NavArrowLeflIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const NavArrowLeflIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -505,12 +424,7 @@ export const NavArrowLeflIcon = ({
 	</Icon>
 );
 
-export const NavArrowRightIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const NavArrowRightIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -527,12 +441,7 @@ export const NavArrowRightIcon = ({
 	</Icon>
 );
 
-export const CheckOneIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const CheckOneIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -551,17 +460,19 @@ export const CheckOneIcon = ({
 );
 
 export const FilterIcon = ({ size = 33, color = "currentColor", ...props }) => (
-	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+	<Icon
+		width={size}
+		height={size}
+		fill={color}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
 		<path d="M4.8 15.6a.6.6 0 0 1 .6-.6H9a.6.6 0 1 1 0 1.2H5.4a.6.6 0 0 1-.6-.6Zm0-3.6a.6.6 0 0 1 .6-.6h8.4a.599.599 0 1 1 0 1.2H5.4a.6.6 0 0 1-.6-.6Zm0-3.6a.6.6 0 0 1 .6-.6h13.2a.6.6 0 1 1 0 1.2H5.4a.6.6 0 0 1-.6-.6Z" />
 	</Icon>
 );
 
-export const CloseSmallIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const CloseSmallIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -579,12 +490,7 @@ export const CloseSmallIcon = ({
 	</Icon>
 );
 
-export const PhoneIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const PhoneIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -598,12 +504,7 @@ export const PhoneIcon = ({
 	</Icon>
 );
 
-export const MapIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const MapIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -618,12 +519,7 @@ export const MapIcon = ({
 	</Icon>
 );
 
-export const PhonesIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const PhonesIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -637,12 +533,7 @@ export const PhonesIcon = ({
 	</Icon>
 );
 
-export const NewIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const NewIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -657,12 +548,7 @@ export const NewIcon = ({
 	</Icon>
 );
 
-export const CartIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const CartIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -675,19 +561,20 @@ export const CartIcon = ({
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<path fill={color} d="M19.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
-		<path fill={color} d="M9.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+		<path
+			fill={color}
+			d="M19.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
+		/>
+		<path
+			fill={color}
+			d="M9.5 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
+		/>
 		<path d="M5 4c-.167-.667-1-2-3-2m3 2h17l-2 11H7L5 4Z" />
 		<path d="M20 15H5.23c-1.784 0-2.73.781-2.73 2 0 1.219.946 2 2.73 2H19.5" />
 	</Icon>
 );
 
-export const UserIcon = ({
-	size = 33,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const UserIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -705,12 +592,7 @@ export const UserIcon = ({
 	</Icon>
 );
 
-export const ExampleIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ExampleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -728,12 +610,7 @@ export const ExampleIcon = ({
 	</Icon>
 );
 
-export const PlusIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const PlusIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -770,19 +647,20 @@ export const Clock = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ..
 
 export const CodeIcon = ({ ...props }) => (
 	<>
-		<Icon fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}>
+		<Icon
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth={1.5}
+		>
 			<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
 			<path d="M12 8v4l2 2" />
 		</Icon>
 	</>
 );
 
-export const DownIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const DownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -807,7 +685,10 @@ export const GoogleIcon = (props: any) => (
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+		<g
+			id="SVGRepo_bgCarrier"
+			strokeWidth="0"
+		></g>
 		<g
 			id="SVGRepo_tracerCarrier"
 			strokeLinecap="round"
@@ -842,14 +723,22 @@ export const FbIcon = (props: any) => (
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-		<g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+		<g
+			id="SVGRepo_bgCarrier"
+			strokeWidth="0"
+		></g>
 		<g
 			id="SVGRepo_tracerCarrier"
 			strokeLinecap="round"
 			strokeLinejoin="round"
 		></g>
 		<g id="SVGRepo_iconCarrier">
-			<circle cx="24" cy="24" r="20" fill="#3B5998"></circle>{" "}
+			<circle
+				cx="24"
+				cy="24"
+				r="20"
+				fill="#3B5998"
+			></circle>{" "}
 			<path
 				fillRule="evenodd"
 				clipRule="evenodd"
@@ -862,7 +751,14 @@ export const FbIcon = (props: any) => (
 );
 
 export const DashboardIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon width={size} height={size} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 30" fill="none" {...props}>
+	<Icon
+		width={size}
+		height={size}
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 27 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -873,7 +769,14 @@ export const DashboardIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const InboxIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -884,7 +787,14 @@ export const InboxIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const NewsFeedIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="newsfeed"
 			fillRule="evenodd"
@@ -896,7 +806,14 @@ export const NewsFeedIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const AddIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="add"
 			fillRule="evenodd"
@@ -908,7 +825,14 @@ export const AddIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const InfoCheckIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			fillRule="evenodd"
 			clipRule="evenodd"
@@ -919,7 +843,14 @@ export const InfoCheckIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const SearchAdminIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<g id="svg">
 			<path
 				id="Shape"
@@ -938,7 +869,14 @@ export const SearchAdminIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const SettingsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="settings"
 			fillRule="evenodd"
@@ -950,7 +888,14 @@ export const SettingsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const ProfileIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="profile"
 			fillRule="evenodd"
@@ -962,7 +907,14 @@ export const ProfileIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const LightDarkIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="icons-2"
 			fillRule="evenodd"
@@ -974,7 +926,14 @@ export const LightDarkIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const AnalyticsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="analytics"
 			fillRule="evenodd"
@@ -986,7 +945,14 @@ export const AnalyticsIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const MarketIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="market"
 			fillRule="evenodd"
@@ -998,7 +964,14 @@ export const MarketIcon = ({ size = 35, color = "#809FB8", ...props }) => (
 );
 
 export const WalletIcon = ({ size = 35, color = "#809FB8", ...props }) => (
-	<Icon xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 29 30" fill="none" {...props}>
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 29 30"
+		fill="none"
+		{...props}
+	>
 		<path
 			id="wallet"
 			fillRule="evenodd"
@@ -1021,12 +994,7 @@ export const ArrowLeftCirleIcon = (props: any) => (
 	</Icon>
 );
 
-export const DownArrowIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const DownArrowIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1044,12 +1012,7 @@ export const DownArrowIcon = ({
 	</Icon>
 );
 
-export const BellIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const BellIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1067,12 +1030,7 @@ export const BellIcon = ({
 	</Icon>
 );
 
-export const ChevronDownIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ChevronDownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1089,12 +1047,7 @@ export const ChevronDownIcon = ({
 	</Icon>
 );
 
-export const CheveronUpIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const CheveronUpIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1111,12 +1064,7 @@ export const CheveronUpIcon = ({
 	</Icon>
 );
 
-export const ArrowUpAdminIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ArrowUpAdminIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1134,12 +1082,7 @@ export const ArrowUpAdminIcon = ({
 	</Icon>
 );
 
-export const ArrowDownIcon = ({
-	size = 35,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const ArrowDownIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1157,11 +1100,7 @@ export const ArrowDownIcon = ({
 	</Icon>
 );
 
-export const ArrowDownAdminIcon = ({
-	size = 35,
-	color = "currentColor",
-	...props
-}) => (
+export const ArrowDownAdminIcon = ({ size = 35, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1175,20 +1114,45 @@ export const ArrowDownAdminIcon = ({
 );
 
 export const TraskIcon = ({ size = 35, color = "currentColor", ...props }) => (
-	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+	<Icon
+		width={size}
+		height={size}
+		fill={color}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
 		<path d="M9.96 3.6h3.6a.6.6 0 0 1 .6.6v1.2h-4.8V4.2a.6.6 0 0 1 .6-.6Zm5.4 1.8V4.2a1.8 1.8 0 0 0-1.8-1.8h-3.6a1.8 1.8 0 0 0-1.8 1.8v1.2H5.168a.6.6 0 0 0-.012 0H3.96a.6.6 0 0 0 0 1.2h.646L5.63 19.392A2.4 2.4 0 0 0 8.022 21.6h7.476a2.4 2.4 0 0 0 2.393-2.208L18.915 6.6h.645a.6.6 0 0 0 0-1.2h-1.194a.61.61 0 0 0-.012 0H15.36Zm2.35 1.2-1.015 12.696a1.2 1.2 0 0 1-1.197 1.104H8.022a1.2 1.2 0 0 1-1.196-1.104L5.811 6.6H17.71ZM8.726 7.8a.6.6 0 0 1 .633.564l.6 10.2a.6.6 0 0 1-1.197.072l-.602-10.2a.6.6 0 0 1 .564-.636h.002Zm6.07 0a.6.6 0 0 1 .563.636l-.6 10.2a.6.6 0 1 1-1.197-.072l.6-10.2a.6.6 0 0 1 .633-.564Zm-3.036 0a.6.6 0 0 1 .6.6v10.2a.6.6 0 1 1-1.2 0V8.4a.6.6 0 0 1 .6-.6Z" />
 	</Icon>
 );
 export const TimeIcon = ({ size = 35, color = "currentColor", ...props }) => (
-	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+	<Icon
+		width={size}
+		height={size}
+		fill={color}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
 		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
 		<path d="M12 8v4l2 2" />
 	</Icon>
 );
 
 export const TagIcon = ({ size = 35, color = "currentColor", ...props }) => (
-	<Icon width={size} height={size} fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
-		<path fill="currentColor" stroke="none" d="M15 8a1 1 0 1 0 0 2 1 1 0 1 0 0-2z" />
+	<Icon
+		width={size}
+		height={size}
+		fill={color}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			fill="currentColor"
+			stroke="none"
+			d="M15 8a1 1 0 1 0 0 2 1 1 0 1 0 0-2z"
+		/>
 		<path d="M12 4.75h7.25V12l-6.697 6.67a2 2 0 0 1-2.87-.047L5.29 13.94a2 2 0 0 1 .072-2.81L12 4.75Z" />
 	</Icon>
 );
@@ -1207,7 +1171,11 @@ export const WarningIcon = ({ size = 46, strokeWidth = 1.5, color = "currentColo
 		{...props}
 	>
 		<path d="M12 13v2" />
-		<path fill={color} stroke="none" d="M12 8a1 1 0 1 0 0 2 1 1 0 1 0 0-2z" />
+		<path
+			fill={color}
+			stroke="none"
+			d="M12 8a1 1 0 1 0 0 2 1 1 0 1 0 0-2z"
+		/>
 		<path d="M12 4.75a7.25 7.25 0 1 0 0 14.5 7.25 7.25 0 1 0 0-14.5z" />
 	</Icon>
 );
@@ -1250,13 +1218,7 @@ export const GiftIcon = ({ size = 46, strokeWidth = 1.5, color = "currentColor",
 	</Icon>
 );
 
-
-export const PictureIcon = ({
-	size = 46,
-	strokeWidth = 1.5,
-	color = "currentColor",
-	...props
-}) => (
+export const PictureIcon = ({ size = 46, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1295,16 +1257,10 @@ export const OrderIcon = ({ size = 32, color = "currentColor", ...props }) => (
 		xmlns="http://www.w3.org/2000/svg"
 		{...props}
 	>
-
 		<path d="M4 6h2v2H4V6Zm0 5h2v2H4v-2Zm0 5h2v2H4v-2Zm16-8V6H8.023v2H20ZM8 11h12v2H8v-2Zm0 5h12v2H8v-2Z" />
-	</Icon >
-
+	</Icon>
 );
-export const CheckedIcon = ({
-	size = 35,
-	color = "currentColor",
-	...props
-}) => (
+export const CheckedIcon = ({ size = 35, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
 		height={size}
@@ -1377,6 +1333,102 @@ export const PlusCircleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentC
 		<path d="M6.857 12.571H16" />
 		<path
 			d="M11.429 17.207V8v9.207Z"
+			clipRule="evenodd"
+		/>
+	</Icon>
+);
+
+export const CopyIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M6.5 6.216v-2.31c0-.776.63-1.406 1.406-1.406h12.188c.776 0 1.406.63 1.406 1.406v12.188c0 .776-.63 1.406-1.406 1.406h-2.336" />
+		<path d="M16.094 6.5H3.906C3.13 6.5 2.5 7.13 2.5 7.906v12.188c0 .776.63 1.406 1.406 1.406h12.188c.776 0 1.406-.63 1.406-1.406V7.906c0-.776-.63-1.406-1.406-1.406Z" />
+	</Icon>
+);
+
+export const AddAdminIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 28 27"
+		fill="none"
+		{...props}
+	>
+		<path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M10.3634 26.4156C3.79041 26.4156 0.982422 23.6076 0.982422 17.0346V9.7726C0.982422 3.1996 3.79041 0.391602 10.3634 0.391602H17.6254C24.1984 0.391602 27.0063 3.1996 27.0063 9.7726V17.0346C27.0063 23.6076 24.1984 26.4156 17.6254 26.4156H10.3634ZM2.79846 9.77258V17.0346C2.79846 22.6146 4.78345 24.5996 10.3634 24.5996H17.6254C23.2053 24.5996 25.1903 22.6146 25.1903 17.0346V9.77258C25.1903 4.19258 23.2063 2.20758 17.6254 2.20758H10.3634C4.78333 2.2076 2.80042 4.19359 2.80042 9.77359L2.79846 9.77258ZM13.0874 18.2456V14.3116H9.15344C8.82202 14.3226 8.51099 14.1521 8.34204 13.8667C8.1731 13.5814 8.1731 13.2267 8.34204 12.9414C8.51099 12.6561 8.82202 12.4856 9.15332 12.4966H13.0874V8.56258C13.076 8.23097 13.2465 7.9196 13.532 7.75044C13.8174 7.58128 14.1724 7.58128 14.4578 7.75044C14.7433 7.91959 14.9137 8.23097 14.9023 8.56256V12.5006H18.8363C19.3257 12.5168 19.7141 12.9183 19.7141 13.4081C19.7141 13.8979 19.3257 14.2994 18.8363 14.3156H14.9004V18.2496C14.9117 18.5812 14.7413 18.8926 14.4558 19.0617C14.1704 19.2309 13.8154 19.2309 13.53 19.0617C13.2445 18.8926 13.0741 18.5812 13.0854 18.2496L13.0874 18.2456Z"
+			fill={color}
+		/>
+	</Icon>
+);
+
+export const ArrowTopRightIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M16.571 15.429v-8h-8" />
+		<path d="M16.571 7.429 7.43 16.57" />
+	</Icon>
+);
+
+export const EditIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			d="M19.429 4.571a2.424 2.424 0 0 1 0 3.429L8.57 18.857 4 20l1.143-4.507L16.004 4.576a2.418 2.418 0 0 1 3.274-.143l.15.138Z"
+			clipRule="evenodd"
+		/>
+		<path d="m17.714 7.429 1.143 1.143" />
+	</Icon>
+);
+
+export const AirplayIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="m7.429 16.572-1.143-.04C5.026 16.528 4 15.466 4 14.207V7.389a2.286 2.286 0 0 1 2.286-2.286l11.428-.002A2.286 2.286 0 0 1 20 7.386v6.86a2.286 2.286 0 0 1-2.286 2.286l-1.143.042" />
+		<path
+			d="m12 15.429-3.429 3.428h6.858L12 15.43Z"
 			clipRule="evenodd"
 		/>
 	</Icon>

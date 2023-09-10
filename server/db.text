@@ -1,21 +1,22 @@
 
 *Bảng products
-- options
-- variantions
 - category_id
 - name
 - slug
 - shared_url
+- image
+- assets
 - price
 - price_before_discount
 - price_discount_percent
 - gift_amount
 - has_gift
-- status
 - video_review
-- image
-- assets
+- sort_description
+- description
 - attributes
+- status
+- is_avaiable
 - created_at
 - updated_at
 

@@ -31,6 +31,9 @@ const baseStyle = definePartsStyle({
 	// define the part you're going to style
 	field: {
 		rounded: "sm",
+		_placeholder: {
+			fontSize: "12px",
+		},
 	},
 	icon: {},
 });

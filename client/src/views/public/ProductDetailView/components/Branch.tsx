@@ -11,8 +11,10 @@ import {
 	Text,
 	Flex,
 	Box,
+	Heading,
 } from "@chakra-ui/react";
 import { NavArrowRightIcon, PhoneIcon } from "~/components/common/Icons";
+import DialogThinkPro from "~/components/DialogThinkPro";
 
 type Props = {};
 const address = [
@@ -23,7 +25,12 @@ const address = [
 			{
 				addressStore: "Số 5 - 7 Nguyễn Huy Tưởng, Phường 6, Quận Bình Thạnh, Hồ Chí Minh",
 				phone: 190063579,
-				icon: <PhoneIcon color="black" size={6} />,
+				icon: (
+					<PhoneIcon
+						color="black"
+						size={6}
+					/>
+				),
 			},
 		],
 	},
@@ -33,7 +40,11 @@ const Branch = (props: Props) => {
 	return (
 		<Box>
 			<Flex justifyContent={"space-between"}>
-				<Text as={"h5"} fontSize={"20px"} fontWeight={"600"}>
+				<Text
+					as={"h5"}
+					fontSize={"lg"}
+					fontWeight={"600"}
+				>
 					Sẵn Sàng & Trưng bày
 				</Text>
 				<Flex
@@ -42,7 +53,7 @@ const Branch = (props: Props) => {
 					fontSize={"14px"}
 					bg={"white"}
 					alignItems={"center"}
-					color={"blue"}
+					color={"text.blue"}
 				>
 					Chi nhánh
 					<Flex
@@ -58,47 +69,62 @@ const Branch = (props: Props) => {
 						justifyContent="center"
 						className="btn-next"
 					>
-						<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
+						<NavArrowRightIcon
+							size={4}
+							strokeWidth={2}
+							color="text.black"
+						/>
 					</Flex>
 				</Flex>
 
-				<Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
-					<ModalOverlay />
-					<ModalContent>
-						<ModalHeader fontSize={"20px"}>Sẵn hàng và Trưng bày</ModalHeader>
-						<ModalCloseButton />
-						<ModalBody mx={"2"}>
-							{address.map((item: any) => (
-								<Box>
-									<Text as={"h5"} fontSize={"16px"} fontWeight={"600"} py={"2"}>
-										Thành Phố {item.city}
+				{/* Dialog */}
+				<DialogThinkPro
+					isOpen={isOpen}
+					onClose={onClose}
+					isCentered
+					title={<Heading fontSize="xl">Sẵn hàng và Trưng bày</Heading>}
+				>
+					{address.map((item: any) => (
+						<Box>
+							<Text
+								as={"h5"}
+								fontSize={"16px"}
+								fontWeight={"600"}
+								py={"2"}
+							>
+								Thành Phố {item.city}
+							</Text>
+							{item.children.map((child: any) => (
+								<>
+									<Text
+										as={"p"}
+										fontSize={"14px"}
+										py={"2"}
+									>
+										{child.addressStore}
 									</Text>
-									{item.children.map((child: any) => (
-										<>
-											<Text as={"p"} fontSize={"14px"} py={"2"}>
-												{child.addressStore}
+									<Button
+										bg={"#E6E8EA"}
+										borderRadius={"16px"}
+									>
+										<Flex alignItems={"center"}>
+											{child.icon}
+											<Text
+												as={"p"}
+												fontSize={"14px"}
+												fontWeight={600}
+												pl={"2"}
+												color={"black"}
+											>
+												{child.phone}
 											</Text>
-											<Button bg={"#E6E8EA"} borderRadius={"16px"}>
-												<Flex alignItems={"center"}>
-													{child.icon}
-													<Text
-														as={"p"}
-														fontSize={"14px"}
-														fontWeight={600}
-														pl={"2"}
-														color={"black"}
-													>
-														{child.phone}
-													</Text>
-												</Flex>
-											</Button>
-										</>
-									))}
-								</Box>
+										</Flex>
+									</Button>
+								</>
 							))}
-						</ModalBody>
-					</ModalContent>
-				</Modal>
+						</Box>
+					))}
+				</DialogThinkPro>
 			</Flex>
 		</Box>
 	);

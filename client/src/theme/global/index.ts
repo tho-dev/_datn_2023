@@ -16,7 +16,7 @@ const GlobalStyles = {
 	colors: {
 		// màu chữ
 		text: {
-			black: "#1c1f23",
+			black: "#17181A",
 			white: "#fff",
 			red: "#fe3464",
 			blue: "#0065ee",
@@ -32,7 +32,7 @@ const GlobalStyles = {
 		},
 		// màu background
 		bg: {
-			black: "#1c1f23",
+			black: "#17181A",
 			white: "#fff",
 			red: "#fe3464",
 			blue: "#0065ee",
@@ -47,6 +47,10 @@ const GlobalStyles = {
 			bgDelete: "#fcdae2",
 			bgSuccess: "#cdf7ec",
 			bgWarning: "#fcf2da",
+		},
+		border: {
+			primary: "#ced4da",
+			error: "#E53E3E",
 		},
 	},
 };

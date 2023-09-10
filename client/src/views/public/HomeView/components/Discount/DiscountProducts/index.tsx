@@ -20,7 +20,11 @@ const DiscountProducts = ({ title }: PropTypes) => {
 
 	return (
 		<Box px="9">
-			<Heading as="h2" fontSize="28px" mb={6}>
+			<Heading
+				as="h2"
+				fontSize="28px"
+				mb={6}
+			>
 				{title}
 			</Heading>
 			{/* Category slider */}
@@ -58,7 +62,11 @@ const DiscountProducts = ({ title }: PropTypes) => {
 										bgColor: "bg.gray",
 									}}
 								>
-									<Text fontSize="xs" color="text.black" fontWeight="semibold">
+									<Text
+										fontSize="xs"
+										color="text.black"
+										fontWeight="semibold"
+									>
 										{item?.name}
 									</Text>
 								</Link>
@@ -86,7 +94,11 @@ const DiscountProducts = ({ title }: PropTypes) => {
 							bgColor: "bg.gray",
 						}}
 					>
-						<NavArrowLeflIcon size={4} strokeWidth={3} color="text.black" />
+						<NavArrowLeflIcon
+							size={4}
+							strokeWidth={3}
+							color="text.black"
+						/>
 					</Flex>
 
 					<Flex
@@ -102,7 +114,11 @@ const DiscountProducts = ({ title }: PropTypes) => {
 							bgColor: "bg.gray",
 						}}
 					>
-						<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
+						<NavArrowRightIcon
+							size={4}
+							strokeWidth={3}
+							color="text.black"
+						/>
 					</Flex>
 				</Flex>
 			</Flex>
@@ -166,7 +182,11 @@ const DiscountProducts = ({ title }: PropTypes) => {
 					backgroundColor="bg.gray"
 					className="discount__btn-prev-products"
 				>
-					<NavArrowLeflIcon size={4} strokeWidth={3} color="text.black" />
+					<NavArrowLeflIcon
+						size={4}
+						strokeWidth={3}
+						color="text.black"
+					/>
 				</Flex>
 				<Flex
 					w="9"
@@ -183,7 +203,11 @@ const DiscountProducts = ({ title }: PropTypes) => {
 					backgroundColor="bg.gray"
 					className="discount__btn-next-products"
 				>
-					<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
+					<NavArrowRightIcon
+						size={4}
+						strokeWidth={3}
+						color="text.black"
+					/>
 				</Flex>
 			</Flex>
 		</Box>

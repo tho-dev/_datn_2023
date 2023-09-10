@@ -1,13 +1,14 @@
-import { Box, Flex, Grid, GridItem } from "@chakra-ui/layout";
+import { Box, Divider, Flex, Grid, GridItem } from "@chakra-ui/layout";
 import React, { useState } from "react";
 import { Button, Input, Text, Tooltip } from "@chakra-ui/react";
-import { MinusIcon, PlusIcon, WarningIcon } from "~/components/common/Icons";
+import { CopyIcon, MinusIcon, PlusIcon, WarningIcon } from "~/components/common/Icons";
 import Gift from "./Gift";
 import Buy from "./Buy";
 type Props = {};
 
 const tooltiptext =
 	"Mới, Sealed: Là sản phẩm mới 100% chưa qua sử dụng còn nguyên tem niêm phong của nhà sản xuất trên vỏ hộp hoặc bao bì sản phẩm.";
+
 const Sku = (props: Props) => {
 	const [quantity, setQuantity] = useState<number>(1);
 	const dercement = () => {
@@ -17,138 +18,230 @@ const Sku = (props: Props) => {
 		setQuantity(quantity + 1);
 	};
 	console.log(quantity);
+
 	return (
 		<>
-			<Box bgColor={"white"} borderRadius={"6px"}>
+			<Box
+				bgColor={"white"}
+				rounded={"6px"}
+				p="6"
+				mt="4"
+			>
 				<Text
-					fontSize={"16px"}
+					fontSize={"sm"}
+					rounded={"6px"}
+					color="text.black"
+					fontWeight="medium"
+				>
+					Dell Inspiron 16 5630
+					<CopyIcon
+						size={4}
+						ml="2"
+						color="text.blue"
+						cursor="pointer"
+					/>
+				</Text>
+				<Text
+					fontSize={"md"}
 					fontWeight={600}
-					borderBottom={"1px solid #E6E8EA"}
-					mx={"2"}
-					my={"4"}
-					py={"4"}
-					borderRadius={"6px"}
+					rounded={"6px"}
+					mt="2"
 				>
 					Dell Inspiron 16 5630
 				</Text>
-				<Box mx={"4"}>
-					<Text fontSize={"14px"} fontWeight={600} color={"#6B7075"}>
+				<Divider my="4" />
+				<Box>
+					<Text
+						fontSize={"14px"}
+						fontWeight="medium"
+						color={"#6B7075"}
+					>
 						Phiên bản
 					</Text>
-					<Button
-						bg={"#EBF3FF"}
-						color={"#0065EE"}
-						border={"#0065EE 1px solid"}
-						w={"121px"}
-						style={{ whiteSpace: "normal" }}
-						fontSize={"12px"}
-						py={"4"}
-						my={"2"}
-						fontWeight={600}
-						
+					{/* Phiên bản */}
+					<Flex
+						gap="3"
+						mt="2"
+						flexWrap="wrap"
 					>
-						i5 1340P, QHD+ 16GB, 512GB
-					</Button>
-					<Text fontSize={"14px"} fontWeight={600} color={"#6B7075"}>
+						<Button
+							bg={"#EBF3FF"}
+							color={"#0065EE"}
+							border={"#0065EE 1px solid"}
+							fontSize={"12px"}
+							px="3"
+							py="6px"
+							fontWeight={600}
+							lineHeight="150%"
+							maxW="120px"
+							h="full"
+							maxH="max-content"
+							whiteSpace="pre-line"
+						>
+							i5 1340P, QHD+ 16GB, 512GB
+						</Button>
+						<Button
+							bg={"#EBF3FF"}
+							color={"#0065EE"}
+							border={"#0065EE 1px solid"}
+							fontSize={"12px"}
+							px="3"
+							py="6px"
+							fontWeight={600}
+							lineHeight="150%"
+							maxW="120px"
+							h="full"
+							maxH="max-content"
+							whiteSpace="pre-line"
+						>
+							i5 1340P, QHD+ 16GB, 512GB
+						</Button>
+					</Flex>
+					<Text
+						fontSize={"14px"}
+						fontWeight="medium"
+						color={"#6B7075"}
+						mt="2"
+					>
 						Màu
 					</Text>
-					<Button
-						bg={"#EBF3FF"}
-						color={"#0065EE"}
-						border={"#0065EE 1px solid"}
-						w={"121px"}
-						style={{ whiteSpace: "normal" }}
-						fontSize={"12px"}
-						py={"4"}
-						my={"2"}
-						fontWeight={600}
+					{/* Màu */}
+					<Flex
+						gap="3"
+						mt="2"
+						flexWrap="wrap"
 					>
-						Plantium Silver
-					</Button>
-					<Text fontSize={"14px"} fontWeight={600} color={"#6B7075"}>
+						<Button
+							bg={"#EBF3FF"}
+							color={"#0065EE"}
+							border={"#0065EE 1px solid"}
+							fontSize={"12px"}
+							px="3"
+							py="6px"
+							fontWeight={600}
+							lineHeight="150%"
+							maxW="120px"
+							h="full"
+							maxH="max-content"
+							whiteSpace="pre-line"
+						>
+							Plantium Silver
+						</Button>
+					</Flex>
+
+					<Text
+						fontSize={"14px"}
+						fontWeight="medium"
+						color={"#6B7075"}
+						mt="2"
+					>
 						Loại hàng
 					</Text>
-					<Flex gap={"4"} flexWrap={"wrap"}>
-						<Tooltip hasArrow label={tooltiptext} bg="gray">
+					<Flex
+						mt="2"
+						gap={"3"}
+						flexWrap={"wrap"}
+					>
+						<Tooltip
+							hasArrow
+							label={tooltiptext}
+							bg="bg.gray"
+							color="text.black"
+						>
 							<Button
 								bg={"#EBF3FF"}
 								color={"#0065EE"}
 								border={"#0065EE 1px solid"}
 								fontSize={"12px"}
-								my={"2"}
 								fontWeight={600}
 								px={3}
 								py={"6px"}
 								lineHeight={"150%"}
 								h={"max-content"}
-								
 							>
 								Mới, full box, nhập khẩu
-								<WarningIcon size={4} />
+								<WarningIcon
+									size={5}
+									ml="1"
+								/>
 							</Button>
 						</Tooltip>
 						<Button
-							bg={"white"}
-							color={"black"}
-							border={" 1px solid #E6E8EA"}
+							bg={"#EBF3FF"}
+							color={"#0065EE"}
+							border={"#0065EE 1px solid"}
 							fontSize={"12px"}
-							my={"2"}
+							fontWeight={600}
 							px={3}
-								py={"6px"}
-								lineHeight={"150%"}
-								h={"max-content"}
-							
+							py={"6px"}
+							lineHeight={"150%"}
+							h={"max-content"}
 						>
 							Mới, full box, nhập khẩu
-							<WarningIcon size={5} />
-						</Button>
-						<Button
-							bg={"white"}
-							color={"black"}
-							border={" 1px solid #E6E8EA"}
-							fontSize={"12px"}
-							my={"2"}
-							px={3}
-								py={"6px"}
-								lineHeight={"150%"}
-								h={"max-content"}
-							
-						>
-							Mới, full box, nhập khẩu
-							<WarningIcon size={5} />
+							<WarningIcon
+								size={5}
+								ml="1"
+							/>
 						</Button>
 					</Flex>
-					<Text fontSize={"14px"} fontWeight={600} color={"#6B7075"}>
+					<Text
+						fontSize={"14px"}
+						fontWeight={"medium"}
+						color={"#6B7075"}
+						mt="2"
+					>
 						Số lượng
 					</Text>
-					<Box display={"flex"} my={"2"} borderBottom={"1px solid #E6E8EA"} pb={"5"}>
+					<Flex
+						mt="2"
+						h="38px"
+					>
 						<Button
-							border={"1px solid #1C1F23"}
+							border={"1px solid #ccc"}
 							w={"20px"}
+							h="full"
 							borderRadius={"4px 0px 0px 4px"}
 							bgColor={"White"}
 							borderRight={"none"}
 							color={"black"}
 							onClick={() => dercement()}
 						>
-							<MinusIcon size={5}/>
+							<MinusIcon size={5} />
 						</Button>
-						<Input value={quantity} w={"70px"} textAlign={"center"} borderRadius={"0px"} />
+						<Input
+							value={quantity}
+							w={"70px"}
+							textAlign={"center"}
+							borderRadius={"0px"}
+							border={"1px solid #ccc"}
+							h="full"
+							fontWeight="bold"
+							fontSize="md"
+						/>
 						<Button
-							border={"1px solid #1C1F23"}
+							border={"1px solid #ccc"}
 							w={"20px"}
 							borderRadius={"0px 4px 4px 0px"}
 							bgColor={"White"}
 							color={"black"}
 							borderLeft={"none"}
+							h="full"
 							onClick={() => incement()}
 						>
 							<PlusIcon size={5} />
 						</Button>
-					</Box>
-					<Grid templateColumns="repeat(3, 1fr)" gap={2} py={"4"}>
+					</Flex>
+					<Divider my="4" />
+					<Grid
+						templateColumns="repeat(3, 1fr)"
+						gap={4}
+					>
 						<GridItem>
-							<Text fontSize={"20px"} fontWeight={600} color={"#FE3464"}>
+							<Text
+								fontSize={"lg"}
+								fontWeight={600}
+								color={"#FE3464"}
+							>
 								19.790.000
 							</Text>
 							<Flex pt={"1"}>
@@ -161,18 +254,31 @@ const Sku = (props: Props) => {
 								>
 									28.990.000
 								</Text>
-								<Text as={"p"} fontSize={"12px"} lineHeight={"18px"} color={"#FE3464"}>
+								<Text
+									as={"p"}
+									fontSize={"12px"}
+									lineHeight={"18px"}
+									color={"#FE3464"}
+								>
 									-32%
 								</Text>
 							</Flex>
 						</GridItem>
 						<GridItem>
-							<Button fontSize={"16px"} fontWeight={600} color={"#0065EE"} bg={"#F5F6FC"}>
+							<Button
+								fontSize={"sm"}
+								fontWeight={600}
+								color={"#0065EE"}
+								bg={"#F5F6FC"}
+							>
 								Thêm vào giỏ
 							</Button>
 						</GridItem>
 						<GridItem>
-							<Button fontSize={"16px"} fontWeight={600}>
+							<Button
+								fontSize={"sm"}
+								fontWeight={600}
+							>
 								Mua Ngay
 							</Button>
 						</GridItem>
@@ -182,7 +288,7 @@ const Sku = (props: Props) => {
 			{/* Quà Tặng kèm */}
 			<Gift />
 			{/* Mua thêm được giảm */}
-			<Buy />
+			{/* <Buy /> */}
 		</>
 	);
 };

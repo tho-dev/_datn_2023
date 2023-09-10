@@ -8,36 +8,78 @@ type Props = {};
 
 const Evaluate = (props: Props) => {
 	return (
-		<Box backgroundColor={"white"} borderRadius={"sm"} py={5} pl={5} my={"5"}>
-			<Flex justifyContent={"space-between"} pb={"4"}>
-				<Text as={"h5"} fontSize={"20px"} fontWeight={"600"}>
+		<Box
+			my={"5"}
+			p="6"
+			rounded="6px"
+			bgColor={"bg.white"}
+		>
+			<Flex
+				justifyContent={"space-between"}
+				pb={"4"}
+			>
+				<Text
+					as={"h5"}
+					fontSize={"lg"}
+					fontWeight={"600"}
+				>
 					Đánh giá từ chuyên gia
 				</Text>
-				<Button bg={"white"} color={"black"} textAlign={"end"}>
+				<Button
+					bg={"white"}
+					color={"black"}
+					textAlign={"end"}
+					px="0"
+				>
 					<Text pr={"1"}>
 						<PopupEvalute />
 					</Text>
-					<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
+					<NavArrowRightIcon
+						size={4}
+						strokeWidth={2}
+						color="text.black"
+					/>
 				</Button>
 			</Flex>
-			<Grid templateColumns="repeat(3, 1fr)" gap={8}>
+			<Grid
+				templateColumns="repeat(3, 1fr)"
+				gap="6"
+			>
 				<GridItem>
-					<Progress rate={100} title="Văn phòng, học tập" />
+					<Progress
+						rate={100}
+						title="Văn phòng, học tập"
+					/>
 				</GridItem>
 				<GridItem>
-					<Progress rate={3} title="Văn phòng, học tập" />
+					<Progress
+						rate={3}
+						title="Văn phòng, học tập"
+					/>
 				</GridItem>
 				<GridItem>
-					<Progress rate={100} title="Văn phòng, học tập" />
+					<Progress
+						rate={100}
+						title="Văn phòng, học tập"
+					/>
 				</GridItem>
 				<GridItem>
-					<Progress rate={100} title="Văn phòng, học tập" />
+					<Progress
+						rate={100}
+						title="Văn phòng, học tập"
+					/>
 				</GridItem>
 				<GridItem>
-					<Progress rate={100} title="Văn phòng, học tập" />
+					<Progress
+						rate={100}
+						title="Văn phòng, học tập"
+					/>
 				</GridItem>
 				<GridItem>
-					<Progress rate={100} title="Văn phòng, học tập" />
+					<Progress
+						rate={100}
+						title="Văn phòng, học tập"
+					/>
 				</GridItem>
 			</Grid>
 		</Box>
