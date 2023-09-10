@@ -28,84 +28,89 @@ import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/O
 import SubCategoryView from "~/views/private/SubCategoryView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { BrandView } from "~/views/private/BrandView";
+import SearchView from "~/views/public/SearchView/SearchView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { CompareView } from "~/views/public/CompareView";
 import { Payment } from "~/views/public/PaymentView";
 
 const routes: RouteObject[] = [
-  {
-    path: "/",
-    children: [
-      {
-        element: <MainLayout />,
-        children: [
-          {
-            index: true,
-            element: <HomeView />,
-          },
-          {
-            path: "gio-hang",
-            element: <CartView />,
-          },
-          {
-            path: "thanh-toan",
-            element: <Payment />,
-          },
-          {
-            path: "don-hang",
-            element: <OrderView />,
-          },
-          {
-            path: "thong-tin",
-            element: <ProfileView />,
-          },
-          {
-            path: ":slug",
-            element: <SlugView />,
-          },
-          {
-            path: ":slug/:slug",
-            element: <ProductDetailView />,
-          },
-          {
-            path: "tin-tuc",
-            element: <NewsView />,
-          },
-          {
-            path: "noi-dung",
-            element: <ContentView />,
-          },
-          {
-            path: "so-sanh",
-            element: <CompareView />,
-          },
-        ],
-      },
-      {
-        element: <DefaultLayout />,
-        children: [
-          {
-            element: <AuthLayout />,
-            children: [
-              {
-                path: "dang-nhap",
-                element: <SignInView />,
-              },
-              {
-                path: "dang-ky",
-                element: <SignUpView />,
-              },
-            ],
-          },
-          {
-            path: "*",
-            element: <NotFoundView />,
-          },
-        ],
-      },
-    ],
-  },
- {
+	{
+		path: "/",
+		children: [
+			{
+				element: <MainLayout />,
+				children: [
+					{
+						index: true,
+						element: <HomeView />,
+					},
+					{
+						path: "gio-hang",
+						element: <CartView />,
+					},
+					{
+						path: "thanh-toan",
+						element: <Payment />,
+					},
+					{
+						path: "don-hang",
+						element: <OrderView />,
+					},
+					{
+						path: "thong-tin",
+						element: <ProfileView />,
+					},
+					{
+						path: ":slug",
+						element: <SlugView />,
+					},
+					{
+						path: ":slug/:slug",
+						element: <ProductDetailView />,
+					},
+					{
+						path: "tin-tuc",
+						element: <NewsView />,
+					},
+					{
+						path: "noi-dung",
+						element: <ContentView />,
+					},
+					{
+						path: "so-sanh",
+						element: <CompareView />,
+					},
+					{
+						path: "tim-kiem",
+						element: <SearchView />,
+					}
+				],
+			},
+			{
+				element: <DefaultLayout />,
+				children: [
+					{
+						element: <AuthLayout />,
+						children: [
+							{
+								path: "dang-nhap",
+								element: <SignInView />,
+							},
+							{
+								path: "dang-ky",
+								element: <SignUpView />,
+							},
+						],
+					},
+					{
+						path: "*",
+						element: <NotFoundView />,
+					},
+				],
+			},
+		],
+	},
+	{
 		path: "/admin",
 		element: <AdminLayout />,
 		children: [
@@ -123,7 +128,7 @@ const routes: RouteObject[] = [
 			},
 			{
 				path: "danh-muc-bai-viet",
-				element: <PostCategoryManagement/>
+				element: <PostCategoryManagement />
 			},
 
 			{
@@ -136,11 +141,11 @@ const routes: RouteObject[] = [
 			},
 			{
 				path: "don-hang/:id",
-				element: <OrderDetailView/>
+				element: <OrderDetailView />
 			},
 			{
 				path: "tai-khoan",
-				element: <UserListManagerView/>
+				element: <UserListManagerView />
 			},
 			{
 				path: "thuong-hieu",
