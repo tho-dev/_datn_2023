@@ -8,6 +8,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { NavArrowLeflIcon, NavArrowRightIcon } from "~/components/common/Icons";
+import "./index.css";
+
 function Gallery() {
 	const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 	const swiperRef = useRef<any>(null);
@@ -26,8 +28,16 @@ function Gallery() {
 		}
 	};
 	return (
-		<Flex backgroundColor={"white"} borderRadius={"6px"} py={5} px={5}>
-			<Box w={"30%"} display={{ base: "none", md: "block" }}>
+		<Flex
+			p="6"
+			rounded="6px"
+			bgColor="bg.white"
+			justifyContent="space-between"
+		>
+			<Box
+				w="100px"
+				display={{ base: "none", md: "block" }}
+			>
 				<Swiper
 					modules={[Navigation, Pagination, Scrollbar, A11y, Mousewheel, FreeMode, Thumbs]}
 					onSwiper={(swiper) => setThumbsSwiper(swiper)}
@@ -40,45 +50,38 @@ function Gallery() {
 						maxHeight: "548px",
 					}}
 				>
-					<SwiperSlide>
-						<Box w={"90px"} h={"90px"}>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
-						</Box>
-					</SwiperSlide>
-					<SwiperSlide>
-						<Box w={"90px"} h={"90px"}>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
-						</Box>
-					</SwiperSlide>
-					<SwiperSlide>
-						<Box w={"90px"} h={"90px"}>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
-						</Box>
-					</SwiperSlide>
-					<SwiperSlide>
-						<Box w={"90px"} h={"90px"}>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
-						</Box>
-					</SwiperSlide>
-					<SwiperSlide>
-						<Box w={"90px"} h={"90px"}>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
-						</Box>
-					</SwiperSlide>
-					<SwiperSlide>
-						<Box w={"90px"} h={"90px"}>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
-						</Box>
-					</SwiperSlide>
-					<SwiperSlide>
-						<Box w={"90px"} h={"90px"}>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} h={"full"} />
-						</Box>
-					</SwiperSlide>
+					{Array(6)
+						.fill(0)
+						.map((item: any, index: number) => {
+							return (
+								<SwiperSlide
+									style={{
+										height: "100px",
+									}}
+									key={index}
+								>
+									<Box
+										w="full"
+										h="full"
+									>
+										<Img
+											src="https://images.thinkgroup.vn/unsafe/200x200/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/23/lenovo-thinkpad-x1-carbon-gen-11-thinkpro-01.png"
+											w={"full"}
+											h={"full"}
+											objectFit="cover"
+										/>
+									</Box>
+								</SwiperSlide>
+							);
+						})}
 				</Swiper>
 			</Box>
 			{thumbsSwiper && (
-				<Box w={"80%"}>
+				<Box
+					w="full"
+					maxW="548px"
+					position="relative"
+				>
 					<Swiper
 						spaceBetween={10}
 						modules={[Navigation, FreeMode, Thumbs]}
@@ -91,29 +94,38 @@ function Gallery() {
 						navigation={false}
 						ref={swiperRef}
 					>
-						<SwiperSlide>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
-						</SwiperSlide>
-						<SwiperSlide>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
-						</SwiperSlide>
-						<SwiperSlide>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
-						</SwiperSlide>
-						<SwiperSlide>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
-						</SwiperSlide>
-						<SwiperSlide>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
-						</SwiperSlide>
-						<SwiperSlide>
-							<Img src="https://picsum.photos/200/300.jpg" w={"full"} />
-						</SwiperSlide>
+						{Array(6)
+							.fill(0)
+							.map((item: any, index: number) => {
+								return (
+									<SwiperSlide key={index}>
+										<Box
+											w="full"
+											h="full"
+											bgColor="bg.gray"
+											rounded="6px"
+										>
+											<Img
+												src="https://images.thinkgroup.vn/unsafe/1000x1000/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/23/lenovo-thinkpad-x1-carbon-gen-11-thinkpro-01.png"
+												w="full"
+												h="full"
+												objectFit="cover"
+											/>
+										</Box>
+									</SwiperSlide>
+								);
+							})}
 					</Swiper>
-					<Flex justifyContent={"end"} mt={"2"}>
+					<Flex
+						gap="2"
+						position="absolute"
+						bottom="4"
+						right="4"
+						justifyContent="end"
+					>
 						<Flex
-							w="9"
-							h="9"
+							w="10"
+							h="10"
 							left="4"
 							top={"calc(50% - 24px)"}
 							translateY="-50%"
@@ -122,15 +134,19 @@ function Gallery() {
 							cursor="pointer"
 							alignItems="center"
 							justifyContent="center"
-							backgroundColor="bg.gray"
+							backgroundColor="bg.white"
 							className="btn-prev"
 							onClick={previousSlide}
 						>
-							<NavArrowLeflIcon size={4} strokeWidth={3} color="text.black" />
+							<NavArrowLeflIcon
+								size={4}
+								strokeWidth={3}
+								color="text.black"
+							/>
 						</Flex>
 						<Flex
-							w="9"
-							h="9"
+							w="10"
+							h="10"
 							right="4"
 							top={"calc(50% - 24px)"}
 							translateY="-50%"
@@ -139,11 +155,15 @@ function Gallery() {
 							cursor="pointer"
 							alignItems="center"
 							justifyContent="center"
-							backgroundColor="bg.gray"
+							backgroundColor="bg.white"
 							className="btn-next"
 							onClick={nextSlide}
 						>
-							<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
+							<NavArrowRightIcon
+								size={4}
+								strokeWidth={3}
+								color="text.black"
+							/>
 						</Flex>
 					</Flex>
 				</Box>

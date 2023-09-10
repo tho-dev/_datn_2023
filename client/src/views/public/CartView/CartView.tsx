@@ -13,11 +13,25 @@ const CartView = (props: Props) => {
 			<Helmet>
 				<title>ThinkPro | Giỏ hàng của bạn</title>
 			</Helmet>
-			<Heading pt={"4"} fontSize={"20px"}>
+			<Heading
+				pt={"4"}
+				fontSize={"20px"}
+			>
 				Giỏ hàng (0)
 			</Heading>
-			<Box display="flex" flexDirection={{ base: "column", md: "row" }} my={"5"} w={"full"}>
-				<Box backgroundColor={"white"} borderRadius={"md"} py={"5"} mr={"5"} w={{ md: "80%", base: "full" }}>
+			<Box
+				display="flex"
+				flexDirection={{ base: "column", md: "row" }}
+				my={"5"}
+				w={"full"}
+			>
+				<Box
+					backgroundColor={"white"}
+					borderRadius={"md"}
+					py={"5"}
+					mr={"5"}
+					w={{ md: "80%", base: "full" }}
+				>
 					<ItemCart />
 				</Box>
 				<Box

@@ -36,11 +36,23 @@ const Buy = (props: Props) => {
 	const [value, setValue] = React.useState("1");
 	return (
 		<Box>
-			<Box bgColor={"white"} borderRadius={"6px"} mb={"2"} mt={"4"} px={"2"} py={4}>
-				<Flex alignItems={"center"} justifyContent={"space-between"}>
+			<Box
+				bgColor={"bg.white"}
+				rounded={"6px"}
+				p="6"
+				mt="4"
+			>
+				<Flex
+					alignItems={"center"}
+					justifyContent={"space-between"}
+				>
 					<Flex alignItems={"center"}>
 						<GiftIcon size={18} />
-						<Text fontSize={"16px"} fontWeight={600} pl={"2"}>
+						<Text
+							fontSize={"16px"}
+							fontWeight={600}
+							pl={"2"}
+						>
 							Mua kèm
 						</Text>
 					</Flex>
@@ -68,43 +80,82 @@ const Buy = (props: Props) => {
 								className="btn-next"
 								pl={"-6"}
 							>
-								<NavArrowRightIcon size={3} strokeWidth={3} color="#FE3464" />
+								<NavArrowRightIcon
+									size={3}
+									strokeWidth={3}
+									color="#FE3464"
+								/>
 							</Flex>
 						</Flex>
 					</Box>
 				</Flex>
-				<Box fontSize={"12px"} pl={"9"} py={"2"}>
+				<Box
+					fontSize={"12px"}
+					pl={"9"}
+					py={"2"}
+				>
 					<Text>Balo Cao Cấp Element - By NiceDesign, Balo Cao Cấp Element - By</Text>
 				</Box>
 			</Box>
 
-			<Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+			<Modal
+				isOpen={isOpen}
+				onClose={onClose}
+				size={"xl"}
+			>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader fontSize={"20px"}>Mua Kèm</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody mx={"2"}>
 						<Flex alignItems={"center"}>
-							<GiftIcon color="blue" size={17} />
-							<Text pl={"2"} fontSize={"14px"}>
+							<GiftIcon
+								color="blue"
+								size={17}
+							/>
+							<Text
+								pl={"2"}
+								fontSize={"14px"}
+							>
 								Bạn hãy chọn 1 quà tặng yêu thích
 							</Text>
 						</Flex>
-						<RadioGroup onChange={setValue} value={value} my={"4"}>
+						<RadioGroup
+							onChange={setValue}
+							value={value}
+							my={"4"}
+						>
 							<Stack direction="column">
 								{dataFake.map((item: any) => (
 									<Radio value={item.id}>
 										<Box>
 											<Flex>
-												<Box w={"60px"} h={"60px"} objectFit={"cover"}>
-													<Image src={item.img} w={"full"} />
+												<Box
+													w={"60px"}
+													h={"60px"}
+													objectFit={"cover"}
+												>
+													<Image
+														src={item.img}
+														w={"full"}
+													/>
 												</Box>
 												<Box>
-													<Text fontSize={"14px"} fontWeight={600}>
+													<Text
+														fontSize={"14px"}
+														fontWeight={600}
+													>
 														{item.name}
 													</Text>
-													<Flex pt={"1"} alignItems={"center"}>
-														<Text fontSize={"14px"} fontWeight={600} color={"#FE3464"}>
+													<Flex
+														pt={"1"}
+														alignItems={"center"}
+													>
+														<Text
+															fontSize={"14px"}
+															fontWeight={600}
+															color={"#FE3464"}
+														>
 															{item.salePrice}
 														</Text>
 														<Text
@@ -137,10 +188,19 @@ const Buy = (props: Props) => {
 					<ModalFooter w={"full"}>
 						<Box w={"66%"}>
 							<Flex>
-								<Text as={"p"} fontSize={"12px"} lineHeight={"18px"}>
+								<Text
+									as={"p"}
+									fontSize={"12px"}
+									lineHeight={"18px"}
+								>
 									Tổng cộng:
 								</Text>
-								<Text as={"p"} fontSize={"12px"} lineHeight={"18px"} color={"#FE3464"}>
+								<Text
+									as={"p"}
+									fontSize={"12px"}
+									lineHeight={"18px"}
+									color={"#FE3464"}
+								>
 									20.589.000
 								</Text>
 								<Text
@@ -154,15 +214,29 @@ const Buy = (props: Props) => {
 								</Text>
 							</Flex>
 							<Flex>
-								<Text as={"p"} fontSize={"12px"} lineHeight={"18px"}>
+								<Text
+									as={"p"}
+									fontSize={"12px"}
+									lineHeight={"18px"}
+								>
 									Tiết kiệm:
 								</Text>
-								<Text as={"p"} fontSize={"12px"} lineHeight={"18px"} color={"#FE3464"}>
+								<Text
+									as={"p"}
+									fontSize={"12px"}
+									lineHeight={"18px"}
+									color={"#FE3464"}
+								>
 									9.000.000
 								</Text>
 							</Flex>
 						</Box>
-						<Button onClick={onClose} w={"full"} fontSize={"16px"} fontWeight={600}>
+						<Button
+							onClick={onClose}
+							w={"full"}
+							fontSize={"16px"}
+							fontWeight={600}
+						>
 							Đóng
 						</Button>
 					</ModalFooter>
