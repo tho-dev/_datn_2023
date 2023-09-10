@@ -10,8 +10,10 @@ import {
 	Text,
 	Flex,
 	Box,
+	Heading,
 } from "@chakra-ui/react";
 import { NavArrowRightIcon } from "~/components/common/Icons";
+import DialogThinkPro from "~/components/DialogThinkPro";
 
 type Props = {};
 
@@ -20,7 +22,11 @@ const Transport = (props: Props) => {
 	return (
 		<Box>
 			<Flex justifyContent={"space-between"}>
-				<Text as={"h5"} fontSize={"20px"} fontWeight={"600"}>
+				<Text
+					as={"h5"}
+					fontSize={"lg"}
+					fontWeight={"600"}
+				>
 					Vận chuyển
 				</Text>
 				<Flex
@@ -29,7 +35,7 @@ const Transport = (props: Props) => {
 					fontSize={"14px"}
 					bg={"white"}
 					alignItems={"center"}
-					color={"blue"}
+					color={"text.blue"}
 				>
 					Chọn địa chỉ giao hàng
 					<Flex
@@ -45,18 +51,21 @@ const Transport = (props: Props) => {
 						justifyContent="center"
 						className="btn-next"
 					>
-						<NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
+						<NavArrowRightIcon
+							size={4}
+							strokeWidth={2}
+							color="text.black"
+						/>
 					</Flex>
 				</Flex>
 
-				<Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
-					<ModalOverlay />
-					<ModalContent>
-						<ModalHeader fontSize={"20px"}>Chọn Quận / Huyện</ModalHeader>
-						<ModalCloseButton />
-						<ModalBody mx={"2"}></ModalBody>
-					</ModalContent>
-				</Modal>
+				{/* Modal */}
+				<DialogThinkPro
+					isOpen={isOpen}
+					onClose={onClose}
+					isCentered
+					title={<Heading fontSize="xl">Chọn Tỉnh / Thành phố</Heading>}
+				></DialogThinkPro>
 			</Flex>
 		</Box>
 	);

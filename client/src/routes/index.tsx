@@ -22,6 +22,8 @@ import { NotFoundView } from "~/views/public/NotFoundView";
 // view admin
 import { DashboardView } from "~/views/private/DashboardView";
 import { ProductManagerView } from "~/views/private/ProductManagerView";
+import { AddProductManagerView } from "~/views/private/ProductManagerView/components/AddProductMangerView";
+import { UpdateProductManagerView } from "~/views/private/ProductManagerView/components/UpdateProductMangerView";
 import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
@@ -84,7 +86,7 @@ const routes: RouteObject[] = [
 					{
 						path: "tim-kiem",
 						element: <SearchView />,
-					}
+					},
 				],
 			},
 			{
@@ -124,32 +126,40 @@ const routes: RouteObject[] = [
 				element: <ProductManagerView />,
 			},
 			{
+				path: "san-pham/add",
+				element: <AddProductManagerView />,
+			},
+			{
+				path: "san-pham/:id/update",
+				element: <UpdateProductManagerView />,
+			},
+			{
 				path: "danh-muc",
 				element: <CategoryManagerView />,
 			},
 			{
 				path: "danh-muc-bai-viet",
-				element: <PostCategoryManagement/>
+				element: <PostCategoryManagement />,
 			},
 			{
 				path: "bai-viet",
-				element: <PostManagementView/>
+				element: <PostManagementView />,
 			},
 			{
 				path: "danh-muc-con",
-				element: <SubCategoryView />
+				element: <SubCategoryView />,
 			},
 			{
 				path: "don-hang",
-				element: <OrderManagementView />
+				element: <OrderManagementView />,
 			},
 			{
 				path: "don-hang/:id",
-				element: <OrderDetailView />
+				element: <OrderDetailView />,
 			},
 			{
 				path: "tai-khoan",
-				element: <UserListManagerView />
+				element: <UserListManagerView />,
 			},
 			{
 				path: "thuong-hieu",

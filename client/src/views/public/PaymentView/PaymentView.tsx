@@ -17,17 +17,44 @@ const Payment = (props: Props) => {
 			<Helmet>
 				<title>ThinkPro | Thanh toán</title>
 			</Helmet>
-			<Heading pt={"4"} fontSize={"20px"}>
+			<Heading
+				pt={"4"}
+				fontSize={"20px"}
+			>
 				Thanh Toán
 			</Heading>
-			<Box display="flex" flexDirection={{ base: "column", md: "row" }} my={"5"} w={"full"}>
-				<Box backgroundColor={"white"} borderRadius={"md"} p={"24px"} mr={"5"} w={{ md: "80%", base: "full" }}>
-					<Text fontSize={"20px"} fontWeight={600} as={"h3"}>
+			<Box
+				display="flex"
+				flexDirection={{ base: "column", md: "row" }}
+				my={"5"}
+				w={"full"}
+			>
+				<Box
+					backgroundColor={"white"}
+					borderRadius={"md"}
+					p={"24px"}
+					mr={"5"}
+					w={{ md: "80%", base: "full" }}
+				>
+					<Text
+						fontSize={"20px"}
+						fontWeight={600}
+						as={"h3"}
+					>
 						Phương Thức Nhận Hàng
 					</Text>
-					<Box py={"16px"} borderBottom={"1px solid #E6E8EA"}>
-						<RadioGroup onChange={setValue} value={value}>
-							<Stack direction="row" gap={"24px"}>
+					<Box
+						py={"16px"}
+						borderBottom={"1px solid #E6E8EA"}
+					>
+						<RadioGroup
+							onChange={setValue}
+							value={value}
+						>
+							<Stack
+								direction="row"
+								gap={"24px"}
+							>
 								<Radio value="1">Tại cửa Hàng</Radio>
 								<Radio value="2">Giao Tận nơi</Radio>
 							</Stack>
@@ -35,11 +62,25 @@ const Payment = (props: Props) => {
 					</Box>
 					<Box>{value == "1" ? <Atstore /> : <ShipProduct />}</Box>
 				</Box>
-				<Box w={{ md: "40%", base: "full" }} h={"full"}>
-					<Box backgroundColor={"white"} borderRadius={"md"} py={"5"} px={"5"}>
+				<Box
+					w={{ md: "40%", base: "full" }}
+					h={"full"}
+				>
+					<Box
+						backgroundColor={"white"}
+						borderRadius={"md"}
+						py={"5"}
+						px={"5"}
+					>
 						<PaySummary />
 					</Box>
-					<Box backgroundColor={"white"} borderRadius={"md"} py={"5"} px={"5"} mt={"16px"}>
+					<Box
+						backgroundColor={"white"}
+						borderRadius={"md"}
+						py={"5"}
+						px={"5"}
+						mt={"16px"}
+					>
 						<ProductPay />
 					</Box>
 				</Box>

@@ -6,12 +6,12 @@ import ListTableCompare from "./components/ListTableCompare";
 type Props = {};
 
 const CompareView = (props: Props) => {
-  return (
-    <Box padding="20px 0" minHeight="100vh" bgColor="#FFFFFF">
-      <ListCardCompare />
-      <ListTableCompare />
-    </Box>
-  );
+	return (
+		<Box py="6">
+			<ListCardCompare />
+			<ListTableCompare />
+		</Box>
+	);
 };
 
 export default CompareView;

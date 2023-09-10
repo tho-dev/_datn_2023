@@ -8,7 +8,11 @@ type Props = {};
 const ItemProductPay = (props: Props) => {
 	return (
 		<>
-			<Flex justifyContent={"space-between"} my={"4"} px={"5"}>
+			<Flex
+				justifyContent={"space-between"}
+				my={"4"}
+				px={"5"}
+			>
 				<Flex>
 					<Box>
 						<Image
@@ -17,7 +21,10 @@ const ItemProductPay = (props: Props) => {
 						/>
 					</Box>
 					<Box ml={"5"}>
-						<Text as={"p"} fontSize={"14px"}>
+						<Text
+							as={"p"}
+							fontSize={"14px"}
+						>
 							Dell Inspiron 16 5630
 						</Text>
 						<Box>
@@ -36,18 +43,27 @@ const ItemProductPay = (props: Props) => {
 						</Box>
 						<Box>
 							<Flex alignItems={"center"}>
-								<Text as={"p"} fontSize={"xl"} color={"#FE3464"} fontWeight={"16px"}>
+								<Text
+									as={"p"}
+									fontSize={"md"}
+									color={"text.red"}
+									fontWeight={"semibold"}
+								>
 									28.490.000
 								</Text>
-								<Text as={"p"} ml={"8px"} fontSize={"16px"}>
-									X1
+								<Text
+									as={"p"}
+									ml={"8px"}
+									fontSize={"sm"}
+								>
+									x1
 								</Text>
 							</Flex>
 						</Box>
 					</Box>
 				</Flex>
 			</Flex>
-			<ItemBonus />
+			{/* <ItemBonus /> */}
 		</>
 	);
 };

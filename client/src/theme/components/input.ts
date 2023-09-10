@@ -38,7 +38,7 @@ const primary = definePartsStyle({
 		lineHeight: 1.5,
 		borderRadius: "4px",
 		border: "1px solid",
-		borderColor: "text.300",
+		borderColor: "border.primary",
 		_focusVisible: {
 			outline: "none",
 		},
