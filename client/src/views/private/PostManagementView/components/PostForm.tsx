@@ -16,7 +16,7 @@ type Props = {
   data?: any;
 };
 
-const ProductForm = ({ type, data, isOpen, onClose }: Props) => {
+const PostForm = ({ type, data, isOpen, onClose }: Props) => {
   console.log("data: ",data?.title);
   const {
     handleSubmit,
@@ -174,4 +174,4 @@ const ProductForm = ({ type, data, isOpen, onClose }: Props) => {
   );
 };
 
-export default ProductForm;
+export default PostForm;

@@ -15,7 +15,7 @@ import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import { PlusIcon, SearchAdminIcon } from "~/components/common/Icons";
-import ProductForm from "./components/ProductForm";
+import PostForm from "./components/PostForm";
 
 type Props = {};
 
@@ -171,7 +171,7 @@ const PostManagementView = (props: Props) => {
         </Flex>
         <TableThinkPro columns={columns} data={thinkpro.posts} />
         <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
-        <ProductForm
+        <PostForm
           type={dialogType}
           data={dialogData}
           onClose={onFormClose}
