@@ -33,7 +33,6 @@ import ShippingList from "~/views/private/ShippingView/ShippingList";
 import Shipments from "~/views/private/ShippingView/Shipments";
 import { Payment } from "~/views/public/PaymentView";
 import { CompareView } from "~/views/public/CompareView";
-import { CommentView } from "~/views/public/Comment";
 import { SearchView } from "~/views/public/SearchView";
 import { BrandView } from "~/views/private/BrandView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
@@ -86,10 +85,6 @@ const routes: RouteObject[] = [
           {
             path: "so-sanh",
             element: <CompareView />,
-          },
-          {
-            path: "comment",
-            element: <CommentView />,
           },
           {
             path: "tim-kiem",
