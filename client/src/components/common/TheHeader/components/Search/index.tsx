@@ -63,6 +63,7 @@ const Search = (props: Props) => {
 				}}
 			>
 				<Box
+					display={isOpen ? "block" : "none"}
 					bg="bg.white"
 					rounded="md"
 					shadow="md"
@@ -75,30 +76,14 @@ const Search = (props: Props) => {
 					overflowX="hidden"
 				>
 					<Box mb="5">
-						<Heading
-							as="h3"
-							fontSize="md"
-							fontWeight="semibold"
-						>
+						<Heading as="h3" fontSize="md" fontWeight="semibold">
 							Tìm kiếm gần đây
 						</Heading>
-						<Flex
-							mt="4"
-							gap="1"
-							flexDir="column"
-						>
-							<Text
-								fontSize="sm"
-								color="text.blue"
-								cursor="pointer"
-							>
+						<Flex mt="4" gap="1" flexDir="column">
+							<Text fontSize="sm" color="text.blue" cursor="pointer">
 								Máy tính
 							</Text>
-							<Text
-								fontSize="sm"
-								color="text.blue"
-								cursor="pointer"
-							>
+							<Text fontSize="sm" color="text.blue" cursor="pointer">
 								Máy tính
 							</Text>
 						</Flex>
@@ -123,37 +108,17 @@ const Search = (props: Props) => {
 						>
 							<CloseSmallIcon size={3} />
 						</Box>
-						<Text
-							flex="1"
-							fontSize="xs"
-							color="text.black"
-							fontWeight="medium"
-						>
+						<Text flex="1" fontSize="xs" color="text.black" fontWeight="medium">
 							Tăng thời gian khách đến 24h00, trở thành chuỗi cửa hàng bán lẻ Phục vụ khách hàng lâu nhất
 						</Text>
 					</Flex>
 					{/* Sản phẩm */}
-					<Flex
-						mt="5"
-						flexDir="column"
-					>
-						<Heading
-							as="h3"
-							fontSize="sm"
-							fontWeight="semibold"
-						>
+					<Flex mt="5" flexDir="column">
+						<Heading as="h3" fontSize="sm" fontWeight="semibold">
 							Sản phẩm
 						</Heading>
-						<Flex
-							gap="3"
-							mt="4"
-							flexDir="column"
-						>
-							<Flex
-								gap="3"
-								alignItems="center"
-								justifyContent="space-between"
-							>
+						<Flex gap="3" mt="4" flexDir="column">
+							<Flex gap="3" alignItems="center" justifyContent="space-between">
 								<Box
 									w="20"
 									h="20"
@@ -169,49 +134,24 @@ const Search = (props: Props) => {
 										objectFit="contain"
 									/>
 								</Box>
-								<Flex
-									flexDir="column"
-									justifyContent="flex-start"
-								>
-									<Text
-										fontSize="15px"
-										fontWeight="semibold"
-									>
+								<Flex flexDir="column" justifyContent="flex-start">
+									<Text fontSize="15px" fontWeight="semibold">
 										Lenovo ThinkPad X1 Cacbon Gen Pro
 									</Text>
 									<Flex gap="2">
-										<Text
-											as="span"
-											color="text.red"
-											fontSize="sm"
-											fontWeight="semibold"
-										>
+										<Text as="span" color="text.red" fontSize="sm" fontWeight="semibold">
 											20.999.999
 										</Text>
-										<Text
-											as="span"
-											fontSize="sm"
-											fontWeight="semibold"
-											textDecor="line-through"
-										>
+										<Text as="span" fontSize="sm" fontWeight="semibold" textDecor="line-through">
 											20.999.999
 										</Text>
-										<Text
-											as="span"
-											fontSize="sm"
-											fontWeight="medium"
-											color="text.red"
-										>
+										<Text as="span" fontSize="sm" fontWeight="medium" color="text.red">
 											-10%
 										</Text>
 									</Flex>
 								</Flex>
 							</Flex>
-							<Flex
-								gap="3"
-								alignItems="center"
-								justifyContent="space-between"
-							>
+							<Flex gap="3" alignItems="center" justifyContent="space-between">
 								<Box
 									w="20"
 									h="20"
@@ -227,39 +167,18 @@ const Search = (props: Props) => {
 										objectFit="contain"
 									/>
 								</Box>
-								<Flex
-									flexDir="column"
-									justifyContent="flex-start"
-								>
-									<Text
-										fontSize="15px"
-										fontWeight="semibold"
-									>
+								<Flex flexDir="column" justifyContent="flex-start">
+									<Text fontSize="15px" fontWeight="semibold">
 										Lenovo ThinkPad X1 Cacbon Gen Pro
 									</Text>
 									<Flex gap="2">
-										<Text
-											as="span"
-											color="text.red"
-											fontSize="sm"
-											fontWeight="semibold"
-										>
+										<Text as="span" color="text.red" fontSize="sm" fontWeight="semibold">
 											20.999.999
 										</Text>
-										<Text
-											as="span"
-											fontSize="sm"
-											fontWeight="semibold"
-											textDecor="line-through"
-										>
+										<Text as="span" fontSize="sm" fontWeight="semibold" textDecor="line-through">
 											20.999.999
 										</Text>
-										<Text
-											as="span"
-											fontSize="sm"
-											fontWeight="medium"
-											color="text.red"
-										>
+										<Text as="span" fontSize="sm" fontWeight="medium" color="text.red">
 											-10%
 										</Text>
 									</Flex>
@@ -269,54 +188,21 @@ const Search = (props: Props) => {
 					</Flex>
 
 					{/* Khuyến mãi */}
-					<Flex
-						mt="5"
-						flexDir="column"
-					>
-						<Heading
-							as="h3"
-							fontSize="sm"
-							fontWeight="semibold"
-						>
+					<Flex mt="5" flexDir="column">
+						<Heading as="h3" fontSize="sm" fontWeight="semibold">
 							Khuyến mãi nổi bật
 						</Heading>
-						<Flex
-							gap="4"
-							mt="5"
-							flexDir="column"
-						>
-							<Flex
-								gap="3"
-								alignItems="center"
-							>
-								<Box
-									w="5"
-									h="5"
-									rounded="full"
-									bgColor="bg.red"
-								></Box>
-								<Text
-									fontSize="sm"
-									fontWeight="medium"
-								>
+						<Flex gap="4" mt="5" flexDir="column">
+							<Flex gap="3" alignItems="center">
+								<Box w="5" h="5" rounded="full" bgColor="bg.red"></Box>
+								<Text fontSize="sm" fontWeight="medium">
 									Đặt hàng trước Dell Inspiron 14 Plus (7420)
 								</Text>
 							</Flex>
 							<Divider bgColor="bg.gray" />
-							<Flex
-								gap="3"
-								alignItems="center"
-							>
-								<Box
-									w="5"
-									h="5"
-									rounded="full"
-									bgColor="bg.red"
-								></Box>
-								<Text
-									fontSize="sm"
-									fontWeight="medium"
-								>
+							<Flex gap="3" alignItems="center">
+								<Box w="5" h="5" rounded="full" bgColor="bg.red"></Box>
+								<Text fontSize="sm" fontWeight="medium">
 									Đặt hàng trước Dell Inspiron 14 Plus (7420)
 								</Text>
 							</Flex>
