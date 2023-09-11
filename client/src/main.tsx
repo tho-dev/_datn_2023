@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
+import "flatpickr/dist/themes/material_green.css";
 // react
 
 // style font
@@ -15,13 +16,10 @@ import customTheme from "~/theme";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<React.StrictMode>
-		<ChakraProvider
-			theme={customTheme}
-			resetCSS={true}
-		>
-			<CSSReset />
-			<App />
-		</ChakraProvider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <ChakraProvider theme={customTheme} resetCSS={true}>
+      <CSSReset />
+      <App />
+    </ChakraProvider>
+  </React.StrictMode>
 );
