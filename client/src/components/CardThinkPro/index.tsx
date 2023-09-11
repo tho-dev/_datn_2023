@@ -13,7 +13,7 @@ type Props = {
 const CardThinkPro = ({ product, mode, showCompare }: Props) => {
   return (
     <Link
-      to={"/"}
+      to={`laptop/lg-gram`}
       as={ReactRouterLink}
       w="full"
       h="full"
