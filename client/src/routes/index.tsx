@@ -22,6 +22,8 @@ import { NotFoundView } from "~/views/public/NotFoundView";
 // view admin
 import { DashboardView } from "~/views/private/DashboardView";
 import { ProductManagerView } from "~/views/private/ProductManagerView";
+import { AddProductManagerView } from "~/views/private/ProductManagerView/components/AddProductMangerView";
+import { UpdateProductManagerView } from "~/views/private/ProductManagerView/components/UpdateProductMangerView";
 import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
@@ -29,6 +31,13 @@ import SubCategoryView from "~/views/private/SubCategoryView";
 import { ShippingView } from "~/views/private/ShippingView";
 import ShippingList from "~/views/private/ShippingView/ShippingList";
 import Shipments from "~/views/private/ShippingView/Shipments";
+import { Payment } from "~/views/public/PaymentView";
+import { CompareView } from "~/views/public/CompareView";
+import { SearchView } from "~/views/public/SearchView";
+import { BrandView } from "~/views/private/BrandView";
+import { UserListManagerView } from "~/views/private/UserListManagerView";
+import PostManagementView from "~/views/private/PostManagementView";
+import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 
 const routes: RouteObject[] = [
   {
@@ -44,6 +53,10 @@ const routes: RouteObject[] = [
           {
             path: "gio-hang",
             element: <CartView />,
+          },
+          {
+            path: "thanh-toan",
+            element: <Payment />,
           },
           {
             path: "don-hang",
@@ -68,6 +81,14 @@ const routes: RouteObject[] = [
           {
             path: "noi-dung",
             element: <ContentView />,
+          },
+          {
+            path: "so-sanh",
+            element: <CompareView />,
+          },
+          {
+            path: "tim-kiem",
+            element: <SearchView />,
           },
         ],
       },
@@ -108,8 +129,24 @@ const routes: RouteObject[] = [
         element: <ProductManagerView />,
       },
       {
+        path: "san-pham/add",
+        element: <AddProductManagerView />,
+      },
+      {
+        path: "san-pham/:id/update",
+        element: <UpdateProductManagerView />,
+      },
+      {
         path: "danh-muc",
         element: <CategoryManagerView />,
+      },
+      {
+        path: "danh-muc-bai-viet",
+        element: <PostCategoryManagement />,
+      },
+      {
+        path: "bai-viet",
+        element: <PostManagementView />,
       },
       {
         path: "danh-muc-con",
@@ -122,6 +159,14 @@ const routes: RouteObject[] = [
       {
         path: "don-hang/:id",
         element: <OrderDetailView />,
+      },
+      {
+        path: "tai-khoan",
+        element: <UserListManagerView />,
+      },
+      {
+        path: "thuong-hieu",
+        element: <BrandView />,
       },
       {
         path: "shipping",

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "flatpickr/dist/themes/material_green.css";
+import "./index.css";
 // react
 
 // style font
