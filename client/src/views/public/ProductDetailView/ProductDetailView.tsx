@@ -1,6 +1,6 @@
 import React from "react";
 import Gallery from "./components/Swiper";
-import { Box, Flex, HStack, Heading } from "@chakra-ui/layout";
+import { Box, Divider, Flex, HStack, Heading } from "@chakra-ui/layout";
 import Evaluate from "./components/Evaluate";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Text } from "@chakra-ui/react";
 import Introduce from "./components/Introduce";
@@ -20,47 +20,59 @@ const ProductDetailView = (props: Props) => {
 		<Box h={"full"}>
 			<Breadcrumb mt={"5"}>
 				<BreadcrumbItem>
-					<BreadcrumbLink href="/" textDecoration={"none"} fontSize={"12px"}>
+					<BreadcrumbLink
+						href="/"
+						textDecoration={"none"}
+						fontSize={"12px"}
+					>
 						Trang chủ
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 
 				<BreadcrumbItem>
-					<BreadcrumbLink textDecoration={"none"} fontSize={"12px"}>
+					<BreadcrumbLink
+						textDecoration={"none"}
+						fontSize={"12px"}
+					>
 						Laptop Dell Inspiron 16
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 			</Breadcrumb>
-			<Flex gap={"6"} flexWrap={{ base: "wrap", md: "nowrap" }}>
+			<Flex
+				gap={"6"}
+				flexWrap={{ base: "wrap", md: "nowrap" }}
+			>
 				{/* Content trái */}
-				<Box w={{ base: "100%", md: "60%" }} my={5}>
+				<Box
+					w={{ base: "100%", md: "60%" }}
+					my={5}
+				>
 					{/* slide ảnh */}
 					<Gallery />
 					{/* marrque */}
 					<Introduce />
 					{/* Đánh Giá */}
 					<Evaluate />
-					<Box backgroundColor={"white"} borderRadius={"6px"} py={5} px={5} my={"5"}>
+					<Box
+						backgroundColor={"bg.white"}
+						borderRadius={"6px"}
+						my={"5"}
+						p="6"
+					>
 						{/* Cấu hình */}
-						<Box borderBottom={"1px solid #E6E8EA"} py={"2"} my={"2"}>
-							<Configuration />
-						</Box>
+						<Configuration />
+						<Divider my="5" />
 						{/* Chi Nhánh */}
-						<Box borderBottom={"1px solid #E6E8EA"} py={"2"} my={"2"}>
-							<Branch />
-						</Box>
+						<Branch />
+						<Divider my="5" />
 						{/* Vận chuyển */}
-						<Box borderBottom={"1px solid #E6E8EA"} py={"2"} my={"2"}>
-							<Transport />
-						</Box>
+						<Transport />
+						<Divider my="5" />
 						{/* Bảo Hành */}
-						<Box borderBottom={"1px solid #E6E8EA"} py={"2"} my={"2"}>
-							<Warranty />
-						</Box>
+						<Warranty />
+						<Divider my="5" />
 						{/* Bài Viết sản phẩm */}
-						<Box py={"2"} my={"2"}>
-							<Describe />
-						</Box>
+						<Describe />
 					</Box>
 				</Box>
 				{/* Content phải */}
@@ -74,10 +86,23 @@ const ProductDetailView = (props: Props) => {
 					overflowY="scroll"
 					maxH="620px"
 				>
-					<Box bg={"#FE3464"} borderRadius={"6px"} px={"2"} py={"4"}>
+					<Box
+						bg={"#FE3464"}
+						rounded={"6px"}
+						px={"6"}
+						py={"5"}
+					>
 						<Flex alignItems={"center"}>
-							<TagIcon color="white" size={8} />
-							<Text color={"white"} fontSize={"16px"} fontWeight={600} ml={"6px"}>
+							<TagIcon
+								color="white"
+								size={6}
+							/>
+							<Text
+								color={"white"}
+								fontSize={"16px"}
+								fontWeight={600}
+								ml={"6px"}
+							>
 								HOT DEAL LAPTOP THÁNG 9
 							</Text>
 						</Flex>

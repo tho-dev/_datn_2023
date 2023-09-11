@@ -6,12 +6,30 @@ type Props = {};
 
 const Introduce = (props: Props) => {
 	return (
-		<Box backgroundColor={"white"} borderRadius={"6px"} py={5} px={5} my={"5"}>
-			<Flex alignItems={"center"} mb={"2"}>
-				<Text as={"h5"} fontSize={"20px"} fontWeight={600}>
+		<Box
+			backgroundColor={"bg.white"}
+			rounded={"6px"}
+			my={"5"}
+			p="6"
+		>
+			<Flex
+				alignItems={"center"}
+				mb={"2"}
+			>
+				<Text
+					as={"h5"}
+					fontSize={"lg"}
+					fontWeight={600}
+				>
 					ThinkPro
 				</Text>
-				<Text as={"p"} fontSize={"16px"} color={"#6B7075"} fontWeight={600} pl={"12px"}>
+				<Text
+					as={"p"}
+					fontSize={"16px"}
+					color={"#6B7075"}
+					fontWeight={600}
+					pl={"12px"}
+				>
 					Là nơi để bạn và người thân tin tưởng lựa chọn
 				</Text>
 			</Flex>

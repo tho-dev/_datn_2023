@@ -7,14 +7,27 @@ type Props = {};
 
 const Gift = (props: Props) => {
 	return (
-		<Box bgColor={"white"} borderRadius={"6px"} mb={"2"} mt={"4"} px={"2"} py={4}>
+		<Box
+			bgColor={"bg.white"}
+			rounded={"6px"}
+			p="6"
+			mt="4"
+		>
 			<Flex alignItems={"center"}>
 				<GiftIcon size={18} />
-				<Text fontSize={"16px"} fontWeight={600} pl={"2"}>
+				<Text
+					fontSize={"16px"}
+					fontWeight={600}
+					pl={"2"}
+				>
 					Quà tặng miễn phí
 				</Text>
 			</Flex>
-			<Box fontSize={"12px"} pl={"9"} py={"2"}>
+			<Box
+				fontSize={"12px"}
+				pl={"9"}
+				py={"2"}
+			>
 				<ul>
 					<li>Chuột E-DRA EM604W 149.000đ</li>
 				</ul>

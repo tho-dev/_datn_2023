@@ -7,26 +7,64 @@ type Props = {};
 const OrderSummary = (props: Props) => {
 	return (
 		<Box>
-			<Text as={"h5"} fontSize={"18px"} fontWeight={"600"} lineHeight={"27px"}>
+			<Text
+				as={"h5"}
+				fontSize={"18px"}
+				fontWeight={"600"}
+				lineHeight={"27px"}
+			>
 				Tóm tắt đơn hàng
 			</Text>
-			<Flex justifyContent={"space-between"} py={"4"} borderBottom={"dashed"}>
-				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"}>
+			<Flex
+				justifyContent={"space-between"}
+				py={"4"}
+				borderBottomColor={"border.primary"}
+				borderBottomWidth={"1px"}
+				borderStyle="dashed"
+			>
+				<Box
+					as={"p"}
+					fontSize={"12px"}
+					lineHeight={"18px"}
+					fontWeight="medium"
+				>
 					Giảm giá:
 				</Box>
-				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight={"600"}>
+				<Box
+					as={"p"}
+					fontSize={"12px"}
+					lineHeight={"18px"}
+					fontWeight={"600"}
+				>
 					9.300.000
 				</Box>
 			</Flex>
-			<Flex justifyContent={"space-between"} py={"4"}>
-				<Box as={"p"} fontSize={"12px"} lineHeight={"18px"}>
+			<Flex
+				justifyContent={"space-between"}
+				py={"4"}
+			>
+				<Box
+					as={"p"}
+					fontSize={"12px"}
+					lineHeight={"18px"}
+					fontWeight="medium"
+				>
 					Tổng cộng:
 				</Box>
-				<Box as={"p"} fontSize={"xl"} color={"#FE3464"} fontWeight={"semibold"}>
+				<Box
+					as={"p"}
+					fontSize={"lg"}
+					color={"#FE3464"}
+					fontWeight={"semibold"}
+				>
 					19.190.000
 				</Box>
 			</Flex>
-			<Button w={"full"} fontSize={"16px"} fontWeight={"600 "}>
+			<Button
+				w={"full"}
+				fontSize={"md"}
+				fontWeight={"600"}
+			>
 				Mua Ngay
 			</Button>
 		</Box>
