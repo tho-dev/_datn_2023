@@ -7,16 +7,37 @@ type Props = {};
 
 const Subcate = (props: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [value, setValue] = React.useState("1");
+
 	return (
 		<Box>
-			<Box bgColor={"white"} borderRadius={"6px"} mb={"2"} mt={"4"} px={"2"} py={4}>
-				<Flex alignItems={"center"} justifyContent={"space-between"}>
+			<Box
+				bgColor={"white"}
+				borderRadius={"6px"}
+				mt="4"
+				p="6"
+			>
+				<Flex
+					alignItems={"center"}
+					justifyContent={"space-between"}
+				>
 					<Flex alignItems={"center"}>
-						<Box w={"42px"} h={"42px"} objectFit={"cover"}>
-							<Image src="https://images.thinkgroup.vn/unsafe/84x84/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/brands/2023/4/5/logo-dell-thinkpro-10.png" />
+						<Box
+							w={"42px"}
+							h={"42px"}
+							objectFit={"cover"}
+						>
+							<Image
+								w="full"
+								h="full"
+								objectFit="cover"
+								src="https://images.thinkgroup.vn/unsafe/84x84/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/brands/2023/4/5/logo-dell-thinkpro-10.png"
+							/>
 						</Box>
-						<Text fontSize={"16px"} fontWeight={600} pl={"2"}>
+						<Text
+							fontSize={"16px"}
+							fontWeight={600}
+							pl={"2"}
+						>
 							Laptop Dell Inspiron 16
 						</Text>
 					</Flex>
@@ -44,7 +65,11 @@ const Subcate = (props: Props) => {
 								className="btn-next"
 								pl={"-6"}
 							>
-								<NavArrowRightIcon size={3} strokeWidth={3} color="black" />
+								<NavArrowRightIcon
+									size={3}
+									strokeWidth={3}
+									color="black"
+								/>
 							</Flex>
 						</Flex>
 					</Box>
