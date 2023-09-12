@@ -38,6 +38,7 @@ import { BrandView } from "~/views/private/BrandView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import PostManagementView from "~/views/private/PostManagementView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
+import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 
 const routes: RouteObject[] = [
   {
@@ -163,6 +164,10 @@ const routes: RouteObject[] = [
       {
         path: "tai-khoan",
         element: <UserListManagerView />,
+      },
+      {
+        path: "tai-khoan/add",
+        element: <AddUserListManagerView />,
       },
       {
         path: "thuong-hieu",
