@@ -16,6 +16,8 @@ import "@fontsource/quicksand/700.css";
 import customTheme from "~/theme";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 
+import store, { persistor } from "./redux/store";
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider theme={customTheme} resetCSS={true}>
