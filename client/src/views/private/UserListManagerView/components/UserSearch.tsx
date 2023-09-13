@@ -1,7 +1,5 @@
-import React from "react";
-
-import { Grid, GridItem, Flex, Box, Center, Text, Heading } from "@chakra-ui/layout";
-import { PlusIcon, SearchAdminIcon } from "~/components/common/Icons";
+import { Grid, GridItem, Flex  } from "@chakra-ui/layout";
+import {   SearchAdminIcon } from "~/components/common/Icons";
 import { Input } from "@chakra-ui/input";
 import { Button, Select } from "@chakra-ui/react";
 
