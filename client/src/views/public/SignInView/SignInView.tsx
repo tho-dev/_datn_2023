@@ -31,8 +31,6 @@ import { signIn } from "~/services/users.service";
 type Props = {};
 
 const SignInView = (props: Props) => {
-  const navigate = useNavigate();
-  const toast = useToast();
   const {
     register,
     handleSubmit,
@@ -40,10 +38,11 @@ const SignInView = (props: Props) => {
   } = useForm<any>({
     resolver: joiResolver(loginSchema),
   });
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const onSubmit = async (data: any) => {
     const result: any = await signIn(data);
-    console.log(result);
     if (result.status === 200) {
       toast({
         title: "Đăng nhập thành công",
