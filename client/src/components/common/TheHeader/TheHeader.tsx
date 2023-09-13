@@ -3,7 +3,7 @@ import { Image } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import logo from "~/assets/images/logo-thinkpro.svg";
 import Search from "./components/Search";
-import { Button, SlideFade, useDisclosure } from "@chakra-ui/react";
+import { Button, SlideFade, useDisclosure, Avatar } from "@chakra-ui/react";
 import {
   PhoneIcon,
   PhonesIcon,
@@ -163,6 +163,26 @@ const TheHeader = (props: Props) => {
             <CartIcon size={4} strokeWidth={2} color="text.black" />
           </Link>
         </Flex>
+        {/* <Link
+            to="/thong-tin"
+            as={ReactRouterLink}
+            w="44px"
+            h="44px"
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="bg.gray"
+            rounded="full"
+            position="relative"
+            border="1px solid #ccc"
+          >
+            <Avatar
+              name="Dan Abrahmov"
+              src={avatar}
+              width="100%"
+              height="100%"
+            />
+          </Link> */}
         <Link
           to="/dang-nhap"
           as={ReactRouterLink}

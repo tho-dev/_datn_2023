@@ -1,0 +1,17 @@
+extends baseEmail 
+
+block content 
+   .container
+      .box
+        h1.title
+          | Think Pro
+        .body_verify
+          h3 Thank For Signing Up As An Think Pro Member
+          p(style='text-align: center;')
+            | Please verify your email by clicking the button
+          p(style='text-align: center;')
+            | below and login later at 
+            a(href='http://thinkpro.com') ThinkPro
+          .btn
+            a(href=`${url}`, target='_blank')
+              | Verify Email
