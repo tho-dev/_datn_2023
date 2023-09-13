@@ -13,17 +13,20 @@ const NavItem = ({ item }: Props) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const Icon = item?.icon;
 
+	const CheckComponent = item?.children?.length > 0 ? Box : Link;
+
 	return (
 		<>
-			<Link
-				as={ReactRouterLink}
-				to={item?.to}
+			<CheckComponent
+				as={item?.children?.length > 0 ? "div" : ReactRouterLink}
+				to={item?.children?.length > 0 ? "" : item?.to}
 				py="4"
 				px="4"
 				rounded="md"
 				display="flex"
 				alignItems="center"
 				transition="all 0.25s ease"
+				cursor="pointer"
 				justifyContent={{
 					sm: "center",
 					md: "center",
@@ -31,7 +34,6 @@ const NavItem = ({ item }: Props) => {
 					xl: "space-between",
 					"2xl": "space-between",
 				}}
-				backgroundColor={location.pathname == item?.to ? "#12AFF033" : ""}
 				_hover={{
 					textDecor: "none",
 					backgroundColor: "#12AFF033",
@@ -53,14 +55,14 @@ const NavItem = ({ item }: Props) => {
 					>
 						<Icon
 							size="5"
-							color={location.pathname == item?.to ? "#12AFF0" : "#809FB8"}
+							color={"#809FB8"}
 						/>
 					</Flex>
 					<Text
 						fontSize="sm"
 						lineHeight="0.5"
 						fontWeight="medium"
-						color={location.pathname == item?.to ? "#12AFF0" : "#809FB8"}
+						color={"#809FB8"}
 						display={{
 							sm: "none",
 							md: "none",
@@ -95,7 +97,7 @@ const NavItem = ({ item }: Props) => {
 						/>
 					</Flex>
 				)}
-			</Link>
+			</CheckComponent>
 			<Collapse
 				in={isOpen}
 				animateOpacity
