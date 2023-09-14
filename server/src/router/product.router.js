@@ -1,20 +1,23 @@
-import express from "express"
-import { getAllProduct, getSingleProduct } from "../controllers/product.controller";
+import express from "express";
+import {
+  getAllProduct,
+  getSingleProduct,
+  compeareProduct,
+} from "../controllers/product.controller";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', getAllProduct)
-router.get('/:slug', getSingleProduct)
+router.get("/", getAllProduct);
+router.get("/:slug", getSingleProduct);
+router.post("/compare", compeareProduct);
 
-
-export default router
-
+export default router;
 
 // các api cần tạo ra sản phẩm
 /**
- * 1. 
- * 2. 
- * 3. 
- * 4. 
+ * 1.
+ * 2.
+ * 3.
+ * 4.
  * 5.
  */
