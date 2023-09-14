@@ -108,7 +108,7 @@ export async function verifyEmail(req, res) {
 export const verifiedEmail = async (req, res) => {
   try {
     res.sendFile(path.join(__dirname, "./../views/verified.html"));
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export async function updateUser(req, res, next) {

@@ -5,28 +5,29 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const plugins = [slug, mongoosePaginate, mongooseDelete]
 
-const demandValueSchema = new Schema({
-	product_id: {
-		type: Schema.Types.ObjectId,
-		ref: 'Product'
-	},
-	demand_id: {
-		type: Schema.Types.ObjectId,
-		ref: 'Demand'
-	},
-	point: {
-		type: Number,
-		default: 0
-	},
-	created_at: {
-		type: Date,
-		default: Date.now
-	},
-	updated_at: {
-		type: Date,
-		default: Date.now
-	}
-}, {
+const demandValueSchema = new Schema(
+	{
+		product_id: {
+			type: Schema.Types.ObjectId,
+			ref: 'Product'
+		},
+		demand_id: {
+			type: Schema.Types.ObjectId,
+			ref: 'Demand'
+		},
+		point: {
+			type: Number,
+			default: 0
+		},
+		created_at: {
+			type: Date,
+			default: Date.now
+		},
+		updated_at: {
+			type: Date,
+			default: Date.now
+		}
+	}, {
 	collection: 'demand_values',
 	timestamps: false,
 	versionKey: false
