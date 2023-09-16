@@ -1,8 +1,12 @@
 import express from "express"
-import { getAllBrand } from "../controllers/brand.controller"
+import { getAllBrand, getOneBrand, createBrand, updateBrand, removeBrand } from "../controllers/brand.controller"
 
 const router = express.Router()
 
 router.get('/', getAllBrand)
+router.get('/:slug', getOneBrand)
+router.post('/', createBrand)
+router.put('/:id', updateBrand)
+router.delete('/:id', removeBrand)
 
 export default router
