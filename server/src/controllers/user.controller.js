@@ -51,7 +51,7 @@ export async function addUser(req, res, next) {
 
     const userExit = await User.findOne({ email: email });
     if (userExit) {
-      return res.json({
+      return res.status(400).json({
         status: 400,
         message: "Email này đã tồn tại",
       });
@@ -69,7 +69,7 @@ export async function addUser(req, res, next) {
   }
 }
 //verify email
-export async function verifyEmail(req, res) {
+export async function verifyEmail(req, res, next) {
   try {
     const { userId, uniqueString } = req.params;
 
@@ -105,21 +105,14 @@ export async function verifyEmail(req, res) {
   }
 }
 
-export const verifiedEmail = async (req, res) => {
+export const verifiedEmail = async (req, res, next) => {
   try {
     res.sendFile(path.join(__dirname, "./../views/verified.html"));
-  } catch (error) { }
+  } catch (error) {}
 };
 
 export async function updateUser(req, res, next) {
   try {
-    const { error } = userSchema.validate(req.body, { abortEarly: false });
-    if (error) {
-      const errors = error.details.map((items) => items.message);
-      return res.status(400).json({
-        message: errors,
-      });
-    }
     const user_updated = await User.findOneAndUpdate(
       { _id: req.params.id },
       req.body,
@@ -133,7 +126,7 @@ export async function updateUser(req, res, next) {
     }
     return res.json({
       status: 200,
-      message: "Thành công",
+      message: "Cập nhật Thành công",
       data: user_updated,
     });
   } catch (error) {
@@ -141,7 +134,52 @@ export async function updateUser(req, res, next) {
   }
 }
 
-export const login = async (req, res) => {
+export async function updateUserPassword(req, res, next) {
+  try {
+    const { password, new_password, new_confirm_password } = req.body;
+    const user = await User.findOne({ _id: req.params.id });
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy user" });
+    }
+    const isMatchPassWord = await bcrypt.compare(password, user.password);
+
+    if (!isMatchPassWord) {
+      return res.status(400).json({
+        message: "Mật khẩu không chính xác",
+      });
+    }
+    if (new_password.length < 6) {
+      return res.status(400).json({
+        message: "Mật khẩu mới phải lớn hơn 6 ký tự",
+      });
+    }
+    const hash_password = await bcrypt.hash(new_password, 10);
+
+    const user_updated = await User.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        ...req.body,
+        password: hash_password,
+        confirm_password: new_confirm_password,
+      },
+      { new: true }
+    );
+    if (!user_updated) {
+      return res.status(404).json({
+        message: "Cập nhật thất bại",
+      });
+    }
+    return res.json({
+      status: 200,
+      message: "Cập nhật mật khẩu Thành công",
+      data: user_updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
