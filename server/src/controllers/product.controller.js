@@ -9,7 +9,12 @@ import { Product, Option, OptionValue, Sku, Variant } from '../models/product.mo
 // controller products
 export async function getAllProduct(req, res, next) {
 	try {
-		const { _page = 1, _sort = "createdAt", _order = "asc", _limit = 10 } = req.query;
+		const {
+			_page = 1,
+			_sort = "createdAt",
+			_order = "asc",
+			_limit = 10,
+		} = req.query;
 
 		const options = {
 			page: _page,
@@ -20,28 +25,25 @@ export async function getAllProduct(req, res, next) {
 			select: ['-assets', '-attributes', '-description', '-specs', '-category_id', '-brand_id', '-deleted', '-deleted_at', '-created_at', '-updated_at']
 		};
 
-		const {
-			docs,
-			...paginate
-		} = await Product.paginate({}, options);
+		const { docs, ...paginate } = await Product.paginate({}, options);
 
 		// hàm lấy ra các 1 sku của một sản phẩm
 		const getSku = async (product, id) => {
 			const sku = await Sku.findOne({
-				product_id: id
-			}).select('-assets -stock -created_at -updated_at')
+				product_id: id,
+			}).select("-assets -stock -created_at -updated_at");
 
 			// lấy ra biến thể của sku
 			const variant = await Variant.find({
-				sku_id: sku?._id
-			}).populate(['option_value_id'])
+				sku_id: sku?._id,
+			}).populate(["option_value_id"]);
 
 			const optionValue = variant?.map((item) => item?.toObject()?.option_value_id?.label)
 
 			// lấy ra các options
 			const options = await Option.find({
-				product_id: id
-			})
+				product_id: id,
+			});
 
 			// lấy ra option màu
 			const option = options?.find((option) => option.name == 'color')
@@ -58,28 +60,30 @@ export async function getAllProduct(req, res, next) {
 			}
 		}
 
-		const data = await Promise.all(docs?.map((item) => getSku(item, item?._id)))
+		const data = await Promise.all(
+			docs?.map((item) => getSku(item, item?._id))
+		);
 
 		return res.json({
 			status: 200,
-			message: 'Thành công',
+			message: "Thành công",
 			data: {
 				items: data,
-				paginate
-			}
-		})
+				paginate,
+			},
+		});
 	} catch (error) {
-		next(error)
+		next(error);
 	}
 }
 
 export async function getSingleProduct(req, res, next) {
 	try {
-		const { slug } = req?.params
+		const { slug } = req?.params;
 
 		const sku = await Sku.findOne({
-			slug
-		}).select('-assets._id')
+			slug,
+		}).select("-assets._id");
 
 		const product = await Product.findOne({
 			_id: sku?.product_id
@@ -112,14 +116,14 @@ export async function getSingleProduct(req, res, next) {
 
 		// lấy ra tất cả các biến thể sản phẩm dựa vào sku
 		const variants = await Variant.find({
-			sku_id: sku?._id
-		}).select('-_id -created_at -updated_at')
+			sku_id: sku?._id,
+		}).select("-_id -created_at -updated_at");
 
 		// hàm get option value
 		const getOptionValues = async (option, id) => {
 			const values = await OptionValue.find({
-				option_id: id
-			}).select('-_id label value')
+				option_id: id,
+			}).select("-_id label value");
 
 			return {
 				name: option?.name,
@@ -130,11 +134,11 @@ export async function getSingleProduct(req, res, next) {
 		// hàm lấy ra các thuộc tính biến thể của 1 sku
 		const getOptionValue = async (id) => {
 			const value = await OptionValue.findOne({
-				_id: id
-			}).select('-_id value label')
+				_id: id,
+			}).select("-_id value label");
 
-			return value
-		}
+			return value;
+		};
 
 		// hàm lấy ra options -> visual = color
 		const getProductColor = async (array) => {
@@ -144,16 +148,16 @@ export async function getSingleProduct(req, res, next) {
 				_id: variant?.option_value_id
 			}).select('-_id value label')
 
-			return color
-		}
+			return color;
+		};
 
 		// hàm lấy tất cả các biến thể của sản phẩm
 		const getVariants = async (sku, id) => {
 			const variants = await Variant.find({
-				sku_id: id
-			})
+				sku_id: id,
+			});
 
-			const color = await getProductColor(variants)
+			const color = await getProductColor(variants);
 
 			// lấy ra giá trị biến thể của 1 sku
 			const optionValues = await Promise.all(variants?.map((item) => getOptionValue(item?.option_value_id)))
@@ -161,11 +165,9 @@ export async function getSingleProduct(req, res, next) {
 			return {
 				...sku,
 				color,
-				option_value: optionValues
-			}
-		}
-
-
+				option_value: optionValues,
+			};
+		};
 
 		// lấy giá trị của từng thuộc tính
 		const data1 = await Promise.all(options?.map((option) => getOptionValues(option, option?._id)))
@@ -199,14 +201,13 @@ export async function getSingleProduct(req, res, next) {
 
 export async function createProduct(req, res, next) {
 	try {
-
 		return res.status(201).json({
 			status: 201,
-			message: 'Thành công',
-			data: []
-		})
+			message: "Thành công",
+			data: [],
+		});
 	} catch (error) {
-		next(error)
+		next(error);
 	}
 }
 

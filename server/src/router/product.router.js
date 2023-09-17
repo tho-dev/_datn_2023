@@ -17,7 +17,7 @@ import {
 	saveVariant
 } from "../controllers/product.controller";
 
-const router = express.Router()
+const router = express.Router();
 
 // api product 
 router.get('/:slug', getSingleProduct)
@@ -46,6 +46,7 @@ router.delete('/:product_id/options/:option_id/values/:value_id', deleteOptionVa
 
 export default router
 
+export default router;
 
 // các api cần tạo ra sản phẩm
 /**
