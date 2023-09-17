@@ -44,8 +44,6 @@ router.put('/:product_id/options/:option_id/values/:value_id', updateOptionValue
 router.delete('/:product_id/options/:option_id/values/:value_id', deleteOptionValue)
 
 
-export default router
-
 export default router;
 
 // các api cần tạo ra sản phẩm
