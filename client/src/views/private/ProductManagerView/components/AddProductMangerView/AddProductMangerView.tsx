@@ -10,9 +10,7 @@ import {
 	FormControl,
 	Input,
 	Button,
-	Divider,
 	Text,
-	MenuItem,
 	RadioGroup,
 	Stack,
 	Radio,
@@ -96,9 +94,32 @@ const AddProductMangerView = (props: Props) => {
 		getValues,
 		watch,
 		reset,
+		resetField,
 		formState: { errors, isSubmitting },
-	} = useForm();
-
+	} = useForm({
+		// defaultValues: {
+		// 	assets: [],
+		// 	attributes: [],
+		// 	brand_id: null,
+		// 	category_id: null,
+		// 	description: "",
+		// 	has_gift: "false",
+		// 	gift_amount: "",
+		// 	image: null,
+		// 	is_avaiable: "false",
+		// 	name: "",
+		// 	sku: "",
+		// 	price: 0,
+		// 	price_before_discount: 0,
+		// 	seo_description: "",
+		// 	specs: "",
+		// 	status: "true",
+		// 	tags: [],
+		// 	title: "",
+		// 	video_review: "",
+		// 	variants: [],
+		// },
+	});
 	// xử lý value quill và react-hook-form
 	useEffect(() => {
 		register("specs");
@@ -459,6 +480,9 @@ const AddProductMangerView = (props: Props) => {
 																<RadioGroup
 																	onChange={onChange}
 																	value={value}
+																	defaultValue={"false"}
+																	name={name}
+																	ref={ref}
 																>
 																	<Stack
 																		direction="row"
@@ -550,6 +574,9 @@ const AddProductMangerView = (props: Props) => {
 																<RadioGroup
 																	onChange={onChange}
 																	value={value}
+																	defaultValue={value}
+																	name={name}
+																	ref={ref}
 																>
 																	<Stack
 																		direction="row"
@@ -603,6 +630,9 @@ const AddProductMangerView = (props: Props) => {
 																<RadioGroup
 																	onChange={onChange}
 																	value={value}
+																	defaultValue={"true"}
+																	name={name}
+																	ref={ref}
 																>
 																	<Stack
 																		direction="row"
@@ -843,6 +873,8 @@ const AddProductMangerView = (props: Props) => {
 										errors={errors}
 										setValue={setValue}
 										getValues={getValues}
+										watch={watch}
+										resetField={resetField}
 									/>
 								</CommonBox>
 							</TabPanel>

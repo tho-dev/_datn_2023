@@ -15,11 +15,6 @@ const optionSchema = new Schema({
 	name: {
 		type: String
 	},
-	visual: {
-		type: String,
-		default: 'text',
-		emun: ['color', 'text', 'image'],
-	},
 	created_at: {
 		type: Date,
 		default: Date.now
@@ -44,7 +39,7 @@ const optionValueSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Option'
 	},
-	lable: {
+	label: {
 		type: String,
 	},
 	value: {
@@ -69,6 +64,10 @@ const skuSchema = new Schema({
 	product_id: {
 		type: Schema.Types.ObjectId,
 		ref: 'Product'
+	},
+	SKU: {
+		type: String,
+		default: ""
 	},
 	name: {
 		type: String
@@ -143,6 +142,14 @@ const variantSchema = new Schema({
 	product_id: {
 		type: Schema.Types.ObjectId,
 		ref: "Product"
+	},
+	deleted: {
+		type: Boolean,
+		default: false,
+	},
+	deleted_at: {
+		type: Date,
+		default: null,
 	},
 	created_at: {
 		type: Date,
@@ -250,8 +257,15 @@ const productSchema = new Schema({
 	versionKey: false
 })
 
+// plugins
 plugins.forEach((item) => productSchema.plugin(item, { overrideMethods: true }));
 pluginsFilter.forEach((item) => skuSchema.plugin(item, { overrideMethods: true }))
+
+// middlewaves trong schema
+skuSchema.pre('save', function (next) {
+	this.name = this.name + "-" + this._id
+	next();
+});
 
 const Product = model('Product', productSchema)
 const Option = model('Option', optionSchema)
