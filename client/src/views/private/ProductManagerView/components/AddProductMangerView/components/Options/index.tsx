@@ -1,15 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
-import { useFieldArray } from "react-hook-form";
-import { Button, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
+import { Controller, useFieldArray } from "react-hook-form";
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { AddAdminIcon, CloseSmallIcon } from "~/components/common/Icons";
+import { Select, chakraComponents } from "chakra-react-select";
 
 type Props = {
 	register?: any;
 	control?: any;
 	errors?: any;
+	watch?: any;
 	setValue?: any;
 	getValues?: any;
+	resetField?: any;
+};
+
+const options: any = [
+	{
+		label: "Màu",
+		value: "color",
+	},
+	{
+		label: "Phiên bản",
+		value: "version",
+	},
+	{
+		label: "Loại hàng",
+		value: "type",
+	},
+];
+
+const visuals = [
+	{
+		label: "Color",
+		value: "color",
+	},
+	{
+		label: "Text",
+		value: "text",
+	},
+];
+
+const OptionComponent = {
+	Option: ({ children, ...props }: any) => (
+		<chakraComponents.Option {...props}>
+			<Text
+				as="div"
+				fontSize="sm"
+			>
+				{children}
+			</Text>
+		</chakraComponents.Option>
+	),
+	Control: ({ children, ...props }: any) => (
+		<chakraComponents.Control {...props}>
+			<Text
+				as="div"
+				w="full"
+				display="flex"
+				fontSize="sm"
+			>
+				{children}
+			</Text>
+		</chakraComponents.Control>
+	),
 };
 
 const OptionNested = ({ nestIndex, control, register, errors }: any) => {
@@ -17,13 +71,6 @@ const OptionNested = ({ nestIndex, control, register, errors }: any) => {
 		control,
 		name: `variants.${nestIndex}.options`,
 	});
-
-	console.log("errors", errors);
-
-	const placeholderLabelText =
-		(nestIndex == 0 && "Black, pink, green, inova,...") ||
-		(nestIndex == 1 && "i7 1260P, FHD+ 16GB, 512GB,...") ||
-		(nestIndex == 2 && "Mới, Full box, Nhập khẩu,...");
 
 	return (
 		<Box>
@@ -64,11 +111,12 @@ const OptionNested = ({ nestIndex, control, register, errors }: any) => {
 									{...register(`variants.${nestIndex}.options.${k}.label`, {
 										required: "Không được để trống",
 									})}
-									placeholder={placeholderLabelText}
+									bgColor="transparent"
+									placeholder="Đen, FHD+ 16GB, 512GB, Mới, Full box, ..."
 									borderColor={
 										errors?.variants?.[nestIndex]?.options?.[k]?.label
 											? "border.error"
-											: "transparent"
+											: "border.primary"
 									}
 								/>
 								<FormErrorMessage>
@@ -81,11 +129,12 @@ const OptionNested = ({ nestIndex, control, register, errors }: any) => {
 									{...register(`variants.${nestIndex}.options.${k}.value`, {
 										required: "Không được để trống",
 									})}
-									placeholder="#ccc, nhập khẩu,..."
+									bgColor="transparent"
+									placeholder="Đen, FHD+ 16GB, 512GB, Mới, Full box, ..."
 									borderColor={
 										errors?.variants?.[nestIndex]?.options?.[k]?.value
 											? "border.error"
-											: "transparent"
+											: "border.primary"
 									}
 								/>
 								<FormErrorMessage>
@@ -139,7 +188,8 @@ const OptionNested = ({ nestIndex, control, register, errors }: any) => {
 	);
 };
 
-const Options = ({ control, register, errors, setValue, getValues }: Props) => {
+const Options = ({ control, register, errors, setValue, getValues, watch, resetField }: Props) => {
+	const toast = useToast();
 	const { fields, append, remove, prepend } = useFieldArray({
 		control,
 		name: "variants",
@@ -166,100 +216,156 @@ const Options = ({ control, register, errors, setValue, getValues }: Props) => {
 				}}
 			>
 				{fields.map((item, index) => {
-					const placeholderName =
-						(index == 0 && "Màu") || (index == 1 && "Phiên bản") || (index == 2 && "Loại hàng");
+					if (index <= 2) {
+						return (
+							<GridItem key={item.id}>
+								<Flex
+									flexDir="column"
+									bgColor="bg.gray"
+									px="6"
+									py="5"
+									rounded="lg"
+									position="relative"
+								>
+									<Flex justifyContent="flex-start">
+										<Flex
+											gap="4"
+											flexDir="column"
+											w="full"
+										>
+											<Controller
+												control={control}
+												name={`variants.${[index]}.name`}
+												rules={{ required: "Không được để trống" }}
+												render={({
+													field: { onChange, onBlur, value, name, ref },
+													fieldState: { error },
+												}) => {
+													const filterOptions = options.filter((option: any, k: any) => {
+														if (index == 1) {
+															return option.value != watch(`variants.${[0]}.name.value`);
+														} else if (index == 2) {
+															const array = [
+																watch(`variants.${[0]}.name.value`),
+																watch(`variants.${[1]}.name.value`),
+															];
 
-					return (
-						<GridItem key={item.id}>
-							<Flex
-								flexDir="column"
-								bgColor="bg.gray"
-								px="6"
-								py="5"
-								rounded="lg"
-								position="relative"
-							>
-								<Flex justifyContent="flex-start">
+															return !array?.includes(option.value);
+														} else {
+															return option;
+														}
+													});
+
+													return (
+														<FormControl isInvalid={!!error}>
+															<FormLabel
+																htmlFor="price"
+																fontSize="sm"
+																fontWeight="semibold"
+															>
+																Thuộc tính
+															</FormLabel>
+
+															<Select
+																name={name}
+																ref={ref}
+																onChange={onChange}
+																onBlur={onBlur}
+																value={value}
+																options={filterOptions}
+																placeholder={
+																	<Text
+																		as="span"
+																		fontSize="sm"
+																	>
+																		Màu, Phiên Bản, Loại Hàng
+																	</Text>
+																}
+																components={OptionComponent}
+																closeMenuOnSelect={false}
+															/>
+
+															<FormErrorMessage>
+																{error && error.message}
+															</FormErrorMessage>
+														</FormControl>
+													);
+												}}
+											/>
+
+											<Controller
+												control={control}
+												name={`variants.${[index]}.visual`}
+												rules={{ required: "Không được để trống" }}
+												render={({
+													field: { onChange, onBlur, value, name, ref },
+													fieldState: { error },
+												}) => (
+													<FormControl isInvalid={!!error}>
+														<FormLabel
+															fontSize="sm"
+															fontWeight="semibold"
+														>
+															Hiển thị
+														</FormLabel>
+
+														<Select
+															name={name}
+															ref={ref}
+															onChange={onChange}
+															onBlur={onBlur}
+															value={value}
+															options={visuals}
+															placeholder={
+																<Text
+																	as="span"
+																	fontSize="sm"
+																>
+																	Màu, Chữ
+																</Text>
+															}
+															components={OptionComponent}
+															closeMenuOnSelect={false}
+														/>
+
+														<FormErrorMessage>{error && error.message}</FormErrorMessage>
+													</FormControl>
+												)}
+											/>
+										</Flex>
+									</Flex>
+
+									{/* Thuộc tính lồng nhau */}
+									<OptionNested
+										nestIndex={index}
+										control={control}
+										register={register}
+										errors={errors}
+									/>
 									<Flex
-										gap="4"
-										flexDir="column"
-										w="full"
+										position="absolute"
+										top="2"
+										right="2"
+										display="inline-flex"
+										alignItems="center"
+										justifyContent="center"
+										cursor="pointer"
+										onClick={() => remove(index)}
+										w="5"
+										h="5"
+										bgColor="bg.white"
+										rounded="full"
 									>
-										<FormControl isInvalid={errors?.variants?.[index]?.name as any}>
-											<FormLabel
-												fontSize="sm"
-												fontWeight="semibold"
-											>
-												Thuộc tính
-											</FormLabel>
-											<Input
-												{...register(`variants.${index}.name`, {
-													required: "Không để trống",
-												})}
-												placeholder={placeholderName}
-												borderColor={
-													errors?.variants?.[index]?.name ? "border.error" : "transparent"
-												}
-											/>
-											<FormErrorMessage>
-												{(errors?.variants?.[index]?.name as any) &&
-													errors?.variants?.[index]?.name?.message}
-											</FormErrorMessage>
-										</FormControl>
-										<FormControl isInvalid={errors?.variants?.[index]?.visual as any}>
-											<FormLabel
-												fontSize="sm"
-												fontWeight="semibold"
-											>
-												Hiển thị
-											</FormLabel>
-											<Input
-												{...register(`variants.${index}.visual`, {
-													required: "Không để trống",
-												})}
-												placeholder="color, text, image, ..."
-												borderColor={
-													errors?.variants?.[index]?.visual ? "border.error" : "transparent"
-												}
-											/>
-											<FormErrorMessage>
-												{(errors?.variants?.[index]?.visual as any) &&
-													errors?.variants?.[index]?.visual?.message}
-											</FormErrorMessage>
-										</FormControl>
+										<CloseSmallIcon
+											size={4}
+											color="text.black"
+											strokeWidth={1.5}
+										/>
 									</Flex>
 								</Flex>
-
-								{/* Thuộc tính lồng nhau */}
-								<OptionNested
-									nestIndex={index}
-									control={control}
-									register={register}
-									errors={errors}
-								/>
-								<Flex
-									position="absolute"
-									top="2"
-									right="2"
-									display="inline-flex"
-									alignItems="center"
-									justifyContent="center"
-									cursor="pointer"
-									onClick={() => remove(index)}
-									w="5"
-									h="5"
-									bgColor="bg.white"
-									rounded="full"
-								>
-									<CloseSmallIcon
-										size={4}
-										color="text.black"
-										strokeWidth={1.5}
-									/>
-								</Flex>
-							</Flex>
-						</GridItem>
-					);
+							</GridItem>
+						);
+					}
 				})}
 			</Grid>
 			<Button
@@ -272,14 +378,74 @@ const Options = ({ control, register, errors, setValue, getValues }: Props) => {
 					textDecor: "none",
 				}}
 				onClick={() => {
-					setValue("variants", [
-						...(getValues().variants || []),
-						{
-							name: "",
-							visual: "",
-							options: [{ label: "", value: "" }],
-						},
-					]);
+					// Giới hạn thuộc tính
+					if (fields?.length > 2) {
+						toast({
+							title: "Giới hạn",
+							description: "Bạn chỉ có thể tạo tối đa 3 thuộc tính",
+							status: "error",
+							duration: 1200,
+							isClosable: true,
+							position: "top-right",
+						});
+
+						return;
+					}
+
+					if (fields?.length == 0 && !watch(`variants.${[0]}.name.value`)) {
+						setValue("variants", [
+							...(getValues().variants || []),
+							{
+								name: "",
+								visual: "",
+								options: [{ label: "", value: "" }],
+							},
+						]);
+					} else {
+						if (watch(`variants.${[0]}.name.value`) || watch(`variants.${[1]}.name.value`)) {
+							if (fields?.length == 1 && watch(`variants.${[0]}.name.value`)) {
+								setValue("variants", [
+									...(getValues().variants || []),
+									{
+										name: "",
+										visual: "",
+										options: [{ label: "", value: "" }],
+									},
+								]);
+							} else if (
+								fields?.length == 2 &&
+								watch(`variants.${[0]}.name.value`) &&
+								watch(`variants.${[1]}.name.value`)
+							) {
+								setValue("variants", [
+									...(getValues().variants || []),
+									{
+										name: "",
+										visual: "",
+										options: [{ label: "", value: "" }],
+									},
+								]);
+							} else {
+								toast({
+									title: "Thuộc tính",
+									description: "Vui lòng chọn giá trị thuộc tính",
+									status: "error",
+									duration: 1200,
+									isClosable: true,
+									position: "top-right",
+								});
+							}
+						} else {
+							toast({
+								title: "Thuộc tính",
+								description: "Vui lòng chọn giá trị thuộc tính",
+								status: "error",
+								duration: 1200,
+								isClosable: true,
+								position: "top-right",
+							});
+						}
+					}
 				}}
 			>
 				Tạo thuộc tính
