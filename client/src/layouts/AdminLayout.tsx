@@ -15,7 +15,7 @@ const AdminLayout = (props: Props) => {
 			</Helmet>
 			<Flex
 				w="full"
-				h="100vh"
+				h="full"
 			>
 				{/* Sidebar */}
 				<Sidebar />
@@ -42,6 +42,7 @@ const AdminLayout = (props: Props) => {
 					<TopBar />
 					<Box
 						w="full"
+						h="full"
 						pl="6"
 						pr="8"
 						pt="6"

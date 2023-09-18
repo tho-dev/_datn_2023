@@ -33,12 +33,12 @@ import ShippingList from "~/views/private/ShippingView/ShippingList";
 import Shipments from "~/views/private/ShippingView/Shipments";
 import { Payment } from "~/views/public/PaymentView";
 import { CompareView } from "~/views/public/CompareView";
-import { CommentView } from "~/views/public/Comment";
 import { SearchView } from "~/views/public/SearchView";
 import { BrandView } from "~/views/private/BrandView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import PostManagementView from "~/views/private/PostManagementView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
+import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 
 const routes: RouteObject[] = [
   {
@@ -86,10 +86,6 @@ const routes: RouteObject[] = [
           {
             path: "so-sanh",
             element: <CompareView />,
-          },
-          {
-            path: "comment",
-            element: <CommentView />,
           },
           {
             path: "tim-kiem",
@@ -168,6 +164,10 @@ const routes: RouteObject[] = [
       {
         path: "tai-khoan",
         element: <UserListManagerView />,
+      },
+      {
+        path: "tai-khoan/add",
+        element: <AddUserListManagerView />,
       },
       {
         path: "thuong-hieu",

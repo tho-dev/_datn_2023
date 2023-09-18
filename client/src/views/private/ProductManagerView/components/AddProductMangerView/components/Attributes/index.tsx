@@ -1,10 +1,8 @@
 import React from "react";
-import CommonBox from "../CommonBox";
 import { Box, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
 import { useFieldArray } from "react-hook-form";
 import { Button, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
 import { AddAdminIcon, CloseSmallIcon } from "~/components/common/Icons";
-import { motion } from "framer-motion";
 
 type Props = {
 	register?: any;
@@ -48,27 +46,45 @@ const AttributeNested = ({ nestIndex, control, register, errors }: any) => {
 						<Flex
 							flexDir="column"
 							gap="2"
-							w="90%"
+							w="full"
 							position="relative"
 							px="6"
 							py="4"
 							key={item?.id}
 						>
-							<FormControl>
+							<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.label as any}>
 								<Input
-									{...register(`attributes.${nestIndex}.items.${k}.label`)}
-									placeholder="Label"
-									border="none"
+									{...register(`attributes.${nestIndex}.items.${k}.label`, {
+										required: "Không được để trống",
+									})}
+									placeholder="Kích thước/Cao tối đa lưng ghế,..."
+									borderColor={
+										errors?.attributes?.[nestIndex]?.items?.[k]?.label
+											? "border.error"
+											: "transparent"
+									}
 								/>
-								<FormErrorMessage>{(errors?.name as any) && errors?.name?.message}</FormErrorMessage>
+								<FormErrorMessage>
+									{(errors?.attributes?.[nestIndex]?.items?.[k]?.label as any) &&
+										errors?.attributes?.[nestIndex]?.items?.[k]?.label?.message}
+								</FormErrorMessage>
 							</FormControl>
-							<FormControl>
+							<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.value as any}>
 								<Input
-									{...register(`attributes.${nestIndex}.items.${k}.value`)}
-									placeholder="Value"
-									border="none"
+									{...register(`attributes.${nestIndex}.items.${k}.value`, {
+										required: "Không được để trống",
+									})}
+									placeholder="66cm, 55cm,..."
+									borderColor={
+										errors?.attributes?.[nestIndex]?.items?.[k]?.value
+											? "border.error"
+											: "transparent"
+									}
 								/>
-								<FormErrorMessage>{(errors?.name as any) && errors?.name?.message}</FormErrorMessage>
+								<FormErrorMessage>
+									{(errors?.attributes?.[nestIndex]?.items?.[k]?.value as any) &&
+										errors?.attributes?.[nestIndex]?.items?.[k]?.value?.message}
+								</FormErrorMessage>
 							</FormControl>
 							<Flex
 								position="absolute"
@@ -95,8 +111,9 @@ const AttributeNested = ({ nestIndex, control, register, errors }: any) => {
 				})}
 			</Flex>
 			<Button
-				bgColor="text.black"
+				bgColor="text.textSuccess"
 				size="small"
+				fontWeight="bold"
 				px="4"
 				leftIcon={<AddAdminIcon size={4} />}
 				_hover={{
@@ -109,7 +126,7 @@ const AttributeNested = ({ nestIndex, control, register, errors }: any) => {
 					})
 				}
 			>
-				Tạo thuộc tính
+				Tạo
 			</Button>
 		</Box>
 	);
@@ -125,9 +142,8 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 		<Box>
 			<Grid
 				gap="4"
-				templateColumns="repeat(2, 1fr)"
+				templateColumns="repeat(3, 1fr)"
 				overflowY="auto"
-				maxH="500px"
 				css={{
 					"&::-webkit-scrollbar": {
 						width: "6px",
@@ -154,26 +170,35 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 								position="relative"
 							>
 								<Flex justifyContent="flex-start">
-									<Box w="full">
-										<FormControl>
+									<Flex
+										gap="4"
+										flexDir="column"
+										w="full"
+									>
+										<FormControl isInvalid={errors?.attributes?.[index]?.group_name as any}>
 											<FormLabel
-												htmlFor="name"
 												fontSize="sm"
 												fontWeight="semibold"
 											>
-												Nhóm thuộc tính
+												Chi tiết
 											</FormLabel>
 											<Input
-												id="name"
-												{...register(`attributes.${index}.group_name`)}
-												placeholder="Group"
-												border="none"
+												{...register(`attributes.${index}.group_name`, {
+													required: "Không để trống",
+												})}
+												placeholder="Thiết kế, Kích thước & Trọng lượng, ..."
+												borderColor={
+													errors?.attributes?.[index]?.group_name
+														? "border.error"
+														: "transparent"
+												}
 											/>
 											<FormErrorMessage>
-												{(errors?.name as any) && errors?.name?.message}
+												{(errors?.attributes?.[index]?.group_name as any) &&
+													errors?.attributes?.[index]?.group_name?.message}
 											</FormErrorMessage>
 										</FormControl>
-									</Box>
+									</Flex>
 								</Flex>
 
 								{/* Thuộc tính lồng nhau */}
@@ -209,11 +234,11 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 				})}
 			</Grid>
 			<Button
-				bgColor="text.black"
-				size="small"
+				bgColor="text.textSuccess"
+				size="medium"
 				px="4"
 				mt="4"
-				leftIcon={<AddAdminIcon size={4} />}
+				leftIcon={<AddAdminIcon size={5} />}
 				_hover={{
 					textDecor: "none",
 				}}
@@ -227,7 +252,7 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 					]);
 				}}
 			>
-				Tạo nhóm thuộc tính
+				Tạo đặc điểm
 			</Button>
 		</Box>
 	);
