@@ -17,3 +17,14 @@ export const productSchema = joi.object({
 	deletedAt: joi.date().default(null),
 	deleted: joi.boolean().default(false),
 });
+export const categorySchema = joi.object({
+	name: joi.string().required(),
+	type: joi.string().required(),
+	thumbnail: joi.object().required(),
+	description: joi.string().required(),
+	deleted: joi.boolean().default(false),
+	deletedAt: joi.date().default(null),
+	createdAt: joi.string().default(() => new Date()),
+	updatedAt: joi.string().default(() => new Date()),
+	sub_categories: joi.array().default([]),
+})
