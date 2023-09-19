@@ -3,16 +3,17 @@ import UserVerification from "../models/userverification.model";
 import { userSchema } from "../validations";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import otpGenerator from "otp-generator";
-import nodemailer from "nodemailer";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
 import { sendVerificationEmail } from "../utils/email";
 import { loginShema } from "../validations/auth";
+import createError from "http-errors";
 
 export async function getAllUser(req, res, next) {
   try {
     const users = await User.find({});
+    if (!users) {
+      throw createError.NotFound("Không tìm thấy sản phẩm");
+    }
     return res.json({
       status: 200,
       message: "Thành công",
@@ -27,7 +28,7 @@ export async function getOneUser(req, res, next) {
   try {
     const { id } = req.params.id;
     const user = await User.findById({ id });
-    if (!user) return res.json({ status: 404, message: "Thất bại" });
+    if (!user) throw createError.NotFound("Không tìm thấy sản phẩm");
     return res.json({
       status: 200,
       message: "Thành công",
@@ -44,17 +45,12 @@ export async function addUser(req, res, next) {
     const { error } = userSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const errors = error.details.map((items) => items.message);
-      return res.status(400).json({
-        message: errors,
-      });
+      throw createError.BadRequest(errors);
     }
 
     const userExit = await User.findOne({ email: email });
     if (userExit) {
-      return res.status(400).json({
-        status: 400,
-        message: "Email này đã tồn tại",
-      });
+      throw createError.BadRequest("Email này đã tồn tại");
     }
     const hash_password = await bcrypt.hash(password, 10);
 
@@ -119,10 +115,7 @@ export async function updateUser(req, res, next) {
       { new: true }
     );
     if (!user_updated) {
-      return res.json({
-        status: 404,
-        message: "Cập nhật thất bại",
-      });
+      throw createError.BadRequest("Cập nhật thất bại");
     }
     return res.json({
       status: 200,
@@ -139,19 +132,15 @@ export async function updateUserPassword(req, res, next) {
     const { password, new_password, new_confirm_password } = req.body;
     const user = await User.findOne({ _id: req.params.id });
     if (!user) {
-      return res.status(404).json({ message: "Không tìm thấy user" });
+      throw createError.NotFound("Không tìm thấy user");
     }
     const isMatchPassWord = await bcrypt.compare(password, user.password);
 
     if (!isMatchPassWord) {
-      return res.status(400).json({
-        message: "Mật khẩu không chính xác",
-      });
+      throw createError.BadRequest("Mật khẩu không chính xác");
     }
     if (new_password.length < 6) {
-      return res.status(400).json({
-        message: "Mật khẩu mới phải lớn hơn 6 ký tự",
-      });
+      throw createError.BadRequest("Mật khẩu mới phải lớn hơn 6 ký tự");
     }
     const hash_password = await bcrypt.hash(new_password, 10);
 
@@ -165,9 +154,7 @@ export async function updateUserPassword(req, res, next) {
       { new: true }
     );
     if (!user_updated) {
-      return res.status(404).json({
-        message: "Cập nhật thất bại",
-      });
+      throw createError.BadRequest("Cập nhật thất bại");
     }
     return res.json({
       status: 200,
@@ -186,29 +173,18 @@ export const login = async (req, res, next) => {
     const { error } = loginShema.validate(req.body, { abortEarly: false });
     if (error) {
       const errors = error.details.map((item) => item.message);
-      return res.status(400).json({
-        message: errors,
-      });
+      throw createError.BadRequest(errors);
     }
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.json({
-        status: 400,
-        message: "Email không tồn tại",
-      });
+      throw createError.BadRequest("Email không tồn tại");
     }
     if (!user.verified) {
-      return res.json({
-        status: 401,
-        message: "Email chưa được xác thực",
-      });
+      throw createError.Unauthorized("Email chưa được xác thực");
     }
     const isMatchPassWord = await bcrypt.compare(password, user.password);
     if (!isMatchPassWord) {
-      return res.json({
-        status: 400,
-        message: "Mật khẩu không chính xác",
-      });
+      throw createError.BadRequest("Mật khẩu không chính xác");
     }
     const accessToken = jwt.sign(
       { _id: user._id },

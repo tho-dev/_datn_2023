@@ -5,6 +5,7 @@ import category from "./category.router";
 import demand from "./demand.router";
 import user from "./user.router";
 import upload from "./uploadImage.router";
+import cart from "./cart.router";
 
 const routes = (app) => {
   app.use("/api/example", example);
@@ -14,6 +15,7 @@ const routes = (app) => {
   app.use("/api/demand", demand);
   app.use("/api/user", user);
   app.use("/api/image", upload);
+  app.use("/api/cart", cart);
 };
 
 export default routes;
