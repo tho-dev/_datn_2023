@@ -32,7 +32,7 @@ const CommentView = () => {
           }}
         >
           <Text fontSize={"18px"} fontWeight={"bold"}>
-            Khánh hàng đánh giá
+            Khách hàng đánh giá
           </Text>
           <Assess />
           <Client />
