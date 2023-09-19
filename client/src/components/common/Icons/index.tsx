@@ -522,7 +522,13 @@ export const ArrowUpAdminIcon = ({ size = 35, strokeWidth = 1.5, color = 'curren
     <path d='M12 4v14.857' />
   </Icon>
 );
-
+export const ShoppingCartIcon = ({ size = 33, strokeWidth = 1.5, color = 'currentColor', ...props }) => (
+  <Icon width={size} height={size} fill='none' stroke={color} strokeLinecap='round' strokeLinejoin='round' strokeWidth={strokeWidth} viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' {...props}>
+    <path d='M7.75 7.75h11.5l-1.637 6.958a2 2 0 0 1-1.947 1.542h-4.127a2 2 0 0 1-1.933-1.488L7.75 7.75Zm0 0-.75-3H4.75'></path>
+    <path fill='currentColor' stroke='none' d='M10 18a1 1 0 1 0 0 2 1 1 0 1 0 0-2z'></path>
+    <path fill='currentColor' stroke='none' d='M17 18a1 1 0 1 0 0 2 1 1 0 1 0 0-2z'></path>
+  </Icon>
+);
 export const ArrowDownIcon = ({ size = 35, strokeWidth = 1.5, color = 'currentColor', ...props }) => (
   <Icon width={size} height={size} fill='none' stroke={color} strokeLinecap='round' strokeLinejoin='round' strokeWidth={strokeWidth} viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' {...props}>
     <path d='M7.429 15.427 12 20l4.571-4.573' />
@@ -715,5 +721,11 @@ export const Star_Half = ({ size = 7, strokeWidth = 1.5, color = 'rgb(255, 196, 
     {...props}
   >
     <path d='m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z' />
+  </Icon>
+);
+export const MailIcon = ({ size = 33, strokeWidth = 1.5, color = 'currentColor', ...props }) => (
+  <Icon width={size} height={size} fill='none' stroke={color} strokeLinecap='round' strokeLinejoin='round' strokeWidth={strokeWidth} viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' {...props}>
+    <path d='M4.75 7.75a2 2 0 0 1 2-2h10.5a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2H6.75a2 2 0 0 1-2-2v-8.5Z'></path>
+    <path d='m5.5 6.5 6.5 5.75 6.5-5.75'></path>
   </Icon>
 );

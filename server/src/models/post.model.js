@@ -20,7 +20,7 @@ const brandSchema = new Schema(
     },
     public_date: {
       type: Date,
-      default: Date.now,
+      default: true,
     },
     thumbnail: {
       id: String,

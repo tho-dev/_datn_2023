@@ -44,10 +44,8 @@ export async function createPost(req, res, next) {
       });
     }
     if (req.body.public_date === true) {
-      req.body.public_date = new Date(); // Hoặc bạn có thể gán ngày khác tùy ý ở đây
+      req.body.public_date = new Date();
     } else if (typeof req.body.public_date === 'string') {
-      // Kiểm tra xem public_date có phải là chuỗi không
-      // Nếu có, bạn có thể chuyển đổi nó thành định dạng ngày hợp lệ
       req.body.public_date = new Date(req.body.public_date);
     }
     const post = await Post.create(req.body);
@@ -72,13 +70,7 @@ export async function updatePost(req, res, next) {
         message: errors,
       });
     }
-    if (req.body.public_date === true) {
-      req.body.public_date = new Date(); // Hoặc bạn có thể gán ngày khác tùy ý ở đây
-    } else if (typeof req.body.public_date === 'string') {
-      // Kiểm tra xem public_date có phải là chuỗi không
-      // Nếu có, bạn có thể chuyển đổi nó thành định dạng ngày hợp lệ
-      req.body.public_date = new Date(req.body.public_date);
-    }
+
     const post = await Post.findByIdAndUpdate(req.params.id, req.body);
     if (!post) {
       throw createError.BadRequest('Sửa sản phẩm thất bại');

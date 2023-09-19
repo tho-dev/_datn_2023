@@ -1,7 +1,7 @@
 import { Box, Text, Flex } from "@chakra-ui/layout";
 import { Image, Divider } from "@chakra-ui/react";
 import { Grid, GridItem } from "@chakra-ui/layout";
-import { Star, StarHalf, StarNocolor } from "~/components/common/Icons";
+import { Star, Star_Half, StarNocolor } from "~/components/common/Icons";
 
 const Assess = () => {
 	return (
@@ -39,7 +39,7 @@ const Assess = () => {
 							<Star size={4} />
 							<Star size={4} />
 							<Star size={4} />
-							<StarHalf size={4} />
+							<Star_Half size={4} />
 						</Flex>
 					</Flex>
 					<Text
