@@ -1,6 +1,6 @@
 import Post from '../models/post.model';
 import createError from 'http-errors';
-import { postSchema } from '../validations/index';
+import { postSchema } from '../validations/post.validate';
 export async function getAllPost(req, res, next) {
   try {
     const posts = await Post.find();
@@ -43,13 +43,20 @@ export async function createPost(req, res, next) {
         message: errors,
       });
     }
+    if (req.body.public_date === true) {
+      req.body.public_date = new Date(); // Hoặc bạn có thể gán ngày khác tùy ý ở đây
+    } else if (typeof req.body.public_date === 'string') {
+      // Kiểm tra xem public_date có phải là chuỗi không
+      // Nếu có, bạn có thể chuyển đổi nó thành định dạng ngày hợp lệ
+      req.body.public_date = new Date(req.body.public_date);
+    }
     const post = await Post.create(req.body);
     if (!post) {
-      throw createError.BadRequest('Thêm sản phẩm thất bại');
+      throw createError.BadRequest('Thêm bài viết thất bại');
     }
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: 'Tạo bài viết thành công',
       data: post,
     });
   } catch (error) {
@@ -65,13 +72,20 @@ export async function updatePost(req, res, next) {
         message: errors,
       });
     }
+    if (req.body.public_date === true) {
+      req.body.public_date = new Date(); // Hoặc bạn có thể gán ngày khác tùy ý ở đây
+    } else if (typeof req.body.public_date === 'string') {
+      // Kiểm tra xem public_date có phải là chuỗi không
+      // Nếu có, bạn có thể chuyển đổi nó thành định dạng ngày hợp lệ
+      req.body.public_date = new Date(req.body.public_date);
+    }
     const post = await Post.findByIdAndUpdate(req.params.id, req.body);
     if (!post) {
       throw createError.BadRequest('Sửa sản phẩm thất bại');
     }
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: 'Sửa sản phẩm thành công',
       data: post,
     });
   } catch (error) {
@@ -81,10 +95,11 @@ export async function updatePost(req, res, next) {
 export async function deletePost(req, res, next) {
   try {
     const postId = req.params.id;
-    const deletedPost = Post.findByIdAndUpdate(postId, { delete: true });
-    if (!deletedPost) {
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
       throw createError.BadRequest('Không tìm thấy bài viết');
     }
+    const deletedPost = await Post.delete({ _id: postId });
     return res.json({
       status: 200,
       message: 'Xóa bài viết thành công',
