@@ -1893,3 +1893,14 @@ export const LogoutIcon = ({
     <path d="M12 3v9"></path>
   </Icon>
 );
+export const CloseIcon = ({ size = 35, ...props }) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25ZM16.06 15 15 16.06l-3-3-3 3L7.94 15l3-3-3-3L9 7.94l3 3 3-3L16.06 9l-3 3 3 3Z"></path>
+  </Icon>
+);
