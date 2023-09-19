@@ -19,6 +19,7 @@ import { TagIcon } from "~/components/common/Icons";
 import Sku from "./components/Sku";
 import Subcate from "./components/Subcate";
 import { CommentView } from "~/components/Comment";
+import ViewedProduct from "~/components/ViewedThinkPro/ViewedProduct";
 
 type Props = {};
 
@@ -94,7 +95,15 @@ const ProductDetailView = (props: Props) => {
           <Subcate />
         </Box>
       </Flex>
+
+      {/* Đánh giá của khách hàng */}
       <CommentView />
+
+      {/* Sản phẩm đã xem */}
+      <Box pb={10} >
+        <ViewedProduct title={""} />
+      </Box>
+
     </Box>
   );
 };

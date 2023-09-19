@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpIcon, ShoppingCartIcon } from '~/components/common/Icons';
+import { ArrowUpIcon, ShoppingIcon } from '~/components/common/Icons';
 import { Grid, GridItem, Flex, Box, Center, Text, Heading } from '@chakra-ui/layout';
 
 type Props = {};
@@ -71,7 +71,7 @@ const Metrics = (props: Props) => {
                 </Flex>
               </Box>
               <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
-                <ShoppingCartIcon size={6} />
+                <ShoppingIcon size={6} />
               </Box>
             </Flex>
           </Box>
@@ -127,7 +127,7 @@ const Metrics = (props: Props) => {
                 </Flex>
               </Box>
               <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
-                <ShoppingCartIcon size={6} />
+                <ShoppingIcon size={6} />
               </Box>
             </Flex>
           </Box>
@@ -183,7 +183,7 @@ const Metrics = (props: Props) => {
                 </Flex>
               </Box>
               <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
-                <ShoppingCartIcon size={6} />
+                <ShoppingIcon size={6} />
               </Box>
             </Flex>
           </Box>
@@ -239,7 +239,7 @@ const Metrics = (props: Props) => {
                 </Flex>
               </Box>
               <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
-                <ShoppingCartIcon size={6} />
+                <ShoppingIcon size={6} />
               </Box>
             </Flex>
           </Box>
