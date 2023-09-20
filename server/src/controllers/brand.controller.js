@@ -308,5 +308,3 @@ export async function restore(req, res, next) {
 		next(error);
 	}
 }
-
-
