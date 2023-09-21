@@ -73,12 +73,7 @@ const skuSchema = new Schema({
     type: String
   },
   slug: {
-    type: String,
-    slug: "name",
-    unique: true,
-    index: true,
-    sparse: true,
-    slugOn: { save: true, update: true, updateOne: true, updateMany: true, findOneAndUpdate: true },
+    type: String
   },
   shared_url: {
     type: String
@@ -102,8 +97,11 @@ const skuSchema = new Schema({
     default: 0
   },
   image: {
-    id: String,
-    url: String
+    type: {
+      id: String,
+      url: String
+    },
+    default: {}
   },
   assets: [
     {
@@ -269,11 +267,13 @@ const productSchema = new Schema(
 
 // plugins
 plugins.forEach((item) => productSchema.plugin(item, { overrideMethods: true }));
-pluginsFilter.forEach((item) => skuSchema.plugin(item, { overrideMethods: true }))
+// pluginsFilter.forEach((item) => skuSchema.plugin(item, { overrideMethods: true }))
 
 // middlewaves trong schema
 skuSchema.pre('save', function (next) {
   this.name = this.name + "-" + this._id
+  this.slug = this.slug + "-" + this._id
+  this.shared_url = this.shared_url + "-" + this._id
   next();
 });
 

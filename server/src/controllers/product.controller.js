@@ -557,7 +557,17 @@ export async function saveVariant(req, res, next) {
 		const { product_id } = req.params
 
 		const product = await Product.findById(product_id)
-			.select("name slug shared_url price price_before_discount price_discount_percent")
+			.select("-_id name slug shared_url price price_before_discount price_discount_percent")
+
+		// Xóa tất cả sku trước khi đăng ký
+		// + TH1: khi thêm bớt options -> tính toán lại biến thể
+		// + TH2: khi thêm bớt options value -> tính toán lại biến thể
+		await Sku.deleteMany({
+			product_id
+		})
+		await Variant.deleteMany({
+			product_id
+		})
 
 		// lấy options
 		const options = await Option.find({
@@ -619,19 +629,44 @@ export async function saveVariant(req, res, next) {
 		const variants = generateVariant(docs)
 		// đăng ký tất cả skus dựa vào số lượng biến thể
 		const arraySkus = Array(variants?.length).fill({
-			...product,
+			...product.toObject(),
 			product_id: product_id,
 			stock: 0,
 			is_avaiable: true,
+			assets: [],
 			image: {},
-			assets: []
 		})
-		const skus = await Sku.insertMany(arraySkus)
+
+		// insert tất cả skus đã đăng ký vào db
+		const skus = await Promise.all(arraySkus?.map((item) => Sku.create(item)))
+
+		// hàm đăng ký các variant options
+		const variantOptions = (variants, skus) => {
+			let result = []
+
+			for (let index in skus) {
+				for (let optionValue of variants[index]) {
+					result.push({
+						product_id,
+						name: optionValue.name,
+						label: optionValue.label,
+						sku_id: skus[index]._id,
+						option_id: optionValue.option_id,
+						option_value_id: optionValue.option_value_id
+					})
+				}
+			}
+			return result
+		}
+
+		const data = variantOptions(variants, skus)
+		// insert tất cả các biến thế đã đăng ký vào db
+		const data1 = await Promise.all(data?.map((item) => Variant.create(item)))
 
 		return res.status(201).json({
 			status: 201,
 			message: 'Thành công',
-			data: skus
+			data: data1
 		})
 	} catch (error) {
 		next(error)
