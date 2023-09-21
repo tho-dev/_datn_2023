@@ -2,7 +2,7 @@ import { Box, Center, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
 import { Image, useMenu } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
-import { CloseSmallIcon, PicIcon, PicOneIcon } from "~/components/common/Icons";
+import { CloseSmallIcon, PhoneIcon } from "~/components/common/Icons";
 
 type Props = {
 	register?: any;
@@ -106,7 +106,7 @@ const Media = ({ register, watch, errors, setValue, getValues }: Props) => {
 								accept={"image/*"}
 								register={register("image")}
 							>
-								<PicOneIcon
+								<PhoneIcon
 									size={6}
 									color="text.white"
 								/>
@@ -182,10 +182,10 @@ const Media = ({ register, watch, errors, setValue, getValues }: Props) => {
 								multiple
 								register={register("assets")}
 							>
-								<PicIcon
+								{/* <PicIcon
 									size={6}
 									color="text.white"
-								/>
+								/> */}
 							</FileUploadThinkPro>
 						</Center>
 					</Flex>
