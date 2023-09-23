@@ -39,6 +39,7 @@ import { UserListManagerView } from "~/views/private/UserListManagerView";
 import PostManagementView from "~/views/private/PostManagementView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
+import DemandView from "~/views/private/DemandView";
 
 const routes: RouteObject[] = [
   {
@@ -172,6 +173,10 @@ const routes: RouteObject[] = [
       {
         path: "thuong-hieu",
         element: <BrandView />,
+      },
+      {
+        path: "nhu-cau",
+        element: <DemandView />,
       },
       {
         path: "shipping",
