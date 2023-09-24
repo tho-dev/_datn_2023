@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
 	FormControl,
@@ -99,6 +100,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 			</Flex>
 		</Box>
 	);
+
 };
 
 export default ShipProduct;
