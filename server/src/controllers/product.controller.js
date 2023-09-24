@@ -2,7 +2,7 @@ import Category from "../models/category.model"
 import Brand from "../models/brand.model"
 import createError from "http-errors"
 import moment from "moment/moment"
-import { optionSchema, optionValuesSchema } from "../validations/product.valiations"
+import { optionSchema, optionValuesSchema, productSchema } from "../validations/product.valiations"
 import { Product, Option, OptionValue, Sku, Variant } from '../models/product.model'
 
 
@@ -11,8 +11,8 @@ export async function getAllProduct(req, res, next) {
 	try {
 		const {
 			_page = 1,
-			_sort = "createdAt",
-			_order = "asc",
+			_sort = "created_at",
+			_order = "desc",
 			_limit = 10,
 		} = req.query;
 
@@ -201,10 +201,21 @@ export async function getSingleProduct(req, res, next) {
 
 export async function createProduct(req, res, next) {
 	try {
+		const payload = req.body
+		const { error } = productSchema.validate(payload, { abortEarly: false });
+
+		if (error) {
+			const errors = {};
+			error.details.forEach((e) => (errors[e.path] = e.message));
+			throw createError.BadRequest(errors);
+		}
+
+		const product = await Product.create(payload)
+
 		return res.status(201).json({
 			status: 201,
 			message: "Thành công",
-			data: [],
+			data: product
 		});
 	} catch (error) {
 		next(error);
@@ -344,12 +355,23 @@ export async function getAllOption(req, res, next) {
 		}).select("_id name")
 
 		const getOptionValues = async (option, id) => {
-			const optionValues = await OptionValue.find({
+			let optionValues = await OptionValue.find({
 				option_id: id
 			}).select("_id label value")
 
+			optionValues = optionValues?.map((optionValue) => {
+				return {
+					option_value_id: optionValue?._id,
+					label: optionValue?.label,
+					value: optionValue?.value,
+				}
+			})
+
+			option._id = undefined
+
 			return {
 				...option,
+				option_id: id,
 				option_values: optionValues
 			}
 		}
@@ -562,10 +584,11 @@ export async function saveVariant(req, res, next) {
 		// Xóa tất cả sku trước khi đăng ký
 		// + TH1: khi thêm bớt options -> tính toán lại biến thể
 		// + TH2: khi thêm bớt options value -> tính toán lại biến thể
-		await Sku.deleteMany({
+		await Variant.deleteMany({
 			product_id
 		})
-		await Variant.deleteMany({
+
+		await Sku.deleteMany({
 			product_id
 		})
 
@@ -673,3 +696,48 @@ export async function saveVariant(req, res, next) {
 	}
 }
 
+export async function deteleVariant(req, res, next) {
+	try {
+		const { product_id, sku_id } = req.params
+		const sku = await Sku.findById(sku_id)
+
+		if (!sku) {
+			throw createError.NotFound("Biến thể sản phẩm không tồn tại")
+		}
+
+		// lấy ra biến thể nằm trong bảng variants
+		const variants = await Variant.find({
+			sku_id
+		})
+
+		// xóa mềm các bảng ghi trong variants và skus
+		await sku.delete()
+		sku.deleted_at = moment(new Date).toISOString()
+		await sku.save()
+
+		await Promise.all(variants.map(async (variant) => {
+			await variant.delete()
+			variant.deleted_at = moment(new Date).toISOString()
+			await variant.save()
+		}))
+
+		return res.json({
+			status: 200,
+			message: "Thành công",
+			data: variants
+		})
+	} catch (error) {
+		next(error)
+	}
+}
+
+export async function updateProduct(req, res, next) {
+	try {
+		const payload = req.body
+		const { product_id, sku_id } = req.params
+
+
+	} catch (error) {
+		next(error)
+	}
+}

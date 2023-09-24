@@ -1,6 +1,8 @@
 import Brand from "../models/brand.model"
 import createError from "http-errors"
 import brandSchema from "../validations/brand.validations";
+import moment from "moment/moment";
+import Category from "../models/category.model"
 
 
 // Hàm đệ quy để xây dựng danh sách thương hiệu con (sub_brands)
@@ -9,23 +11,21 @@ function nestedBrands(input, parentId) {
 	let brands = null;
 
 	if (parentId) {
-		brands = input.filter((brand) => String(brand.category_id) == String(parentId));
+		brands = input.filter((brand) => String(brand.parent_id) == String(parentId));
 	} else {
-		brands = input.filter((brand) => !brand.category_id);
+		brands = input.filter((brand) => !brand.parent_id);
 	}
 
 	for (let brand of brands) {
 		output.push({
-			_id: brand._id,
-			name: brand.name,
-			slug: brand.slug,
-			thumbnail: brand.thumbnail,
-			description: brand.description,
-			sub_brands: nestedBrands(input, brand._id),
-			updated_at: brand.updated_at,
-			created_at: brand.created_at,
-			deleted_at: brand.deleted_at,
-			deleted: brand.deleted,
+			_id: brand?._id,
+			parent_id: parentId,
+			name: brand?.name,
+			slug: brand?.slug,
+			shared_url: brand?.shared_url,
+			thumbnail: brand?.thumbnail.url,
+			description: brand?.description,
+			children: nestedBrands(input, brand?._id).length == 0 ? undefined : nestedBrands(input, brand?._id),
 		});
 	}
 
@@ -35,7 +35,7 @@ function nestedBrands(input, parentId) {
 // Lấy danh sách thương hiệu
 export async function getAllBrand(req, res, next) {
 	try {
-		const { _page = 1, _sort = "created_at", _order = "asc", _limit = 15, slug = false } = req.query;
+		const { _page = 1, _sort = "created_at", _order = "asc", _limit = 10, _parent = true } = req.query;
 
 		const options = {
 			page: _page,
@@ -43,115 +43,92 @@ export async function getAllBrand(req, res, next) {
 			sort: {
 				[_sort]: _order === "desc" ? -1 : 1,
 			},
+			select: ['-deleted', '-deleted_at']
 		};
 
-		if (slug) {
-			let brand = await Brand.paginateSubDocs({ slug }, options);
+		const { docs, ...paginate } = await Brand.paginate({
+			parent_id: JSON.parse(_parent) ? null : { $ne: null }
+		}, options);
+		const brands = await Brand.find({});
+		const result = [];
 
-			if (!brand) {
-				throw createError.BadRequest("Thương hiệu này không tồn tại");
-			}
-
-			const brands = await Brand.find({});
+		for (const brand of docs) {
+			const { category_id, thumbnail, ...ass } = brand.toObject()
 			const children = nestedBrands(brands, brand._id);
+			const category = await Category.findById(brand?.category_id)
 
-			return res.json({
-				message: "successfully",
-				data: {
-					...brand.toObject(),
-					sub_brands: children,
+			result.push({
+				...ass,
+				thumbnail: thumbnail?.url,
+				category: {
+					category_id: category?._id,
+					name: category?.name,
+					slug: category?.slug,
+					type: category?.type,
+					thumbnail: category?.thumbnail?.url,
+					description: category.description,
 				},
-			});
-		} else {
-			const { docs, totalPages, totalDocs, limit, hasPrevPage, pagingCounter, hasNextPage, page, nextPage, prevPage } = await Brand.paginate({}, options);
-			const brands = await Brand.find({});
-			const result = [];
-
-			for (const brand of docs) {
-				const children = nestedBrands(brands, brand._id);
-				result.push({
-					...brand.toObject(),
-					sub_brands: children,
-				});
-			}
-
-			return res.json({
-				message: "successfully",
-				data: result,
-				paginate: {
-					limit,
-					totalDocs,
-					totalPages,
-					page,
-					pagingCounter,
-					hasPrevPage,
-					hasNextPage,
-					prevPage,
-					nextPage,
-				},
+				children
 			});
 		}
+
+		if (!JSON.parse(_parent)) {
+			// hàm lấy ra danh mục cha
+			const getParent = async (brand) => {
+				const { category_id, parent_id, ...ass } = brand.toObject()
+				const doc = await Brand.findById(parent_id)
+				const category = await Category.findById(category_id)
+
+				return {
+					...ass,
+					category: {
+						category_id: category?._id,
+						name: category?.name,
+						slug: category?.slug,
+						type: category?.type,
+						thumbnail: category?.thumbnail?.url,
+						description: category.description,
+					},
+					parent: {
+						parent_id: parent_id,
+						name: doc?.name,
+						slug: doc?.slug,
+						thumbnail: doc?.thumbnail?.url,
+						description: doc?.description
+					}
+				}
+			}
+
+			const repsonse = await Promise.all(docs.map((item) => getParent(item)))
+
+			return res.json({
+				status: 200,
+				message: "Thành công",
+				data: {
+					items: repsonse,
+					paginate
+				},
+			})
+		}
+
+		return res.json({
+			status: 200,
+			message: "Thành công",
+			data: {
+				items: result,
+				paginate
+			}
+		});
+
 	} catch (error) {
 		next(error);
 	}
 }
 
-
-// Lấy danh sách thương hiệu cha (có parentId là null)
-// export async function getParent(req, res, next) {
-// 	try {
-// 		const { _page = 1, _sort = "createdAt", _order = "asc", _limit = 15 } = req.query;
-// 		const options = {
-// 			page: _page,
-// 			limit: _limit,
-// 			sort: {
-// 				[_sort]: _order == "desc" ? -1 : 1,
-// 			},
-// 			select: ["-products", "-categoryIds"],
-// 		};
-
-// 		let {
-// 			docs,
-// 			totalPages,
-// 			totalDocs,
-// 			limit,
-// 			hasPrevPage,
-// 			pagingCounter,
-// 			hasNextPage,
-// 			page,
-// 			nextPage,
-// 			prevPage,
-// 		} = await Brand.paginate({}, options);
-
-// 		docs = docs?.filter((item) => !item.parentId);
-
-// 		return res.json({
-// 			message: "successfully",
-// 			data: docs,
-// 			paginate: {
-// 				limit,
-// 				totalDocs,
-// 				totalPages,
-// 				page,
-// 				pagingCounter,
-// 				hasPrevPage,
-// 				hasNextPage,
-// 				prevPage,
-// 				nextPage,
-// 			},
-// 		});
-// 	} catch (error) {
-// 		next(error);
-// 	}
-// }
-
-
-// GetOne
 export async function getOneBrand(req, res, next) {
 	try {
 		const { id } = req.params;
-
-		const brand = await Brand.findById(id);
+		const brand = await Brand.findById(id).select('-deleted -deleted_at');
 
 		if (!brand) {
 			throw createError.NotFound("Thương hiệu không tồn tại");
@@ -160,11 +137,14 @@ export async function getOneBrand(req, res, next) {
 		const brands = await Brand.find({});
 		const children = nestedBrands(brands, brand._id);
 
+		const { ...ass } = brand.toObject()
+
 		return res.json({
-			message: "successfully",
+			status: 200,
+			message: "Thành công",
 			data: {
-				...brand.toObject(),
-				sub_brands: children,
+				...ass,
+				children,
 			},
 		});
 	} catch (error) {
@@ -172,102 +152,21 @@ export async function getOneBrand(req, res, next) {
 	}
 }
 
-// Tạo thương hiệu mới
-export async function create(req, res, next) {
+export async function createBrand(req, res, next) {
 	try {
-		const { error } = brandSchema.validate(req.body, { abortEarly: false });
+		const payload = req.body;
+		const { error } = brandSchema.validate(payload, { abortEarly: false });
 
 		if (error) {
-			const errors = {};
-			error.details.forEach((e) => (errors[e.path] = e.message));
-			return res.status(400).json({
-				errors,
-			});
+			const errors = error.details.map((items) => items.message);
+			throw createError.BadRequest(errors)
 		}
 
-		const { subBrandId } = req.body;
-		const { id } = req.params;
+		const brand = await Brand.create(payload);
 
-		const brand = await Brand.findById(id);
-
-		if (!brand) {
-			return res.status(404).json({
-				message: "Không tìm thấy brand",
-			});
-		}
-
-		// Kiểm tra xem sub_brands đã tồn tại và có khả năng lặp không
-		const subBrands = brand.sub_brands || [];
-
-		// Thêm subBrandId vào sub_brands
-		subBrands.push(subBrandId);
-
-		// Cập nhật thương hiệu với sub_brands mới
-		const updatedBrand = await Brand.findByIdAndUpdate(id, { sub_brands: subBrands }, { new: true });
-
-		// Trả về kết quả với thông báo "successfully"
-		return res.status(200).json({
-			message: "successfully",
-			data: updatedBrand,
-		});
-	} catch (error) {
-		next(error);
-	}
-}
-
-// Cập nhật thương hiệu
-export async function updateBrand(req, res, next) {
-	try {
-		const { error } = brandSchema.validate(req.body, { abortEarly: false });
-
-		if (error) {
-			const errors = {};
-			error.details.forEach((e) => (errors[e.path] = e.message));
-			throw createError.BadRequest(errors);
-		}
-
-		const { slug } = req.body;
-		const existingBrand = await Brand.findOne({ slug });
-
-		if (existingBrand && existingBrand._id.toString() !== req.params.id) {
-			throw createError.BadRequest("Slug already exists");
-		}
-
-		const updatedBrand = await Brand.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
-		return res.status(200).json({
-			message: "successfully",
-			data: updatedBrand,
-		});
-	} catch (error) {
-		next(error);
-	}
-}
-
-
-// Xóa thương hiệu
-export async function removeBrand(req, res, next) {
-	try {
-		const brand = await Brand.findOneWithDeleted({
-			_id: req.params.id,
-		});
-		const isForce = JSON.parse(req.query.force || false);
-
-		if (!brand) {
-			throw createError.BadRequest("Thương hiệu này không tồn tại");
-		}
-
-		if (!brand.category_id) {
-			const subBrand = await Brand.findWithDeleted({
-				category_id: brand.toObject()._id,
-			});
-			subBrand.forEach(async (item) => (isForce ? await item.deleteOne() : await item.delete()));
-		}
-
-		isForce ? brand.deleteOne() : brand.delete();
-
-		return res.json({
-			message: "successfully",
+		return res.status(201).json({
+			status: 201,
+			message: "Thành công",
 			data: brand,
 		});
 	} catch (error) {
@@ -275,36 +174,63 @@ export async function removeBrand(req, res, next) {
 	}
 }
 
-
-
-// Khôi phục thương hiệu bị xóa mềm
-export async function restore(req, res, next) {
+export async function updateBrand(req, res, next) {
 	try {
-		const brand = await Brand.findOneWithDeleted({
-			_id: req.params.id,
-		});
+		const { id } = req.params;
+		const payload = req.body;
+		const { error } = brandSchema.validate(payload, { abortEarly: false });
+
+		if (error) {
+			const errors = error.details.map((items) => items.message);
+			throw createError.BadRequest(errors)
+		}
+
+		const brand = await Brand.findById(id)
 
 		if (!brand) {
-			throw createError.BadRequest("Thương hiệu này không tồn tại");
+			throw createError.NotFound("Không tìm thấy");
 		}
 
-		if (!brand?.deleted) {
-			throw createError.BadRequest("Danh mục chưa bị xóa mềm");
-		}
+		// cập nhật
+		brand.set({
+			...payload,
+			updated_at: moment(new Date()).toISOString()
+		})
+		await brand.save()
 
-		if (!brand.category_id) {
-			const subBrand = await Brand.findWithDeleted({
-				category_id: brand.toObject()._id,
-			});
-			subBrand.forEach(async (item) => await item.restore());
-		}
 
-		await brand.restore();
 
 		return res.json({
-			message: "successfully",
+			status: 200,
+			message: "Thành công",
+			data: brand,
 		});
 	} catch (error) {
 		next(error);
 	}
 }
+
+export async function removeBrand(req, res, next) {
+	try {
+		const { id } = req.params;
+		const brand = await Brand.findById(id);
+
+		if (!brand) {
+			throw createError.NotFound("Không tìm thấy");
+		}
+
+		// cách xóa mềm
+		await brand.delete()
+		brand.deleted_at = moment(new Date).toISOString()
+		await brand.save()
+
+		return res.json({
+			status: 200,
+			message: "Thành công",
+			data: brand,
+		});
+	} catch (error) {
+		next(error);
+	}
+}
+

@@ -2,9 +2,10 @@ import { Schema, model } from "mongoose";
 import slug from "mongoose-slug-updater";
 import mongoosePaginate from "mongoose-paginate-v2";
 import mongooseDelete from "mongoose-delete";
+import Category from "./category.model";
 
 const plugins = [slug, mongoosePaginate, mongooseDelete];
-const pluginsFilter = [slug];
+const pluginsFilter = [slug, mongooseDelete];
 
 // thuộc tính của sản phẩm
 const optionSchema = new Schema({
@@ -115,14 +116,22 @@ const skuSchema = new Schema(
         url: String,
       },
     ],
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    deleted_at: {
+      type: Date,
+      default: null,
+    },
     created_at: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
     updated_at: {
       type: Date,
-      default: Date.now,
-    },
+      default: Date.now
+    }
   },
   {
     collection: "skus",
@@ -273,12 +282,36 @@ const productSchema = new Schema(
   }
 );
 
+// plugins
 plugins.forEach((item) =>
   productSchema.plugin(item, { overrideMethods: true })
 );
+
 pluginsFilter.forEach((item) =>
   skuSchema.plugin(item, { overrideMethods: true })
 );
+
+pluginsFilter.forEach((item) =>
+  variantSchema.plugin(item, { overrideMethods: true })
+);
+
+// middlewaves trong schema
+skuSchema.pre('save', function (next) {
+  this.slug = this.slug + "-" + this._id
+  this.shared_url = this.shared_url + "-" + this._id
+  next();
+});
+
+productSchema.pre("save", async function (next) {
+  const category = await Category.findOne({
+    _id: this.category_id
+  })
+
+  this.shared_url = `${category?.slug}/${this.slug}`
+  this.price_discount_percent = Math.ceil(((this.price_before_discount - this.price) / this.price_before_discount) * 100)
+
+  next()
+})
 
 const Product = model('Product', productSchema)
 const Option = model('Option', optionSchema)
