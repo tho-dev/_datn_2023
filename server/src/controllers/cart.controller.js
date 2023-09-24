@@ -3,47 +3,37 @@ import createError from "http-errors";
 
 export const addCart = async (req, res, next) => {
   try {
-    const cart = await Cart.findOne({ user_id: req.body.user_id });
-
+    const cart = await Cart.findOne({ user_id: req.body.user_id }).select(
+      "-deleted_at -deleted -created_at -updated_at -createdAt -__v"
+    );
     if (!cart) {
       const newCart = await Cart.create(req.body);
+      const total_money = newCart.products.reduce((sum, product) => {
+        return sum + product.price * product.quantity;
+      }, 0);
+      newCart.total_money = total_money;
+      await newCart.save();
       return res.json({
         status: 201,
         message: "tạo giỏ hàng thành công",
         data: newCart,
       });
     } else {
-      const sku_id = cart.products.find((item) => {
-        return item.variants == req.body.products[0].variants;
+      const sku = cart.products.findIndex((item) => {
+        return item.sku_id == req.body.products[0].sku_id;
       });
-      if (sku_id) {
-        const new_cart = await Cart.findOneAndUpdate(
-          {
-            user_id: req.body.user_id,
-            "products._id": sku_id._id,
-          },
-          {
-            $set: {
-              "products.$": req.body.products[0],
-            },
-          },
-          { new: true }
-        );
-        const total = new_cart.products.reduce((acc, item) => {
-          return acc + item.price;
+      if (sku !== -1) {
+        cart.products[sku].quantity++;
+        await cart.save();
+        const total = cart.products.reduce((acc, item) => {
+          return acc + item.price * item.quantity;
         }, 0);
-
-        const result = await Cart.findByIdAndUpdate(
-          { _id: new_cart._id },
-          {
-            $set: { total: total },
-          },
-          { new: true }
-        );
+        cart.total_money = total;
+        await cart.save();
         return res.json({
           status: 200,
           message: "Thêm sản phẩm thành công",
-          data: result,
+          data: cart,
         });
       } else {
         cart.products.push(req.body.products[0]);
@@ -51,18 +41,12 @@ export const addCart = async (req, res, next) => {
         const total = cart.products.reduce((acc, item) => {
           return acc + item.price;
         }, 0);
-
-        const result = await Cart.findByIdAndUpdate(
-          { _id: cart._id },
-          {
-            $set: { total: total },
-          },
-          { new: true }
-        );
+        cart.total_money = total;
+        await cart.save();
         return res.json({
           status: 200,
           message: "Thêm mới sản phẩm thành công",
-          data: result,
+          data: cart,
         });
       }
     }
@@ -73,16 +57,7 @@ export const addCart = async (req, res, next) => {
 
 export const getCart = async (req, res, next) => {
   try {
-    const cart = await Cart.findOne({ user_id: req.body.user_id }).populate([
-      { path: "user_id" },
-      {
-        path: "products.variants",
-        populate: {
-          path: "product_id",
-          model: "Product",
-        },
-      },
-    ]);
+    const cart = await Cart.findOne({ user_id: req.body.user_id });
     if (!cart) {
       throw createError.NotFound("Không tìm thấy giỏ hàng");
     }
@@ -100,14 +75,6 @@ export const deleteProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
     const cart = await Cart.findOne({ user_id: req.body.user_id });
-    if (cart.products.length === 0) {
-      await Cart.findOneAndDelete({ user_id: req.body.user_id });
-      return res.json({
-        status: 200,
-        message: "xoá giỏ hàng thành công",
-        data: [],
-      });
-    }
     if (!cart) {
       throw createError.NotFound("Không tìm thấy giỏ hàng");
     }
@@ -117,23 +84,18 @@ export const deleteProduct = async (req, res, next) => {
         $pull: { products: { _id: id } },
       },
       { new: true }
-    );
+    ).select("-deleted_at -deleted -created_at -updated_at -createdAt -__v");
+
     const total = cart.products.reduce((acc, item) => {
       return acc + item.price;
     }, 0);
 
-    const result = await Cart.findByIdAndUpdate(
-      { _id: cart._id },
-      {
-        $set: { total: total },
-      },
-      { new: true }
-    ).populate([{ path: "user_id" }, { path: "products.variants" }]);
-
+    new_cart.total_money = total;
+    await new_cart.save();
     return res.json({
       status: 200,
       message: "xoá sản phẩm thành công",
-      data: result,
+      data: new_cart,
     });
   } catch (error) {
     next(error);
@@ -143,12 +105,37 @@ export const deleteProduct = async (req, res, next) => {
 export const deleteCart = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const cart = await Cart.findByIdAndDelete(id);
+    const cart = await Cart.findByIdAndDelete(id).select(
+      "-deleted_at -deleted -created_at -updated_at -createdAt -__v"
+    );
+    if (!cart) {
+      throw createError.NotFound("Giỏ hàng đã được xoá");
+    }
     return res.json({
       status: 200,
       message: "Xoá giỏ hàng thành công",
       data: cart,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+export const deleteOneProduct = async (req, res, next) => {
+  try {
+    const cart = await Cart.findOne({ user_id: req.body.user_id }).select(
+      "-deleted_at -deleted -created_at -updated_at -createdAt -__v"
+    );
+    if (!cart) {
+      throw createError.NotFound("Giỏ hàng đã được xoá");
+    }
+    const sku = cart.products.findIndex((item) => {
+      return item.sku_id == req.body.products[0].sku_id;
+    });
+    if (cart.products[sku].quantity === 1) {
+      throw createError.BadRequest("Tối thiểu số lượng sản phẩm là 1");
+    }
+    cart.products[sku].quantity--;
+    await cart.save();
   } catch (error) {
     next(error);
   }

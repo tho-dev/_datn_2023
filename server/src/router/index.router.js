@@ -7,6 +7,7 @@ import user from "./user.router";
 import upload from "./uploadImage.router";
 import cart from "./cart.router";
 import post from "./post.router";
+import order from "./order.router";
 
 const routes = (app) => {
   app.use("/api/example", example);
@@ -18,6 +19,7 @@ const routes = (app) => {
   app.use("/api/image", upload);
   app.use("/api/cart", cart);
   app.use("/api/post", post);
+  app.use("/api/order", order);
 };
 
 export default routes;
