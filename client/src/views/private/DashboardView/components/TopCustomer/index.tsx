@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/layout';
-import { ArrowUpIcon, MailIcon } from '~/components/common/Icons';
+import { ArrowUpIcon, MapIcon } from '~/components/common/Icons';
 import { Image } from '@chakra-ui/react';
 type Props = {
   title: string;
@@ -41,7 +41,7 @@ const TopCustomer = ({ title }: Props) => {
               color: '#fff',
             }}
           >
-            <MailIcon size={5} />
+            <MapIcon size={5} />
           </Box>
         </Flex>
         <Flex p='4' justifyContent='space-between' borderBottom='2px dashed #ef476f' alignItems='center'>
@@ -66,7 +66,7 @@ const TopCustomer = ({ title }: Props) => {
               color: '#fff',
             }}
           >
-            <MailIcon size={5} />
+            <MapIcon size={5} />
           </Box>
         </Flex>
         <Flex p='4' justifyContent='space-between' borderBottom='2px dashed #ef476f' alignItems='center'>
@@ -91,7 +91,7 @@ const TopCustomer = ({ title }: Props) => {
               color: '#fff',
             }}
           >
-            <MailIcon size={5} />
+            <MapIcon size={5} />
           </Box>
         </Flex>
       </Box>
