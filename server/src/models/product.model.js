@@ -7,175 +7,163 @@ const plugins = [slug, mongoosePaginate, mongooseDelete];
 const pluginsFilter = [slug];
 
 // thuộc tính của sản phẩm
-const optionSchema = new Schema(
-  {
-    product_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-    },
-    name: {
-      type: String,
-    },
-    visual: {
-      type: String,
-      default: "text",
-      emun: ["color", "text", "image"],
-    },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
-    },
+const optionSchema = new Schema({
+  product_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Product'
   },
-  {
-    collection: "options",
-    timestamps: false,
-    versionKey: false,
+  name: {
+    type: String
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
   }
-);
+}, {
+  collection: "options",
+  timestamps: false,
+  versionKey: false
+})
 
 // giá trị của từng thuộc tính
-const optionValueSchema = new Schema(
-  {
-    product_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-    },
-    option_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Option",
-    },
-    label: {
-      type: String,
-    },
-    value: {
-      type: String,
-    },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
-    },
+const optionValueSchema = new Schema({
+  product_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Product'
   },
-  {
-    collection: "option_values",
-    timestamps: false,
-    versionKey: false,
+  option_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Option'
+  },
+  label: {
+    type: String,
+  },
+  value: {
+    type: String,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
   }
-);
+}, {
+  collection: 'option_values',
+  timestamps: false,
+  versionKey: false
+})
 
 // mã của sản phẩm
-const skuSchema = new Schema(
-  {
-    product_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-    },
-    name: {
-      type: String,
-    },
-    slug: {
-      type: String,
-      slug: "name",
-      unique: true,
-      index: true,
-      sparse: true,
-      slugOn: {
-        save: true,
-        update: true,
-        updateOne: true,
-        updateMany: true,
-        findOneAndUpdate: true,
-      },
-    },
-    shared_url: {
-      type: String,
-    },
-    price: {
-      type: Number,
-      default: 200000,
-    },
-    price_before_discount: {
-      type: Number,
-    },
-    price_discount_percent: {
-      type: Number,
-    },
-    is_avaiable: {
-      // check xem có sẵn hay không
-      type: Boolean,
-      default: false,
-    },
-    stock: {
-      type: Number,
-      default: 0,
-    },
-    image: {
-      id: String,
-      url: String,
-    },
-    assets: [
-      {
-        id: String,
-        url: String,
-      },
-    ],
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
-    },
+const skuSchema = new Schema({
+  product_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Product'
   },
-  {
-    collection: "skus",
-    timestamps: false,
-    versionKey: false,
+  SKU: {
+    type: String,
+    default: ""
+  },
+  name: {
+    type: String
+  },
+  slug: {
+    type: String,
+    slug: "name",
+    unique: true,
+    index: true,
+    sparse: true,
+    slugOn: { save: true, update: true, updateOne: true, updateMany: true, findOneAndUpdate: true },
+  },
+  shared_url: {
+    type: String
+  },
+  price: {
+    type: Number,
+    default: 200000
+  },
+  price_before_discount: {
+    type: Number,
+  },
+  price_discount_percent: {
+    type: Number
+  },
+  is_avaiable: { // check xem có sẵn hay không
+    type: Boolean,
+    default: false
+  },
+  stock: {
+    type: Number,
+    default: 0
+  },
+  image: {
+    id: String,
+    url: String
+  },
+  assets: [
+    {
+      id: String,
+      url: String
+    }
+  ],
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
   }
-);
+}, {
+  collection: 'skus',
+  timestamps: false,
+  versionKey: false
+})
 
 // biến thể của sản phẩm
-const variantSchema = new Schema(
-  {
-    sku_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Sku",
-    },
-    option_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Option",
-    },
-    option_value_id: {
-      type: Schema.Types.ObjectId,
-      ref: "OptionValue",
-    },
-    product_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-    },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
-    },
+const variantSchema = new Schema({
+  sku_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Sku'
   },
-  {
-    collection: "variants",
-    timestamps: false,
-    versionKey: false,
+  option_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Option'
+  },
+  option_value_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'OptionValue'
+  },
+  product_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Product"
+  },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+  deleted_at: {
+    type: Date,
+    default: null,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
   }
-);
+}, {
+  collection: "variants",
+  timestamps: false,
+  versionKey: false
+})
 
 // chung
 const productSchema = new Schema(
@@ -279,17 +267,20 @@ const productSchema = new Schema(
   }
 );
 
-plugins.forEach((item) =>
-  productSchema.plugin(item, { overrideMethods: true })
-);
-pluginsFilter.forEach((item) =>
-  skuSchema.plugin(item, { overrideMethods: true })
-);
+// plugins
+plugins.forEach((item) => productSchema.plugin(item, { overrideMethods: true }));
+pluginsFilter.forEach((item) => skuSchema.plugin(item, { overrideMethods: true }))
 
-const Product = model("Product", productSchema);
-const Option = model("Option", optionSchema);
-const OptionValue = model("OptionValue", optionValueSchema);
-const Sku = model("Sku", skuSchema);
-const Variant = model("Variant", variantSchema);
+// middlewaves trong schema
+skuSchema.pre('save', function (next) {
+  this.name = this.name + "-" + this._id
+  next();
+});
+
+const Product = model('Product', productSchema)
+const Option = model('Option', optionSchema)
+const OptionValue = model('OptionValue', optionValueSchema)
+const Sku = model('Sku', skuSchema)
+const Variant = model('Variant', variantSchema)
 
 export { Product, Option, OptionValue, Sku, Variant };

@@ -60,6 +60,7 @@ const MENU = [
 			{ title: "Danh mục cha", to: "/admin/danh-muc-san-pham" },
 			{ title: "Danh mục con", to: "/admin/danh-muc-con" },
 			{ title: "Thương hiệu", to: "/admin/thuong-hieu" },
+			{ title: "Nhu cầu", to: "/admin/nhu-cau" },
 		],
 	},
 	{
@@ -137,8 +138,8 @@ const Sidebar = (props: Props) => {
 					justifyContent="center"
 					borderBottomWidth="1px"
 					borderColor="bg.admin1"
-					// backgroundColor="rgb(11 203 224)"
-					// bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
+				// backgroundColor="rgb(11 203 224)"
+				// bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
 				>
 					<Heading
 						as="h3"

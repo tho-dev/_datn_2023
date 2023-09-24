@@ -1,21 +1,26 @@
-import { Icon } from "@chakra-ui/react";
+import { Icon } from '@chakra-ui/react';
 
-export const SearchIcon = ({ size = 46, strokeWidth = 2, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill="none"
-		stroke={color}
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		strokeWidth={strokeWidth}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path d="M11 3a8 8 0 1 0 0 16 8 8 0 1 0 0-16z" />
-		<path d="m21 21-4.35-4.35" />
-	</Icon>
+export const SearchIcon = ({
+  size = 46,
+  strokeWidth = 2,
+  color = "currentColor",
+  ...props
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M11 3a8 8 0 1 0 0 16 8 8 0 1 0 0-16z" />
+    <path d="m21 21-4.35-4.35" />
+  </Icon>
 );
 
 export const ArrowRightUpIcon = ({ size = 33, strokeWidth = 1.5, color = "currentColor", ...props }) => (
@@ -1546,61 +1551,23 @@ export const Star = ({ size = 30, strokeWidth = 1.5, color = "rgb(255, 196, 0)",
 		<path d="M6.255 20.452c-.464.237-.99-.18-.896-.71l.996-5.677-4.227-4.027c-.395-.377-.19-1.065.34-1.14l5.877-.835 2.62-5.192a.616.616 0 0 1 1.113 0L14.7 8.063l5.878.835c.529.075.734.763.338 1.14l-4.226 4.027.996 5.676c.093.532-.432.948-.896.71l-5.269-2.707-5.267 2.708h.002Z" />
 	</Icon>
 );
-
-export const StarHalf = ({ size = 7, strokeWidth = 1.5, color = "rgb(255, 196, 0)", ...props }) => (
-	<Icon
-		stroke="rgb(255, 196, 0)"
-		fill="rgb(255, 196, 0)"
-		strokeWidth={strokeWidth}
-		viewBox="0 0 24 24"
-		// color="#FFC400"
-		width={size}
-		height={size}
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path d="m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z" />
-	</Icon>
-);
-
-export const PicOneIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill="none"
-		stroke={color}
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		strokeWidth={strokeWidth}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path d="M12 22.5c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10Z" />
-		<path d="m4.5 19 4-4.5 8 6.5" />
-		<path d="M9 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-		<path d="m12 17 4-5 5 4" />
-	</Icon>
-);
-
-export const PicIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
-	<Icon
-		width={size}
-		height={size}
-		fill="none"
-		stroke={color}
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		strokeWidth={strokeWidth}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path
-			d="M3.5 4h17a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"
-			clipRule="evenodd"
-		/>
-		<path d="M7.25 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
-		<path d="m7.5 12 2.5 2 3-3.5 8.5 6.5v2a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1v-2l5-5Z" />
-	</Icon>
+export const Star_Half = ({
+  size = 7,
+  strokeWidth = 1.5,
+  color = "rgb(255, 196, 0)",
+  ...props
+}) => (
+  <Icon
+    stroke="rgb(255, 196, 0)"
+    fill="rgb(255, 196, 0)"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    // color="#FFC400"
+    width={size}
+    height={size}
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z" />
+  </Icon>
 );

@@ -18,8 +18,6 @@ const AttributeNested = ({ nestIndex, control, register, errors }: any) => {
 		name: `attributes.${nestIndex}.items`,
 	});
 
-	console.log("errors", errors);
-
 	return (
 		<Box>
 			<Flex
