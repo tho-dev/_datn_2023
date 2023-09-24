@@ -1,18 +1,41 @@
 import React from "react";
-import { FormControl, FormLabel, FormErrorMessage, FormHelperText, Box, Input, Flex, Text } from "@chakra-ui/react";
-type Props = {
-	register: any;
-	errors: any;
-};
+import {
+	FormControl,
+	FormLabel,
+	FormErrorMessage,
+	FormHelperText,
+	Box,
+	Input,
+	Flex,
+	Text,
+	Radio,
+	RadioGroup,
+	Stack,
+	Textarea,
+} from "@chakra-ui/react";
+type Props = {};
 
-const Atstore = ({ register, errors }: Props) => {
+const Atstore = (props: Props) => {
 	return (
 		<Box mt={"12px"}>
 			<Text mb={"16px"} fontSize={"16px"} lineHeight={"150%"} fontWeight={600}>
+				Cửa hàng
+			</Text>
+			<Box my={4}>
+				<RadioGroup borderRadius={4} background="#f1f1f1" padding={4}>
+					<Radio value="1">
+						<Box w="250px" maxH="100px" fontSize={14} fontWeight="semibold">
+							Số 5 - 7 Nguyễn Huy Tưởng, Phường 6, Quận Bình Thạnh, Hồ Chí Minh
+						</Box>
+					</Radio>
+				</RadioGroup>
+			</Box>
+			<Text mb={"16px"} fontSize={"16px"} lineHeight={"150%"} fontWeight={600}>
 				Thông tin người nhận
 			</Text>
+
 			<Flex gap={"16px"}>
-				<FormControl isInvalid={errors.name as any}>
+				<FormControl>
 					<FormLabel>Tên người nhận</FormLabel>
 					<Input
 						type="text"
@@ -22,11 +45,9 @@ const Atstore = ({ register, errors }: Props) => {
 						bg={"#F6F9FC"}
 						borderRadius={"6px"}
 						fontSize={"14px"}
-						{...register("name")}
 					/>
-					<FormErrorMessage> {(errors.name as any) && (errors?.name?.message as any)}</FormErrorMessage>
 				</FormControl>
-				<FormControl isInvalid={errors.phone as any}>
+				<FormControl>
 					<FormLabel>Số điện thoại</FormLabel>
 					<Input
 						type="text"
@@ -36,11 +57,22 @@ const Atstore = ({ register, errors }: Props) => {
 						bg={"#F6F9FC"}
 						borderRadius={"6px"}
 						fontSize={"14px"}
-						{...register("phone")}
 					/>
-					<FormErrorMessage> {(errors.phone as any) && (errors?.phone?.message as any)}</FormErrorMessage>
 				</FormControl>
 			</Flex>
+			<Box my={2}>
+				<FormControl>
+					<FormLabel>Lời nhắn</FormLabel>
+					<Textarea
+						border={"none"}
+						p={"8px 12px"}
+						placeholder="Lời nhắn của bạn"
+						bg={"#F6F9FC"}
+						borderRadius={"6px"}
+						fontSize={"14px"}
+					/>
+				</FormControl>
+			</Box>
 		</Box>
 	);
 };
