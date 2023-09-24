@@ -13,11 +13,15 @@ import {
   UserIcon,
 } from "../Icons";
 import Cart from "./components/Cart";
+import { useAppSelector } from "~/redux/hook/hook";
 
 type Props = {};
 
 const TheHeader = (props: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user, isLogin } = useAppSelector(
+    (state) => state.persistedReducer.global
+  );
 
   return (
     <Flex h="20" alignItems="center">
@@ -163,7 +167,8 @@ const TheHeader = (props: Props) => {
             <CartIcon size={4} strokeWidth={2} color="text.black" />
           </Link>
         </Flex>
-        {/* <Link
+        {isLogin ? (
+          <Link
             to="/thong-tin"
             as={ReactRouterLink}
             w="44px"
@@ -177,26 +182,28 @@ const TheHeader = (props: Props) => {
             border="1px solid #ccc"
           >
             <Avatar
-              name="Dan Abrahmov"
-              src={avatar}
+              name={user.first_name + " " + user.last_name}
+              src={user.avatar}
               width="100%"
               height="100%"
             />
-          </Link> */}
-        <Link
-          to="/dang-nhap"
-          as={ReactRouterLink}
-          w="44px"
-          h="44px"
-          display="inline-flex"
-          alignItems="center"
-          justifyContent="center"
-          backgroundColor="bg.gray"
-          rounded="full"
-          position="relative"
-        >
-          <UserIcon size={5} strokeWidth={2} color="text.black" />
-        </Link>
+          </Link>
+        ) : (
+          <Link
+            to="/dang-nhap"
+            as={ReactRouterLink}
+            w="44px"
+            h="44px"
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="bg.gray"
+            rounded="full"
+            position="relative"
+          >
+            <UserIcon size={5} strokeWidth={2} color="text.black" />
+          </Link>
+        )}
       </Flex>
     </Flex>
   );

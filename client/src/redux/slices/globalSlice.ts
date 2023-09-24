@@ -3,32 +3,30 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 
-export interface authState {
+export interface IGlobalState {
     isLogin: boolean;
     user: any;
 }
 
-const initialState: authState = {
+const initialState: IGlobalState = {
     isLogin: false,
     user: {} as any
 }
 
-const userSlice = createSlice({
-    name: "user",
+const globalSlice = createSlice({
+    name: "global",
     initialState,
     reducers: {
         login: (state, action) => {
-            console.log(action);
             state.user = action.payload;
             state.isLogin = true;
         },
         logout: (state, action) => {
-            console.log(action);
             state.user = {}
-            state.isLogin = false;
+            state.isLogin = action.payload;
         },
     },
 });
 
-export const { login, logout } = userSlice.actions;
-export default userSlice.reducer;
+export const { login, logout } = globalSlice.actions;
+export default globalSlice.reducer;
