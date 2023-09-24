@@ -1,26 +1,26 @@
 import { Icon } from "@chakra-ui/react";
 
 export const SearchIcon = ({
-  size = 46,
-  strokeWidth = 2,
-  color = "currentColor",
-  ...props
+	size = 46,
+	strokeWidth = 2,
+	color = "currentColor",
+	...props
 }) => (
-  <Icon
-    width={size}
-    height={size}
-    fill="none"
-    stroke={color}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth={strokeWidth}
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path d="M11 3a8 8 0 1 0 0 16 8 8 0 1 0 0-16z" />
-    <path d="m21 21-4.35-4.35" />
-  </Icon>
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M11 3a8 8 0 1 0 0 16 8 8 0 1 0 0-16z" />
+		<path d="m21 21-4.35-4.35" />
+	</Icon>
 );
 
 export const ArrowRightUpIcon = ({
@@ -1821,25 +1821,167 @@ export const Star = ({
   </Icon>
 );
 export const Star_Half = ({
-  size = 7,
-  strokeWidth = 1.5,
-  color = "rgb(255, 196, 0)",
-  ...props
+	size = 7,
+	strokeWidth = 1.5,
+	color = "rgb(255, 196, 0)",
+	...props
 }) => (
-  <Icon
-    stroke="rgb(255, 196, 0)"
-    fill="rgb(255, 196, 0)"
-    strokeWidth={strokeWidth}
-    viewBox="0 0 24 24"
-    // color="#FFC400"
-    width={size}
-    height={size}
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path d="m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z" />
-  </Icon>
+	<Icon
+		stroke="rgb(255, 196, 0)"
+		fill="rgb(255, 196, 0)"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		// color="#FFC400"
+		width={size}
+		height={size}
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z" />
+	</Icon>
 );
+
+export const ChromeIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth="2"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+	><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z" />
+		<path d="M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8z" />
+		<path d="M21.17 8H12" />
+		<path d="M3.95 6.06 8.54 14" />
+		<path d="M10.88 21.94 15.46 14" />
+	</Icon>
+);
+
+export const LaptopIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth="2"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path d="M3 19h18" />
+		<path d="M18 6H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1Z" />
+	</Icon>
+);
+
+export const ComputerIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth="2"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path fillRule="evenodd" d="M3.6 6A2.4 2.4 0 0 1 6 3.6h12A2.4 2.4 0 0 1 20.4 6v9.6A2.4 2.4 0 0 1 18 18h-2.664l.148.587.964.965A1.2 1.2 0 0 1 15.6 21.6H8.4a1.2 1.2 0 0 1-.848-2.048l.964-.965.148-.587H6a2.4 2.4 0 0 1-2.4-2.4V6Zm6.925 8.4H6V6h12v8.4h-7.475Z" clipRule="evenodd" />
+	</Icon>
+);
+
+
+export const SmartPhoneIcon = ({ size = 35, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth="2"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<rect width={14} height={20} x={5} y={2} rx={2} ry={2} />
+		<path d="M12 18h.01" />
+	</Icon>
+);
+
+export const EmailIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M2.4 7.2a2.4 2.4 0 0 1 2.4-2.4h14.4a2.4 2.4 0 0 1 2.4 2.4v9.6a2.4 2.4 0 0 1-2.4 2.4H4.8a2.4 2.4 0 0 1-2.4-2.4V7.2ZM4.8 6a1.2 1.2 0 0 0-1.2 1.2v.26L12 12.5l8.4-5.04V7.2A1.2 1.2 0 0 0 19.2 6H4.8Zm15.6 2.86-5.65 3.39 5.65 3.476V8.859Zm-.04 8.25-6.768-4.165L12 13.9l-1.59-.954-6.77 4.164A1.2 1.2 0 0 0 4.8 18h14.4a1.2 1.2 0 0 0 1.159-.888ZM3.6 15.727l5.65-3.477L3.6 8.86v6.867Z" />
+	</Icon>
+);
+
+export const GlobeIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M12 2.25A9.75 9.75 0 0 0 2.25 12c0 5.384 4.365 9.75 9.75 9.75 5.384 0 9.75-4.366 9.75-9.75 0-5.385-4.366-9.75-9.75-9.75Z" />
+		<path d="M12 2.25c-2.722 0-5.28 4.365-5.28 9.75 0 5.384 2.56 9.75 5.281 9.75 2.722 0 5.282-4.366 5.282-9.75 0-5.385-2.56-9.75-5.282-9.75Z" />
+		<path d="M5.5 5.5C7.293 6.773 9.55 7.532 12 7.532c2.451 0 4.708-.76 6.5-2.032" />
+		<path d="M18.5 18.5c-1.792-1.272-4.049-2.031-6.5-2.031-2.45 0-4.707.759-6.5 2.031" />
+		<path d="M12 2.25v19.5" />
+		<path d="M21.75 12H2.25" />
+	</Icon>
+);
+
+export const AppIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M18 5v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2Z" />
+		<path d="M12 18v.001" />
+		<path d="M9 6v.001" />
+		<path d="M12 6v.001" />
+		<path d="M15 6v.001" />
+		<path d="M9 9v.001" />
+		<path d="M12 9v.001" />
+		<path d="M15 9v.001" />
+		<path d="M9 12v.001" />
+		<path d="M12 12v.001" />
+	</Icon>
+); 
+
+
+
+
+
+
+
 export const StarHalf = ({
   size = 7,
   strokeWidth = 1.5,
@@ -1954,3 +2096,4 @@ export const MailIcon = ({ size = 35, ...props }) => (
     <path d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25ZM16.06 15 15 16.06l-3-3-3 3L7.94 15l3-3-3-3L9 7.94l3 3 3-3L16.06 9l-3 3 3 3Z"></path>
   </Icon>
 );
+

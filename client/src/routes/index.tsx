@@ -40,6 +40,7 @@ import PostManagementView from "~/views/private/PostManagementView";
 import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import DemandView from "~/views/private/DemandView";
+import { ProfileManagerView } from "~/views/private/ProfileManagerView";
 
 const routes: RouteObject[] = [
   {
@@ -169,6 +170,10 @@ const routes: RouteObject[] = [
       {
         path: "tai-khoan/add",
         element: <AddUserListManagerView />,
+      },
+      {
+        path: "profile",
+        element: <ProfileManagerView />,
       },
       {
         path: "thuong-hieu",
