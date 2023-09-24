@@ -1,4 +1,4 @@
-import { FormLabel, Flex, Box, Text, FormControl, Input, FormErrorMessage, Grid, GridItem, HStack, Radio, RadioGroup } from "@chakra-ui/react";
+import { FormLabel, Flex, Box, Text, FormControl, Input, FormErrorMessage, Grid, GridItem, HStack, Radio, RadioGroup, Spacer } from "@chakra-ui/react";
 import { PictureIcon } from "~/components/common/Icons";
 import { useForm } from "react-hook-form";
 
@@ -85,40 +85,43 @@ const Profine = () => {
                     Full name
                 </GridItem>
                 <GridItem colSpan={3}>
-                    <Grid
-                        templateColumns={{
-                            sm: "repeat(1, 1fr)",
-                            md: "repeat(1, 1fr)",
-                            xl: "repeat(2, 1fr)",
-                        }}>
-                        <GridItem colSpan={1}>
-                            <FormControl isInvalid={errors.firstName as any}>
-                                <Input
-                                    id="firstName"
-                                    placeholder="Clarice"
-                                    size="lager"
-                                    {...register("firstName", {
-                                        required: "Không được để trống !!!",
-                                    })}
-                                />
-                                <FormErrorMessage>{(errors.firstName as any) && errors?.firstName?.message}</FormErrorMessage>
-                            </FormControl>
-                        </GridItem>
-                        <GridItem colSpan={1}>
-                            <FormControl isInvalid={errors.lastName as any}>
-                                <Input
-                                    id="lastName"
-                                    placeholder="Boone"
-                                    size="lager"
-                                    {...register("lastName", {
-                                        required: "Không được để trống !!!",
-                                    })}
-                                />
-                                <FormErrorMessage>{(errors.lastName as any) && errors?.lastName?.message}</FormErrorMessage>
-                            </FormControl>
-                        </GridItem>
-                    </Grid>
-                </GridItem>
+                        <Grid
+                            templateColumns={{
+                                sm: "repeat(1, 1fr)",
+                                md: "repeat(1, 1fr)",
+                                xl: "repeat(31, 1fr)",
+                            }}>
+                            <GridItem colSpan={15}>
+                                <FormControl isInvalid={errors.firstName as any}>
+                                    <Input
+                                        fontSize={16}
+                                        id="firstName"
+                                        placeholder="Clarice"
+                                        size="lager"
+                                        {...register("firstName", {
+                                            required: "Không được để trống !!!",
+                                        })}
+                                    />
+                                    <FormErrorMessage>{(errors.firstName as any) && errors?.firstName?.message}</FormErrorMessage>
+                                </FormControl>
+                            </GridItem>
+                            <Spacer />
+                            <GridItem colSpan={15}>
+                                <FormControl isInvalid={errors.lastName as any}>
+                                    <Input
+                                        fontSize={16}
+                                        id="lastName"
+                                        placeholder="Boone"
+                                        size="lager"
+                                        {...register("lastName", {
+                                            required: "Không được để trống !!!",
+                                        })}
+                                    />
+                                    <FormErrorMessage>{(errors.lastName as any) && errors?.lastName?.message}</FormErrorMessage>
+                                </FormControl>
+                            </GridItem>
+                        </Grid>
+                    </GridItem>
             </Grid>
 
             {/* Email */}
