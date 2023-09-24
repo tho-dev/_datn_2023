@@ -11,6 +11,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Textarea,
 } from "@chakra-ui/react";
 type Props = {};
 
@@ -59,6 +60,19 @@ const Atstore = (props: Props) => {
           />
         </FormControl>
       </Flex>
+      <Box my={2}>
+        <FormControl>
+          <FormLabel>Lời nhắn</FormLabel>
+          <Textarea
+            border={"none"}
+            p={"8px 12px"}
+            placeholder="Lời nhắn của bạn"
+            bg={"#F6F9FC"}
+            borderRadius={"6px"}
+            fontSize={"14px"}
+          />
+        </FormControl>
+      </Box>
     </Box>
   );
 };

@@ -365,7 +365,28 @@ export const ShoppingIcon = ({
     <path d="M14 5a2 2 0 1 0-4 0" />
   </Icon>
 );
-
+export const ShoppingCartIcon = ({
+  size = 33,
+  strokeWidth = 1.5,
+  color = "currentColor",
+  ...props
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="m19.261 9.696 1.385 9A2 2 0 0 1 18.669 21H5.331a2 2 0 0 1-1.976-2.304l1.384-9A2 2 0 0 1 6.716 8h10.569a2 2 0 0 1 1.976 1.696Z" />
+    <path d="M14 5a2 2 0 1 0-4 0" />
+  </Icon>
+);
 export const InfoIcon = ({
   size = 33,
   strokeWidth = 1.5,
@@ -1799,7 +1820,26 @@ export const Star = ({
     <path d="M6.255 20.452c-.464.237-.99-.18-.896-.71l.996-5.677-4.227-4.027c-.395-.377-.19-1.065.34-1.14l5.877-.835 2.62-5.192a.616.616 0 0 1 1.113 0L14.7 8.063l5.878.835c.529.075.734.763.338 1.14l-4.226 4.027.996 5.676c.093.532-.432.948-.896.71l-5.269-2.707-5.267 2.708h.002Z" />
   </Icon>
 );
-
+export const Star_Half = ({
+  size = 7,
+  strokeWidth = 1.5,
+  color = "rgb(255, 196, 0)",
+  ...props
+}) => (
+  <Icon
+    stroke="rgb(255, 196, 0)"
+    fill="rgb(255, 196, 0)"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    // color="#FFC400"
+    width={size}
+    height={size}
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z" />
+  </Icon>
+);
 export const StarHalf = ({
   size = 7,
   strokeWidth = 1.5,
@@ -1820,7 +1860,6 @@ export const StarHalf = ({
     <path d="m8.345 8.062 2.62-5.192a.619.619 0 0 1 .555-.35.62.62 0 0 1 .558.35l2.62 5.192 5.878.836a.644.644 0 0 1 .544.606.659.659 0 0 1-.204.534l-4.228 4.027.996 5.676c.094.531-.432.948-.895.71l-5.27-2.707-5.266 2.707a.628.628 0 0 1-.175.06c-.41.072-.802-.305-.72-.77l.996-5.676-4.227-4.027a.66.66 0 0 1-.206-.484.69.69 0 0 1 .102-.362.616.616 0 0 1 .444-.294l5.878-.836Zm3.175 8.29a.61.61 0 0 1 .278.067l4.423 2.273-.832-4.748a.677.677 0 0 1 .194-.606l3.488-3.324-4.862-.692a.63.63 0 0 1-.472-.345l-2.216-4.39-.001.004v11.761Z" />
   </Icon>
 );
-
 export const PicOneIcon = ({
   size = 35,
   strokeWidth = 1.5,
@@ -1894,6 +1933,17 @@ export const LogoutIcon = ({
   </Icon>
 );
 export const CloseIcon = ({ size = 35, ...props }) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M12 2.25c-5.376 0-9.75 4.374-9.75 9.75s4.374 9.75 9.75 9.75 9.75-4.374 9.75-9.75S17.376 2.25 12 2.25ZM16.06 15 15 16.06l-3-3-3 3L7.94 15l3-3-3-3L9 7.94l3 3 3-3L16.06 9l-3 3 3 3Z"></path>
+  </Icon>
+);
+export const MailIcon = ({ size = 35, ...props }) => (
   <Icon
     width={size}
     height={size}

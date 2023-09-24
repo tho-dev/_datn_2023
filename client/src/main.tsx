@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "flatpickr/dist/themes/material_green.css";
 import "./index.css";
+import "leaflet/dist/leaflet.css";
 // redux-toolkit
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./redux/store.ts";
