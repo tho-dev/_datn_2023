@@ -1,18 +1,27 @@
 import User from "../models/user.model";
 import UserVerification from "../models/userverification.model";
+import RefreshToken from "../models/refreshToken.model";
 import { userSchema } from "../validations";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import otpGenerator from "otp-generator";
-import nodemailer from "nodemailer";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
-import { sendVerificationEmail } from "../utils/email";
+import { sendEmail, sendVerificationEmail } from "../utils/email";
 import { loginShema } from "../validations/auth";
+import createError from "http-errors";
+import {
+  signAccessToken,
+  signRefreshToken,
+} from "../middleware/jwt.middleware";
+import randomstring from "randomstring";
+import resetPassWordModel from "../models/resetPassword.model";
+import pug from "pug";
 
 export async function getAllUser(req, res, next) {
   try {
     const users = await User.find({});
+    if (!users) {
+      throw createError.NotFound("Không tìm thấy sản phẩm");
+    }
     return res.json({
       status: 200,
       message: "Thành công",
@@ -27,7 +36,7 @@ export async function getOneUser(req, res, next) {
   try {
     const { id } = req.params.id;
     const user = await User.findById({ id });
-    if (!user) return res.json({ status: 404, message: "Thất bại" });
+    if (!user) throw createError.NotFound("Không tìm thấy sản phẩm");
     return res.json({
       status: 200,
       message: "Thành công",
@@ -44,17 +53,12 @@ export async function addUser(req, res, next) {
     const { error } = userSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const errors = error.details.map((items) => items.message);
-      return res.status(400).json({
-        message: errors,
-      });
+      throw createError.BadRequest(errors);
     }
 
     const userExit = await User.findOne({ email: email });
     if (userExit) {
-      return res.json({
-        status: 400,
-        message: "Email này đã tồn tại",
-      });
+      throw createError.BadRequest("Email này đã tồn tại");
     }
     const hash_password = await bcrypt.hash(password, 10);
 
@@ -68,8 +72,9 @@ export async function addUser(req, res, next) {
     next(error);
   }
 }
+
 //verify email
-export async function verifyEmail(req, res) {
+export async function verifyEmail(req, res, next) {
   try {
     const { userId, uniqueString } = req.params;
 
@@ -105,35 +110,25 @@ export async function verifyEmail(req, res) {
   }
 }
 
-export const verifiedEmail = async (req, res) => {
+export const verifiedEmail = async (req, res, next) => {
   try {
     res.sendFile(path.join(__dirname, "./../views/verified.html"));
-  } catch (error) { }
+  } catch (error) {}
 };
 
 export async function updateUser(req, res, next) {
   try {
-    const { error } = userSchema.validate(req.body, { abortEarly: false });
-    if (error) {
-      const errors = error.details.map((items) => items.message);
-      return res.status(400).json({
-        message: errors,
-      });
-    }
     const user_updated = await User.findOneAndUpdate(
       { _id: req.params.id },
       req.body,
       { new: true }
     );
     if (!user_updated) {
-      return res.json({
-        status: 404,
-        message: "Cập nhật thất bại",
-      });
+      throw createError.BadRequest("Cập nhật thất bại");
     }
     return res.json({
       status: 200,
-      message: "Thành công",
+      message: "Cập nhật Thành công",
       data: user_updated,
     });
   } catch (error) {
@@ -141,44 +136,155 @@ export async function updateUser(req, res, next) {
   }
 }
 
-export const login = async (req, res) => {
+export async function updateUserPassword(req, res, next) {
+  try {
+    const { password, new_password, new_confirm_password } = req.body;
+    const user = await User.findOne({ _id: req.params.id });
+    if (!user) {
+      throw createError.NotFound("Không tìm thấy user");
+    }
+    const isMatchPassWord = await bcrypt.compare(password, user.password);
+
+    if (!isMatchPassWord) {
+      throw createError.BadRequest("Mật khẩu không chính xác");
+    }
+    if (new_password.length < 6) {
+      throw createError.BadRequest("Mật khẩu mới phải lớn hơn 6 ký tự");
+    }
+    const hash_password = await bcrypt.hash(new_password, 10);
+
+    const user_updated = await User.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        ...req.body,
+        password: hash_password,
+        confirm_password: new_confirm_password,
+      },
+      { new: true }
+    );
+    if (!user_updated) {
+      throw createError.BadRequest("Cập nhật thất bại");
+    }
+    return res.json({
+      status: 200,
+      message: "Cập nhật mật khẩu Thành công",
+      data: user_updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const sendOtp_resetPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    // Tìm người dùng trong cơ sở dữ liệu bằng email
+    const user = await User.findOne({ email });
+    const resetPassModel = await resetPassWordModel.findOne({
+      user_id: user._id,
+    });
+    if (resetPassModel) {
+      throw createError.BadRequest("Mã Otp vẫn còn hiệu lực vui lòng đợi 5p");
+    }
+    if (!user) {
+      throw createError.NotFound(
+        "Không tìm thấy người dùng với địa chỉ email này."
+      );
+    }
+    const opt_length = 6;
+    const otp_code = randomstring.generate({
+      length: opt_length,
+      charset: "numeric",
+    });
+    const hash_otp = await bcrypt.hash(otp_code, 10);
+    await resetPassWordModel.create({
+      user_id: user._id,
+      otp_code: hash_otp,
+    });
+    const templatePath = path.join(__dirname, "./../views/verifyPassword.pug");
+    const templateEmail = pug.renderFile(templatePath, {
+      otp: otp_code,
+    });
+    await sendEmail(user, "Mã OTP", templateEmail);
+    return res.json({
+      status: 200,
+      message: "Mã Otp đã được gửi đến email của bạn",
+      data: otp_code,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetPassWord = async (req, res, next) => {
+  try {
+    const { email, new_password, otp_code } = req.body;
+    const user = await User.findOne({ email });
+    const resetPassModel = await resetPassWordModel.findOne({
+      user_id: user._id,
+    });
+    if (!resetPassModel) {
+      throw createError.BadRequest("Không tìm thấy mã otp hoặc mã otp hết hạn");
+    }
+    if (!user) {
+      throw createError.NotFound(
+        "Không tìm thấy người dùng với địa chỉ email này."
+      );
+    }
+    const is_otp = await bcrypt.compare(otp_code, resetPassModel.otp_code);
+    if (!is_otp) {
+      throw createError.BadRequest("Mã otp không đúng");
+    }
+    const hash_password = await bcrypt.hash(new_password, 10);
+
+    user.password = hash_password;
+    user.confirm_password = new_password;
+
+    await user.save();
+    await resetPassModel.deleteOne();
+
+    return res.json({
+      status: 200,
+      message: "Thay đổi mật khẩu thành công",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
     const { error } = loginShema.validate(req.body, { abortEarly: false });
     if (error) {
       const errors = error.details.map((item) => item.message);
-      return res.status(400).json({
-        message: errors,
-      });
+      throw createError.BadRequest(errors);
     }
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.json({
-        status: 400,
-        message: "Email không tồn tại",
-      });
+      throw createError.BadRequest("Email không tồn tại");
     }
     if (!user.verified) {
-      return res.json({
-        status: 401,
-        message: "Email chưa được xác thực",
-      });
+      throw createError.Unauthorized("Email chưa được xác thực");
     }
     const isMatchPassWord = await bcrypt.compare(password, user.password);
     if (!isMatchPassWord) {
-      return res.json({
-        status: 400,
-        message: "Mật khẩu không chính xác",
-      });
+      throw createError.BadRequest("Mật khẩu không chính xác");
     }
-    const accessToken = jwt.sign(
-      { _id: user._id },
-      process.env.JWT_SECRET_ACCESS_TOKEN,
-      {
-        expiresIn: "1d",
-      }
-    );
+
+    const accessToken = await signAccessToken(user);
+    const refreshToken = await signRefreshToken(user);
+
+    const optionsCookies = {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 1000,
+      sameSite: "none",
+      secure: true,
+    };
+
+    res.cookie("refreshToken", refreshToken, optionsCookies);
+    res.cookie("loggedIn", "true", optionsCookies);
+
     return res.json({
       status: 200,
       message: "Đăng nhập thành công",
@@ -189,3 +295,34 @@ export const login = async (req, res) => {
     next(error);
   }
 };
+
+export async function logout(req, res, next) {
+  try {
+    const refreshToken = req?.cookies?.refreshToken;
+    const userToken = await RefreshToken.findOne({
+      token: refreshToken,
+    });
+
+    const optionsCookies = {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    };
+    res.clearCookie("refreshToken");
+    res.cookie("loggedIn", "false", optionsCookies);
+
+    if (!userToken) {
+      return res.json({
+        message: "logged out successfully",
+      });
+    }
+
+    await userToken.deleteOne();
+
+    return res.json({
+      message: "logged out successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
