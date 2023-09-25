@@ -29,7 +29,7 @@ import { Img, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, Im
 import { Flex, Box, Text } from "@chakra-ui/layout";
 import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Thumbs, Navigation, Pagination, Scrollbar, A11y, Mousewheel, FreeMode } from "swiper/modules";
+import { Thumbs, Navigation, Pagination, Scrollbar, A11y, Mousewheel, FreeMode, Zoom } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -69,22 +69,23 @@ function ImagePreviewModal({ onClose, isOpen, product }: Props) {
               rounded="6px"
               bgColor="bg.white"
               justifyContent="space-between"
-             
+
             >
               {thumbsSwiper && (
                 <Flex
                   w="90%"
                   maxH={"90vh"}
-                 
+
                 >
                   <Swiper
                     spaceBetween={10}
-                    modules={[Navigation, FreeMode, Thumbs]}
+                    modules={[Navigation, FreeMode, Thumbs, Zoom]}
                     thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
                     watchSlidesProgress={true}
                     slidesPerView={1}
                     navigation={false}
                     ref={swiperRef}
+                    zoom={true}
                   >
                     {Array(6)
                       .fill(0)
@@ -96,14 +97,22 @@ function ImagePreviewModal({ onClose, isOpen, product }: Props) {
                               h="full"
                               bgColor="bg.gray"
                               rounded="6px"
+
                             >
-                              <Img
-                                src="https://images.thinkgroup.vn/unsafe/1000x1000/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/23/lenovo-thinkpad-x1-carbon-gen-11-thinkpro-01.png"
+                              <Flex
                                 w="full"
                                 h="full"
-                                objectFit="contain"
-                                cursor={"pointer"}
-                              />
+                                className="swiper-zoom-container"
+                                justifyContent={"center"}
+                              >
+                                <Img
+                                  src="https://images.thinkgroup.vn/unsafe/1000x1000/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/23/lenovo-thinkpad-x1-carbon-gen-11-thinkpro-01.png"
+
+                                  objectFit="contain"
+                                  cursor={"pointer"}
+                                />
+                              </Flex>
+
 
                             </Box>
                           </SwiperSlide>
@@ -152,7 +161,7 @@ function ImagePreviewModal({ onClose, isOpen, product }: Props) {
                     })}
                 </Swiper>
               </Box>
-              
+
             </Flex>
 
           </ModalBody>
