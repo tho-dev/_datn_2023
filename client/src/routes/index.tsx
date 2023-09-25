@@ -12,7 +12,6 @@ import { SignInView } from "~/views/public/SignInView";
 import { SignUpView } from "~/views/public/SignUpView";
 import { SlugView } from "~/views/public/SlugView";
 import { CartView } from "~/views/public/CartView/";
-import { OrderView } from "~/views/public/OrderView";
 import { ProfileView } from "~/views/public/ProfileView/";
 import { ProductDetailView } from "~/views/public/ProductDetailView";
 import { NewsView } from "~/views/public/NewsView";
@@ -60,10 +59,6 @@ const routes: RouteObject[] = [
           {
             path: "thanh-toan",
             element: <Payment />,
-          },
-          {
-            path: "don-hang",
-            element: <OrderView />,
           },
           {
             path: "thong-tin",

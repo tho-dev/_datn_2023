@@ -19,7 +19,7 @@ import { LogoutIcon } from "~/components/common/Icons";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { logout } from "~/redux/slices/globalSlice";
 import { useNavigate } from "react-router-dom";
-import InforOrder from "./components/InforOrder";
+import { InforOrder } from "./components/InforOrder";
 
 type Props = {};
 
