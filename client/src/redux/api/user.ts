@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser } from '~/interface/user';
-import { signIn } from '~/services/users.service';
+
 
 
 const authApi = createApi({
