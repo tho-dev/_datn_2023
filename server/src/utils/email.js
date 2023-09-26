@@ -21,7 +21,7 @@ export async function sendEmail(user, subject, html) {
     });
 
     await transporter.sendMail({
-      from: `Nhà Hàng Dev-Food ${process.env.USER}`,
+      from: `Hệ thống Poly-Tech ${process.env.USER}`,
       to: user?.email,
       subject,
       html,

@@ -1,30 +1,3 @@
-// import React from 'react';
-// import { Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, Image, Box } from '@chakra-ui/react';
-
-// type Props = {
-//   imageSrc: string,
-//   onClose: any,
-//   isOpen: any,
-// }
-
-// const ImagePreviewModal = ({ imageSrc, onClose, isOpen }: Props) => {
-//   return (
-//     <Box >
-//       <Modal onClose={onClose} isOpen={isOpen} size={"3xl"}>
-//         <ModalOverlay />
-//         <ModalContent >
-//           <ModalCloseButton />
-//           <ModalBody >
-//             <Image objectFit={"cover"} src={imageSrc} />
-//       </ModalBody>
-//     </ModalContent>
-//   </Modal>
-// </Box>
-
-//   );
-// };
-
-// export default ImagePreviewModal;
 import { Img, Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, Image } from "@chakra-ui/react";
 import { Flex, Box, Text } from "@chakra-ui/layout";
 import React, { useRef, useState } from "react";
@@ -46,14 +19,7 @@ type Props = {
 function ImagePreviewModal({ onClose, isOpen, product }: Props) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const swiperRef = useRef<any>(null);
-
-  // handle swiper change
-  // const handleSwiperChange = (swiper: any) => {
-  //   setThumbsSwiper(swiper);
-  //   console.log(swiper.realIndex)
-  //   // swiper.style.borderColor = "1px solid red";
-  // }
-
+  
   return (
     <Box overflow={"hidden"} >
       <Modal onClose={onClose} isOpen={isOpen} size={"full"} >
@@ -163,7 +129,6 @@ function ImagePreviewModal({ onClose, isOpen, product }: Props) {
               </Box>
 
             </Flex>
-
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -172,3 +137,4 @@ function ImagePreviewModal({ onClose, isOpen, product }: Props) {
 }
 
 export default ImagePreviewModal;
+

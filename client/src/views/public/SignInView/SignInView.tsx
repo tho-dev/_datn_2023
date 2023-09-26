@@ -26,7 +26,9 @@ import {
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { loginSchema } from "~/validate/user";
-import { signIn } from "~/services/users.service";
+import { useSigninMutation } from "~/redux/api/user";
+import { useAppDispatch } from "~/redux/hook/hook";
+import { login } from "~/redux/slices/globalSlice";
 
 type Props = {};
 
@@ -41,23 +43,30 @@ const SignInView = (props: Props) => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const dispatch = useAppDispatch();
+
+  const [signin] = useSigninMutation();
+
   const onSubmit = async (data: any) => {
-    const result: any = await signIn(data);
-    if (result.status === 200) {
+    const result: any = await signin(data);
+    console.log(result);
+
+    if (result.data.status === 200) {
       toast({
         title: "Đăng nhập thành công",
-        description: result.message,
+        description: result.data.message,
         status: "success",
         duration: 2000,
         isClosable: true,
         position: "bottom-right",
       });
+      dispatch(login(result.data.data));
       navigate("/");
     } else {
       toast({
         title: "Đăng nhập thất bại",
-        description: result.message,
-        status: "success",
+        description: result.data.message,
+        status: "error",
         duration: 2000,
         isClosable: true,
         position: "bottom-right",

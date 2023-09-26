@@ -50,7 +50,11 @@ const categorySchema = new Schema({
 	updated_at: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	cateId : {
+		type: Schema.Types.ObjectId,
+		ref: 'Category'
+	},
 }, {
 	collection: 'categories',
 	timestamps: false,

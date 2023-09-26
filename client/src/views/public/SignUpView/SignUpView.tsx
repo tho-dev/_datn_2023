@@ -29,8 +29,7 @@ import {
 } from "react-router-dom";
 import { registerSchema } from "~/validate/user";
 import { useToast } from "@chakra-ui/react";
-import { signUp } from "~/services/users.service";
-
+import { useSignupMutation } from "~/redux/api/user";
 type Props = {};
 
 const SignUpView = (props: Props) => {
@@ -43,7 +42,7 @@ const SignUpView = (props: Props) => {
   } = useForm<any>({
     resolver: joiResolver(registerSchema),
   });
-
+  const [signup] = useSignupMutation();
   const onSubmit = async (data: any) => {
     const avatar =
       "https://i.pinimg.com/222x/90/9e/9e/909e9e27ae77ca7da531375be6c05ac5.jpg";
@@ -51,27 +50,29 @@ const SignUpView = (props: Props) => {
       ...data,
       avatar,
     };
-    const result: any = await signUp(newData);
-    if (result.status === 201) {
-      toast({
-        title: "Tạo tài khoản thành công",
-        description: result.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
+    signup(newData)
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Tạo tài khoản thành công",
+          description: data.message,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+        navigate("/dang-nhap");
+      })
+      .catch((err) => {
+        toast({
+          title: "Tạo tài khoản thất bại",
+          description: err.data.message,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
       });
-      navigate("/dang-nhap");
-    } else {
-      toast({
-        title: "Tạo tài khoản thất bại",
-        description: result.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
   };
 
   return (
