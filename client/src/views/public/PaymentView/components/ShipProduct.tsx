@@ -61,7 +61,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 			<Flex gap={"16px"} mt={"16px"}>
 				<FormControl isInvalid={errors?.district as any}>
 					<FormLabel>Khu Vực</FormLabel>
-					<Transport addres={addres} />
+					<Box display={district!=""?"none":"block"}><Transport addres={addres} /></Box>
 					<Input
 						type="text"
 						border={"none"}
@@ -72,7 +72,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 						fontSize={"14px"}
 						{...registerShip("district")}
 						defaultValue={district}
-						disabled
+						display={district==""?"none":"block"}
 					/>
 					<FormErrorMessage>
 						{" "}

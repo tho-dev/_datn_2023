@@ -28,6 +28,7 @@ const Atstore = ({ register, errors }: Props) => {
 				</FormControl>
 				<FormControl isInvalid={errors.phone as any}>
 					<FormLabel>Số điện thoại</FormLabel>
+
 					<Input
 						type="text"
 						border={"none"}

@@ -48,7 +48,7 @@ const Transport = (props: Props) => {
 				setValue(item.name + "," + value);
 			});
 		}
-		if (item.division_type == "xã") {
+		if (item.division_type == "xã"||item.division_type == "phường") {
 			setValue(item.name + "," + value);
 			onClose();
 		}
@@ -59,21 +59,28 @@ const Transport = (props: Props) => {
 		});
 	};
 
-	props.addres(value);
+	useEffect(()=>{
+		props.addres(value);
+	})
 
 	return (
 		<Box>
-			<Flex justifyContent={"space-between"}>
-				<Text as={"h5"} fontSize={"lg"} fontWeight={"600"}>
-					Vận chuyển
-				</Text>
+			<Flex>
 				<Flex
 					onClick={onOpen}
 					as={"button"}
 					fontSize={"14px"}
-					bg={"white"}
 					alignItems={"center"}
+					textAlign={"center"}
 					color={"text.blue"}
+					border={"none"}
+					pl={"8px"}
+					py={"2px"}
+					placeholder="Khu vực"
+					bg={"#F6F9FC"}
+					borderRadius={"6px"}
+					w={"full"}
+					justifyContent={"space-between"}
 				>
 					Chọn địa chỉ giao hàng
 					<Flex
