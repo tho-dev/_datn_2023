@@ -9,12 +9,18 @@ type Props = {};
 
 const ShippingList = (props: Props) => {
   return (
-    <Box width="100%" minHeight="100vh" bgColor="bg.white">
-      <Text fontSize="18px" fontWeight="bold" padding={4}>
+    <Box width="100%" minHeight="100vh">
+      <Text
+        fontSize="18px"
+        fontWeight="bold"
+        padding={4}
+        bgColor="white"
+        my={4}
+      >
         Shipping
       </Text>
       <Grid gridTemplateColumns="repeat(7,1fr)" gap={4}>
-        <GridItem colSpan={2}>
+        <GridItem colSpan={2} bgColor="bg.white" padding={4} borderRadius={6}>
           <Box padding={4}>
             <InputGroup>
               <InputLeftElement pointerEvents="none">
@@ -28,10 +34,9 @@ const ShippingList = (props: Props) => {
               />
             </InputGroup>
           </Box>
-
           <ListCardShipping />
         </GridItem>
-        <GridItem colSpan={5} padding={4}>
+        <GridItem colSpan={5} padding={8} bgColor="bg.white">
           <ShippingDetail />
         </GridItem>
       </Grid>

@@ -52,20 +52,28 @@ const TheHeader = (props: Props) => {
           }}
           justifyContent="space-between"
         >
-          <Button
-            h="45px"
-            px="4"
-            bgColor="bg.white"
-            transition="all 0.25s ease"
-            color="text.black"
-            fontWeight="semibold"
+          <Link
+            to="/lich-su-mua-hang"
+            as={ReactRouterLink}
             _hover={{
-              bgColor: "bg.gray",
+              textDecoration: "none",
             }}
-            leftIcon={<PhoneIcon size={5} color="text.blue" strokeWidth={2} />}
           >
-            1900.63.2574
-          </Button>
+            <Button
+              h="45px"
+              px="4"
+              bgColor="bg.white"
+              transition="all 0.25s ease"
+              color="text.black"
+              fontWeight="semibold"
+              _hover={{
+                bgColor: "bg.gray",
+              }}
+              leftIcon={<CartIcon size={5} color="text.blue" strokeWidth={2} />}
+            >
+              Tra cứu đơn hàng
+            </Button>
+          </Link>
           <Button
             h="45px"
             px="4"
@@ -182,8 +190,8 @@ const TheHeader = (props: Props) => {
             border="1px solid #ccc"
           >
             <Avatar
-              name={user.first_name + " " + user.last_name}
-              src={user.avatar}
+              name={user?.first_name + " " + user?.last_name}
+              src={user?.avatar}
               width="100%"
               height="100%"
             />

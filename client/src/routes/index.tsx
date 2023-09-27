@@ -40,6 +40,7 @@ import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCate
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import DemandView from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
+import { HistoryOrderView } from "~/views/public/HistoryOrderView";
 
 const routes: RouteObject[] = [
   {
@@ -87,6 +88,10 @@ const routes: RouteObject[] = [
           {
             path: "tim-kiem",
             element: <SearchView />,
+          },
+          {
+            path: "lich-su-mua-hang",
+            element: <HistoryOrderView />,
           },
         ],
       },
