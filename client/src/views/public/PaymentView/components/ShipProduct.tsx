@@ -55,6 +55,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 						fontSize={"14px"}
 						{...registerShip("phone")}
 					/>
+					
 					<FormErrorMessage> {(errors.phone as any) && (errors?.phone?.message as any)}</FormErrorMessage>
 				</FormControl>
 			</Flex>
@@ -73,7 +74,6 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 						{...registerShip("district")}
 						defaultValue={district}
 						display={district==""?"none":"block"}
-						
 					/>
 					<FormErrorMessage>
 						{" "}
