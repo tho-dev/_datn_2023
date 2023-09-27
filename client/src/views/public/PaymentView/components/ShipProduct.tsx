@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
 	FormControl,
@@ -56,13 +55,14 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 						fontSize={"14px"}
 						{...registerShip("phone")}
 					/>
+					
 					<FormErrorMessage> {(errors.phone as any) && (errors?.phone?.message as any)}</FormErrorMessage>
 				</FormControl>
 			</Flex>
 			<Flex gap={"16px"} mt={"16px"}>
 				<FormControl isInvalid={errors?.district as any}>
 					<FormLabel>Khu Vực</FormLabel>
-					<Transport addres={addres} />
+					<Box display={district!=""?"none":"block"}><Transport addres={addres} /></Box>
 					<Input
 						type="text"
 						border={"none"}
@@ -73,7 +73,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 						fontSize={"14px"}
 						{...registerShip("district")}
 						defaultValue={district}
-						disabled
+						display={district==""?"none":"block"}
 					/>
 					<FormErrorMessage>
 						{" "}
@@ -100,7 +100,6 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 			</Flex>
 		</Box>
 	);
-
 };
 
 export default ShipProduct;
