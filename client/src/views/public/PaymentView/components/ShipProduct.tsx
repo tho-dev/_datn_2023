@@ -73,6 +73,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 						{...registerShip("district")}
 						defaultValue={district}
 						display={district==""?"none":"block"}
+						
 					/>
 					<FormErrorMessage>
 						{" "}
