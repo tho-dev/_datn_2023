@@ -1,16 +1,17 @@
-import Post from '../models/post.model';
-import createError from 'http-errors';
-import { postSchema } from '../validations/index';
+import Post from "../models/post.model";
+import createError from "http-errors";
+import { postSchema } from "../validations/index";
+
 export async function getAllPost(req, res, next) {
   try {
     const posts = await Post.find();
     if (posts.length === 0) {
-      throw createError.BadRequest('Bài viêt không tồn tại');
+      throw createError.BadRequest("Bài viêt không tồn tại");
     }
 
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: "Thành công",
       data: posts,
     });
   } catch (error) {
@@ -23,11 +24,11 @@ export async function getPostDetail(req, res, next) {
       _id: req.params.id,
     });
     if (!post) {
-      throw createError.BadRequest('Bài viết không tồn tại');
+      throw createError.BadRequest("Bài viết không tồn tại");
     }
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: "Thành công",
       data: post,
     });
   } catch (error) {
@@ -45,11 +46,11 @@ export async function createPost(req, res, next) {
     }
     const post = await Post.create(req.body);
     if (!post) {
-      throw createError.BadRequest('Thêm sản phẩm thất bại');
+      throw createError.BadRequest("Thêm sản phẩm thất bại");
     }
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: "Thành công",
       data: post,
     });
   } catch (error) {
@@ -67,11 +68,11 @@ export async function updatePost(req, res, next) {
     }
     const post = await Post.findByIdAndUpdate(req.params.id, req.body);
     if (!post) {
-      throw createError.BadRequest('Sửa sản phẩm thất bại');
+      throw createError.BadRequest("Sửa sản phẩm thất bại");
     }
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: "Thành công",
       data: post,
     });
   } catch (error) {
@@ -83,11 +84,11 @@ export async function deletePost(req, res, next) {
     const postId = req.params.id;
     const deletedPost = Post.findByIdAndUpdate(postId, { delete: true });
     if (!deletedPost) {
-      throw createError.BadRequest('Không tìm thấy bài viết');
+      throw createError.BadRequest("Không tìm thấy bài viết");
     }
     return res.json({
       status: 200,
-      message: 'Xóa bài viết thành công',
+      message: "Xóa bài viết thành công",
       data: deletedPost,
     });
   } catch (error) {
