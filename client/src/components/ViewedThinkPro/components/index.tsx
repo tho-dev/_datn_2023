@@ -1,8 +1,7 @@
-import React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
 import { Image, Divider, Button } from "@chakra-ui/react";
-import { PlusIcon, Star } from "./../../common/Icons";
+import { PlusIcon } from "./../../common/Icons";
 
 type Props = {
   product?: any;
@@ -11,19 +10,50 @@ type Props = {
 };
 
 const ViewedList = ({ product, mode, showCompare }: Props) => {
+  const saveToLocalStorage = () => {
+    const dataToSave = {
+      image: "https://images.thinkgroup.vn/unsafe/460x460/https://media-api-beta.thinkpro.vn/media/core/products/2022/8/3/LG-Gram-14-2022-ThinkPro-10.jpg",
+      productName: "LG Gram 14 2022",
+      price: 19999000,
+      sale: "-31%",
+      color: "",
+      promotion: "Quà tặng 400.000",
+    };
+
+    const jsonData = JSON.stringify(dataToSave);
+
+    localStorage.setItem("viewedProduct", jsonData);
+  };
+
+  const retrieveFromLocalStorage = () => {
+    const jsonData = localStorage.getItem("viewedProduct");
+
+    if (jsonData) {
+      const data = JSON.parse(jsonData);
+
+      console.log(data);
+
+      return data;
+    }
+    return null;
+  };
+
+  const retrievedData = retrieveFromLocalStorage();
+
   return (
     <Link
-      to={`laptop/lg-gram`}
+      // to={`laptop/lg-gram`}
       as={ReactRouterLink}
       w="full"
       h="full"
       overflow="hidden"
       rounded="md"
       display="inline-block"
-      backgroundColor="#f6f9fc"
+      backgroundColor="bg.white"
       _hover={{
         textDecoration: "none",
       }}
+      onClick={saveToLocalStorage}
     >
       <Box pb="100%" position="relative">
         <Box top="0" position="absolute">
@@ -46,25 +76,30 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
           <Text fontSize="md" color="text.red">
             19.999.000
           </Text>
-          <Text
-            p="2px"
-            fontSize="10px"
-            color="text.red"
-            backgroundColor="#fff5f7"
-          >
+          <Text p="2px" fontSize="10px" color="text.red" backgroundColor="#fff5f7">
             -31%
           </Text>
         </Flex>
         <Flex gap="1" alignItems="center" fontWeight="semibold">
           <Text fontSize="xs" color="text.gray">
-            4.7
+            Màu
           </Text>
-          <Star size={4} />
-          <Text fontSize="xs" color="text.gray">
-            | Đã bán 25
-          </Text>
+          <Flex>
+            <Box w="3" h="3" rounded="sm" backgroundColor="red.200" />
+          </Flex>
         </Flex>
         <Divider my="3" />
+        {mode == "home" && (
+          <>
+            <Box color="text.black" fontSize="xs" fontWeight="medium">
+              <Text>CPU: Core i7 1260P, 12 Cores</Text>
+              <Text>CPU: Core i7 1260P, 12 Cores</Text>
+              <Text>CPU: Core i7 1260P, 12 Cores</Text>
+              <Text>CPU: Core i7 1260P, 12 Cores</Text>
+            </Box>
+            <Divider my="3" />
+          </>
+        )}
 
         <Text
           color="text.black"
