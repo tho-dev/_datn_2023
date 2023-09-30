@@ -113,7 +113,7 @@ export async function verifyEmail(req, res, next) {
 export const verifiedEmail = async (req, res, next) => {
   try {
     res.sendFile(path.join(__dirname, "./../views/verified.html"));
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export async function updateUser(req, res, next) {
@@ -251,6 +251,8 @@ export const resetPassWord = async (req, res, next) => {
     next(error);
   }
 };
+
+
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
