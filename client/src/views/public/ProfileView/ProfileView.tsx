@@ -10,19 +10,48 @@ import {
   TabPanels,
   Tabs,
   Text,
+  IconButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import Info from "./components/Info";
 import ChangePassword from "./components/ChangePassword";
-import Chat from "./components/Chat";
+import { LogoutIcon } from "~/components/common/Icons";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { logout } from "~/redux/slices/globalSlice";
+import { useNavigate } from "react-router-dom";
+import { InforOrder } from "./components/InforOrder";
 
 type Props = {};
 
 const ProfileView = (props: Props) => {
+  const { user } = useAppSelector((state) => state.persistedReducer.global);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    dispatch(logout(false));
+    navigate("/");
+  };
+
   return (
     <Box my="6" px="6" py="4" rounded="xl" bgColor="bg.white">
-      <Heading py="4" color="text.black" fontSize="xl">
-        Thông tin tài khoản
-      </Heading>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Heading py="4" color="text.black" fontSize="xl">
+          Thông tin tài khoản
+        </Heading>
+        <Tooltip label="Đăng xuất">
+          <IconButton
+            aria-label="logout button"
+            icon={<LogoutIcon size={6} color="black" />}
+            background="none"
+            onClick={handleLogOut}
+            padding="10px"
+            bgColor="bg.gray"
+            _hover={{ bgColor: "#ccc" }}
+            rounded="full"
+          />
+        </Tooltip>
+      </Flex>
       <Divider />
       <Box my="6">
         <Flex alignItems="center" gap="6">
@@ -30,17 +59,18 @@ const ProfileView = (props: Props) => {
             <Image
               rounded="full"
               boxSize="120px"
-              src="https://gratisography.com/wp-content/uploads/2023/05/gratisography-noir-cat-free-stock-photo-800x525.jpg"
+              src={user.avatar}
               objectFit="cover"
               alt="Dan Abramov"
+              border="1px solid #ccc"
             />
           </Box>
           <Box>
             <Text fontSize="md" fontWeight="semibold">
-              Quỳnh
+              {user.first_name + " " + user.last_name}
             </Text>
             <Text fontSize="sm" fontWeight="semibold">
-              quynh19396@gmail.com
+              {user.email}
             </Text>
           </Box>
         </Flex>
@@ -53,22 +83,22 @@ const ProfileView = (props: Props) => {
               Đổi mật khẩu
             </Tab>
             <Tab fontSize="sm" fontWeight="semibold">
-              Chat
+              Đơn hàng
             </Tab>
           </TabList>
 
           <TabPanels>
             {/* Thay đổi thông tin người dùng */}
             <TabPanel>
-              <Info />
+              <Info user={user} />
             </TabPanel>
             {/* Thay đổi mật khẩu */}
             <TabPanel>
-              <ChangePassword />
+              <ChangePassword user={user} />
             </TabPanel>
             {/* Chat */}
             <TabPanel>
-              <Chat />
+              <InforOrder />
             </TabPanel>
           </TabPanels>
         </Tabs>

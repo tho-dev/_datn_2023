@@ -1,7 +1,9 @@
+
+import React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
 import { Image, Divider, Button } from "@chakra-ui/react";
-import { PlusIcon } from "./../../common/Icons";
+import { PlusIcon, Star } from "./../../common/Icons";
 
 type Props = {
   product?: any;
@@ -40,9 +42,10 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
 
   const retrievedData = retrieveFromLocalStorage();
 
+
   return (
     <Link
-      // to={`laptop/lg-gram`}
+      to={`laptop/lg-gram`}
       as={ReactRouterLink}
       w="full"
       h="full"
@@ -54,6 +57,7 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
         textDecoration: "none",
       }}
       onClick={saveToLocalStorage}
+
     >
       <Box pb="100%" position="relative">
         <Box top="0" position="absolute">
@@ -76,7 +80,13 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
           <Text fontSize="md" color="text.red">
             19.999.000
           </Text>
-          <Text p="2px" fontSize="10px" color="text.red" backgroundColor="#fff5f7">
+
+          <Text
+            p="2px"
+            fontSize="10px"
+            color="text.red"
+            backgroundColor="#fff5f7"
+          >
             -31%
           </Text>
         </Flex>
@@ -100,7 +110,6 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
             <Divider my="3" />
           </>
         )}
-
         <Text
           color="text.black"
           fontSize="sm"
