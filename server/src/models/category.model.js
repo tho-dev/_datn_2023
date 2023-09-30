@@ -6,12 +6,10 @@ import mongoosePaginate from "mongoose-paginate-v2";
 const plugins = [slug, mongooseDelete, mongoosePaginate]
 
 const categorySchema = new Schema({
-	sub_categories: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'Category'
-		}
-	],
+	parent_id: {
+		type: Schema.Types.ObjectId,
+		default: null
+	},
 	name: {
 		type: String
 	},
@@ -27,6 +25,9 @@ const categorySchema = new Schema({
 		type: String,
 		enum: ['category_brand', 'category_post'],
 		default: 'category_brand'
+	},
+	shared_url: {
+		type: String
 	},
 	thumbnail: {
 		id: String,
@@ -51,10 +52,6 @@ const categorySchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	cateId : {
-		type: Schema.Types.ObjectId,
-		ref: 'Category'
-	},
 }, {
 	collection: 'categories',
 	timestamps: false,
@@ -62,5 +59,12 @@ const categorySchema = new Schema({
 })
 
 plugins.forEach((item) => categorySchema.plugin(item, { overrideMethods: true }));
+
+// middlewares schema
+categorySchema.pre("save", async function (next) {
+	// shared_url danh mục con
+	this.shared_url = this?.slug
+	next()
+})
 
 export default model('Category', categorySchema)

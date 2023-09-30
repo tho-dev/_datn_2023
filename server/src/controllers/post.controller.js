@@ -1,6 +1,8 @@
 import Post from '../models/post.model';
 import createError from 'http-errors';
 import { postSchema } from '../validations/index';
+
+
 export async function getAllPost(req, res, next) {
   try {
     const posts = await Post.find();
