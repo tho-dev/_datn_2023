@@ -18,7 +18,8 @@ const ViewedProduct = ({ title }: PropTypes) => {
 	// comps
 
 	return (
-		<Box bg="white"
+		<Box
+			bg="white"
 			w="100%"
 			borderRadius="2xl"
 			py={7}
@@ -29,7 +30,10 @@ const ViewedProduct = ({ title }: PropTypes) => {
 				xl: "15",
 			}}
 		>
-			<Text fontSize={"18px"} fontWeight={"bold"}>
+			<Text
+				fontSize={"18px"}
+				fontWeight={"bold"}
+			>
 				Sản phẩm đã xem
 			</Text>
 			<Flex position="relative">
@@ -51,7 +55,7 @@ const ViewedProduct = ({ title }: PropTypes) => {
 							slidesPerView: 3,
 						},
 						1200: {
-							slidesPerView: 6,
+							slidesPerView: 5,
 						},
 					}}
 				>

@@ -67,6 +67,9 @@ const skuSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Product",
     },
+    SKU: {
+      type: String
+    },
     name: {
       type: String,
     },

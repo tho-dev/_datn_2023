@@ -1,6 +1,6 @@
 import User from "../models/user.model";
-import UserVerification from "../models/userverification.model";
-import RefreshToken from "../models/refreshToken.model";
+import UserVerification from "../models/user-verifi-cation.model";
+import RefreshToken from "../models/refresh-token.model";
 import { userSchema } from "../validations";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -13,7 +13,7 @@ import {
   signRefreshToken,
 } from "../middleware/jwt.middleware";
 import randomstring from "randomstring";
-import resetPassWordModel from "../models/resetPassword.model";
+import resetPassWordModel from "../models/reset-password.model";
 import pug from "pug";
 
 export async function getAllUser(req, res, next) {

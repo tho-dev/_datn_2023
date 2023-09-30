@@ -90,7 +90,7 @@ export async function getSingleProduct(req, res, next) {
 		})
 			.select('-assets._id -attributes._id -attributes.items._id -deleted -deleted_at')
 
-		if (!product || !sku) {
+		if (!product && !sku) {
 			throw createError.NotFound('Sản phẩm không tồn tại')
 		}
 
@@ -622,6 +622,9 @@ export async function saveVariant(req, res, next) {
 				const name = option.name;
 				const optionId = option._id
 				const optionValues = option.option_values;
+
+				if (optionValues.length === 0) continue;
+
 				const append = [];
 
 				for (const valueObj of optionValues) {

@@ -11,9 +11,19 @@ const refreshTokenSchema = new Schema(
       required: true,
     },
     createdAt: { type: Date, default: Date.now, expires: 30 * 86400 },
+    created_at: {
+      type: Date,
+      default: Date.now
+    },
+    updated_at: {
+      type: Date,
+      default: Date.now
+    }
   },
   {
-    collection: "refreshtokens",
+    collection: "refresh_tokens",
+    timestamps: false,
+    versionKey: false,
   }
 );
 

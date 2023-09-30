@@ -2,6 +2,7 @@ import Category from "../models/category.model"
 import Brand from "../models/brand.model"
 import polytech from "../data/polytech.json"
 import fetch from "node-fetch"
+import { Demand, DemandValue } from "../models/demand.model"
 import { Product, Option, OptionValue, Sku, Variant } from "../models/product.model"
 
 export async function insertData(req, res, next) {
@@ -125,7 +126,7 @@ export async function insertProduct(req, res, next) {
 			const category_id = categoryFind?._id
 
 			const insertProduct = async (doc) => {
-				const { name, price = 100000, price_before_discount = 10000, specs = "test", has_gift = false, gift_amount = 20000, status = true, attributes = [], video_review, description = "test", skus: skusPolytech, variations, brand } = doc
+				const { name, price = 100000, price_before_discount = 10000, specs = "test", has_gift = false, gift_amount = 20000, status = true, attributes = [], video_review, description = "test", skus: skusPolytech, variations, brand, demands: demandsPolytech } = doc
 
 				const brandFind = await Brand.findOne({
 					shared_url: brand?.slug
@@ -134,6 +135,7 @@ export async function insertProduct(req, res, next) {
 				const brandFull = await Brand.findOne({
 					category_id
 				})
+
 
 				const brand_id = brandFind?._id || brandFull?._id
 				const productFind = await Product.create({
@@ -159,6 +161,21 @@ export async function insertProduct(req, res, next) {
 
 				const product_id = productFind?._id
 
+
+				const demands = await Demand.find({})
+				// Check điểm 
+				if (Array.isArray(demandsPolytech) && demandsPolytech?.length > 0) {
+					await Promise.all(demandsPolytech?.map(async (demand) => {
+						const demandFind = demands?.find((i) => i?.slug == demand?.slug)
+
+						await DemandValue.create({
+							product_id: product_id,
+							demand_id: demandFind?._id,
+							point: demand?.point,
+						})
+					}))
+				}
+
 				// random màu
 				const colors = ['#495057', '#f03e3e', '#faa2c1', '#845ef7', '#364fc7', '#0c8599', '#087f5b', '#2f9e44', '#e67700', '#ffd43b', '#d9480f']
 
@@ -167,7 +184,8 @@ export async function insertProduct(req, res, next) {
 					return colors[randomIndex];
 				}
 
-				const optionsP = variations?.map((variant) => ({
+				const variationsFilter = variations?.filter((a) => a?.options?.length > 0)
+				const optionsP = variationsFilter?.map((variant) => ({
 					name: variant?.name,
 					option_values: variant?.options?.map((i) => {
 						return {
@@ -239,6 +257,9 @@ export async function insertProduct(req, res, next) {
 						const name = option.name;
 						const optionId = option._id
 						const optionValues = option.option_values;
+
+						if (optionValues.length === 0) continue;
+
 						const append = [];
 
 						for (const valueObj of optionValues) {

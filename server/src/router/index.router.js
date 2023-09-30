@@ -4,7 +4,7 @@ import brand from "./brand.router";
 import category from "./category.router";
 import demand from "./demand.router";
 import user from "./user.router";
-import upload from "./uploadImage.router";
+import upload from "./upload-image.router";
 import cart from "./cart.router";
 import post from "./post.router";
 import order from "./order.router";

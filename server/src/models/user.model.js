@@ -67,6 +67,7 @@ const userSchema = new Schema(
     },
   },
   {
+    collection: "users",
     timestamps: false,
     versionKey: false,
   }
