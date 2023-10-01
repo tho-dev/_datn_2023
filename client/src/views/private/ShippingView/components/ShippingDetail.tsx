@@ -43,7 +43,7 @@ const ShippingDetail = (props: Props) => {
         </Box>
       </Box>
       <Box>
-        <Text fontSize="18px" fontWeight="bold">
+        <Text pb={5} fontSize="18px" fontWeight="bold">
           Xem bản đồ
         </Text>
         <Box width="100%" minH="700px">

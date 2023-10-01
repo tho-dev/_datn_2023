@@ -45,8 +45,8 @@ const CategoryForm = ({ data }: Props) => {
     },
   ];
   return (
-    <Box borderWidth={1} rounded={"sm"} p={4} fontSize="14px">
-      <Heading fontSize="md" pb={4} borderBottomWidth={1}>
+    <Box borderWidth={1} rounded={"sm"} p={4} fontSize="15">
+      <Heading fontSize="15" pb={4} borderBottomWidth={1}>
         {isCreateForm ? "Tạo mới" : "Cập nhật"}
       </Heading>
       <Box pt={4}>
@@ -85,6 +85,7 @@ const CategoryForm = ({ data }: Props) => {
             bgColor={isCreateForm ? "green.500" : "red.500"}
             isLoading={isSubmitting}
             type="submit"
+            
           >
             {isCreateForm ? "Tạo mới" : "Lưu lại"}
           </Button>

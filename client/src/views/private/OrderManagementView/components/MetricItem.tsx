@@ -1,4 +1,4 @@
-import { GridItem, Flex, Heading, Box, Text } from "@chakra-ui/layout";
+import { GridItem, Flex, Heading, Box, Text, Center } from "@chakra-ui/layout";
 import React from "react";
 import { CheckIcon, ArrowUpIcon } from "~/components/common/Icons";
 
@@ -44,11 +44,11 @@ const MetricItem = ({ heading, text, icon, color }: Props) => {
           </Flex>
         </Box>
         <Box>
-          <Heading as="h3" fontSize="xl" my="2" textTransform="uppercase">
+          <Heading as="h3" fontSize="18" my="2" textTransform="uppercase">
             {heading}
           </Heading>
           <Flex gap="1" alignItems="center">
-            <Text color="#1AD598" fontSize="md" fontWeight="semibold">
+            <Text color="#1AD598" fontSize="16" fontWeight="semibold">
               {text}
             </Text>
           </Flex>

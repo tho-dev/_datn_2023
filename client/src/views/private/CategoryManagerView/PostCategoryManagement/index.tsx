@@ -47,8 +47,9 @@ const PostCategoryManagement = (props: Props) => {
         return (
           <Menu>
             <MenuButton
-              fontSize="sm"
+              fontSize="18"
               fontWeight="bold"
+              ml={3}
               w="5"
               h="5"
               rounded="sm"
@@ -123,14 +124,14 @@ const PostCategoryManagement = (props: Props) => {
   ];
   return (
     <Box w="full" h="full">
-      <Heading as="h1" fontSize="2xl">
+      <Heading as="h1" fontSize="18">
         <Text>Quản lí danh mục bài viết</Text>
       </Heading>
       <Flex>
         <Box
           w={{
             sm: "100%",
-            lg: "25%",
+            lg: "30%",
           }}
           bgColor="bg.white"
           mt="6"
@@ -142,7 +143,7 @@ const PostCategoryManagement = (props: Props) => {
         <Box
           w={{
             sm: "100%",
-            lg: "75%",
+            lg: "70%",
           }}
           bgColor="bg.white"
           mt="6"

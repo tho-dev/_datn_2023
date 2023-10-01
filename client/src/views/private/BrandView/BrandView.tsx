@@ -25,7 +25,7 @@ const BrandView = (props: Props) => {
             >
                 <Heading
                     as="h2"
-                    fontSize="lg"
+                    fontSize="18"
                 >
                     Thương Hiệu
                 </Heading>
@@ -68,7 +68,7 @@ const BrandView = (props: Props) => {
                         justifyContent="center"
                     >
                         <SearchIcon
-                            size={4}
+                            size={5}
                             color="text.black"
                             strokeWidth={1}
                         />
@@ -76,7 +76,7 @@ const BrandView = (props: Props) => {
                     <Input
                         border="none"
                         padding="0.6rem 0.9rem"
-                        fontSize="0.875rem"
+                        fontSize="15"
                         fontWeight="medium"
                         lineHeight="1.5"
                         w="260px"
@@ -107,7 +107,7 @@ const BrandView = (props: Props) => {
                 isOpen={isOpenDialog}
                 onClose={onCloseDialog}
                 isCentered
-                title={<Heading fontSize="xl">Tạo mới thương hiệu</Heading>}
+                title={<Heading fontSize="18">Tạo mới thương hiệu</Heading>}
             >
                 <ActionBrand onClose={onCloseDialog} />
             </DialogThinkPro>
