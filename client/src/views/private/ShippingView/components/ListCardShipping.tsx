@@ -1,5 +1,4 @@
-import { Box, Flex } from "@chakra-ui/layout";
-import React from "react";
+import { Flex } from "@chakra-ui/layout";
 import CardShipping from "./CardShipping";
 
 type Props = {};

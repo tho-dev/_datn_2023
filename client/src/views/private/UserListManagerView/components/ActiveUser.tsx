@@ -37,7 +37,7 @@ const ActiveUser = ({ columns = 4 }: Props) => {
                     <Box bg="#fcf2da">
                         <Text
                             p={5}
-                            fontSize={22}
+                            fontSize={19}
                             fontWeight={"semibold"}
                         >
                             7,845,102
@@ -45,7 +45,7 @@ const ActiveUser = ({ columns = 4 }: Props) => {
                         <Text
                             pl={5}
                             pb={5}
-                            fontSize={14}
+                            fontSize={15}
                             fontWeight={"semibold"}
                         >
                             TOTAL USERS
@@ -69,7 +69,7 @@ const ActiveUser = ({ columns = 4 }: Props) => {
                     <Box bg={"#cdf7ec"}>
                         <Text
                             p={5}
-                            fontSize={22}
+                            fontSize={19}
                             fontWeight={"semibold"}
                         >
                             559.25k
@@ -77,7 +77,7 @@ const ActiveUser = ({ columns = 4 }: Props) => {
                         <Text
                             pl={5}
                             pb={5}
-                            fontSize={14}
+                            fontSize={15}
                             fontWeight={"semibold"}
                         >
                             ACTIVE USERS
@@ -101,7 +101,7 @@ const ActiveUser = ({ columns = 4 }: Props) => {
                     <Box bg={"#d2edf6"}>
                         <Text
                             p={5}
-                            fontSize={22}
+                            fontSize={19}
                             fontWeight={"semibold"}
                         >
                             559.25k
@@ -109,7 +109,7 @@ const ActiveUser = ({ columns = 4 }: Props) => {
                         <Text
                             pl={5}
                             pb={5}
-                            fontSize={14}
+                            fontSize={15}
                             fontWeight={"semibold"}
                         >
                             UNACTIVE USERS
