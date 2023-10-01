@@ -54,13 +54,13 @@ const BrandList = ({ items }: Props) => {
                                             <Heading
                                                 as="h4"
                                                 textAlign="center"
-                                                fontSize="lg"
+                                                fontSize="18"
                                             >
                                                 Dell
                                             </Heading>
                                             <Text
                                                 textAlign="center"
-                                                fontSize="sm"
+                                                fontSize="15"
                                             >
                                                 12 brand sub
                                             </Text>
@@ -74,7 +74,7 @@ const BrandList = ({ items }: Props) => {
                                     >
                                         <Badge
                                             px="2"
-                                            fontSize="xs"
+                                            fontSize="15"
                                             rounded="4px"
                                             cursor="pointer"
                                             textTransform="inherit"
@@ -89,7 +89,7 @@ const BrandList = ({ items }: Props) => {
                                         </Badge>
                                         <Badge
                                             px="2"
-                                            fontSize="xs"
+                                            fontSize="15"
                                             rounded="4px"
                                             cursor="pointer"
                                             textTransform="inherit"

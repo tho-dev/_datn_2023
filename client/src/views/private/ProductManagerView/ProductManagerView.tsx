@@ -72,7 +72,7 @@ const ProductManagerView = (props: Props) => {
         return (
           <Menu>
             <MenuButton textAlign="center">
-              <Text fontSize="lg" fontWeight="semibold" textAlign="center">
+              <Text fontSize="18" fontWeight="semibold" textAlign="center" ml={3}>
                 ...
               </Text>
             </MenuButton>
@@ -109,42 +109,46 @@ const ProductManagerView = (props: Props) => {
   return (
     <Box>
       <Flex alignItems="center" justifyContent="space-between">
-        <Heading fontSize="2xl" color="text.black" lineHeight="100%">
+        <Heading fontSize="18" color="text.black" lineHeight="100%">
           Quản lý sản phẩm
         </Heading>
-        <Flex gap="4">
+        <Flex gap="4" >
           <Button
             color="text.black"
             bgColor="bg.white"
             size="small"
-            px="4"
+            px="6"
             leftIcon={<ArrowTopRightIcon size={5} strokeWidth={1.2} />}
+            fontSize={14}
           >
             Export
           </Button>
           <Link as={ReactRouterLink} to="/admin/san-pham/add">
             <Button
-              bgColor="text.black"
+              bgColor="#06d6a0"
               size="small"
-              px="4"
+              px="6"
               leftIcon={<AddAdminIcon size={4} />}
+              fontSize={14}
               _hover={{
-                textDecor: "none",
+                textDecoration: "none",  
               }}
             >
               Tạo mới
             </Button>
           </Link>
+
         </Flex>
       </Flex>
-      <Flex alignItems="center" justifyContent="space-between" mt="6">
+      <Flex alignItems="center" justifyContent="space-between" mt="4">
         <Button
           color="text.black"
           bgColor="bg.white"
           size="small"
           px="4"
           fontWeight="semibold"
-          leftIcon={<FilterIcon size={5} />}
+          fontSize={14}
+          leftIcon={<FilterIcon size={7} />}
         >
           Lọc
         </Button>
@@ -152,7 +156,7 @@ const ProductManagerView = (props: Props) => {
           alignItems="center"
           justifyContent="space-around"
           bgColor="bg.white"
-          rounded="6px"
+          rounded="4px"
           border="1px solid #F1F4F9"
           px="4"
         >
@@ -167,12 +171,12 @@ const ProductManagerView = (props: Props) => {
             w="200px"
             maxW="full"
             _placeholder={{
-              fontSize: "12px",
+              fontSize: "14",
             }}
           />
         </Flex>
       </Flex>
-      <Box bgColor="bg.white" pl="8" pt="6" pr="4" mt="6" rounded="6px">
+      <Box bgColor="bg.white" pl="8" pt="6" pr="4" mt="4" rounded="6px">
         <TableThinkPro columns={columns} data={thinkpro.data} />
       </Box>
 

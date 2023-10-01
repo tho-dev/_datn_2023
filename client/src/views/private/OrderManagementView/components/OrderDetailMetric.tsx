@@ -1,6 +1,4 @@
-import { GridItem, Flex, Heading, Box, Text } from "@chakra-ui/layout";
-import React from "react";
-import { CheckIcon, ArrowUpIcon } from "~/components/common/Icons";
+import { GridItem, Flex, Heading, Box, Text } from "@chakra-ui/layout"; 
 
 type Props = {
   heading: string;
@@ -19,36 +17,36 @@ const OrderDetailMetricItem = ({ heading, text, icon, color }: Props) => {
         xl: "1px",
         "2xl": "1px",
       }}
-      minH={32}
+      minH={"20"}
       borderColor="#F1F4F9"
       rounded="md"
-      bgColor={color+".50"}
+      bgColor={color + ".50"}
       transition="all .8s ease"
       _hover={{
         transform: "translateY(-10px)",
         bgColor: "gray.200",
       }}
     >
-      <Flex padding={4} justifyContent="space-between" gap={4}>
+      <Flex padding={5} justifyContent="space-between" gap={4}>
         <Box>
-          <Heading as="h3" fontSize="xl" my="2">
+          <Heading as="h3" fontSize="18" my="2">
             {heading}
           </Heading>
           <Flex gap="1" alignItems="center">
-            <Text fontSize="sm" fontWeight="semibold">
+            <Text fontSize="15" fontWeight="semibold">
               {text}
             </Text>
           </Flex>
         </Box>
         <Box>
-            <Flex
-             p={3}
-              rounded="md"
-              bgColor={color+".100"}
-              justifyContent="start"
-            >
-              {icon}
-            </Flex>
+          <Flex
+            p={4}
+            rounded="md"
+            bgColor={color + ".100"}
+            justifyContent="start"
+          >
+            {icon}
+          </Flex>
         </Box>
       </Flex>
     </GridItem>
