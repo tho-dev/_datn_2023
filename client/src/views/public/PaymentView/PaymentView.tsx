@@ -12,10 +12,13 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { atStoreSchema, shipSchema } from "~/validate/payment";
 import axios from "axios";
 import { data } from "~/views/private/DashboardView/components/TopCategory";
+import { useNavigate } from "react-router";
+
 type Props = {};
 
 const Payment = (props: Props) => {
 	const [value, setValue] = React.useState("1");
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -24,7 +27,10 @@ const Payment = (props: Props) => {
 		resolver: joiResolver(value === "1" ? atStoreSchema : shipSchema),
 	});
 	const submitForm = (data: any) => {
-		console.log("vvalue", data);
+		console.log("value_", data);
+		if (data.payment == "online") {
+			navigate("/check-otp");
+		}
 	};
 	return (
 		<HelmetProvider>

@@ -21,6 +21,9 @@ export const shipSchema = Joi.object({
 		"string.empty": "Không được bỏ trống",
 		"any.required": "Trường này bắt buộc phải nhập",
 	}),
+	storeAddress: Joi.string().required().messages({}),
+	note: Joi.string().optional().allow("").trim().messages({}),
+	payment: Joi.string().required().messages({}),
 });
 export const atStoreSchema = Joi.object({
 	name: Joi.string().trim().required().messages({
@@ -38,4 +41,13 @@ export const atStoreSchema = Joi.object({
 		}),
 	address: Joi.string().optional().allow("").trim().messages({}),
 	district: Joi.string().optional().allow("").trim().messages({}),
+	note: Joi.string().optional().allow("").trim().messages({}),
+	payment: Joi.string().optional().allow("").trim().messages({}),
+	storeAddress: Joi.string().optional().allow("").trim().messages({}),
+});
+export const otpSchema = Joi.object({
+	otp: Joi.string().trim().required().messages({
+		"string.empty": "Không được bỏ trống",
+		"any.required": "Trường này bắt buộc phải nhập",
+	}),
 });
