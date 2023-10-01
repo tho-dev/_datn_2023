@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import createError from "http-errors";
-import RefreshToken from "../models/refreshToken.model";
+import RefreshToken from "../models/refresh-token.model";
 
 dotenv.config();
 

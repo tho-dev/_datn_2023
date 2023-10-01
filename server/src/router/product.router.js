@@ -14,7 +14,8 @@ import {
 	updateOption,
 	deleteOption,
 	getAllVariant,
-	saveVariant
+	saveVariant,
+	deteleVariant
 } from "../controllers/product.controller";
 
 const router = express.Router();
@@ -28,6 +29,7 @@ router.post("/", createProduct)
 // api variant
 router.get("/:product_id/variants", getAllVariant)
 router.post("/:product_id/variants", saveVariant)
+router.delete("/:product_id/variants/:sku_id", deteleVariant)
 
 // api option
 router.get("/:product_id/options", getAllOption)

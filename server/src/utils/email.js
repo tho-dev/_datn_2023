@@ -4,7 +4,7 @@ import pug from "pug";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import bcrypt from "bcryptjs";
-import UserVerification from "../models/userverification.model";
+import UserVerification from "../models/user-verifi-cation.model";
 
 dotenv.config();
 

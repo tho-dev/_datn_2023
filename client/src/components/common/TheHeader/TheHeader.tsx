@@ -27,7 +27,7 @@ const TheHeader = (props: Props) => {
     <Flex h="20" alignItems="center">
       {/* Logo */}
       <Link to="/" as={ReactRouterLink}>
-        <Image src={logo} w="42px" h="24px" />
+        <Image src={logo} w="100px" h="64px" objectFit="contain" />
       </Link>
       {/* Tìm kiếm */}
       <Search />
