@@ -11,12 +11,12 @@ const TopProduct = ({ title }: Props) => {
   const labelStyles = {
     mt: '2',
     ml: '-2.5',
-    fontSize: 'sm',
+    // fontSize: 'sm',
   };
   return (
     <Box width='33%' border='1px solid #f1f4f9' rounded='md'>
       <Flex justifyContent='space-between' borderBottom='1px solid #f1f4f9' p='4'>
-        <Text fontSize='xl' fontWeight='bold'>
+        <Text fontSize='18' fontWeight='bold'>
           {title}
         </Text>
         <Flex alignItems='center'>
@@ -27,7 +27,7 @@ const TopProduct = ({ title }: Props) => {
 
       <Box mb='2' p='4'>
         <Box my='4'>
-          <Text fontSize='md' fontWeight='semibold'>
+          <Text fontSize='16' fontWeight='semibold'>
             Fashion & Clothing
           </Text>
           <Box>
@@ -43,8 +43,8 @@ const TopProduct = ({ title }: Props) => {
             </Slider>
           </Box>
         </Box>
-        <Box my='4'>
-          <Text fontSize='md' fontWeight='semibold'>
+        <Box mt={8}>
+          <Text fontSize='16' fontWeight='semibold'>
             Fashion & Clothing
           </Text>
           <Box>
@@ -60,8 +60,8 @@ const TopProduct = ({ title }: Props) => {
             </Slider>
           </Box>
         </Box>
-        <Box my='4'>
-          <Text fontSize='md' fontWeight='semibold'>
+        <Box mt='8'>
+          <Text fontSize='16'  fontWeight='semibold'>
             Fashion & Clothing
           </Text>
           <Box>

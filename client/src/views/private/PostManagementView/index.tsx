@@ -89,10 +89,11 @@ const PostManagementView = (props: Props) => {
         return (
           <Menu>
             <MenuButton
-              fontSize="sm"
+              fontSize="18"
               fontWeight="bold"
               w="5"
               h="5"
+              ml={3}
               rounded="sm"
               alignItems="center"
               justifyContent="center"
@@ -125,7 +126,7 @@ const PostManagementView = (props: Props) => {
 
   return (
     <>
-      <Heading fontSize="2xl">Quản lí bài viết</Heading>
+      <Heading fontSize="18">Quản lí bài viết</Heading>
       <Box bgColor="bg.white" mt="6" p="6" rounded={"md"}>
         <Flex justifyContent="space-between" alignItems="center" mb={4}>
           <Flex gap={4}>

@@ -11,6 +11,7 @@ import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import Demand from "./components/Demand";
 import { useState } from "react";
+import CategoryFilter from "../CategoryManagerView/PostCategoryManagement/components/CategoryFilter";
 
 type Props = {};
 
@@ -42,7 +43,8 @@ const DemandView = (props: Props) => {
                 return (
                     <Menu>
                         <MenuButton
-                            fontSize="sm"
+                            fontSize="18"
+                            ml={3}
                             fontWeight="bold"
                             w="5"
                             h="5"
@@ -92,14 +94,14 @@ const DemandView = (props: Props) => {
     ];
     return (
         <Box w="full" h="full">
-            <Heading as="h1" fontSize={24} textTransform="uppercase">
+            <Heading as="h1" fontSize={18} textTransform="uppercase">
                 <Text>Quản lí nhu cầu</Text>
             </Heading>
             <Flex>
                 <Box
                     w={{
                         sm: "100%",
-                        lg: "25%",
+                        lg: "30%",
                     }}
                     bgColor="bg.white"
                     mt="6"
@@ -111,12 +113,13 @@ const DemandView = (props: Props) => {
                 <Box
                     w={{
                         sm: "100%",
-                        lg: "75%",
+                        lg: "70%",
                     }}
                     bgColor="bg.white"
                     mt="6"
                     p="6"
                 >
+                    <CategoryFilter />
                     <TableThinkPro columns={columns} data={fakeData} />
                 </Box>
             </Flex>

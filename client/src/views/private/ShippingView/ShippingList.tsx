@@ -10,7 +10,7 @@ type Props = {};
 const ShippingList = (props: Props) => {
   return (
     <Box width="100%" minHeight="100vh" bgColor="bg.white">
-      <Text fontSize="18px" fontWeight="bold" padding={4}>
+      <Text fontSize="18" fontWeight="bold" padding={4}>
         Shipping
       </Text>
       <Grid gridTemplateColumns="repeat(7,1fr)" gap={4}>

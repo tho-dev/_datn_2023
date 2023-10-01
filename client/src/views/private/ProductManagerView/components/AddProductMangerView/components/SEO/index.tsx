@@ -15,13 +15,13 @@ const SEO = ({ register, errors }: Props) => {
 			<FormControl isInvalid={errors?.title as any}>
 				<FormLabel
 					htmlFor="title"
-					fontSize="sm"
+					fontSize="15"
 					fontWeight="semibold"
 				>
 					Title
 					<Text
 						as="span"
-						fontSize="xs"
+						fontSize="15"
 						ml="1"
 						color="#8c98a4"
 						fontWeight="medium"
@@ -40,13 +40,13 @@ const SEO = ({ register, errors }: Props) => {
 			<FormControl isInvalid={errors?.seo_description as any}>
 				<FormLabel
 					htmlFor="seo_description"
-					fontSize="sm"
+					fontSize="15"
 					fontWeight="semibold"
 				>
 					Description
 					<Text
 						as="span"
-						fontSize="xs"
+						fontSize="15"
 						ml="1"
 						color="#8c98a4"
 						fontWeight="medium"

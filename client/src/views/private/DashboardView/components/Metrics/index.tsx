@@ -36,7 +36,7 @@ const Metrics = (props: Props) => {
           xl: '0',
           '2xl': '0',
         }}
-        borderRightColor='#F1F4F9'
+        borderRightColor='gray.300'
         _last={{
           borderRightWidth: 0,
           borderBottomWidth: 0,
@@ -55,22 +55,22 @@ const Metrics = (props: Props) => {
           <Box px='4' py='3'>
             <Flex gap='3' justifyContent='space-between'>
               <Box>
-                <Text color='text.admin2' fontSize='xl' fontWeight='semibold'>
+                <Text color='text.admin2' fontSize='18' fontWeight='semibold'>
                   Doanh Thu
                 </Text>
-                <Heading as='h3' fontSize='lg' my='2'>
+                <Heading as='h3' fontSize='18' my='2'>
                   9.232 M
                 </Heading>
                 <Flex gap='1' alignItems='center'>
                   <Flex w='5' h='5' alignItems='center' justifyContent='center' rounded='full' bgColor='rgba(26, 213, 152, 0.20)'>
                     <ArrowUpIcon size={4} color='#1AD598' />
                   </Flex>
-                  <Text color='#1AD598' fontSize='sm' fontWeight='semibold'>
+                  <Text color='#1AD598' fontSize='16' fontWeight='semibold'>
                     +20,20 %
                   </Text>
                 </Flex>
               </Box>
-              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
+              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.300'>
                 <ShoppingIcon size={6} />
               </Box>
             </Flex>
@@ -92,7 +92,7 @@ const Metrics = (props: Props) => {
           xl: '0',
           '2xl': '0',
         }}
-        borderRightColor='#F1F4F9'
+        borderRightColor='gray.300'
         _last={{
           borderRightWidth: 0,
           borderBottomWidth: 0,
@@ -111,22 +111,22 @@ const Metrics = (props: Props) => {
           <Box px='4' py='3'>
             <Flex gap='3' justifyContent='space-between'>
               <Box>
-                <Text color='text.admin2' fontSize='xl' fontWeight='semibold'>
+                <Text color='text.admin2' fontSize='18' fontWeight='semibold'>
                   Doanh Thu
                 </Text>
-                <Heading as='h3' fontSize='lg' my='2'>
+                <Heading as='h3' fontSize='18' my='2'>
                   9.232 M
                 </Heading>
                 <Flex gap='1' alignItems='center'>
                   <Flex w='5' h='5' alignItems='center' justifyContent='center' rounded='full' bgColor='rgba(26, 213, 152, 0.20)'>
                     <ArrowUpIcon size={4} color='#1AD598' />
                   </Flex>
-                  <Text color='#1AD598' fontSize='sm' fontWeight='semibold'>
+                  <Text color='#1AD598' fontSize='16' fontWeight='semibold'>
                     +20,20 %
                   </Text>
                 </Flex>
               </Box>
-              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
+              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.300'>
                 <ShoppingIcon size={6} />
               </Box>
             </Flex>
@@ -148,7 +148,7 @@ const Metrics = (props: Props) => {
           xl: '0',
           '2xl': '0',
         }}
-        borderRightColor='#F1F4F9'
+        borderRightColor='gray.300'
         _last={{
           borderRightWidth: 0,
           borderBottomWidth: 0,
@@ -167,22 +167,22 @@ const Metrics = (props: Props) => {
           <Box px='4' py='3'>
             <Flex gap='3' justifyContent='space-between'>
               <Box>
-                <Text color='text.admin2' fontSize='xl' fontWeight='semibold'>
+                <Text color='text.admin2' fontSize='18' fontWeight='semibold'>
                   Doanh Thu
                 </Text>
-                <Heading as='h3' fontSize='lg' my='2'>
+                <Heading as='h3' fontSize='18' my='2'>
                   9.232 M
                 </Heading>
                 <Flex gap='1' alignItems='center'>
                   <Flex w='5' h='5' alignItems='center' justifyContent='center' rounded='full' bgColor='rgba(26, 213, 152, 0.20)'>
                     <ArrowUpIcon size={4} color='#1AD598' />
                   </Flex>
-                  <Text color='#1AD598' fontSize='sm' fontWeight='semibold'>
+                  <Text color='#1AD598' fontSize='16' fontWeight='semibold'>
                     +20,20 %
                   </Text>
                 </Flex>
               </Box>
-              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
+              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.300'>
                 <ShoppingIcon size={6} />
               </Box>
             </Flex>
@@ -204,7 +204,7 @@ const Metrics = (props: Props) => {
           xl: '0',
           '2xl': '0',
         }}
-        borderRightColor='#F1F4F9'
+        borderRightColor='gray.300'
         _last={{
           borderRightWidth: 0,
           borderBottomWidth: 0,
@@ -223,22 +223,22 @@ const Metrics = (props: Props) => {
           <Box px='4' py='3'>
             <Flex gap='3' justifyContent='space-between'>
               <Box>
-                <Text color='text.admin2' fontSize='xl' fontWeight='semibold'>
+                <Text color='text.admin2' fontSize='18' fontWeight='semibold'>
                   Doanh Thu
                 </Text>
-                <Heading as='h3' fontSize='lg' my='2'>
+                <Heading as='h3' fontSize='18' my='2'>
                   9.232 M
                 </Heading>
                 <Flex gap='1' alignItems='center'>
                   <Flex w='5' h='5' alignItems='center' justifyContent='center' rounded='full' bgColor='rgba(26, 213, 152, 0.20)'>
                     <ArrowUpIcon size={4} color='#1AD598' />
                   </Flex>
-                  <Text color='#1AD598' fontSize='sm' fontWeight='semibold'>
+                  <Text color='#1AD598' fontSize='16' fontWeight='semibold'>
                     +20,20 %
                   </Text>
                 </Flex>
               </Box>
-              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.400'>
+              <Box width='40px' height='40px' backgroundColor='blue.100' rounded='md' textTransform='uppercase' display='flex' justifyContent='center' alignItems='center' color='blue.300'>
                 <ShoppingIcon size={6} />
               </Box>
             </Flex>
