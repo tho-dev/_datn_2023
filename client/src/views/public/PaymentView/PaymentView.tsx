@@ -28,9 +28,7 @@ const Payment = (props: Props) => {
 	});
 	const submitForm = (data: any) => {
 		console.log("value_", data);
-		if (data.payment == "online") {
-			navigate("/check-otp");
-		}
+		navigate("/check-otp");
 	};
 	return (
 		<HelmetProvider>

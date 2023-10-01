@@ -13,6 +13,7 @@ import {
 	RadioGroup,
 	Stack,
 	Radio,
+	Textarea,
 } from "@chakra-ui/react";
 import { ArrowRightUpIcon } from "~/components/common/Icons";
 type Props = {
@@ -95,6 +96,19 @@ const Atstore = ({ register, errors }: Props) => {
 					</RadioGroup>
 				</FormControl>
 			</Box>
+			<Flex mt={"16px"}>
+				<FormControl isInvalid={errors?.note as any}>
+					<FormLabel>Ghi chú</FormLabel>
+					<Textarea
+						placeholder="Nhập ghi chú"
+						bg={"#F6F9FC"}
+						borderRadius={"6px"}
+						fontSize={"14px"}
+						{...register("note")}
+						border={"none"}
+					/>
+				</FormControl>
+			</Flex>
 		</Box>
 	);
 };

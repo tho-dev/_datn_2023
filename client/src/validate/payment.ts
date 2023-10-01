@@ -46,7 +46,7 @@ export const atStoreSchema = Joi.object({
 	storeAddress: Joi.string().optional().allow("").trim().messages({}),
 });
 export const otpSchema = Joi.object({
-	otp: Joi.string().trim().required().messages({
+	otp: Joi.string().required().messages({
 		"string.empty": "Không được bỏ trống",
 		"any.required": "Trường này bắt buộc phải nhập",
 	}),

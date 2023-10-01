@@ -1,5 +1,16 @@
-import { Box, Flex, Heading, Stack } from "@chakra-ui/layout";
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, Radio, RadioGroup, Text } from "@chakra-ui/react";
+import { Box, Flex, HStack, Heading, Stack } from "@chakra-ui/layout";
+import {
+	Button,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
+	Input,
+	PinInput,
+	PinInputField,
+	Radio,
+	RadioGroup,
+	Text,
+} from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
@@ -11,16 +22,10 @@ import { otpSchema } from "~/validate/payment";
 type Props = {};
 
 const CheckOtp = (props: Props) => {
-	const [value, setValue] = React.useState("1");
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		resolver: joiResolver(otpSchema),
-	});
-	const submitForm = (data: any) => {
-		console.log("value_", data);
+	const [value, setValue] = React.useState("");
+	const { register, handleSubmit } = useForm({});
+	const submitForm = () => {
+		console.log("value_", value);
 	};
 	return (
 		<HelmetProvider>
@@ -42,18 +47,18 @@ const CheckOtp = (props: Props) => {
 						<Text fontSize={"20px"} fontWeight={600} as={"h3"}>
 							Check OTP
 						</Text>
-						<FormControl isInvalid={errors.otp as any}>
-							<Input
-								type="text"
-								border={"none"}
-								p={"8px 12px"}
-								placeholder="Nhập mã OTP"
-								bg={"#F6F9FC"}
-								borderRadius={"6px"}
-								fontSize={"14px"}
-								{...register("otp")}
-							/>
-							<FormErrorMessage> {(errors.otp as any) && (errors?.otp?.message as any)}</FormErrorMessage>
+						<FormControl>
+							<HStack>
+								<PinInput onChange={(value) => setValue(value)}>
+									<PinInputField />
+									<PinInputField />
+									<PinInputField />
+									<PinInputField />
+									<PinInputField />
+									<PinInputField />
+								</PinInput>
+							</HStack>
+							<FormErrorMessage>{value.length === 0 ? "Mời bạn nhập mã OTP" : ""}</FormErrorMessage>
 						</FormControl>
 						<Button bg={"green.400"} mt={"16px"} type="submit">
 							Xác nhận
