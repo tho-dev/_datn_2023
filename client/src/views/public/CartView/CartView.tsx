@@ -5,14 +5,12 @@ import { HelmetProvider } from "react-helmet-async";
 import ItemCart from "./components/ItemCart";
 import OrderSummary from "./components/OrderSummary";
 import { useNavigate } from "react-router";
+import NotData from "./components/NotData";
 
 type Props = {};
 
 const CartView = (props: Props) => {
-  const navigate = useNavigate();
-  const handlePayment = () => {
-    navigate("/thanh-toan");
-  };
+  const dataFake = [];
   return (
     <HelmetProvider>
       <Helmet>
@@ -34,7 +32,7 @@ const CartView = (props: Props) => {
           mr={"5"}
           w={{ md: "80%", base: "full" }}
         >
-          <ItemCart />
+          {dataFake.length === 0 ? <NotData /> : <ItemCart />}
         </Box>
         <Box
           backgroundColor={"white"}
@@ -44,7 +42,7 @@ const CartView = (props: Props) => {
           w={{ md: "40%", base: "full" }}
           h={"full"}
         >
-          <OrderSummary handlePayment={handlePayment} />
+          <OrderSummary />
         </Box>
       </Box>
     </HelmetProvider>

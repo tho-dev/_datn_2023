@@ -17,6 +17,7 @@ import { ProductDetailView } from "~/views/public/ProductDetailView";
 import { NewsView } from "~/views/public/NewsView";
 import { ContentView } from "~/views/public/ContentView";
 import { NotFoundView } from "~/views/public/NotFoundView";
+import { CheckOtp } from "~/views/public/CheckOtp";
 
 // view admin
 import { DashboardView } from "~/views/private/DashboardView";
@@ -92,6 +93,10 @@ const routes: RouteObject[] = [
           {
             path: "lich-su-mua-hang",
             element: <HistoryOrderView />,
+          },
+          {
+            path: "check-otp",
+            element: <CheckOtp />,
           },
         ],
       },
