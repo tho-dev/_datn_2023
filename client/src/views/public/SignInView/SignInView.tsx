@@ -49,8 +49,6 @@ const SignInView = (props: Props) => {
 
   const onSubmit = async (data: any) => {
     const result: any = await signin(data);
-    console.log(result);
-
     if (result.data.status === 200) {
       toast({
         title: "Đăng nhập thành công",
@@ -60,7 +58,7 @@ const SignInView = (props: Props) => {
         isClosable: true,
         position: "bottom-right",
       });
-      dispatch(login(result.data.data));
+      dispatch(login(result.data));
       navigate("/");
     } else {
       toast({

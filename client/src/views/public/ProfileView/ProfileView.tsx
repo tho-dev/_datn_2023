@@ -25,6 +25,7 @@ type Props = {};
 
 const ProfileView = (props: Props) => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -59,7 +60,7 @@ const ProfileView = (props: Props) => {
             <Image
               rounded="full"
               boxSize="120px"
-              src={user.avatar}
+              src={user?.avatar}
               objectFit="cover"
               alt="Dan Abramov"
               border="1px solid #ccc"
@@ -67,10 +68,10 @@ const ProfileView = (props: Props) => {
           </Box>
           <Box>
             <Text fontSize="md" fontWeight="semibold">
-              {user.first_name + " " + user.last_name}
+              {user?.first_name + " " + user?.last_name}
             </Text>
             <Text fontSize="sm" fontWeight="semibold">
-              {user.email}
+              {user?.email}
             </Text>
           </Box>
         </Flex>

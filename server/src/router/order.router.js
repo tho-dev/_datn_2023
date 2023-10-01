@@ -10,12 +10,18 @@ import {
   payMomo,
   sendOtpCode,
   verifyOtpCode,
+  serviceFree,
+  getOrderByPhoneNumber,
+  getTokenPrintBills,
 } from "../controllers/order.controller";
 
 const router = express.Router();
 
 router.post("/send-otp", sendOtpCode);
 router.post("/verify-otp", verifyOtpCode);
+router.post("/calculateFee", serviceFree);
+router.post("/orderByPhoneNumber", getOrderByPhoneNumber);
+router.post("/getTokenPrintBill", getTokenPrintBills);
 
 router.post("/:id", createOrder);
 router.get("/", getAll);

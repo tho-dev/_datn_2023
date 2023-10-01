@@ -6,11 +6,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface IGlobalState {
     isLogin: boolean;
     user: any;
+    accessToken: string
 }
 
 const initialState: IGlobalState = {
     isLogin: false,
-    user: {} as any
+    user: {} as any,
+    accessToken: ""
 }
 
 const globalSlice = createSlice({
@@ -18,12 +20,14 @@ const globalSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            state.user = action.payload;
+            state.user = action.payload.data;
             state.isLogin = true;
+            state.accessToken = action.payload.accessToken;
         },
         logout: (state, action) => {
             state.user = {}
             state.isLogin = action.payload;
+            state.accessToken = ""
         },
     },
 });

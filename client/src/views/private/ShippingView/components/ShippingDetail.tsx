@@ -46,7 +46,7 @@ const ShippingDetail = (props: Props) => {
         <Text pb={5} fontSize="18px" fontWeight="bold">
           Xem bản đồ
         </Text>
-        <Box width="100%" maxH="500px">
+        <Box width="100%" minH="700px">
           <MapContainer
             center={[51.505, -0.09]}
             zoom={13}
