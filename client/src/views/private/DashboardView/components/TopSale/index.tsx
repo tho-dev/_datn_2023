@@ -7,9 +7,9 @@ type Props = {
 const TopSale = ({ title }: Props) => {
   console.log(title);
   return (
-    <Box width='25%' border='1px solid #f1f4f9' rounded='md'>
+    <Box width='35%' border='1px solid #f1f4f9' rounded='md'>
       <Flex justifyContent='space-between' borderBottom='1px solid #f1f4f9' p='4'>
-        <Text fontSize='xl' fontWeight='bold'>
+        <Text fontSize='18' fontWeight='bold'>
           {title}
         </Text>
         <Flex alignItems='center'>
@@ -19,7 +19,7 @@ const TopSale = ({ title }: Props) => {
       </Flex>
       <Box my='2' p='4'>
         <Flex alignItems='center'>
-          <Text fontSize='2xl' fontWeight='bold' mr='2'>
+          <Text fontSize='18' fontWeight='bold' mr='2'>
             6,343
           </Text>
           <Text>Total Sales</Text>
@@ -27,7 +27,7 @@ const TopSale = ({ title }: Props) => {
         <Text>Sales from Jan - Dec 2022</Text>
       </Box>
       <Box>
-        <Flex backgroundColor='#cdf7ec' p='2' justifyContent='space-between' border='1px solid #f1f4f9'>
+        <Flex backgroundColor='#cdf7ec' px='4' py={2} justifyContent='space-between' border='1px solid #f1f4f9'>
           <Flex>
             <Image width='5' height='5' rounded='full' src='https://themesbrand.com/toner/html/assets/images/flags/us.svg' alt='Dan Abramov' />
             <Text ml='2' fontWeight='semibold'>
@@ -36,7 +36,7 @@ const TopSale = ({ title }: Props) => {
           </Flex>
           <Text fontWeight='semibold'>23413</Text>
         </Flex>
-        <Flex backgroundColor='#cdf7ec' p='2' justifyContent='space-between' border='1px solid #f1f4f9'>
+        <Flex backgroundColor='#cdf7ec' px='4' py={2}  justifyContent='space-between' border='1px solid #f1f4f9'>
           <Flex>
             <Image width='5' height='5' rounded='full' src='https://themesbrand.com/toner/html/assets/images/flags/us.svg' alt='Dan Abramov' />
             <Text ml='2' fontWeight='semibold'>
@@ -45,7 +45,7 @@ const TopSale = ({ title }: Props) => {
           </Flex>
           <Text fontWeight='semibold'>23413</Text>
         </Flex>
-        <Flex backgroundColor='#cdf7ec' p='2' justifyContent='space-between' border='1px solid #f1f4f9'>
+        <Flex backgroundColor='#cdf7ec' px='4' py={2}  justifyContent='space-between' border='1px solid #f1f4f9'>
           <Flex>
             <Image width='5' height='5' rounded='full' src='https://themesbrand.com/toner/html/assets/images/flags/us.svg' alt='Dan Abramov' />
             <Text ml='2' fontWeight='semibold'>

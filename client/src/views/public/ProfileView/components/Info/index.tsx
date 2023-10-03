@@ -37,7 +37,6 @@ const Info = ({ user }: Props) => {
 
   const image = watch("avatar");
   const [file, setFile] = useState<any>(null);
-  const dispatch = useAppDispatch();
   const onSubmit = (data: any) => {
     if (
       data.email === user.email &&
@@ -65,7 +64,6 @@ const Info = ({ user }: Props) => {
           isClosable: true,
           position: "bottom-right",
         });
-        dispatch(login(data.data));
       })
       .catch((error) => {
         console.log(error);
@@ -100,7 +98,7 @@ const Info = ({ user }: Props) => {
             <Image
               rounded="full"
               boxSize="120px"
-              src={file ?? user.avatar}
+              src={file ?? user?.avatar}
               alt="Dan Abramov"
               objectFit="cover"
               border="1px solid #ccc"

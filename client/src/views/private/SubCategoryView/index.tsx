@@ -11,6 +11,7 @@ import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import SubCategoryForm from "./components/SubCategoryForm";
 import { useState } from "react";
+import CategoryFilter from "../CategoryManagerView/PostCategoryManagement/components/CategoryFilter";
 
 type Props = {};
 
@@ -50,10 +51,11 @@ const SubCategoryView = (props: Props) => {
         return (
           <Menu>
             <MenuButton
-              fontSize="sm"
+              fontSize="18"
               fontWeight="bold"
               w="5"
               h="5"
+              ml={3}
               rounded="sm"
               alignItems="center"
               justifyContent="center"
@@ -124,14 +126,14 @@ const SubCategoryView = (props: Props) => {
   ];
   return (
     <Box w="full" h="full">
-      <Heading as="h1" fontSize={24} textTransform="uppercase">
+      <Heading as="h1" fontSize={18} textTransform="uppercase">
         <Text>Quản lí danh mục con</Text>
       </Heading>
       <Flex>
         <Box
           w={{
             sm: "100%",
-            lg: "25%",
+            lg: "30%",
           }}
           bgColor="bg.white"
           mt="6"
@@ -143,12 +145,13 @@ const SubCategoryView = (props: Props) => {
         <Box
           w={{
             sm: "100%",
-            lg: "75%",
+            lg: "70%",
           }}
           bgColor="bg.white"
           mt="6"
           p="6"
         >
+          <CategoryFilter/>
           <TableThinkPro columns={columns} data={fakeData} />
         </Box>
       </Flex>

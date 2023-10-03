@@ -39,7 +39,7 @@ const ActiveUserItem = ({ heading, text, icon }: Props) => {
                 </Box>
                 <Box>
                     <Heading
-                        fontSize="20"
+                        fontSize="18"
                         my="3"
                     >
                         {heading}

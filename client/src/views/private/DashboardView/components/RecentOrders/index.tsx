@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Heading, Text } from '@chakra-ui/layout';
+import { Box, Text } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuItem, MenuList, useDisclosure } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import TableThinkPro from '~/components/TableThinkPro';
@@ -21,7 +20,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -31,7 +30,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -41,7 +40,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -51,7 +50,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -61,7 +60,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -71,7 +70,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -81,7 +80,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -91,7 +90,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -101,7 +100,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -111,7 +110,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -121,7 +120,7 @@ const RecentOrders = () => {
       order_id: 1,
       product_name: 'Sản phẩm 1',
       customer_name: 'khách hàng 1',
-      Amount: 3,
+      amount: 3,
       order_date: '16/09/2023',
       delivery_date: '20/09/2023',
       ratings: '5',
@@ -194,10 +193,11 @@ const RecentOrders = () => {
         return (
           <Menu>
             <MenuButton
-              fontSize='sm'
+              fontSize='18'
               fontWeight='bold'
               w='5'
               h='5'
+              mx={3}
               rounded='sm'
               alignItems='center'
               justifyContent='center'
@@ -228,7 +228,7 @@ const RecentOrders = () => {
   return (
     <Box w='full' h='full' my='6'>
       <Box bgColor='bg.white' p='6' border='1px solid #f1f4f9' rounded='md'>
-        <Text fontSize='xl' fontWeight='bold' mb='6'>
+        <Text fontSize='18' fontWeight='bold' mb='6'>
           Đặt hàng
         </Text>
         <TableThinkPro columns={columns} data={OrderList} />

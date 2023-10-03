@@ -47,8 +47,8 @@ const Demand = ({ data }: Props) => {
     //     },
     // ];
     return (
-        <Box borderWidth={1} rounded={"sm"} p={4} fontSize="14px">
-            <Heading fontSize="md" pb={4} borderBottomWidth={1}>
+        <Box borderWidth={1} rounded={"sm"} p={4} fontSize="15">
+            <Heading fontSize="18" pb={4} borderBottomWidth={1}>
                 {isCreateForm ? "Tạo mới" : "Cập nhật"}
             </Heading>
             <Box pt={4}>

@@ -21,22 +21,22 @@ const Revenue = () => {
   const options = {};
 
   return (
-    <Box width='80%' border='1px solid #f1f4f9' rounded='md'>
+    <Box width='70%' border='1px solid #f1f4f9' rounded='md'>
       <Flex justifyContent='space-between' borderBottom='1px solid #f1f4f9' p='4'>
-        <Text fontSize='xl' fontWeight='bold'>
+        <Text fontSize='18' fontWeight='bold'>
           Doanh thu
         </Text>
         <Flex gap='2'>
-          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='sm' fontWeight='semibold' rounded='md'>
+          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='14' fontWeight='semibold' rounded='md'>
             ALL
           </Box>
-          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='sm' fontWeight='semibold' rounded='md'>
+          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='14' fontWeight='semibold' rounded='md'>
             1M
           </Box>
-          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='sm' fontWeight='semibold' rounded='md'>
+          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='14' fontWeight='semibold' rounded='md'>
             6M
           </Box>
-          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='sm' fontWeight='semibold' rounded='md'>
+          <Box backgroundColor='rgba(124, 107, 255, 0.1)' color='#7c6bff' py='1' px='3' fontSize='14' fontWeight='semibold' rounded='md'>
             1Y
           </Box>
         </Flex>

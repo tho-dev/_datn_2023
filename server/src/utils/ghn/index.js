@@ -1,5 +1,5 @@
 import Axios from "axios";
-
+// Lấy mã địa chỉ
 export const getLocation = async (location) => {
   try {
     let ward_code;
@@ -55,6 +55,7 @@ export const getLocation = async (location) => {
     console.log(error);
   }
 };
+// Lấy thông tin đơn hàng
 export const get_order_info = async (order_code) => {
   try {
     const order_info = await Axios.post(
@@ -73,7 +74,7 @@ export const get_order_info = async (order_code) => {
     console.log(error);
   }
 };
-
+// Huỷ đơn hàng
 export const cancelled_order = async (order_code) => {
   try {
     const order_info = await Axios.post(
@@ -93,7 +94,7 @@ export const cancelled_order = async (order_code) => {
     console.log(error);
   }
 };
-
+// cập nhật thông tin
 export const update_info = async (info) => {
   try {
     const order_info = await Axios.post(
@@ -113,6 +114,7 @@ export const update_info = async (info) => {
     console.log(error);
   }
 };
+// Tính toán thời gian
 export const calculate_time = async (info) => {
   try {
     const expected_time = await Axios.post(
@@ -128,6 +130,45 @@ export const calculate_time = async (info) => {
       }
     );
     return expected_time.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// tính toán phí ship
+export const calculate_fee = async (location) => {
+  try {
+    const calculate = await Axios.post(
+      "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
+      {
+        ...location,
+      },
+      {
+        headers: {
+          Token: process.env.GHN_SHOP_TOKEN,
+          ShopId: process.env.GHN_SHOP_ID,
+        },
+      }
+    );
+    return calculate.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// api lấy token để in đơn
+export const getTokenPrintBill = async (order_code) => {
+  try {
+    const print_bill = await Axios.post(
+      "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/a5/gen-token",
+      {
+        order_codes: [order_code],
+      },
+      {
+        headers: {
+          Token: process.env.GHN_SHOP_TOKEN,
+        },
+      }
+    );
+    return print_bill.data;
   } catch (error) {
     console.log(error);
   }

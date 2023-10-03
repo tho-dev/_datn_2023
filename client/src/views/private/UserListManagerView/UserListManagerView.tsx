@@ -1,8 +1,6 @@
-import { Box, Heading, Text, Flex } from "@chakra-ui/layout";
+import { Box, Heading, Text} from "@chakra-ui/layout";
 import ActiveUser from "./components/ActiveUser";
-import { Button, Input } from "@chakra-ui/react";
 import UserSearch from "./components/UserSearch";
-import { SearchIcon, PlusCircleIcon } from "~/components/common/Icons";
 import {
   Menu,
   MenuButton,
@@ -51,7 +49,7 @@ const UserListManagerView = (props: Props) => {
         return (
           <Menu>
             <MenuButton
-              fontSize="sm"
+              fontSize="18"
               fontWeight="bold"
               w="5"
               h="5"
@@ -122,7 +120,7 @@ const UserListManagerView = (props: Props) => {
   ];
   return (
     <Box w="full" h="full">
-      <Heading as="h1" fontSize={24}  >
+      <Heading as="h1" fontSize={18}  >
         <Text>Users list</Text>
       </Heading>
 

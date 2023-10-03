@@ -69,6 +69,7 @@ const OrderManagementView = (props: Props) => {
             <MenuButton
               fontSize="sm"
               fontWeight="bold"
+              ml={3}
               w="5"
               h="5"
               rounded="sm"
@@ -110,7 +111,7 @@ const OrderManagementView = (props: Props) => {
   // };
   return (
     <Box w="full" h="full">
-      <Heading as="h1" fontSize={"2xl"}>
+      <Heading as="h1" fontSize={"18"}>
         <Text>Danh sách đơn hàng</Text>
       </Heading>
       <Metrics />

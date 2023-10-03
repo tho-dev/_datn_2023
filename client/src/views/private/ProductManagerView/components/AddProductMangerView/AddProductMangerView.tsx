@@ -148,7 +148,7 @@ const AddProductMangerView = (props: Props) => {
 			minH="100vh"
 		>
 			<Heading
-				fontSize="xl"
+				fontSize="18"
 				color="text.black"
 				lineHeight="100%"
 			>
@@ -170,28 +170,28 @@ const AddProductMangerView = (props: Props) => {
 					>
 						<TabList>
 							<Tab
-								fontSize="md"
+								fontSize="16"
 								color="text.black"
 								fontWeight="bold"
 							>
 								Thông tin chung
 							</Tab>
 							<Tab
-								fontSize="md"
+								fontSize="16"
 								color="text.black"
 								fontWeight="bold"
 							>
 								Đặc điểm
 							</Tab>
 							<Tab
-								fontSize="md"
+								fontSize="16"
 								color="text.black"
 								fontWeight="bold"
 							>
 								Thuộc tính
 							</Tab>
 							<Tab
-								fontSize="md"
+								fontSize="16"
 								color="text.black"
 								fontWeight="bold"
 							>
@@ -226,7 +226,7 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.name as any}>
 														<FormLabel
 															htmlFor="name"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															Sản phẩm
@@ -246,7 +246,7 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.sku as any}>
 														<FormLabel
 															htmlFor="sku"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															SKU
@@ -266,13 +266,13 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.video_review as any}>
 														<FormLabel
 															htmlFor="video_review"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															Video review
 															<Text
 																as="span"
-																fontSize="xs"
+																fontSize="15"
 																ml="1"
 																color="#8c98a4"
 																fontWeight="medium"
@@ -294,13 +294,13 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.specs as any}>
 														<FormLabel
 															htmlFor="specs"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															Mô tả ngắn
 															<Text
 																as="span"
-																fontSize="xs"
+																fontSize="15"
 																ml="1"
 																color="#8c98a4"
 																fontWeight="medium"
@@ -319,7 +319,7 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.description as any}>
 														<FormLabel
 															htmlFor="description"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															Mô tả chi tiết
@@ -368,7 +368,7 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.price as any}>
 														<FormLabel
 															htmlFor="price"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															Giá gốc
@@ -396,7 +396,7 @@ const AddProductMangerView = (props: Props) => {
 															/>
 															<Text
 																color="#8c98a4"
-																fontSize="sm"
+																fontSize="14"
 																fontWeight="semibold"
 															>
 																VNĐ
@@ -409,7 +409,7 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.price_before_discount as any}>
 														<FormLabel
 															htmlFor="price_before_discount"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															Giá khuyến mãi
@@ -439,7 +439,7 @@ const AddProductMangerView = (props: Props) => {
 															/>
 															<Text
 																color="#8c98a4"
-																fontSize="sm"
+																fontSize="14"
 																fontWeight="semibold"
 															>
 																VNĐ
@@ -471,7 +471,7 @@ const AddProductMangerView = (props: Props) => {
 															>
 																<FormLabel
 																	htmlFor="has_gift"
-																	fontSize="sm"
+																	fontSize="15"
 																	fontWeight="semibold"
 																>
 																	Khuyến mãi
@@ -490,7 +490,7 @@ const AddProductMangerView = (props: Props) => {
 																	>
 																		<Radio value="true">
 																			<Text
-																				fontSize="sm"
+																				fontSize="15"
 																				fontWeight="medium"
 																			>
 																				Có
@@ -498,7 +498,7 @@ const AddProductMangerView = (props: Props) => {
 																		</Radio>
 																		<Radio value="false">
 																			<Text
-																				fontSize="sm"
+																				fontSize="15"
 																				fontWeight="medium"
 																			>
 																				Không
@@ -539,7 +539,7 @@ const AddProductMangerView = (props: Props) => {
 																/>
 																<Text
 																	color="#8c98a4"
-																	fontSize="sm"
+																	fontSize="15"
 																	fontWeight="semibold"
 																>
 																	VNĐ
@@ -565,7 +565,7 @@ const AddProductMangerView = (props: Props) => {
 															>
 																<FormLabel
 																	htmlFor="status"
-																	fontSize="sm"
+																	fontSize="15"
 																	fontWeight="semibold"
 																>
 																	Trạng thái
@@ -584,7 +584,7 @@ const AddProductMangerView = (props: Props) => {
 																	>
 																		<Radio value="true">
 																			<Text
-																				fontSize="sm"
+																				fontSize="15"
 																				fontWeight="medium"
 																			>
 																				Đang bán
@@ -592,7 +592,7 @@ const AddProductMangerView = (props: Props) => {
 																		</Radio>
 																		<Radio value="false">
 																			<Text
-																				fontSize="sm"
+																				fontSize="15"
 																				fontWeight="medium"
 																			>
 																				Ngừng bán
@@ -621,7 +621,7 @@ const AddProductMangerView = (props: Props) => {
 															>
 																<FormLabel
 																	htmlFor="is_avaiable"
-																	fontSize="sm"
+																	fontSize="15"
 																	fontWeight="semibold"
 																>
 																	Có sẵn hàng không?
@@ -640,7 +640,7 @@ const AddProductMangerView = (props: Props) => {
 																	>
 																		<Radio value="true">
 																			<Text
-																				fontSize="sm"
+																				fontSize="15"
 																				fontWeight="medium"
 																			>
 																				Có sẵn
@@ -648,7 +648,7 @@ const AddProductMangerView = (props: Props) => {
 																		</Radio>
 																		<Radio value="false">
 																			<Text
-																				fontSize="sm"
+																				fontSize="15"
 																				fontWeight="medium"
 																			>
 																				Hết hàng
@@ -674,7 +674,7 @@ const AddProductMangerView = (props: Props) => {
 													<FormControl isInvalid={errors?.stock as any}>
 														<FormLabel
 															htmlFor="stock"
-															fontSize="sm"
+															fontSize="15"
 															fontWeight="semibold"
 														>
 															Số lượng
@@ -717,7 +717,7 @@ const AddProductMangerView = (props: Props) => {
 															>
 																<FormLabel
 																	htmlFor="price"
-																	fontSize="sm"
+																	fontSize="15"
 																	fontWeight="semibold"
 																>
 																	Danh mục
@@ -733,7 +733,7 @@ const AddProductMangerView = (props: Props) => {
 																	placeholder={
 																		<Text
 																			as="span"
-																			fontSize="sm"
+																			fontSize="15"
 																		>
 																			Laptop, Bàn phím,...
 																		</Text>
@@ -762,7 +762,7 @@ const AddProductMangerView = (props: Props) => {
 															>
 																<FormLabel
 																	htmlFor="price"
-																	fontSize="sm"
+																	fontSize="15"
 																	fontWeight="semibold"
 																>
 																	Thương hiệu
@@ -778,7 +778,7 @@ const AddProductMangerView = (props: Props) => {
 																	placeholder={
 																		<Text
 																			as="span"
-																			fontSize="sm"
+																			fontSize="15"
 																		>
 																			Dell, Lenovo,...
 																		</Text>
@@ -806,13 +806,13 @@ const AddProductMangerView = (props: Props) => {
 															>
 																<FormLabel
 																	htmlFor="price"
-																	fontSize="sm"
+																	fontSize="15"
 																	fontWeight="semibold"
 																>
 																	Tags
 																	<Text
 																		as="span"
-																		fontSize="xs"
+																		fontSize="15"
 																		ml="1"
 																		color="#8c98a4"
 																		fontWeight="medium"
@@ -902,7 +902,7 @@ const AddProductMangerView = (props: Props) => {
 					// borderColor="#eef1f6"
 					boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 				>
-					<Button
+					<Button w={"40"}
 						isLoading={isSubmitting}
 						bgColor="bg.bgDelete"
 						color="text.textDelete"
@@ -910,7 +910,7 @@ const AddProductMangerView = (props: Props) => {
 					>
 						Hủy
 					</Button>
-					<Button
+					<Button w={"40"}
 						isLoading={isSubmitting}
 						type="submit"
 						bgColor="bg.bgSuccess"
