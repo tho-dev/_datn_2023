@@ -1,18 +1,24 @@
 import express from "express";
 import {
   addCart,
+  addOneProduct,
   getCart,
   deleteProduct,
   deleteCart,
   deleteOneProduct,
+  getCartByUserId,
+  createCart,
 } from "../controllers/cart.controller";
 
 const router = express.Router();
 
+router.post("/create", createCart);
 router.post("/", addCart);
-router.get("/", getCart);
-router.delete("/:id", deleteProduct);
+router.get("/:cart_id", getCart);
+router.post("/user/:user_id", getCartByUserId);
+router.delete("/:sku_id", deleteProduct);
 router.delete("/delete/:id", deleteCart);
-router.delete("/deleteOne/:id", deleteOneProduct);
+router.delete("/deleteOne/:sku_id", deleteOneProduct);
+router.post("/addOne/:sku_id", addOneProduct);
 
 export default router;

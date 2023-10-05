@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Gallery from "./components/Swiper";
 import { Box, Divider, Flex, HStack, Heading } from "@chakra-ui/layout";
 import Evaluate from "./components/Evaluate";
@@ -8,6 +8,7 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import Introduce from "./components/Introduce";
 import Branch from "./components/Branch";
@@ -20,10 +21,78 @@ import Sku from "./components/Sku";
 import Subcate from "./components/Subcate";
 import { CommentView } from "~/components/Comment";
 import ViewedProduct from "~/components/ViewedThinkPro/ViewedProduct";
+import { useParams } from "react-router";
+import { useGetBySlugQuery } from "~/redux/api/product";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { v4 as uuidv4 } from "uuid";
+import { useAddToCartMutation } from "~/redux/api/cart";
+import { addCart } from "~/redux/slices/cartSlice";
 
 type Props = {};
 
 const ProductDetailView = (props: Props) => {
+  const { slug } = useParams();
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const isLogin = useAppSelector(
+    (state) => state.persistedReducer.global.isLogin
+  );
+  const user = useAppSelector((state) => state.persistedReducer.global.user);
+  const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+  const dispatch = useAppDispatch();
+  const [addToCart] = useAddToCartMutation();
+  const {
+    data: product,
+    isError,
+    isFetching,
+  } = useGetBySlugQuery(slug as string);
+
+  if (isFetching) {
+    return <Box>Loading...</Box>;
+  }
+
+  if (isError) {
+    return <Box>error...</Box>;
+  }
+  const handleAddToCart = async () => {
+    const data = {
+      cart_id: cart_id || uuidv4(),
+      product: {
+        sku_id: product.data._id,
+        quantity,
+        price: product.data.price,
+        price_before_discount: product.data.price_before_discount,
+        price_discount_percent: product.data.price_discount_percent,
+      },
+    };
+    if (isLogin) {
+      addToCart({ ...data, user_id: user._id })
+        .unwrap()
+        .then(({ data }) => {
+          dispatch(addCart(data.cart_id));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return;
+    }
+    addToCart(data)
+      .unwrap()
+      .then(({ data }) => {
+        dispatch(addCart(data.cart_id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleDercement = () => {
+    if (quantity == 1) return;
+    setQuantity(quantity - 1);
+  };
+  const handleIncement = () => {
+    if (quantity == product.stock) return;
+    setQuantity(quantity + 1);
+  };
   return (
     <Box h={"full"}>
       <Breadcrumb mt={"5"}>
@@ -35,7 +104,7 @@ const ProductDetailView = (props: Props) => {
 
         <BreadcrumbItem>
           <BreadcrumbLink textDecoration={"none"} fontSize={"12px"}>
-            Laptop Dell Inspiron 16
+            {product?.data.name}
           </BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
@@ -43,14 +112,14 @@ const ProductDetailView = (props: Props) => {
         {/* Content trái */}
         <Box w={{ base: "100%", md: "60%" }} my={5}>
           {/* slide ảnh */}
-          <Gallery />
+          <Gallery assets={product?.data.assets} name={product?.data.name} />
           {/* marrque */}
           <Introduce />
           {/* Đánh Giá */}
           <Evaluate />
           <Box backgroundColor={"bg.white"} borderRadius={"6px"} my={"5"} p="6">
             {/* Cấu hình */}
-            <Configuration />
+            <Configuration attributes={product?.data.attributes} />
             <Divider my="5" />
             {/* Chi Nhánh */}
             <Branch />
@@ -62,7 +131,10 @@ const ProductDetailView = (props: Props) => {
             <Warranty />
             <Divider my="5" />
             {/* Bài Viết sản phẩm */}
-            <Describe />
+            <Describe
+              image={product?.data.image}
+              description={product?.data.description}
+            />
           </Box>
         </Box>
         {/* Content phải */}
@@ -90,7 +162,13 @@ const ProductDetailView = (props: Props) => {
             </Flex>
           </Box>
           {/* Số lượng phiên bản giá */}
-          <Sku />
+          <Sku
+            product={product.data}
+            handleDercement={handleDercement}
+            handleIncement={handleIncement}
+            handleAddToCart={handleAddToCart}
+            quantity={quantity}
+          />
           {/* Danh mục con */}
           <Subcate />
         </Box>
@@ -100,10 +178,9 @@ const ProductDetailView = (props: Props) => {
       <CommentView />
 
       {/* Sản phẩm đã xem */}
-      <Box pb={10} >
+      <Box pb={10}>
         <ViewedProduct title={""} />
       </Box>
-
     </Box>
   );
 };

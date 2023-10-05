@@ -6,6 +6,7 @@ import { RootState } from '../store';
 
 const authApi = createApi({
     reducerPath: "auth",
+    tagTypes: ["Auth"],
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.VITE_API_URL,
         // xét token vào headers
@@ -49,13 +50,22 @@ const authApi = createApi({
                 body: credentials
             })
         }),
+        logoutUser: builder.mutation<any, any>({
+            query: (user) => ({
+                url: `/user/logout`,
+                method: "POST",
+                body: user
+            }),
+            invalidatesTags: ["Auth"]
+        }),
     })
 });
 export const {
     useSigninMutation,
     useSignupMutation,
     useUpdateMutation,
-    useUpdatePassWordMutation
+    useUpdatePassWordMutation,
+    useLogoutUserMutation
 } = authApi;
 
 export const authReducer = authApi.reducer;
