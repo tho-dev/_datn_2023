@@ -4,9 +4,11 @@ import { Cart } from "../models/cart.model";
 import { Sku } from "../models/product.model";
 import Axios from "axios";
 import {
+  calculate_fee,
   calculate_time,
   cancelled_order,
   getLocation,
+  getTokenPrintBill,
   get_order_info,
   update_info,
 } from "../utils/ghn/";
@@ -604,7 +606,7 @@ export const payVnPay = async (req, res, next) => {
     next(error);
   }
 };
-
+// gửi otp qua sdt
 export const sendOtpCode = async (req, res, next) => {
   try {
     const { phone_number } = req.body;
@@ -629,11 +631,109 @@ export const verifyOtpCode = async (req, res, next) => {
   try {
     const { phone_number, code } = req.body;
     const result = await TextFlow.verifyCode(phone_number, code);
-    console.log(result);
     if (!result.valid) {
       throw createError.BadRequest("Mã code không đúng");
     }
     return res.json({ status: result.status, message: result.message });
+  } catch (error) {
+    next(error);
+  }
+};
+// tính tiền vận chuyển
+export const serviceFree = async (req, res, next) => {
+  try {
+    const { location } = req.body;
+    const code_location = await getLocation(location);
+    const data = {
+      from_district_id: 1915,
+      from_ward_code: "1B2128",
+      service_id: 53320,
+      service_type_id: null,
+      to_district_id: code_location.district_id,
+      to_ward_code: code_location.ward_code,
+      height: 50,
+      length: 20,
+      weight: 200,
+      width: 20,
+      insurance_value: 10000,
+      cod_failed_amount: 2000,
+      coupon: null,
+    };
+    const total_money = await calculate_fee(data);
+    if (total_money.code !== 200) {
+      throw createError.BadRequest("Không thể tính phí vận chuyển");
+    }
+    return res.json({
+      status: 200,
+      message: "thành công",
+      data: total_money.data.total,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// lấy đơn hàng theo số điện thoại
+export const getOrderByPhoneNumber = async (req, res, next) => {
+  try {
+    const { phone_number, code } = req.body;
+    const result_otp = await TextFlow.verifyCode(phone_number, code);
+    if (!result_otp.valid) {
+      throw createError.BadRequest("Mã code không đúng");
+    }
+    const result = await Order.findOne({ phone_number: phone_number });
+    if (!result) {
+      throw createError.NotFound("Không tìm thấy đơn hàng");
+    }
+    const new_result = result.toObject();
+    const order_details = await Order_Detail.find({ order_id: result._id });
+
+    const new_order_details = await Promise.all(
+      order_details.map(async (item) => {
+        const sku = await Sku.findOne({ _id: item.sku_id }).select(
+          "name shared_url"
+        );
+        const new_item = item.toObject();
+        const new_sku = sku.toObject();
+        return {
+          ...new_item,
+          ...new_sku,
+        };
+      })
+    );
+
+    return res.json({
+      status: 200,
+      message: "Tìm thấy đơn hàng thành công",
+      data: {
+        ...new_result,
+        new_order_details,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getTokenPrintBills = async (req, res, next) => {
+  try {
+    const { order_id } = req.body;
+    const order = await Order.findById(order_id).populate("shipping_info");
+    if (!order) {
+      throw createError.NotFound("Không tìm thấy đơn hàng");
+    }
+    if (order.shipping_method === "at_store") {
+      throw createError.BadRequest("Đơn hàng này mua tại cửa hàng");
+    }
+    const order_codes = order.shipping_info?.order_code;
+    const token_bill = await getTokenPrintBill(order_codes);
+    if (token_bill.code !== 200) {
+      throw createError.BadRequest("Không tìm thấy token hoá đơn");
+    }
+    return res.json({
+      status: token_bill.code,
+      message: token_bill.message,
+      data: token_bill.data?.token,
+    });
   } catch (error) {
     next(error);
   }

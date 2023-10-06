@@ -84,7 +84,7 @@ const ActionBrand = ({ onClose }: Props) => {
                 <FormControl isInvalid={errors.name as any}>
                     <FormLabel
                         htmlFor="name"
-                        fontSize="sm"
+                        fontSize="15"
                     >
                         Thương hiệu
                     </FormLabel>
@@ -100,7 +100,7 @@ const ActionBrand = ({ onClose }: Props) => {
                 </FormControl>
                 <FormControl isInvalid={errors.description as any}>
                     <FormLabel
-                        fontSize="sm"
+                        fontSize="15"
                         htmlFor="description"
                     >
                         Mô tả

@@ -1,4 +1,4 @@
-import {  Img, useDisclosure } from "@chakra-ui/react";
+import { Img, useDisclosure } from "@chakra-ui/react";
 
 import { Flex, Grid, Box } from "@chakra-ui/layout";
 import React, { useRef, useState } from "react";
@@ -41,6 +41,14 @@ function Gallery() {
 				<Box
 					w="100px"
 					display={{ base: "none", md: "block" }}
+					__css={{
+						"& .swiper-slide-thumb-active": {
+							borderStyle: "solid",
+							borderWidth: "1px",
+							borderColor: "bg.blue",
+							rounded: "md",
+						},
+					}}
 				>
 					<Swiper
 						modules={[Navigation, Pagination, Scrollbar, A11y, Mousewheel, FreeMode, Thumbs]}
@@ -50,9 +58,11 @@ function Gallery() {
 						slidesPerView={4}
 						watchSlidesProgress={true}
 						spaceBetween={10}
+						speed={600}
 						style={{
 							maxHeight: "548px",
 						}}
+						slideActiveClass="assets"
 					>
 						{Array(6)
 							.fill(0)
@@ -67,15 +77,16 @@ function Gallery() {
 										<Box
 											w="full"
 											h="full"
+											bgColor="bg.gray"
+											rounded="md"
+											cursor="pointer"
 										>
 											<Img
 												src="https://images.thinkgroup.vn/unsafe/200x200/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/23/lenovo-thinkpad-x1-carbon-gen-11-thinkpro-01.png"
 												w={"full"}
 												h={"full"}
 												objectFit="cover"
-												
 											/>
-											
 										</Box>
 									</SwiperSlide>
 								);
@@ -99,6 +110,7 @@ function Gallery() {
 							}}
 							navigation={false}
 							ref={swiperRef}
+							speed={600}
 						>
 							{Array(6)
 								.fill(0)
@@ -119,13 +131,7 @@ function Gallery() {
 													onClick={onOpen}
 													cursor={"pointer"}
 												/>
-
 											</Box>
-											<ImagePreviewModal 
-												imageSrc="https://images.thinkgroup.vn/unsafe/1000x1000/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/23/lenovo-thinkpad-x1-carbon-gen-11-thinkpro-01.png" 
-												isOpen={isOpen} 
-												onClose={onClose} 
-											/>
 										</SwiperSlide>
 									);
 								})}
@@ -182,8 +188,14 @@ function Gallery() {
 						</Flex>
 					</Box>
 				)}
-			</Flex>
 
+				{/* // Box hiển thị ảnh */}
+				<ImagePreviewModal
+					product="https://images.thinkgroup.vn/unsafe/1000x1000/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/products/2022/12/23/lenovo-thinkpad-x1-carbon-gen-11-thinkpro-01.png"
+					isOpen={isOpen}
+					onClose={onClose}
+				/>
+			</Flex>
 		</>
 	);
 }

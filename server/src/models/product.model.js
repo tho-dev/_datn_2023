@@ -2,9 +2,10 @@ import { Schema, model } from "mongoose";
 import slug from "mongoose-slug-updater";
 import mongoosePaginate from "mongoose-paginate-v2";
 import mongooseDelete from "mongoose-delete";
+import Category from "./category.model";
 
 const plugins = [slug, mongoosePaginate, mongooseDelete];
-const pluginsFilter = [slug];
+const pluginsFilter = [slug, mongooseDelete];
 
 // thuộc tính của sản phẩm
 const optionSchema = new Schema({
@@ -60,70 +61,87 @@ const optionValueSchema = new Schema({
 })
 
 // mã của sản phẩm
-const skuSchema = new Schema({
-  product_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'Product'
-  },
-  SKU: {
-    type: String,
-    default: ""
-  },
-  name: {
-    type: String
-  },
-  slug: {
-    type: String,
-    slug: "name",
-    unique: true,
-    index: true,
-    sparse: true,
-    slugOn: { save: true, update: true, updateOne: true, updateMany: true, findOneAndUpdate: true },
-  },
-  shared_url: {
-    type: String
-  },
-  price: {
-    type: Number,
-    default: 200000
-  },
-  price_before_discount: {
-    type: Number,
-  },
-  price_discount_percent: {
-    type: Number
-  },
-  is_avaiable: { // check xem có sẵn hay không
-    type: Boolean,
-    default: false
-  },
-  stock: {
-    type: Number,
-    default: 0
-  },
-  image: {
-    id: String,
-    url: String
-  },
-  assets: [
-    {
+const skuSchema = new Schema(
+  {
+    product_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    },
+    SKU: {
+      type: String
+    },
+    name: {
+      type: String,
+    },
+    slug: {
+      type: String,
+      slug: "name",
+      unique: true,
+      index: true,
+      sparse: true,
+      slugOn: {
+        save: true,
+        update: true,
+        updateOne: true,
+        updateMany: true,
+        findOneAndUpdate: true,
+      },
+    },
+    shared_url: {
+      type: String,
+    },
+    price: {
+      type: Number,
+      default: 200000,
+    },
+    price_before_discount: {
+      type: Number,
+    },
+    price_discount_percent: {
+      type: Number,
+    },
+    is_avaiable: {
+      // check xem có sẵn hay không
+      type: Boolean,
+      default: false,
+    },
+    stock: {
+      type: Number,
+      default: 0,
+    },
+    image: {
       id: String,
-      url: String
+      url: String,
+    },
+    assets: [
+      {
+        id: String,
+        url: String,
+      },
+    ],
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    deleted_at: {
+      type: Date,
+      default: null,
+    },
+    created_at: {
+      type: Date,
+      default: Date.now
+    },
+    updated_at: {
+      type: Date,
+      default: Date.now
     }
-  ],
-  created_at: {
-    type: Date,
-    default: Date.now
   },
-  updated_at: {
-    type: Date,
-    default: Date.now
+  {
+    collection: "skus",
+    timestamps: false,
+    versionKey: false,
   }
-}, {
-  collection: 'skus',
-  timestamps: false,
-  versionKey: false
-})
+);
 
 // biến thể của sản phẩm
 const variantSchema = new Schema({
@@ -268,14 +286,35 @@ const productSchema = new Schema(
 );
 
 // plugins
-plugins.forEach((item) => productSchema.plugin(item, { overrideMethods: true }));
-pluginsFilter.forEach((item) => skuSchema.plugin(item, { overrideMethods: true }))
+plugins.forEach((item) =>
+  productSchema.plugin(item, { overrideMethods: true })
+);
+
+pluginsFilter.forEach((item) =>
+  skuSchema.plugin(item, { overrideMethods: true })
+);
+
+pluginsFilter.forEach((item) =>
+  variantSchema.plugin(item, { overrideMethods: true })
+);
 
 // middlewaves trong schema
 skuSchema.pre('save', function (next) {
-  this.name = this.name + "-" + this._id
+  this.slug = this.slug + "-" + this._id
+  this.shared_url = this.shared_url + "-" + this._id
   next();
 });
+
+productSchema.pre("save", async function (next) {
+  const category = await Category.findOne({
+    _id: this.category_id
+  })
+
+  this.shared_url = `${category?.slug}/${this.slug}`
+  this.price_discount_percent = Math.ceil(((this.price_before_discount - this.price) / this.price_before_discount) * 100)
+
+  next()
+})
 
 const Product = model('Product', productSchema)
 const Option = model('Option', optionSchema)

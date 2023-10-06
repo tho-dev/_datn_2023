@@ -19,11 +19,12 @@ const DashboardView = (props: Props) => {
       <Metrics />
 
       {/* Test table */}
-      <Box bgColor='bg.white' mt='6' p='6'>
+      <Box bgColor='bg.white' my='6' p='6'>
         {/* <TableThinkPro columns={columns} data={thinkpro.data} /> */}
         <Flex gap='6'>
+        <Revenue></Revenue>
           <TopSale title='Top sales location ' />
-          <Revenue></Revenue>
+          
         </Flex>
         <RecentOrders />
 

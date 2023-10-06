@@ -14,6 +14,7 @@ import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
 import OrderDetailMetricItem from "../components/OrderDetailMetric";
 import { Progress } from '@chakra-ui/react'
+import { mt } from "date-fns/locale";
 
 type Props = {};
 
@@ -75,26 +76,26 @@ const OrderDetailView = (props: Props) => {
   return (
     <Box w="full" h="full">
       <Flex justifyContent="space-between" alignItems={"center"}>
-        <Heading as="h1" fontSize="2xl">
+        <Heading as="h1" fontSize="18">
           <Text>Chi tiết đơn hàng</Text>
         </Heading>
+        <Button leftIcon={<DownloadIcon size={24} />}> Xuất HĐ</Button>
       </Flex>
       <Flex justifyContent="space-between" alignItems={"center"}>
-        <Heading as="h1" fontSize="md">
+        <Heading as="h1" fontSize="16">
           <Text>ID đơn hàng: #111</Text>
         </Heading>
-        <Button leftIcon={<DownloadIcon size={24} />}> Xuất HĐ</Button>
       </Flex>
       <Grid
         mt="4"
         px="5"
         py="6"
-        gap="2"
+        gap="5"
         bgColor="bg.white"
         rounded="md"
         templateColumns={{
           sm: "repeat(2, 1fr)",
-          md: "repeat(4, 1fr)",
+          md: "repeat(3, 1fr)",
         }}
       >
         <OrderDetailMetricItem
@@ -132,10 +133,10 @@ const OrderDetailView = (props: Props) => {
         <Box w="25%">
           {/* Vận chuyển */}
           <Box my="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
-            <Heading size="md" pb={4} borderBottomWidth={1}>
+            <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
               Vận chuyển:
             </Heading>
-            <Flex justifyContent="center" alignItems="center">
+            <Flex justifyContent="center" alignItems="center" fontSize={15}>
               <Flex
                 py={4}
                 justifyContent={"center"}
@@ -151,10 +152,10 @@ const OrderDetailView = (props: Props) => {
           </Box>
           {/* Thanh toán */}
           <Box my="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
-            <Heading size="md" pb={4} borderBottomWidth={1}>
+            <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
               Chi tiết thanh toán:
             </Heading>
-            <Flex pt={4} flexDir="column" gap={2}>
+            <Flex pt={4} flexDir="column" gap={2} fontSize={15}>
               <Flex>
                 <Text w="40%">Mã giao dịch:</Text>
                 <Text>#1111111111111</Text>
@@ -179,14 +180,14 @@ const OrderDetailView = (props: Props) => {
           </Box>
         </Box>
       </Flex>
-      <Box mt="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
+      <Box m="16px 0 30px 0" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
         <Flex justifyContent={"space-between"} pb={4} borderBottomWidth={1}>
-          <Heading size="md"> Trạng thái đơn hàng:</Heading>
+          <Heading fontSize={18}> Trạng thái đơn hàng:</Heading>
           <Flex gap={2}>
             <Button
               bgColor="blue.100"
               color={"blue.400"}
-              leftIcon={<LocationIcon size={12} />}
+              leftIcon={<LocationIcon size={25} />}
               _hover={{
                 bgColor: "blue.400",
                 color: "white",
@@ -197,7 +198,7 @@ const OrderDetailView = (props: Props) => {
             <Button
               bgColor="red.100"
               color={"red.400"}
-              leftIcon={<LocationIcon size={12} />}
+              leftIcon={<LocationIcon size={25} />}
               _hover={{
                 bgColor: "red.400",
                 color: "white",
@@ -209,49 +210,49 @@ const OrderDetailView = (props: Props) => {
         </Flex>
 
         <Box pt={8}>
-          <Progress hasStripe value={50} colorScheme="green" size={"md"} w={"78%"} m={"0 auto"}/>
+          <Progress hasStripe value={50} colorScheme="green" size={"md"} w={"78%"} m={"0 auto"} />
           <Flex w={"90%"} m="40px auto 0 auto" justifyContent={"space-between"}>
-             <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5}>
-                <Heading size={"md"}>
-                    Đơn hàng được đặt
-                </Heading>
-                <Text size={"xs"}>
-                    Mon, 24 Dec, 2022
-                </Text>
-             </Box>
-             <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5}>
-                <Heading size={"md"}>
-                    Đóng gói
-                </Heading>
-                <Text size={"xs"}>
-                    Mon, 24 Dec, 2022
-                </Text>
-             </Box>
-             <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5}>
-                <Heading size={"md"}>
-                  Giao cho ĐVVC
-                </Heading>
-                <Text size={"xs"}>
-                    Mon, 24 Dec, 2022
-                </Text>
-             </Box>
-             <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5}>
-                <Heading size={"md"}>
-                  Đang giao
-                </Heading>
-                <Text size={"xs"}>
-                    Mon, 24 Dec, 2022
-                </Text>
-             </Box>
-             <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5}>
-                <Heading size={"md"}>
-                    Đã giao
-                </Heading>
-                <Text size={"xs"}>
-                    Mon, 24 Dec, 2022
-                </Text>
-             </Box>
-             
+            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
+              <Heading fontSize={18}>
+                Đơn hàng được đặt
+              </Heading>
+              <Text fontSize={15} mt={2}>
+                Mon, 24 Dec, 2022
+              </Text>
+            </Box>
+            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
+              <Heading fontSize={18}>
+                Đóng gói
+              </Heading>
+              <Text fontSize={15} mt={2}>
+                Mon, 24 Dec, 2022
+              </Text>
+            </Box>
+            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
+              <Heading fontSize={18}>
+                Giao cho ĐVVC
+              </Heading>
+              <Text fontSize={15} mt={2}>
+                Mon, 24 Dec, 2022
+              </Text>
+            </Box>
+            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
+              <Heading fontSize={18}>
+                Đang giao
+              </Heading>
+              <Text fontSize={15} mt={2}>
+                Mon, 24 Dec, 2022
+              </Text>
+            </Box>
+            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
+              <Heading fontSize={18}>
+                Đã giao
+              </Heading>
+              <Text fontSize={15} mt={2}>
+                Mon, 24 Dec, 2022
+              </Text>
+            </Box>
+
           </Flex>
         </Box>
       </Box>

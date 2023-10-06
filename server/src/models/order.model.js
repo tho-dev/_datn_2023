@@ -50,6 +50,10 @@ const orderItemSchema = new Schema({
     type: Boolean,
     default: false,
   },
+}, {
+  collection: "order_details",
+  timestamps: false,
+  versionKey: false,
 });
 
 const shippingInfoSchema = new Schema({
@@ -65,6 +69,18 @@ const shippingInfoSchema = new Schema({
   order_code: {
     type: String,
   },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
+}, {
+  collection: "shippings",
+  timestamps: false,
+  versionKey: false,
 });
 
 const orderSchema = new Schema({
@@ -147,11 +163,15 @@ const orderSchema = new Schema({
     type: Boolean,
     default: false,
   },
+}, {
+  collection: "orders",
+  timestamps: false,
+  versionKey: false,
 });
 
 plugins.forEach((item) => orderSchema.plugin(item, { overrideMethods: true }));
 
 const Order = model("Order", orderSchema);
 const Shipping = model("Shipping", shippingInfoSchema);
-const Order_Detail = model("Order_detail", orderItemSchema);
+const Order_Detail = model("OrderDetail", orderItemSchema);
 export { Order, Shipping, Order_Detail };

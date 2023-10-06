@@ -1,19 +1,16 @@
-import Joi from "joi";
+import joi from "joi";
 
-const brandSchema = Joi.object({
-  category_id: Joi.string().required(),
-  sub_brands: Joi.array().items(Joi.string()),
-  name: Joi.string().required(),
-  slug: Joi.string().required(),
-  thumbnail: Joi.object({
-    id: Joi.string(),
-    url: Joi.string(),
+const brandSchema = joi.object({
+  category_id: joi.string().required(),
+  parent_id: joi.string(),
+  name: joi.string().required(),
+  thumbnail: joi.object({
+    id: joi.string(),
+    url: joi.string(),
   }).required(),
-  description: Joi.string(),
-  deleted: Joi.boolean().default(false),
-  deleted_at: Joi.date().allow(null).default(null), // Chấp nhận null cho deleted_at
-  created_at: Joi.date().default(() => new Date()),
-  updated_at: Joi.date().default(() => new Date()),
+  description: joi.string().required(),
+  created_at: joi.date().default(() => new Date()),
+  updated_at: joi.date().default(() => new Date()),
 });
 
 export default brandSchema;

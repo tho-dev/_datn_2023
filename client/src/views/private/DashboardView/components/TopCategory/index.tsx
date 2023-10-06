@@ -26,7 +26,7 @@ const TopCategory = ({ title }: Props) => {
   return (
     <Box width='33%' border='1px solid #f1f4f9' rounded='md'>
       <Flex justifyContent='space-between' borderBottom='1px solid #f1f4f9' p='4'>
-        <Text fontSize='xl' fontWeight='bold'>
+        <Text fontSize='18' fontWeight='bold'>
           {title}
         </Text>
         <Flex alignItems='center'>
