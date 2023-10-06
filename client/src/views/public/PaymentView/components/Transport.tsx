@@ -21,7 +21,7 @@ type Props = {
 	addres: any;
 };
 
-const Transport = (props: Props) => {
+const Transport = ({ addres }: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [district, setDistrict] = useState<any>({});
 	const [conscious, setConscious] = useState([]);
@@ -35,8 +35,6 @@ const Transport = (props: Props) => {
 	}, []);
 
 	const districtConsious = async (item: any) => {
-		console.log(item);
-
 		if (
 			item.division_type == "huyện" ||
 			item.division_type == "thị xã" ||
@@ -48,7 +46,7 @@ const Transport = (props: Props) => {
 				setValue(item.name + "," + value);
 			});
 		}
-		if (item.division_type == "xã"||item.division_type == "phường") {
+		if (item.division_type == "xã" || item.division_type == "phường") {
 			setValue(item.name + "," + value);
 			onClose();
 		}
@@ -59,9 +57,9 @@ const Transport = (props: Props) => {
 		});
 	};
 
-	useEffect(()=>{
-		props.addres(value);
-	})
+	useEffect(() => {
+		addres(value);
+	}, [value]);
 
 	return (
 		<Box>
