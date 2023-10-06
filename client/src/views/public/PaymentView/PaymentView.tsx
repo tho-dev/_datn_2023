@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout";
-import { Radio, RadioGroup, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { Radio, RadioGroup, Text, useDisclosure } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
 import PaySummary from "./components/PaySummary";
@@ -11,38 +11,39 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { atStoreSchema, shipSchema } from "~/validate/payment";
 import axios from "axios";
-import { data } from "~/views/private/DashboardView/components/TopCategory";
 import { useNavigate } from "react-router";
 import { useAppSelector } from "~/redux/hook/hook";
 import { useGetCartQuery } from "~/redux/api/cart";
+import PopupCheckOtp from "./components/PopupCheckOtp";
 
 type Props = {};
 
 const Payment = (props: Props) => {
+  const [value, setValue] = React.useState("1");
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const { data, isLoading, isError } = useGetCartQuery(cart_id);
-  const [value, setValue] = React.useState("1");
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const {
     register,
-    watch,
     handleSubmit,
+    watch,
     formState: { errors },
+    control,
+    setValue: updateValue,
   } = useForm({
     resolver: joiResolver(value === "1" ? atStoreSchema : shipSchema),
   });
   const submitForm = (data: any) => {
+    setOpen(!open);
     console.log("value_", data);
-    navigate("/check-otp");
   };
-
   if (isLoading) {
     return <Box>Loading...</Box>;
   }
   if (isError) {
     return <Box>Error...</Box>;
   }
-
   return (
     <HelmetProvider>
       <Helmet>
@@ -77,13 +78,20 @@ const Payment = (props: Props) => {
               </RadioGroup>
             </Box>
             <Box>
-              {value === "1" && <Atstore register={register} errors={errors} />}
-              {value === "2" && (
+              {value === "1" ? (
+                <Atstore register={register} errors={errors} />
+              ) : (
+                ""
+              )}
+              {value === "2" ? (
                 <ShipProduct
                   registerShip={register}
                   errors={errors}
                   watch={watch}
+                  updateValue={updateValue}
                 />
+              ) : (
+                ""
               )}
             </Box>
           </Box>
@@ -106,6 +114,7 @@ const Payment = (props: Props) => {
               <ProductPay products={data.data.products} />
             </Box>
           </Box>
+          <PopupCheckOtp open={open} />;
         </Box>
       </form>
     </HelmetProvider>

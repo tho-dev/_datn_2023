@@ -21,7 +21,7 @@ type Props = {
   addres: any;
 };
 
-const Transport = (props: Props) => {
+const Transport = ({ addres }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [district, setDistrict] = useState<any>({});
   const [conscious, setConscious] = useState([]);
@@ -30,11 +30,13 @@ const Transport = (props: Props) => {
     axios
       .get("https://provinces.open-api.vn/api/")
       .then(({ data }) => setConscious(data));
+    ///huyện
+    // axios.get("https://provinces.open-api.vn/api/p/1?depth=2").then(({ data }) => setcountry(data));
+    ///xã
+    // axios.get("https://provinces.open-api.vn/api/d/1?depth=2").then(({ data }) => setcountry(data));
   }, []);
 
   const districtConsious = async (item: any) => {
-    console.log(item);
-
     if (
       item.division_type == "huyện" ||
       item.division_type == "thị xã" ||
@@ -62,8 +64,8 @@ const Transport = (props: Props) => {
   };
 
   useEffect(() => {
-    props.addres(value);
-  });
+    addres(value);
+  }, [value]);
 
   return (
     <Box>
