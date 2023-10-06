@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import {
 	FormControl,
@@ -22,15 +22,20 @@ import { ArrowRightUpIcon } from "~/components/common/Icons";
 type Props = {
 	registerShip: any;
 	errors: any;
+	watch: any;
+	updateValue: any;
 };
 const addrs = "Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam";
-const ShipProduct = ({ registerShip, errors }: Props) => {
+const ShipProduct = ({ registerShip, errors, watch, updateValue }: Props) => {
 	const [district, setDistrict] = useState<string>("");
 	const [value, setValue] = React.useState("tructiep");
 	const [valueaddress, setValueAddress] = React.useState(addrs);
 	const addres = (value: string) => {
 		setDistrict(value);
 	};
+	useEffect(() => {
+		updateValue("district", district);
+	}, [district]);
 	return (
 		<Box mt={"12px"}>
 			<Text mb={"16px"} fontSize={"16px"} lineHeight={"150%"} fontWeight={600}>
@@ -70,7 +75,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 			<Flex gap={"16px"} mt={"16px"}>
 				<FormControl isInvalid={errors?.district as any}>
 					<FormLabel>Khu Vực</FormLabel>
-					<Box display={district != "" ? "none" : "block"}>
+					<Box display={district.length != 0 ? "none" : "block"}>
 						<Transport addres={addres} />
 					</Box>
 					<Input
@@ -83,7 +88,7 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
 						fontSize={"14px"}
 						{...registerShip("district")}
 						defaultValue={district}
-						display={district == "" ? "none" : "block"}
+						display={district.length == 0 ? "none" : "block"}
 					/>
 					<FormErrorMessage>
 						{" "}

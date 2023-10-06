@@ -89,10 +89,10 @@ const routes: RouteObject[] = [
 						path: "tim-kiem",
 						element: <SearchView />,
 					},
-					{
-						path: "check-otp",
-						element: <CheckOtp />,
-					},
+					// {
+					// 	path: "check-otp",
+					// 	element: <CheckOtp />,
+					// },
 				],
 			},
 			{
