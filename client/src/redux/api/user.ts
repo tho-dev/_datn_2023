@@ -1,15 +1,24 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser } from '~/interface/user';
+import { RootState } from '../store';
 
 
 
 const authApi = createApi({
     reducerPath: "auth",
     baseQuery: fetchBaseQuery({
-        baseUrl: process.env.VITE_API_URL
+        baseUrl: process.env.VITE_API_URL,
+        // xét token vào headers
+        prepareHeaders: (headers, { getState }) => {
+            const token = (getState() as RootState).persistedReducer.global.accessToken
+            if (token) {
+                headers.set('authorization', `Bearer ${token}`)
+            }
+            return headers
+        },
     }),
     endpoints: (builder) => ({
-        signin: builder.mutation<{ accessToken: string, user: {} }, { email: string, password: string }>({
+        signin: builder.mutation<any, { email: string, password: string }>({
             query: (credentials) => ({
                 url: `/user/login`,
                 method: "POST",
@@ -27,7 +36,10 @@ const authApi = createApi({
             query: (credentials) => ({
                 url: `/user/${credentials._id}`,
                 method: "PUT",
-                body: credentials
+                body: credentials,
+                headers: {
+                    "Content-Type": "application/json"
+                }
             })
         }),
         updatePassWord: builder.mutation<any, any>({
@@ -39,7 +51,6 @@ const authApi = createApi({
         }),
     })
 });
-
 export const {
     useSigninMutation,
     useSignupMutation,

@@ -7,6 +7,7 @@ import DefaultLayout from "~/layouts/DefaultLayout";
 import AdminLayout from "~/layouts/AdminLayout";
 
 // view client
+
 import { HomeView } from "~/views/public/HomeView";
 import { SignInView } from "~/views/public/SignInView";
 import { SignUpView } from "~/views/public/SignUpView";
@@ -41,6 +42,8 @@ import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCate
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import DemandView from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
+import { HistoryOrderView } from "~/views/public/HistoryOrderView";
+import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordView";
 
 const routes: RouteObject[] = [
 	{
@@ -89,10 +92,14 @@ const routes: RouteObject[] = [
 						path: "tim-kiem",
 						element: <SearchView />,
 					},
-					// {
-					// 	path: "check-otp",
-					// 	element: <CheckOtp />,
-					// },
+					{
+						path: "lich-su-mua-hang",
+						element: <HistoryOrderView />,
+					},
+					{
+						path: "check-otp",
+						element: <CheckOtp />,
+					},
 				],
 			},
 			{
@@ -108,6 +115,10 @@ const routes: RouteObject[] = [
 							{
 								path: "dang-ky",
 								element: <SignUpView />,
+							},
+							{
+								path: "quen-mat-khau",
+								element: <ResetPasswordView />,
 							},
 						],
 					},
