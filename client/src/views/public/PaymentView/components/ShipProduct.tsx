@@ -22,13 +22,17 @@ import { ArrowRightUpIcon } from "~/components/common/Icons";
 type Props = {
   registerShip: any;
   errors: any;
+  watch: any;
 };
 const addrs =
   "Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam";
-const ShipProduct = ({ registerShip, errors }: Props) => {
+const ShipProduct = ({ registerShip, errors, watch }: Props) => {
   const [district, setDistrict] = useState<string>("");
   const [value, setValue] = React.useState("tructiep");
   const [valueaddress, setValueAddress] = React.useState(addrs);
+  const districts = watch("district");
+  console.log(districts);
+
   const addres = (value: string) => {
     setDistrict(value);
   };
@@ -37,7 +41,6 @@ const ShipProduct = ({ registerShip, errors }: Props) => {
       <Text mb={"16px"} fontSize={"16px"} lineHeight={"150%"} fontWeight={600}>
         Thông tin người nhận
       </Text>
-
       <Flex gap={"16px"}>
         <FormControl isInvalid={errors.name as any}>
           <FormLabel>Tên người nhận</FormLabel>

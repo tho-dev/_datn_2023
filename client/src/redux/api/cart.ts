@@ -58,7 +58,6 @@ const cartApi = createApi({
             }),
             providesTags: (result, error, cart_id) => [{ type: 'Cart', cart_id }],
         }),
-
         getCartByUserId: builder.mutation<any, any>({
             query: (user_id) => ({
                 url: `/cart/user/${user_id}`,

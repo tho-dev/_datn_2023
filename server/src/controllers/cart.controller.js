@@ -12,10 +12,6 @@ export const addCart = async (req, res, next) => {
     if (!cart) {
       const newCart = await Cart.create(req.body);
       newCart.products.push(product);
-      const total_money = newCart.products.reduce((sum, product) => {
-        return sum + product.price * product.quantity;
-      }, 0);
-      newCart.total_money = total_money;
       if (!user_id) {
         newCart.isGuest = true;
       }
@@ -37,11 +33,6 @@ export const addCart = async (req, res, next) => {
       if (sku !== -1) {
         cart.products[sku].quantity += product.quantity;
         await cart.save();
-        const total = cart.products.reduce((acc, item) => {
-          return acc + item.price * item.quantity;
-        }, 0);
-        cart.total_money = total;
-        await cart.save();
         return res.json({
           status: 200,
           message: "Thêm sản phẩm thành công",
@@ -49,11 +40,6 @@ export const addCart = async (req, res, next) => {
         });
       } else {
         cart.products.push(product);
-        await cart.save();
-        const total = cart.products.reduce((acc, item) => {
-          return acc + item.price;
-        }, 0);
-        cart.total_money = total;
         await cart.save();
         return res.json({
           status: 200,
