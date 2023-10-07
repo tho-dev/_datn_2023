@@ -2,7 +2,7 @@ import React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
 import { Image, Divider, Button } from "@chakra-ui/react";
-import { PlusIcon, Star } from "./../../common/Icons";
+import { PlusIcon } from "./../../common/Icons";
 
 type Props = {
   product?: any;
@@ -32,6 +32,8 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
 
     if (jsonData) {
       const data = JSON.parse(jsonData);
+
+      console.log(data);
 
       return data;
     }
