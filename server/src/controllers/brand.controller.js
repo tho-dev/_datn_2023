@@ -36,7 +36,7 @@ function nestedBrands(input, parentId) {
 // Lấy danh sách thương hiệu
 export async function getAllBrand(req, res, next) {
 	try {
-		const { _page = 1, _sort = "created_at", _order = "asc", _limit = 10, _parent = true } = req.query;
+		const { _page = 1, _sort = "created_at", _order = "asc", _limit = 10 } = req.query;
 
 		const options = {
 			page: _page,
@@ -47,70 +47,26 @@ export async function getAllBrand(req, res, next) {
 			select: ['-deleted', '-deleted_at']
 		};
 
-		const { docs, ...paginate } = await Brand.paginate({
-			parent_id: JSON.parse(_parent) ? null : { $ne: null }
-		}, options);
-		const brands = await Brand.find({});
+		const { docs, ...paginate } = await Brand.paginate({}, options);
 		const result = [];
 
 		for (const brand of docs) {
-			const { category_id, thumbnail, ...ass } = brand.toObject()
-			const children = nestedBrands(brands, brand._id);
+			const { category_id, ...ass } = brand.toObject()
 			const category = await Category.findById(brand?.category_id)
 
 			result.push({
 				...ass,
-				thumbnail: thumbnail?.url,
 				category: {
 					category_id: category?._id,
 					name: category?.name,
 					slug: category?.slug,
 					type: category?.type,
-					thumbnail: category?.thumbnail?.url,
 					description: category.description,
 				},
-				children
 			});
 		}
 
-		if (!JSON.parse(_parent)) {
-			// hàm lấy ra danh mục cha
-			const getParent = async (brand) => {
-				const { category_id, parent_id, ...ass } = brand.toObject()
-				const doc = await Brand.findById(parent_id)
-				const category = await Category.findById(category_id)
 
-				return {
-					...ass,
-					category: {
-						category_id: category?._id,
-						name: category?.name,
-						slug: category?.slug,
-						type: category?.type,
-						thumbnail: category?.thumbnail?.url,
-						description: category.description,
-					},
-					parent: {
-						parent_id: parent_id,
-						name: doc?.name,
-						slug: doc?.slug,
-						thumbnail: doc?.thumbnail?.url,
-						description: doc?.description
-					}
-				}
-			}
-
-			const repsonse = await Promise.all(docs.map((item) => getParent(item)))
-
-			return res.json({
-				status: 200,
-				message: "Thành công",
-				data: {
-					items: repsonse,
-					paginate
-				},
-			})
-		}
 
 		return res.json({
 			status: 200,
