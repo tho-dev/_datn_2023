@@ -4,6 +4,7 @@ import createError from "http-errors"
 import moment from "moment/moment"
 import { optionSchema, optionValuesSchema, productSchema } from "../validations/product.valiations"
 import { Product, Option, OptionValue, Sku, Variant } from '../models/product.model'
+import { Demand, DemandValue } from "../models/demand.model"
 
 
 // controller products
@@ -94,6 +95,28 @@ export async function getSingleProduct(req, res, next) {
 			throw createError.NotFound('Sản phẩm không tồn tại')
 		}
 
+		// lấy ra thang đánh giá nhu cầu
+		const demandValues = await DemandValue.find({
+			product_id: product?._id
+		})
+
+		const demands = await Promise.all(demandValues?.map(async (item) => {
+			const doc = await Demand.findById(item?.demand_id)
+
+			return {
+				name: doc?.name,
+				point: item?.point,
+				slug: doc?.slug
+			}
+		}))
+
+		// xắp xếp thuộc tính 
+		const customSort = (input) => {
+			const order = { "specs": 0, "color": 1, "type": 2 };
+			input.sort((a, b) => order[a.name] - order[b.name]);
+			return input
+		}
+
 		// lấy danh mục sản phẩm
 		const category = await Category.findOne({
 			_id: product?.category_id
@@ -105,9 +128,11 @@ export async function getSingleProduct(req, res, next) {
 		}).select("_id name slug")
 
 		// lấy options
-		const options = await Option.find({
+		let options = await Option.find({
 			product_id: product?._id
 		})
+
+		options = customSort(options)
 
 		// lấy ra tất skus sản phẩm
 		const skus = await Sku.find({
@@ -160,7 +185,20 @@ export async function getSingleProduct(req, res, next) {
 			const color = await getProductColor(variants);
 
 			// lấy ra giá trị biến thể của 1 sku
-			const optionValues = await Promise.all(variants?.map((item) => getOptionValue(item?.option_value_id)))
+			let optionFilter = await Promise.all(variants?.map(async (item) => {
+				const optionFind = await Option.findOne({
+					_id: item?.option_id
+				})
+
+				return {
+					...item.toJSON(),
+					name: optionFind?.name
+				}
+			}))
+
+			optionFilter = customSort(optionFilter)
+
+			const optionValues = await Promise.all(optionsFilter?.map((item) => getOptionValue(item?.option_value_id)))
 
 			return {
 				...sku,
@@ -169,14 +207,28 @@ export async function getSingleProduct(req, res, next) {
 			};
 		};
 
+		let optionsFilter = await Promise.all(variants?.map(async (item) => {
+			const optionFind = await Option.findOne({
+				_id: item?.option_id
+			})
+
+			return {
+				...item.toJSON(),
+				name: optionFind?.name
+			}
+		}))
+
+		optionsFilter = customSort(optionsFilter)
+
 		// lấy giá trị của từng thuộc tính
 		const data1 = await Promise.all(options?.map((option) => getOptionValues(option, option?._id)))
 		// lấy ra biến tất cả các biến thể
 		const data2 = await Promise.all(skus?.map((sku) => getVariants(sku.toObject(), sku?._id)))
 		// lấy ra giá trị biến thể của 1 sku
-		const data3 = await Promise.all(variants?.map((item) => getOptionValue(item?.option_value_id)))
+		const data3 = await Promise.all(optionsFilter?.map((item) => getOptionValue(item?.option_value_id)))
 		// lấy màu của sản phẩm
 		const color = await getProductColor(variants)
+
 
 		return res.json({
 			status: 200,
@@ -188,10 +240,11 @@ export async function getSingleProduct(req, res, next) {
 				brand_id: undefined,
 				brand,
 				category,
+				demands,
 				color,
+				option_value: data3,
 				variants: data1,
 				skus: data2,
-				option_value: data3,
 			}
 		})
 	} catch (error) {
