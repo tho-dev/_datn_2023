@@ -29,7 +29,7 @@ const SignInView = (props: Props) => {
 
   const onSubmit = async (data: any) => {
     const result: any = await signin(data);
-    if (result.data.status === 200) {
+    if (result.data?.status === 200) {
       toast({
         title: 'Đăng nhập thành công',
         description: result.data.message,
@@ -40,11 +40,11 @@ const SignInView = (props: Props) => {
       });
 
       dispatch(login(result.data));
-      navigate("/");
+      navigate('/');
     } else {
       toast({
         title: 'Đăng nhập thất bại',
-        description: result.data.message,
+        description: result.data?.message,
         status: 'error',
         duration: 2000,
         isClosable: true,
@@ -92,7 +92,7 @@ const SignInView = (props: Props) => {
           </Stack>
           <Link
             as={ReactRouterLink}
-            to='/quen-mat-khau'
+            to='/tao-mat-khau'
             _hover={{
               textDecoration: 'none',
             }}

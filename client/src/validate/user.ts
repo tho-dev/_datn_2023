@@ -59,6 +59,17 @@ export const loginSchema = Joi.object({
     'string.min': 'Tối thiểu 6 ký tự',
   }),
 });
+export const sendOtpPasswordSchema = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required()
+    .trim()
+    .messages({
+      'string.email': 'Email không hợp lệ',
+      'string.empty': 'Không được để trống',
+      'any.required': 'Trường này bắt buộc phải nhập',
+    }),
+});
 export const ResetPasswordSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
@@ -74,9 +85,8 @@ export const ResetPasswordSchema = Joi.object({
     'any.required': 'Trường này bắt buộc phải nhập',
     'string.min': 'Tối thiểu 6 ký tự',
   }),
-  confirm_password: Joi.any().equal(Joi.ref('password')).required().messages({
+  otp_code: Joi.string().required().trim().messages({
     'string.empty': 'Không được để trống',
     'any.required': 'Trường này bắt buộc phải nhập',
-    'any.only': 'Mật khẩu không khớp',
   }),
 });

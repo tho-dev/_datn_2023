@@ -1,20 +1,12 @@
-import { Divider, Flex, Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Image,
-  Input,
-  useToast,
-} from "@chakra-ui/react";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { CheckedIcon, CloseSmallIcon } from "~/components/common/Icons";
-import { useUpdatePassWordMutation } from "~/redux/api/user";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "~/redux/hook/hook";
-import { logout } from "~/redux/slices/globalSlice";
+import { Divider, Flex, Grid, GridItem, Stack, Text } from '@chakra-ui/layout';
+import { Button, FormControl, FormErrorMessage, FormLabel, Image, Input, useToast } from '@chakra-ui/react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { CheckedIcon, CloseSmallIcon } from '~/components/common/Icons';
+import { useUpdateMutation } from '~/redux/api/user';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '~/redux/hook/hook';
+import { logout } from '~/redux/slices/globalSlice';
 
 type Props = {
   user: any;
@@ -25,7 +17,7 @@ const ChangePassword = ({ user }: Props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [updatePassWord] = useUpdatePassWordMutation();
+  const [updatePassWord] = useUpdateMutation();
   const {
     handleSubmit,
     register,
@@ -35,12 +27,12 @@ const ChangePassword = ({ user }: Props) => {
   const onSubmit = (data: any) => {
     if (data.new_password !== data.confirm_password) {
       toast({
-        title: "Hệ thống thông báo",
-        description: "Mật khẩu mới không trùng khớp",
-        status: "error",
+        title: 'Hệ thống thông báo',
+        description: 'Mật khẩu mới không trùng khớp',
+        status: 'error',
         duration: 2000,
         isClosable: true,
-        position: "bottom-right",
+        position: 'bottom-right',
       });
       return;
     }
@@ -53,151 +45,125 @@ const ChangePassword = ({ user }: Props) => {
       .unwrap()
       .then((data) => {
         toast({
-          title: "Hệ thống thông báo",
+          title: 'Hệ thống thông báo',
           description: data.message,
-          status: "success",
+          status: 'success',
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: 'bottom-right',
         });
         dispatch(logout(false));
-        navigate("/");
+        navigate('/');
       })
       .catch((error) => {
         toast({
-          title: "Hệ thống thông báo",
+          title: 'Hệ thống thông báo',
           description: error.data.message,
-          status: "error",
+          status: 'error',
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: 'bottom-right',
         });
       });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex gap="4" mt="6" flexDir="column">
+      <Flex gap='4' mt='6' flexDir='column'>
         <Grid
           templateColumns={{
-            sm: "repeat(1, 1fr)",
-            md: "repeat(6, 1fr)",
-            xl: "repeat(6, 1fr)",
+            sm: 'repeat(1, 1fr)',
+            md: 'repeat(6, 1fr)',
+            xl: 'repeat(6, 1fr)',
           }}
           gap={4}
-          alignItems="center"
+          alignItems='center'
         >
           <GridItem colSpan={1}>
-            <FormLabel fontWeight="semibold" htmlFor="password" fontSize="sm">
+            <FormLabel fontWeight='semibold' htmlFor='password' fontSize='sm'>
               Mật khẩu
             </FormLabel>
           </GridItem>
           <GridItem colSpan={4}>
             <FormControl isInvalid={errors.password as any}>
               <Input
-                type="password"
-                id="password"
-                placeholder="Mật khẩu"
-                {...register("password", {
-                  required: "Vui lòng điền thông tin",
+                type='password'
+                id='password'
+                placeholder='Mật khẩu'
+                {...register('password', {
+                  required: 'Vui lòng điền thông tin',
                 })}
-                borderColor={errors?.password ? "border.error" : ""}
+                borderColor={errors?.password ? 'border.error' : ''}
               />
-              <FormErrorMessage>
-                {errors?.password && (errors.password.message as any)}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors?.password && (errors.password.message as any)}</FormErrorMessage>
             </FormControl>
           </GridItem>
         </Grid>
         <Grid
           templateColumns={{
-            sm: "repeat(1, 1fr)",
-            md: "repeat(6, 1fr)",
-            xl: "repeat(6, 1fr)",
+            sm: 'repeat(1, 1fr)',
+            md: 'repeat(6, 1fr)',
+            xl: 'repeat(6, 1fr)',
           }}
           gap={4}
-          alignItems="center"
+          alignItems='center'
         >
           <GridItem colSpan={1}>
-            <FormLabel
-              fontSize="sm"
-              htmlFor="new_password"
-              fontWeight="semibold"
-            >
+            <FormLabel fontSize='sm' htmlFor='new_password' fontWeight='semibold'>
               Mật khẩu mới
             </FormLabel>
           </GridItem>
           <GridItem colSpan={4}>
             <FormControl isInvalid={errors.new_password as any}>
               <Input
-                id="new_password"
-                type="password"
-                placeholder="Mật khẩu mới"
-                {...register("new_password", {
-                  required: "Vui lòng điền thông tin",
+                id='new_password'
+                type='password'
+                placeholder='Mật khẩu mới'
+                {...register('new_password', {
+                  required: 'Vui lòng điền thông tin',
                 })}
-                borderColor={errors?.new_password ? "border.error" : ""}
+                borderColor={errors?.new_password ? 'border.error' : ''}
               />
-              <FormErrorMessage>
-                {errors?.new_password && (errors.new_password.message as any)}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors?.new_password && (errors.new_password.message as any)}</FormErrorMessage>
             </FormControl>
           </GridItem>
         </Grid>
         <Grid
           templateColumns={{
-            sm: "repeat(1, 1fr)",
-            md: "repeat(6, 1fr)",
-            xl: "repeat(6, 1fr)",
+            sm: 'repeat(1, 1fr)',
+            md: 'repeat(6, 1fr)',
+            xl: 'repeat(6, 1fr)',
           }}
           gap={4}
-          alignItems="center"
+          alignItems='center'
         >
           <GridItem colSpan={1}>
-            <FormLabel
-              fontSize="sm"
-              htmlFor="confirm_password"
-              fontWeight="semibold"
-            >
+            <FormLabel fontSize='sm' htmlFor='confirm_password' fontWeight='semibold'>
               Xác nhận mật khẩu mới
             </FormLabel>
           </GridItem>
           <GridItem colSpan={4}>
             <FormControl isInvalid={errors.confirm_password as any}>
               <Input
-                type="password"
-                id="confirm_password"
-                placeholder="Xác nhận mật khẩu mới"
-                {...register("confirm_password", {
-                  required: "Vui lòng điền thông tin",
+                type='password'
+                id='confirm_password'
+                placeholder='Xác nhận mật khẩu mới'
+                {...register('confirm_password', {
+                  required: 'Vui lòng điền thông tin',
                 })}
-                borderColor={errors?.confirm_password ? "border.error" : ""}
+                borderColor={errors?.confirm_password ? 'border.error' : ''}
               />
-              <FormErrorMessage>
-                {errors?.confirm_password &&
-                  (errors.confirm_password.message as any)}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors?.confirm_password && (errors.confirm_password.message as any)}</FormErrorMessage>
             </FormControl>
           </GridItem>
         </Grid>
       </Flex>
-      <Divider my="6" />
-      <Stack direction="row" spacing={4}>
-        <Button
-          colorScheme="blue"
-          leftIcon={<CheckedIcon size={5} />}
-          variant="solid"
-          type="submit"
-          size="medium"
-        >
+      <Divider my='6' />
+      <Stack direction='row' spacing={4}>
+        <Button colorScheme='blue' leftIcon={<CheckedIcon size={5} />} variant='solid' type='submit' size='medium'>
           Lưu lại
         </Button>
-        <Button
-          colorScheme="blue"
-          leftIcon={<CloseSmallIcon size={5} />}
-          variant="outline"
-          size="medium"
-        >
+        <Button colorScheme='blue' leftIcon={<CloseSmallIcon size={5} />} variant='outline' size='medium'>
           Hủy
         </Button>
       </Stack>
