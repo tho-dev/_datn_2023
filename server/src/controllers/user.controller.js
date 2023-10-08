@@ -18,14 +18,31 @@ import pug from "pug";
 
 export async function getAllUser(req, res, next) {
   try {
-    const users = await User.find({});
-    if (!users) {
+    const {
+      _page = 1,
+      _sort = "createdAt",
+      _order = "asc",
+      _limit = 10,
+    } = req.query;
+
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        [_sort]: _order == "desc" ? -1 : 1,
+      },
+    };
+    const { docs, ...paginate } = await User.paginate({}, options);
+    if (!docs) {
       throw createError.NotFound("Không tìm thấy sản phẩm");
     }
     return res.json({
       status: 200,
       message: "Thành công",
-      data: users,
+      data: {
+        docs,
+        paginate,
+      },
     });
   } catch (error) {
     next(error);
@@ -36,7 +53,7 @@ export async function getOneUser(req, res, next) {
   try {
     const { id } = req.params.id;
     const user = await User.findById({ id });
-    if (!user) throw createError.NotFound("Không tìm thấy sản phẩm");
+    if (!user) throw createError.NotFound("Không tìm thấy user");
     return res.json({
       status: 200,
       message: "Thành công",
@@ -113,7 +130,9 @@ export async function verifyEmail(req, res, next) {
 export const verifiedEmail = async (req, res, next) => {
   try {
     res.sendFile(path.join(__dirname, "./../views/verified.html"));
-  } catch (error) { }
+  } catch (error) {
+    next(error);
+  }
 };
 
 export async function updateUser(req, res, next) {
@@ -252,7 +271,6 @@ export const resetPassWord = async (req, res, next) => {
   }
 };
 
-
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -322,6 +340,7 @@ export async function logout(req, res, next) {
     await userToken.deleteOne();
 
     return res.json({
+      status: 200,
       message: "logged out successfully",
     });
   } catch (error) {

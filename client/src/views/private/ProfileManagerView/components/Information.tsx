@@ -53,7 +53,7 @@ const Information = () => {
         <Select
           pl={"25px"}
           color={"#797a7b"}
-          fontSize={16}
+          fontSize={14}
           fontWeight={600}
           w={"xs"}
           borderRadius={"md"}
@@ -155,7 +155,7 @@ const Information = () => {
                 {...register("email", {
                   required: "Không được để trống !!!",
                 })}
-                disabled
+                
               />
               <FormErrorMessage>
                 {(errors.email as any) && errors?.email?.message}

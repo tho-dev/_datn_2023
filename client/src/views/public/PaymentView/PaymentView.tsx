@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout";
-import { Radio, RadioGroup, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { Radio, RadioGroup, Text, useDisclosure } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
 import PaySummary from "./components/PaySummary";
@@ -12,20 +12,30 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { atStoreSchema, shipSchema } from "~/validate/payment";
 import axios from "axios";
 import { data } from "~/views/private/DashboardView/components/TopCategory";
+import { useNavigate } from "react-router";
+import PopupCheckOtp from "./components/PopupCheckOtp";
+
 type Props = {};
 
 const Payment = (props: Props) => {
 	const [value, setValue] = React.useState("1");
+	const [open, setOpen] = useState(false);
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
+		watch,
 		formState: { errors },
+		control,
+		setValue: updateValue,
 	} = useForm({
 		resolver: joiResolver(value === "1" ? atStoreSchema : shipSchema),
 	});
 	const submitForm = (data: any) => {
-		console.log("vvalue", data);
+		setOpen(!open);
+		console.log("value_", data);
 	};
+
 	return (
 		<HelmetProvider>
 			<Helmet>
@@ -56,7 +66,16 @@ const Payment = (props: Props) => {
 						</Box>
 						<Box>
 							{value === "1" ? <Atstore register={register} errors={errors} /> : ""}
-							{value === "2" ? <ShipProduct registerShip={register} errors={errors} /> : ""}
+							{value === "2" ? (
+								<ShipProduct
+									registerShip={register}
+									errors={errors}
+									watch={watch}
+									updateValue={updateValue}
+								/>
+							) : (
+								""
+							)}
 						</Box>
 					</Box>
 					<Box w={{ md: "40%", base: "full" }} h={"full"}>
@@ -67,6 +86,7 @@ const Payment = (props: Props) => {
 							<ProductPay />
 						</Box>
 					</Box>
+					<PopupCheckOtp open={open} />;
 				</Box>
 			</form>
 		</HelmetProvider>

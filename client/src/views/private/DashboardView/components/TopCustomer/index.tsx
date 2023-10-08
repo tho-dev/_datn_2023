@@ -9,7 +9,7 @@ const TopCustomer = ({ title }: Props) => {
   return (
     <Box width='33%' border='1px solid #f1f4f9' rounded='md'>
       <Flex justifyContent='space-between' borderBottom='1px solid #f1f4f9' p='4'>
-        <Text fontSize='xl' fontWeight='bold'>
+        <Text fontSize='18' fontWeight='bold'>
           {title}
         </Text>
         <Flex alignItems='center'>
@@ -24,7 +24,7 @@ const TopCustomer = ({ title }: Props) => {
             <Image width='35' height='35' rounded='md' src='https://themesbrand.com/toner/html/assets/images/users/avatar-2.jpg' alt='Dan Abramov' />
             <Box>
               <Text fontWeight='semibold'>United States</Text>
-              <Text fontSize='sm'>02 Jan, 2023</Text>
+              <Text fontSize='16'>02 Jan, 2023</Text>
             </Box>
           </Flex>
           <Box
@@ -41,7 +41,7 @@ const TopCustomer = ({ title }: Props) => {
               color: '#fff',
             }}
           >
-            <MapIcon size={5} />
+            <MapIcon size={7} />
           </Box>
         </Flex>
         <Flex p='4' justifyContent='space-between' borderBottom='2px dashed #ef476f' alignItems='center'>
@@ -49,7 +49,7 @@ const TopCustomer = ({ title }: Props) => {
             <Image width='35' height='35' rounded='md' src='https://themesbrand.com/toner/html/assets/images/users/avatar-2.jpg' alt='Dan Abramov' />
             <Box>
               <Text fontWeight='semibold'>United States</Text>
-              <Text fontSize='sm'>02 Jan, 2023</Text>
+              <Text fontSize='16'>02 Jan, 2023</Text>
             </Box>
           </Flex>
           <Box
@@ -66,7 +66,7 @@ const TopCustomer = ({ title }: Props) => {
               color: '#fff',
             }}
           >
-            <MapIcon size={5} />
+            <MapIcon size={7} />
           </Box>
         </Flex>
         <Flex p='4' justifyContent='space-between' borderBottom='2px dashed #ef476f' alignItems='center'>
@@ -74,7 +74,7 @@ const TopCustomer = ({ title }: Props) => {
             <Image width='35' height='35' rounded='md' src='https://themesbrand.com/toner/html/assets/images/users/avatar-2.jpg' alt='Dan Abramov' />
             <Box>
               <Text fontWeight='semibold'>United States</Text>
-              <Text fontSize='sm'>02 Jan, 2023</Text>
+              <Text fontSize='16'>02 Jan, 2023</Text>
             </Box>
           </Flex>
           <Box
@@ -91,7 +91,7 @@ const TopCustomer = ({ title }: Props) => {
               color: '#fff',
             }}
           >
-            <MapIcon size={5} />
+            <MapIcon size={7} />
           </Box>
         </Flex>
       </Box>
