@@ -82,9 +82,9 @@ const ResetPasswordView = (props: Props) => {
               <Input id='email' value={isEmail} type='email' placeholder='Email' size='lager' {...register('email')} />
               <FormErrorMessage>{(errors.email as any) && (errors?.email?.message as any)}</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={errors.password as any}>
-              <Input id='password' type='password' placeholder='Nhập mật khẩu mới' size='lager' {...register('password')} />
-              <FormErrorMessage>{(errors.password as any) && (errors?.password?.message as any)}</FormErrorMessage>
+            <FormControl isInvalid={errors.new_password as any}>
+              <Input id='new_password' type='password' placeholder='Nhập mật khẩu mới' size='lager' {...register('new_password')} />
+              <FormErrorMessage>{(errors.new_password as any) && (errors?.new_password?.message as any)}</FormErrorMessage>
             </FormControl>
             <FormControl>
               <Input id='otp_code' value={isOtpCode} type='text' placeholder='Nhập Mã OTP' size='lager' {...register('otp_code')} />

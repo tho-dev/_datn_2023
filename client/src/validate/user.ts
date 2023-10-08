@@ -80,7 +80,7 @@ export const ResetPasswordSchema = Joi.object({
       'string.empty': 'Không được để trống',
       'any.required': 'Trường này bắt buộc phải nhập',
     }),
-  password: Joi.string().min(6).required().trim().messages({
+  new_password: Joi.string().min(6).required().trim().messages({
     'string.empty': 'Không được để trống',
     'any.required': 'Trường này bắt buộc phải nhập',
     'string.min': 'Tối thiểu 6 ký tự',

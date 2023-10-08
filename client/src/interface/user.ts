@@ -13,7 +13,7 @@ export interface IEmail {
 }
 export interface IResetPassword {
   email: string;
-  password: string;
+  new_password: string;
   otp_cote: number;
 }
 export interface IReset {
