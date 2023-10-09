@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.delete("/", removeFile);
 
-router.post("/multiple", upload.fields([{ name: "assets", maxCount: 10 }, { name: "brand", maxCount: 1 }, { name: "category", maxCount: 1 }, { name: "thumbnail", maxCount: 1 }]), uploadMultipleFile);
+router.post("/", upload.fields([{ name: "assets", maxCount: 1 }, { name: "brand", maxCount: 1 }, { name: "category", maxCount: 1 }, { name: "thumbnail", maxCount: 1 }]), uploadMultipleFile);
 
 router.put("/:filename", uploadFile);
 
