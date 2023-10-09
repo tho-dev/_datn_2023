@@ -5,6 +5,7 @@ import globalSlice from "./slices/globalSlice";
 
 //api
 import authApi from "../redux/api/user";
+import brandApi from "../redux/api/brand";
 import categoryApi from "../redux/api/category";
 
 const persistConfig = {
@@ -18,12 +19,13 @@ const rootReducer = combineReducers({
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [authApi.middleware, categoryApi.middleware];
+const middleware = [authApi.middleware, categoryApi.middleware, brandApi.middleware];
 const store = configureStore({
 	reducer: {
 		persistedReducer,
 		[authApi.reducerPath]: authApi.reducer,
 		[categoryApi.reducerPath]: categoryApi.reducer,
+		[brandApi.reducerPath]: brandApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
 });
