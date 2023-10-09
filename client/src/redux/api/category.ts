@@ -11,6 +11,7 @@ type TQuery = {
 };
 
 const categoryApi = createApi({
+	reducerPath: "category",
 	baseQuery: fetchBaseQuery({ baseUrl: process.env.VITE_API_URL + "/category" }),
 	tagTypes: ["CategoryTag"],
 	endpoints: (build) => ({

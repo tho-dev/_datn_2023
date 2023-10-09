@@ -154,6 +154,20 @@ export async function filterBrandAndCategory(req, res, next) {
 			const maxPrice = products[products?.length - 1]?.price
 			const optionFilterPrice = generateDynamicPriceOptions(minPrice, maxPrice)
 
+			// bộ lọc khuyến mãi
+			const promotionFilter = {
+				name: "khuyen-mai",
+				type: "switch",
+				label: "Có khuyến mại",
+				options: [
+					{
+						"label": "Có",
+						"value": "co"
+					}
+				]
+			}
+
+
 
 			data = {
 				detail: {
@@ -163,7 +177,10 @@ export async function filterBrandAndCategory(req, res, next) {
 				},
 				type: "category",
 				children,
-				filters: optionFilterPrice,
+				filters: [
+					optionFilterPrice,
+					promotionFilter
+				],
 				seo_data: {}
 			}
 		}
@@ -192,12 +209,24 @@ export async function filterBrandAndCategory(req, res, next) {
 			const minPrice = products[0]?.price
 			const maxPrice = products[products?.length - 1]?.price
 			let optionFilterPrice = generateDynamicPriceOptions(minPrice, maxPrice)
-
 			optionFilterPrice = {
 				name: 'gia',
 				type: 'checkbox',
 				label: 'Khoảng giá',
 				options: optionFilterPrice
+			}
+
+			// bộ lọc khuyến mãi
+			const promotionFilter = {
+				name: "khuyen-mai",
+				type: "switch",
+				label: "Có khuyến mại",
+				options: [
+					{
+						"label": "Có",
+						"value": "co"
+					}
+				]
 			}
 
 			data = {
@@ -222,7 +251,10 @@ export async function filterBrandAndCategory(req, res, next) {
 					name: `${categoryFind?.name} ${ass?.name} ${item?.name}`,
 					shared_url: item?.shared_url
 				})),
-				filters: optionFilterPrice,
+				filters: [
+					optionFilterPrice,
+					promotionFilter
+				],
 				seo_data: {}
 			}
 		}
