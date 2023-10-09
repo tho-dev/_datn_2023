@@ -19,12 +19,12 @@ const storage = new CloudinaryStorage({
       width = 1000;
       height = 1000;
     } else if (file.fieldname == "brand") {
-      width = 68;
-      height = 68;
+      width = 120;
+      height = 120;
       folder = "brands";
     } else if (file.fieldname == "category") {
-      width = 96;
-      height = 96;
+      width = 120;
+      height = 120;
       folder = "categories";
     } else if (file.fieldname == "thumbnail") {
       width = 460;

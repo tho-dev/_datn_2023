@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IUser, IEmail, IResetPassword } from '~/interface/user';
+import { IUser } from '~/interface/user';
 import { RootState } from '../store';
 
 const authApi = createApi({
@@ -40,23 +40,16 @@ const authApi = createApi({
         },
       }),
     }),
-    sendOtpResetPassword: builder.mutation<{ status: number; message: string }, IEmail>({
+    updatePassWord: builder.mutation<any, any>({
       query: (credentials) => ({
-        url: 'user/sent-otp',
-        method: 'POST',
-        body: credentials,
-      }),
-    }),
-    resetPassWord: builder.mutation<IResetPassword, Partial<IResetPassword>>({
-      query: (credentials) => ({
-        url: `/user/resetPassword`,
-        method: 'POST',
+        url: `/user/updatePassword/${credentials.id}`,
+        method: 'PUT',
         body: credentials,
       }),
     }),
   }),
 });
-export const { useSigninMutation, useSignupMutation, useUpdateMutation, useSendOtpResetPasswordMutation, useResetPassWordMutation } = authApi;
+export const { useSigninMutation, useSignupMutation, useUpdateMutation, useUpdatePassWordMutation } = authApi;
 
 export const authReducer = authApi.reducer;
 

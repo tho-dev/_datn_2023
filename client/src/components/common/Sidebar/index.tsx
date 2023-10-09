@@ -34,7 +34,7 @@ const MENU = [
 		icon: InfoIcon,
 	},
 	{
-		title: "Khuyến mãi",
+		title: "Quản lý khuyến mãi",
 		to: "/admin/khuyen-mai",
 		icon: WalletIcon,
 		children: [
@@ -43,7 +43,7 @@ const MENU = [
 		],
 	},
 	{
-		title: "Đơn hàng",
+		title: "Quản lý đơn hàng",
 		to: "/admin/don-hang",
 		icon: OrderIcon,
 		children: [
@@ -52,28 +52,27 @@ const MENU = [
 		],
 	},
 	{
-		title: "Sản phẩm",
+		title: "Quản lý sản phẩm",
 		to: "/admin/san-pham",
 		icon: AddIcon,
 		children: [
-			{ title: "Tất cả sản phẩm", to: "/admin/san-pham" },
-			{ title: "Danh mục cha", to: "/admin/danh-muc-san-pham" },
-			{ title: "Danh mục con", to: "/admin/danh-muc-con" },
+			{ title: "Sản phẩm", to: "/admin/san-pham" },
+			{ title: "Danh mục", to: "/admin/danh-muc" },
 			{ title: "Thương hiệu", to: "/admin/thuong-hieu" },
 			{ title: "Nhu cầu", to: "/admin/nhu-cau" },
 		],
 	},
 	{
-		title: "Bài viết",
+		title: "Quản lý bài viết",
 		to: "/admin/bai-viet",
 		icon: NewsFeedIcon,
 		children: [
-			{ title: "Tất cả bài viết", to: "/admin/bai-viet" },
+			{ title: "Bài viết", to: "/admin/bai-viet" },
 			{ title: "Danh mục", to: "/admin/danh-muc-bai-viet" },
 		],
 	},
 	{
-		title: "Tài khoản",
+		title: "Quản lý tài khoản",
 		to: "/admin/user",
 		icon: ProfileIcon,
 		children: [
@@ -111,6 +110,8 @@ const Sidebar = (props: Props) => {
 				xl: "260px",
 				"2xl": "260px",
 			}}
+			maxH="100vh"
+			overflowY="auto"
 			transition="all 0.25s ease"
 			flexDir="column"
 			justifyContent="space-between"
@@ -138,8 +139,8 @@ const Sidebar = (props: Props) => {
 					justifyContent="center"
 					borderBottomWidth="1px"
 					borderColor="bg.admin1"
-				// backgroundColor="rgb(11 203 224)"
-				// bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
+					// backgroundColor="rgb(11 203 224)"
+					// bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
 				>
 					<Heading
 						as="h3"

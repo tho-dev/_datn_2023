@@ -19,7 +19,7 @@ const NavItem = ({ item }: Props) => {
 		<>
 			<CheckComponent
 				as={item?.children?.length > 0 ? "div" : ReactRouterLink}
-				to={item?.children?.length > 0 ? "" : item?.to}
+				to={item?.children?.length > 0 ? "/" : item?.to}
 				py="4"
 				px="4"
 				rounded="md"
@@ -59,7 +59,7 @@ const NavItem = ({ item }: Props) => {
 						/>
 					</Flex>
 					<Text
-						fontSize="sm"
+						fontSize="13px"
 						lineHeight="0.5"
 						fontWeight="medium"
 						color={"#809FB8"}
@@ -119,7 +119,7 @@ const NavItem = ({ item }: Props) => {
 							display="flex"
 							alignItems="center"
 							justifyContent="space-between"
-							fontSize="sm"
+							fontSize="13px"
 							fontWeight="medium"
 							color="text.admin2"
 							_hover={{

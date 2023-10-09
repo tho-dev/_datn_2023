@@ -44,7 +44,6 @@ import DemandView from '~/views/private/DemandView';
 import { ProfileManagerView } from '~/views/private/ProfileManagerView';
 import { HistoryOrderView } from '~/views/public/HistoryOrderView';
 import ResetPasswordView from '~/views/public/ResetPasswordView/ResetPasswordView';
-import CreatePasswordView from '~/views/public/ResetPasswordView/CreatePasswordView';
 
 const routes: RouteObject[] = [
   {
@@ -120,10 +119,6 @@ const routes: RouteObject[] = [
               {
                 path: 'quen-mat-khau',
                 element: <ResetPasswordView />,
-              },
-              {
-                path: 'tao-mat-khau',
-                element: <CreatePasswordView />,
               },
             ],
           },

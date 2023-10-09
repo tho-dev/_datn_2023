@@ -2,6 +2,9 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
 import { Image, Divider, Button } from "@chakra-ui/react";
 import { PlusIcon } from "../common/Icons";
+import { addViewedItem } from "~/redux/slices/globalSlice";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
 
 type Props = {
   product?: any;
@@ -10,6 +13,17 @@ type Props = {
 };
 
 const CardThinkPro = ({ product, mode, showCompare }: Props) => {
+  const dispatch = useAppDispatch();
+  
+  const viewedItems = useAppSelector((state: RootState) => state.persistedReducer.global.viewedItems)
+
+  const handleViewProduct = () => {
+    const productData = {
+      productName: "LG Gram 14 2022",
+      price: "19.999.000",
+    };
+    dispatch(addViewedItem(productData));
+  };
   return (
     <Link
       to={`laptop/lg-gram`}
@@ -23,6 +37,8 @@ const CardThinkPro = ({ product, mode, showCompare }: Props) => {
       _hover={{
         textDecoration: "none",
       }}
+      onClick={handleViewProduct}
+
     >
       <Box pb="100%" position="relative">
         <Box top="0" position="absolute">

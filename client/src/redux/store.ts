@@ -2,10 +2,10 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import globalSlice from './slices/globalSlice';
-import authSlice from './slices/authSlice';
 
 //api
 import authApi from '../redux/api/user';
+import categoryApi from '../redux/api/category';
 
 const persistConfig = {
   key: 'root',
@@ -15,15 +15,15 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   global: globalSlice,
-  auth: authSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [authApi.middleware];
+const middleware = [authApi.middleware, categoryApi.middleware];
 const store = configureStore({
   reducer: {
     persistedReducer,
     [authApi.reducerPath]: authApi.reducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
 });

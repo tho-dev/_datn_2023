@@ -8,7 +8,8 @@ import upload from "./upload-image.router";
 import cart from "./cart.router";
 import post from "./post.router";
 import order from "./order.router";
-import insert from "./insert.router"
+import insert from "./insert.router";
+import collection from "./collection.router";
 
 const routes = (app) => {
   app.use("/api/example", example);
@@ -21,7 +22,8 @@ const routes = (app) => {
   app.use("/api/cart", cart);
   app.use("/api/post", post);
   app.use("/api/order", order);
-  app.use("/api/insert", insert)
+  app.use("/api/insert", insert);
+  app.use("/api/collection", collection);
 };
 
 export default routes;

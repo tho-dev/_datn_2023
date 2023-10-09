@@ -3,7 +3,9 @@ import { defineStyle, defineStyleConfig } from "@chakra-ui/react";
 const primary = defineStyle({
 	color: "text.black",
 	fontWeight: "normal",
-	border: "1px solid #ced4da",
+	borderWidth: "1px",
+	borderStyle: "solid",
+	borderColor: "border.primary",
 	px: "4",
 	pt: "3",
 	fontSize: "sm",

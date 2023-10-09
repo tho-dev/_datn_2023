@@ -30,5 +30,5 @@ const globalSlice = createSlice({
   },
 });
 
-export const { login, logout } = globalSlice.actions;
+export const { login, logout, addViewedItem } = globalSlice.actions;
 export default globalSlice.reducer;
