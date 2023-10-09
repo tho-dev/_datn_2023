@@ -25,7 +25,7 @@ const store = configureStore({
 		persistedReducer,
 		[authApi.reducerPath]: authApi.reducer,
 		[categoryApi.reducerPath]: categoryApi.reducer,
-		[brandApi.reducerPath]: brandApi.reducer
+		[brandApi.reducerPath]: brandApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
 });
