@@ -20,6 +20,7 @@ const rootReducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const middleware = [authApi.middleware, categoryApi.middleware, brandApi.middleware];
+
 const store = configureStore({
 	reducer: {
 		persistedReducer,
