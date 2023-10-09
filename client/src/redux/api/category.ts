@@ -10,7 +10,7 @@ type TQuery = {
 	_type?: string;
 };
 
-const brandApi = createApi({
+const categoryApi = createApi({
 	baseQuery: fetchBaseQuery({ baseUrl: process.env.VITE_API_URL + "/category" }),
 	tagTypes: ["CategoryTag"],
 	endpoints: (build) => ({
@@ -55,6 +55,6 @@ export const {
 	useCreateCategoryMutation,
 	useUpdateCategoryMutation,
 	useDeleteCategoryMutation,
-} = brandApi;
+} = categoryApi;
 
-export default brandApi;
+export default categoryApi;
