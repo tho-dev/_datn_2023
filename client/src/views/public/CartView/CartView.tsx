@@ -84,7 +84,7 @@ const CartView = (props: Props) => {
         <title>ThinkPro | Giỏ hàng của bạn</title>
       </Helmet>
       <Heading pt={"4"} fontSize={"20px"}>
-        Giỏ hàng ({data?.data?.products?.length})
+        Giỏ hàng ({data?.data?.products?.length || 0})
       </Heading>
       <Box
         display="flex"

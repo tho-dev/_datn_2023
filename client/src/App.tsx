@@ -15,7 +15,6 @@ function App() {
   );
   useEffect(() => {
     if (!cart_id) {
-      console.log("abc");
       const data = {
         cart_id: uuidv4(),
         product: {},

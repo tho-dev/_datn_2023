@@ -153,16 +153,8 @@ const routes: RouteObject[] = [
         element: <CategoryManagerView />,
       },
       {
-        path: "danh-muc-bai-viet",
-        element: <PostCategoryManagement />,
-      },
-      {
         path: "bai-viet",
         element: <PostManagementView />,
-      },
-      {
-        path: "danh-muc-con",
-        element: <SubCategoryView />,
       },
       {
         path: "don-hang",

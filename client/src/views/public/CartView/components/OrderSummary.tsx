@@ -33,7 +33,7 @@ const OrderSummary = ({ handlePayment, data }: Props) => {
           Giảm giá:
         </Box>
         <Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight={"600"}>
-          {caculate_discount(data.products).toLocaleString()}
+          {caculate_discount(data.products).toLocaleString() || 0}
         </Box>
       </Flex>
       <Flex justifyContent={"space-between"} py={"4"}>
