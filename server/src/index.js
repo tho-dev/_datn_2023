@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import initRouter from "./router/index.router.js";
 import createError from "http-errors";
 import { connect } from "./config/database.config.js";
+import { connectRedis } from "./config/redis.config.js";
 
 dotenv.config();
 
@@ -17,7 +18,8 @@ const io = new Server(server);
 
 // connect db
 connect();
-
+//conect redis
+// connectRedis();
 // using middlewares
 app.use(
   cors({

@@ -13,17 +13,19 @@ import {
   serviceFree,
   getOrderByPhoneNumber,
   getTokenPrintBills,
+  updatePaymentStatus,
 } from "../controllers/order.controller";
 
 const router = express.Router();
 
 router.post("/send-otp", sendOtpCode);
+router.post("/payment-status", updatePaymentStatus);
 router.post("/verify-otp", verifyOtpCode);
 router.post("/calculateFee", serviceFree);
 router.post("/orderByPhoneNumber", getOrderByPhoneNumber);
 router.post("/getTokenPrintBill", getTokenPrintBills);
 
-router.post("/:id", createOrder);
+router.post("/", createOrder);
 router.get("/", getAll);
 router.get("/:id", getOne);
 router.put("/cancel/:id", cancelOrder);

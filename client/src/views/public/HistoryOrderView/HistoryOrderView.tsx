@@ -10,6 +10,7 @@ const HistoryOrderView = (props: Props) => {
   const handleCheckOrdered = () => {
     setIsOrder(false);
   };
+
   return (
     <Box m="30px 0">
       {isOrder ? (
