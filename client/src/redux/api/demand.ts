@@ -1,8 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IDemand } from "~/interface/demand";
 
- 
-
 const demandApi = createApi({
 	reducerPath: "demand",
 	baseQuery: fetchBaseQuery({
@@ -11,7 +9,7 @@ const demandApi = createApi({
 	tagTypes: ["DemandTag"],
 	endpoints: (build) => ({
 		getAllDemand: build.query({
-			query: () => `/`,
+			query: () => "",
 			providesTags: ["DemandTag"],
 		}),
 		getSingleDemand: build.query({
