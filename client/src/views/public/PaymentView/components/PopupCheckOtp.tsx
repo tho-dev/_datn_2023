@@ -27,7 +27,7 @@ import {
 import { useNavigate } from "react-router";
 import Time from "./Time";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { setCheckOtp } from "~/redux/slices/globalSlice";
+import { resetOtp, setCheckOtp } from "~/redux/slices/globalSlice";
 type Props = {
   open: any;
   dataOrder: any;
@@ -35,12 +35,14 @@ type Props = {
 
 const PopupCheckOtp = ({ open, dataOrder }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [value, setValue] = React.useState("");
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
   const [paymentMomo] = usePaymentMomoMutation();
   const { time, isCheckOtp } = useAppSelector(
     (state) => state.persistedReducer.global
   );
+  const [loading, setLoading] = useState(false);
   const [sendOtp] = useSendOtpMutation();
   const dispatch = useAppDispatch();
 
@@ -51,10 +53,10 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
   }, [open]);
 
   const navigate = useNavigate();
-  const [value, setValue] = React.useState("");
 
   const submitForm = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     if (value.length < 6) return;
     const { payment_method, ...rest } = dataOrder;
 
@@ -72,6 +74,7 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
         position: "bottom-right",
       });
     }
+
     const createdOrder: any = await create(dataOrder);
     if (createdOrder.data.status !== 200) {
       return toast({
@@ -83,7 +86,7 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
         position: "bottom-right",
       });
     }
-
+    setLoading(false);
     if (payment_method == "online") {
       const payment_momo: any = await paymentMomo({
         bill: dataOrder.total_amount,
@@ -94,19 +97,17 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
         window.location.assign(`${payment_momo.data.data.url}`);
       }
     } else {
+      dispatch(resetOtp(false));
+      onClose();
       navigate("/thanks");
     }
-    onClose();
   };
 
   useEffect(() => {
     if (time == 0 && !isCheckOtp && open) {
-      console.log("vào đây");
       dispatch(setCheckOtp(60));
       sendOtp({ phone_number: dataOrder.phone_number })
         .then((data) => {
-          console.log("vao day nữa");
-
           toast({
             title: "Thanh Toán",
             description: "Gửi mã OTP thành công",
@@ -153,8 +154,12 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
         });
       });
   };
+  const handleClose = () => {
+    if (loading) return;
+    onClose();
+  };
   return (
-    <DialogThinkPro isOpen={isOpen} onClose={onClose} isCentered>
+    <DialogThinkPro isOpen={isOpen} onClose={handleClose} isCentered>
       <form onSubmit={submitForm}>
         <Flex my={"5"} w={"full"} justifyContent="center" alignItems="center">
           <Flex
@@ -195,6 +200,7 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
                 color={`${value.length < 6 ? "gray.500" : "white"}`}
                 mt={"16px"}
                 type="submit"
+                isLoading={loading}
               >
                 Xác nhận
               </Button>

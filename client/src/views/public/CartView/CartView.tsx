@@ -13,23 +13,17 @@ import {
   useIncrementMutation,
   useRemoveMutation,
 } from "~/redux/api/cart";
+import { Skeleton, SkeletonCircle, SkeletonText, FLex } from "@chakra-ui/react";
 
 type Props = {};
 
 const CartView = (props: Props) => {
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
-  const { data, isLoading, isError } = useGetCartQuery(cart_id);
-  const [decrement] = useDecrementMutation();
-  const [increment] = useIncrementMutation();
-  const [remove] = useRemoveMutation();
+  const { data, isLoading, isError, isFetching } = useGetCartQuery(cart_id);
+  const [decrement, { isLoading: loadingDecrement }] = useDecrementMutation();
+  const [increment, { isLoading: loadingIncrement }] = useIncrementMutation();
+  const [remove, { isLoading: loadingRemove }] = useRemoveMutation();
   const navigate = useNavigate();
-  if (isLoading) {
-    return <Box>Loading...</Box>;
-  }
-  if (isError) {
-    return <Box>Error...</Box>;
-  }
-
   const handlePayment = () => {
     if (data?.data?.products?.length <= 0) return;
     navigate("/thanh-toan");
@@ -78,6 +72,13 @@ const CartView = (props: Props) => {
         console.log(err);
       });
   };
+
+  if (isError) {
+    return <Box>Error...</Box>;
+  }
+  if (isLoading) {
+    return <Box>isLoading...</Box>;
+  }
   return (
     <HelmetProvider>
       <Helmet>
@@ -86,41 +87,96 @@ const CartView = (props: Props) => {
       <Heading pt={"4"} fontSize={"20px"}>
         Giỏ hàng ({data?.data?.products?.length || 0})
       </Heading>
-      <Box
-        display="flex"
-        flexDirection={{ base: "column", md: "row" }}
-        my={"5"}
-        w={"full"}
-      >
+      {isFetching ? (
         <Box
-          backgroundColor={"white"}
-          borderRadius={"md"}
-          py={"5"}
-          mr={"5"}
-          w={{ md: "80%", base: "full" }}
+          display="flex"
+          flexDirection={{ base: "column", md: "row" }}
+          my={"5"}
+          w={"full"}
         >
-          {data?.data?.products?.length === 0 ? (
-            <NotData />
-          ) : (
-            <ItemCart
-              data={data?.data}
-              handleDercement={handleDercement}
-              handleIncement={handleIncement}
-              handleRemove={handleRemove}
-            />
-          )}
+          <Box
+            backgroundColor={"white"}
+            borderRadius={"md"}
+            py={"10"}
+            mr={"5"}
+            w={{ md: "80%", base: "full" }}
+          >
+            <Flex gap={2} px={"5"} alignItems="center">
+              <Skeleton w="76px" h="76px" borderRadius={8} />
+
+              <Flex w="100%" flexDirection="column" gap={2}>
+                <Flex justifyContent="space-between">
+                  <Skeleton height="20px" w="30%" />
+                  <Skeleton height="20px" w="25%" />
+                </Flex>
+                <Flex justifyContent="space-between">
+                  <Skeleton height="20px" w="50%" />
+                  <Skeleton height="20px" w="30%" />
+                </Flex>
+                <Flex justifyContent="space-between">
+                  <Skeleton height="40px" w="40%" />
+                  <Skeleton height="40px" w="20%" />
+                </Flex>
+              </Flex>
+            </Flex>
+          </Box>
+          <Flex
+            backgroundColor={"white"}
+            borderRadius={"md"}
+            py={"5"}
+            px={"5"}
+            w={{ md: "40%", base: "full" }}
+            h={"full"}
+            flexDirection="column"
+            gap={4}
+          >
+            <Skeleton height="20px" width="50%" />
+            <Skeleton height="20px" />
+
+            <Skeleton height="20px" />
+            <Skeleton height="40px" />
+          </Flex>
         </Box>
+      ) : (
         <Box
-          backgroundColor={"white"}
-          borderRadius={"md"}
-          py={"5"}
-          px={"5"}
-          w={{ md: "40%", base: "full" }}
-          h={"full"}
+          display="flex"
+          flexDirection={{ base: "column", md: "row" }}
+          my={"5"}
+          w={"full"}
         >
-          <OrderSummary handlePayment={handlePayment} data={data.data} />
+          <Box
+            backgroundColor={"white"}
+            borderRadius={"md"}
+            py={"5"}
+            mr={"5"}
+            w={{ md: "80%", base: "full" }}
+          >
+            {data?.data?.products?.length === 0 ? (
+              <NotData />
+            ) : (
+              <ItemCart
+                data={data?.data}
+                handleDercement={handleDercement}
+                handleIncement={handleIncement}
+                handleRemove={handleRemove}
+                loadingDecrement={loadingDecrement}
+                loadingIncrement={loadingIncrement}
+                loadingRemove={loadingRemove}
+              />
+            )}
+          </Box>
+          <Box
+            backgroundColor={"white"}
+            borderRadius={"md"}
+            py={"5"}
+            px={"5"}
+            w={{ md: "40%", base: "full" }}
+            h={"full"}
+          >
+            <OrderSummary handlePayment={handlePayment} data={data.data} />
+          </Box>
         </Box>
-      </Box>
+      )}
     </HelmetProvider>
   );
 };

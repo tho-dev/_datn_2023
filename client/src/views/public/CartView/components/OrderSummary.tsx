@@ -15,7 +15,6 @@ const OrderSummary = ({ handlePayment, data }: Props) => {
     }, 0);
     return discount;
   };
-  console.log(data);
 
   return (
     <Box>

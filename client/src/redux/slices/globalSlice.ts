@@ -44,9 +44,13 @@ const globalSlice = createSlice({
     setCheckOtp: (state, action: PayloadAction<any>) => {
       state.time = action.payload;
       state.isCheckOtp = true;
+    },
+    resetOtp: (state, action: PayloadAction<any>) => {
+      state.time = 0;
+      state.isCheckOtp = action.payload;
     }
   },
 });
 
-export const { login, logout, addViewedItem, setTime, setOtp, setCheckOtp } = globalSlice.actions;
+export const { login, logout, addViewedItem, setTime, setOtp, setCheckOtp, resetOtp } = globalSlice.actions;
 export default globalSlice.reducer;

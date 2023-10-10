@@ -34,6 +34,12 @@ const TheHeader = (props: Props) => {
   if (isLoading) {
     return <Box>Loading...</Box>;
   }
+  if (isFetching) {
+    return <Box>isFetching...</Box>;
+  }
+  if (isError) {
+    return <Box>isError...</Box>;
+  }
   return (
     <Flex h="20" alignItems="center">
       {/* Logo */}

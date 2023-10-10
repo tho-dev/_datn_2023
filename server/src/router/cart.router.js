@@ -8,10 +8,12 @@ import {
   deleteOneProduct,
   getCartByUserId,
   createCart,
+  deleteAllCart,
 } from "../controllers/cart.controller";
 
 const router = express.Router();
 
+router.delete("/deleteAllCart", deleteAllCart);
 router.post("/create", createCart);
 router.post("/", addCart);
 router.get("/:cart_id", getCart);

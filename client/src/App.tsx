@@ -10,9 +10,6 @@ function App() {
   const [createCart] = useCreateCartMutation();
   const dispatch = useAppDispatch();
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
-  const isLogin = useAppSelector(
-    (state) => state.persistedReducer.global.isLogin
-  );
   useEffect(() => {
     if (!cart_id) {
       const data = {
@@ -28,7 +25,7 @@ function App() {
           console.log(err);
         });
     }
-  }, [cart_id]);
+  }, []);
   const router = createBrowserRouter(routes);
   return <RouterProvider router={router} />;
 }

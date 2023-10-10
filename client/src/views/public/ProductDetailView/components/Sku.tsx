@@ -18,7 +18,10 @@ type Props = {
   handleDercement: () => void;
   handleIncement: () => void;
   handleAddToCart: () => void;
+  handleByNow: () => void;
   quantity: number;
+  isLoading: any;
+  loading: any;
 };
 
 const Sku = ({
@@ -26,38 +29,40 @@ const Sku = ({
   handleAddToCart,
   handleDercement,
   handleIncement,
+  handleByNow,
   quantity,
+  isLoading,
+  loading,
 }: Props) => {
+  const new_option_value = product.option_value.map((item: any) => item.label);
   const toast = useToast();
   const navigate = useNavigate();
+
   const new_variants = sortJSON(product.variants);
-  const new_option_value = product.option_value
-    .map((item: any) => item.label)
-    .sort()
-    .reverse();
 
   const handeChangeSku = (value: any, index: any) => {
-    const option_valued = new_option_value.sort().reverse();
-    const new_option_valued = JSON.parse(JSON.stringify(option_valued));
+    const new_option_valued = JSON.parse(JSON.stringify(new_option_value));
     new_option_valued.splice(index, 1, value);
     const new_data = product.skus.filter((item: any) => {
       const new_data2 = item.option_value.map((it: any) => {
         return it.label;
       });
-      const new_data2ed = new_data2.sort().reverse();
-      return JSON.stringify(new_data2ed) === JSON.stringify(new_option_valued);
+      return JSON.stringify(new_data2) === JSON.stringify(new_option_valued);
     });
+
     if (new_data.length == 0) {
-      return toast({
+      toast({
         title: "Phiên bản không khả dụng",
         description: "Bạn có thể chọn lại phiên bản khác",
         status: "warning",
         duration: 2000,
         isClosable: true,
       });
+    } else {
+      navigate(`/${new_data[0].shared_url}`);
     }
-    navigate(`/${new_data[0].shared_url}`);
   };
+
   return (
     <>
       <Box bgColor={"white"} rounded={"6px"} p="6" mt="4">
@@ -171,6 +176,9 @@ const Sku = ({
                 fontWeight={600}
                 color={"#0065EE"}
                 bg={"#F5F6FC"}
+                onClick={handleAddToCart}
+                _hover={{ bg: "bg.darkGray" }}
+                isLoading={isLoading}
               >
                 Thêm vào giỏ
               </Button>
@@ -179,7 +187,9 @@ const Sku = ({
               <Button
                 fontSize={"sm"}
                 fontWeight={600}
-                onClick={handleAddToCart}
+                _hover={{ bg: "red" }}
+                onClick={handleByNow}
+                isLoading={loading}
               >
                 Mua Ngay
               </Button>

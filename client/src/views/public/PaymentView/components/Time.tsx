@@ -26,9 +26,9 @@ const Time = ({ handleSendOtp }: Props) => {
     }
     const timers = setTimeout(() => {
       setTimer(timer - 1);
+      dispatch(setTime(timer));
     }, 1000);
     return () => {
-      dispatch(setTime(timer));
       clearTimeout(timers);
     };
   }, [timer]);
