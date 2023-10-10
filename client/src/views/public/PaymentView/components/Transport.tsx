@@ -1,132 +1,156 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-	useDisclosure,
-	Text,
-	Flex,
-	Box,
-	Heading,
-	Input,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Text,
+  Flex,
+  Box,
+  Heading,
+  Input,
+  Button,
 } from "@chakra-ui/react";
 import { NavArrowRightIcon } from "~/components/common/Icons";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import axios from "axios";
 
 type Props = {
-	addres: any;
+  isOpen: any;
+  onOpen: any;
+  onClose: any;
+  handleChooseAdress: (data: any) => void;
 };
 
-const Transport = ({ addres }: Props) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [district, setDistrict] = useState<any>({});
-	const [conscious, setConscious] = useState([]);
-	const [value, setValue] = useState<string>("");
-	useEffect(() => {
-		axios.get("https://provinces.open-api.vn/api/").then(({ data }) => setConscious(data));
-		///huyện
-		// axios.get("https://provinces.open-api.vn/api/p/1?depth=2").then(({ data }) => setcountry(data));
-		///xã
-		// axios.get("https://provinces.open-api.vn/api/d/1?depth=2").then(({ data }) => setcountry(data));
-	}, []);
+const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
+  const [selectedProvince, setSelectedProvince] = useState({
+    label: undefined,
+    value: undefined,
+  } as any);
+  const [selectedDistrict, setSelectedDistrict] = useState({
+    label: undefined,
+    value: undefined,
+  } as any);
+  const [selectedWard, setSelectedWard] = useState({
+    label: undefined,
+    value: undefined,
+  } as any);
 
-	const districtConsious = async (item: any) => {
-		if (
-			item.division_type == "huyện" ||
-			item.division_type == "thị xã" ||
-			item.ivision_type == "thành phố" ||
-			item.division_type == "quận"
-		) {
-			return await axios.get("https://provinces.open-api.vn/api/" + `d/${item.code}?depth=2`).then(({ data }) => {
-				setConscious(data.wards);
-				setValue(item.name + "," + value);
-			});
-		}
-		if (item.division_type == "xã" || item.division_type == "phường") {
-			setValue(item.name + "," + value);
-			onClose();
-		}
+  const [district, setDistrict] = useState<any>([]);
+  const [provider, setProvider] = useState<any>([]);
+  const [conscious, setConscious] = useState([]);
 
-		return await axios.get("https://provinces.open-api.vn/api/" + `p/${item.code}?depth=2`).then(({ data }) => {
-			setConscious(data.districts);
-			setValue(item.name + "," + value);
-		});
-	};
+  useEffect(() => {
+    handleChooseAdress([
+      selectedWard.value,
+      selectedDistrict.value,
+      selectedProvince.value,
+    ]);
+  }, [selectedWard, selectedDistrict, selectedProvince]);
 
-	useEffect(() => {
-		addres(value);
-	}, [value]);
+  useEffect(() => {
+    if (district.length == 0 || provider.length == 0) {
+      axios.get("https://provinces.open-api.vn/api/").then(({ data }) => {
+        setConscious(data);
+        setSelectedProvince({ ...selectedProvince, label: "Tỉnh | Thành Phố" });
+      });
+    }
+  }, []);
 
-	return (
-		<Box>
-			<Flex>
-				<Flex
-					onClick={onOpen}
-					as={"button"}
-					fontSize={"14px"}
-					alignItems={"center"}
-					textAlign={"center"}
-					color={"text.blue"}
-					border={"none"}
-					pl={"8px"}
-					py={"2px"}
-					placeholder="Khu vực"
-					bg={"#F6F9FC"}
-					borderRadius={"6px"}
-					w={"full"}
-					justifyContent={"space-between"}
-				>
-					Chọn địa chỉ giao hàng
-					<Flex
-						w="9"
-						h="9"
-						right="4"
-						top={"calc(50% - 24px)"}
-						translateY="-50%"
-						zIndex="5"
-						rounded="full"
-						cursor="pointer"
-						alignItems="center"
-						justifyContent="center"
-						className="btn-next"
-					>
-						<NavArrowRightIcon size={4} strokeWidth={2} color="text.black" />
-					</Flex>
-				</Flex>
+  const districtConsious = async (item: any) => {
+    return await axios
+      .get(`https://provinces.open-api.vn/api/p/${item.code}?depth=3`)
+      .then(({ data }) => {
+        setDistrict(data.districts);
+        setSelectedProvince({ ...selectedProvince, value: data.name });
+        setSelectedDistrict({ ...selectedDistrict, label: "Quận | Huyện" });
+        setConscious([]);
+      });
+  };
+  const getDistrict = (item: any) => {
+    setDistrict([]);
+    setSelectedDistrict({ ...selectedDistrict, value: item.name });
+    setSelectedWard({ ...selectedWard, label: "Phường | Xã" });
+    setProvider(item?.wards);
+  };
+  const getProvider = (item: any) => {
+    setSelectedWard({ ...selectedWard, value: item.name });
+    setTimeout(() => {
+      onClose();
+    }, 1000);
+  };
 
-				{/* Modal */}
-				<DialogThinkPro
-					isOpen={isOpen}
-					onClose={onClose}
-					isCentered
-					title={<Heading fontSize="xl">Chọn Tỉnh / Thành phố{district ? district?.name : ""}</Heading>}
-				>
-					<Box>
-						<Flex>
-							<Text>Tỉnh/Thành phố</Text>|<Text>Quận/Huyện</Text>|<Text>Phường/Xã</Text>
-						</Flex>
-					</Box>
-					<Input placeholder={"Tìm kiếm ....."} />
-					{conscious?.map((item: any) => (
-						<Box
-							borderBottom={"1px soid #E6E8EA"}
-							key={item.code}
-							py={"16px"}
-							as={"button"}
-							display={"block"}
-							onClick={() => districtConsious(item)}
-						>
-							{item.name}
-						</Box>
-					))}
-				</DialogThinkPro>
-			</Flex>
-		</Box>
-	);
+  return (
+    <Box>
+      <Flex>
+        {/* Modal */}
+        <DialogThinkPro
+          isOpen={isOpen}
+          onClose={onClose}
+          isCentered
+          title={<Heading fontSize="xl">Chọn Tỉnh / Thành phố</Heading>}
+        >
+          <Box>
+            <Flex justifyContent={"flex-start"} gap={2}>
+              <Button bg="none" color="black" padding={0}>
+                {selectedProvince.value ?? selectedProvince.label}
+              </Button>
+              <Button bg="none" color="black" padding={0}>
+                {selectedDistrict.value ?? selectedDistrict.label}
+              </Button>
+              <Button bg="none" color="black" padding={0}>
+                {selectedWard.value ?? selectedWard.label}
+              </Button>
+            </Flex>
+          </Box>
+          <Input placeholder={"Tìm kiếm ....."} />
+
+          {conscious.length > 0 &&
+            conscious?.map((item: any) => (
+              <Box
+                borderBottom={"1px soid #E6E8EA"}
+                key={item.code}
+                py={"16px"}
+                as={"button"}
+                display={"block"}
+                onClick={() => districtConsious(item)}
+              >
+                {item.name}
+              </Box>
+            ))}
+          {district.length > 0 &&
+            district?.map((item: any) => (
+              <Box
+                borderBottom={"1px soid #E6E8EA"}
+                key={item.code}
+                py={"16px"}
+                as={"button"}
+                display={"block"}
+                onClick={() => getDistrict(item)}
+              >
+                {item.name}
+              </Box>
+            ))}
+          {provider.length > 0 &&
+            provider?.map((item: any) => (
+              <Box
+                borderBottom={"1px soid #E6E8EA"}
+                key={item.code}
+                py={"16px"}
+                as={"button"}
+                display={"block"}
+                onClick={() => getProvider(item)}
+              >
+                {item.name}
+              </Box>
+            ))}
+        </DialogThinkPro>
+      </Flex>
+    </Box>
+  );
 };
 
 export default Transport;

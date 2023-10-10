@@ -5,13 +5,17 @@ export interface IGlobalState {
   user: any;
   accessToken: string;
   viewedItems: any[];
+  time: number,
+  isCheckOtp: boolean;
 }
 
 const initialState: IGlobalState = {
   isLogin: false,
   user: {} as any,
   accessToken: "",
-  viewedItems: [], 
+  viewedItems: [],
+  time: 0,
+  isCheckOtp: false,
 };
 
 const globalSlice = createSlice({
@@ -31,8 +35,18 @@ const globalSlice = createSlice({
     addViewedItem: (state, action: PayloadAction<any>) => {
       state.viewedItems = [action.payload, ...state.viewedItems];
     },
+    setTime: (state, action: PayloadAction<any>) => {
+      state.time = action.payload
+    },
+    setOtp: (state, action: PayloadAction<any>) => {
+      state.isCheckOtp = action.payload;
+    },
+    setCheckOtp: (state, action: PayloadAction<any>) => {
+      state.time = action.payload;
+      state.isCheckOtp = true;
+    }
   },
 });
 
-export const { login, logout, addViewedItem } = globalSlice.actions;
+export const { login, logout, addViewedItem, setTime, setOtp, setCheckOtp } = globalSlice.actions;
 export default globalSlice.reducer;

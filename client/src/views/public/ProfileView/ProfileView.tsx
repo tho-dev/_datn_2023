@@ -20,6 +20,8 @@ import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { logout } from "~/redux/slices/globalSlice";
 import { useNavigate } from "react-router-dom";
 import { InforOrder } from "./components/InforOrder";
+import { removeCart } from "~/redux/slices/cartSlice";
+import { useLogoutUserMutation } from "~/redux/api/user";
 
 type Props = {};
 
@@ -28,10 +30,14 @@ const ProfileView = (props: Props) => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [logoutUser] = useLogoutUserMutation();
 
   const handleLogOut = () => {
-    dispatch(logout(false));
-    navigate("/");
+    logoutUser(user).then(() => {
+      dispatch(logout(false));
+      dispatch(removeCart(""));
+      navigate("/");
+    });
   };
 
   return (

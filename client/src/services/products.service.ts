@@ -11,7 +11,7 @@ export const createProduct = async (data: any): Promise<AxiosResponse> => {
 	return response?.data;
 };
 
-export const getDetailProduct = async (slug: string) => {
-	const response = await http.getTypeRequest("/product/" + slug);
-	return response?.data;
-};
+export const getDetailProduct = async (slug: string): Promise<AxiosResponse> => {
+	const response = await http.getTypeRequest(`/product/${slug}`);
+	return response?.data
+}
