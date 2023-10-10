@@ -13,10 +13,12 @@ export const getLocation = async (location) => {
         },
       }
     );
-    const provinces_id = provinces.data.data.find(
-      (item) => item.ProvinceName == location.split(",")[3].trim()
-    );
 
+    const provinces_id = provinces.data.data.filter((item) => {
+      return item.NameExtension.every(
+        (item) => item === location.split(",")[2].trim()
+      );
+    });
     const districts = await Axios.post(
       "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district",
       {
@@ -29,7 +31,7 @@ export const getLocation = async (location) => {
       }
     );
     const district = districts.data.data.find(
-      (item) => item.DistrictName == location.split(",")[2].trim()
+      (item) => item.DistrictName == location.split(",")[1].trim()
     );
     district_id = district.DistrictID;
     const wards = await Axios.post(
@@ -44,7 +46,7 @@ export const getLocation = async (location) => {
       }
     );
     const ward = wards.data.data.find(
-      (item) => item.WardName == location.split(",")[1].trim()
+      (item) => item.WardName == location.split(",")[0].trim()
     );
     ward_code = ward.WardCode;
     return {

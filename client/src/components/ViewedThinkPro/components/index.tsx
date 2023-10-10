@@ -1,21 +1,20 @@
-
 import React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
 import { Image, Divider, Button } from "@chakra-ui/react";
 import { PlusIcon } from "./../../common/Icons";
 
-
 type Props = {
-	product?: any;
-	mode?: string;
-	showCompare?: boolean;
+  product?: any;
+  mode?: string;
+  showCompare?: boolean;
 };
 
 const ViewedList = ({ product, mode, showCompare }: Props) => {
   const saveToLocalStorage = () => {
     const dataToSave = {
-      image: "https://images.thinkgroup.vn/unsafe/460x460/https://media-api-beta.thinkpro.vn/media/core/products/2022/8/3/LG-Gram-14-2022-ThinkPro-10.jpg",
+      image:
+        "https://images.thinkgroup.vn/unsafe/460x460/https://media-api-beta.thinkpro.vn/media/core/products/2022/8/3/LG-Gram-14-2022-ThinkPro-10.jpg",
       productName: "LG Gram 14 2022",
       price: 19999000,
       sale: "-31%",
@@ -43,7 +42,6 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
 
   const retrievedData = retrieveFromLocalStorage();
 
-
   return (
     <Link
       to={`laptop/lg-gram`}
@@ -58,7 +56,6 @@ const ViewedList = ({ product, mode, showCompare }: Props) => {
         textDecoration: "none",
       }}
       onClick={saveToLocalStorage}
-
     >
       <Box pb="100%" position="relative">
         <Box top="0" position="absolute">

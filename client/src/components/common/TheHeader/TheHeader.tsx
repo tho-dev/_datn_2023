@@ -1,4 +1,4 @@
-import { Flex, Link } from "@chakra-ui/layout";
+import { Box, Flex, Link } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import logo from "~/assets/images/logo-thinkpro.svg";
@@ -14,6 +14,7 @@ import {
 } from "../Icons";
 import Cart from "./components/Cart";
 import { useAppSelector } from "~/redux/hook/hook";
+import { useGetCartQuery } from "~/redux/api/cart";
 
 type Props = {};
 
@@ -22,7 +23,17 @@ const TheHeader = (props: Props) => {
   const { user, isLogin } = useAppSelector(
     (state) => state.persistedReducer.global
   );
+  const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
 
+  const {
+    data: data,
+    isFetching,
+    isLoading,
+    isError,
+  } = useGetCartQuery(cart_id);
+  if (isLoading) {
+    return <Box>Loading...</Box>;
+  }
   return (
     <Flex h="20" alignItems="center">
       {/* Logo */}
@@ -142,7 +153,7 @@ const TheHeader = (props: Props) => {
               display: isOpen ? "flex" : "none",
             }}
           >
-            <Cart />
+            <Cart data={data?.data} />
           </SlideFade>
           <Link
             to="/gio-hang"
@@ -155,23 +166,25 @@ const TheHeader = (props: Props) => {
             backgroundColor="bg.gray"
             rounded="full"
             position="relative"
-            _after={{
-              content: `"1"`,
-              position: "absolute",
-              right: 0,
-              bottom: 6,
-              w: "18px",
-              h: "18px",
-              display: "flex",
-              fontSize: "12px",
-              fontWeight: 600,
-              justifyContent: "center",
-              alignItems: "center",
-              color: "text.white",
-              rounded: "full",
-              bgColor: "bg.red",
-            }}
           >
+            <Box
+              position="absolute"
+              right={0}
+              bottom={6}
+              width="18px"
+              height="18px"
+              display="flex"
+              fontSize="12px"
+              fontWeight="bold"
+              justifyContent="center"
+              alignItems="center"
+              color="white"
+              rounded="full"
+              bgColor="red"
+            >
+              {data?.data.products.length || 0}
+            </Box>
+
             <CartIcon size={4} strokeWidth={2} color="text.black" />
           </Link>
         </Flex>
