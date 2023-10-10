@@ -51,7 +51,7 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Cập nhật danh mục thành công",
+				description: "Cập nhật danh mục bài viết thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -113,8 +113,8 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 				<SelectThinkPro
 					control={control}
 					name="parent_id"
-					title="Danh mục cha"
-					placeholder="-- Danh mục cha --"
+					title="Danh mục bài viết"
+					placeholder="-- Danh mục bài viết cha --"
 					data={parents}
 				/>
 				<FormControl isInvalid={errors.description as any}>

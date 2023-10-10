@@ -37,7 +37,7 @@ const ActionCreateCategory = ({ onClose, parents }: Props) => {
 	const onSubmit = async (data: any) => {
 		data = {
 			...data,
-			type: "category_brand",
+			type: "category_post",
 			parent_id: data?.parent_id?.value,
 		};
 
@@ -95,7 +95,7 @@ const ActionCreateCategory = ({ onClose, parents }: Props) => {
 						fontSize="15"
 						fontWeight="semibold"
 					>
-						Danh mục
+						Danh mục bài viết
 					</FormLabel>
 					<Input
 						id="name"
@@ -110,7 +110,7 @@ const ActionCreateCategory = ({ onClose, parents }: Props) => {
 				<SelectThinkPro
 					control={control}
 					name="parent_id"
-					title="Danh mục cha"
+					title="Danh mục bài viết"
 					placeholder="-- Danh mục cha --"
 					data={parents}
 				/>
