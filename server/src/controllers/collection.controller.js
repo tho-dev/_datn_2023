@@ -1,6 +1,7 @@
 import Category from "../models/category.model"
 import Brand from "../models/brand.model"
 import { Product } from "../models/product.model"
+import { Demand } from "../models/demand.model"
 import createError from "http-errors"
 
 // Hàm đệ quy để xây dựng danh sách thương hiệu con (sub_brands)
@@ -167,6 +168,34 @@ export async function filterBrandAndCategory(req, res, next) {
 				]
 			}
 
+			// bộ lọc thương hiệu
+			const brandFilter = {
+				name: "thuong-hieu",
+				type: "checkbox",
+				label: "Thương hiệu",
+				options: doc?.map((item) => ({
+					label: item?.name,
+					value: item?.slug
+				}))
+			}
+
+			// bộ lọc nhu cầu chỉ danh cho laptop
+			let demandFilter = undefined
+			if (category?.slug == 'laptop') {
+				const demands = await Demand.find({})
+
+				demandFilter = {
+					name: "nhu-cau",
+					type: "checkbox",
+					label: "Nhu cầu",
+					options: demands?.map((item) => ({
+						label: item?.name,
+						value: item?.slug
+					}))
+				}
+			}
+
+
 
 
 			data = {
@@ -178,8 +207,10 @@ export async function filterBrandAndCategory(req, res, next) {
 				type: "category",
 				children,
 				filters: [
+					brandFilter,
 					optionFilterPrice,
-					promotionFilter
+					demandFilter,
+					promotionFilter,
 				],
 				seo_data: {}
 			}
@@ -229,6 +260,17 @@ export async function filterBrandAndCategory(req, res, next) {
 				]
 			}
 
+			// bộ lọc thương hiệu
+			const brandFilter = {
+				name: "thuong-hieu",
+				type: "checkbox",
+				label: "Thương hiệu con",
+				options: children?.map((item) => ({
+					label: item?.name,
+					value: item?.slug
+				}))
+			}
+
 			data = {
 				detail: {
 					name: `${categoryFind?.name} ${ass?.name}`,
@@ -252,6 +294,7 @@ export async function filterBrandAndCategory(req, res, next) {
 					shared_url: item?.shared_url
 				})),
 				filters: [
+					brandFilter,
 					optionFilterPrice,
 					promotionFilter
 				],
