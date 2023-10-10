@@ -151,7 +151,7 @@ export const deleteProduct = async (req, res, next) => {
 export const deleteCart = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const cart = await Cart.findByIdAndDelete(id).select(
+    const cart = await Cart.findOneAndDelete({ cart_id: id }).select(
       "-deleted_at -deleted -created_at -updated_at -createdAt -__v"
     );
     if (!cart) {
@@ -160,7 +160,6 @@ export const deleteCart = async (req, res, next) => {
     return res.json({
       status: 200,
       message: "Xoá giỏ hàng thành công",
-      data: cart,
     });
   } catch (error) {
     next(error);
@@ -197,12 +196,10 @@ export const deleteOneProduct = async (req, res, next) => {
 export const addOneProduct = async (req, res, next) => {
   try {
     const { cart_id } = req.body;
-    console.log(req.body);
     const sku_id = req.params.sku_id;
     const cart = await Cart.findOne({ cart_id }).select(
       "-deleted_at -deleted -created_at -updated_at -createdAt -__v"
     );
-    console.log(cart);
     if (!cart) {
       throw createError.NotFound("Giỏ hàng đã được xoá");
     }
@@ -239,6 +236,17 @@ export const getCartByUserId = async (req, res, next) => {
       status: 200,
       message: "Lấy giỏ hàng thành công",
       data: cart,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const deleteAllCart = async (req, res, next) => {
+  try {
+    await Cart.deleteMany();
+    return res.json({
+      status: 200,
+      message: "xoá giỏ hàng thành công",
     });
   } catch (error) {
     next(error);

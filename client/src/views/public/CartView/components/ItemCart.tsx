@@ -10,6 +10,9 @@ type Props = {
   handleIncement: (product: any) => void;
   handleDercement: (product: any) => void;
   handleRemove: (product: any) => void;
+  loadingDecrement: any;
+  loadingIncrement: any;
+  loadingRemove: any;
 };
 
 const ItemCart = ({
@@ -17,6 +20,9 @@ const ItemCart = ({
   handleDercement,
   handleIncement,
   handleRemove,
+  loadingDecrement,
+  loadingIncrement,
+  loadingRemove,
 }: Props) => {
   return (
     <>
@@ -66,6 +72,7 @@ const ItemCart = ({
                     borderRight={"none"}
                     color={"black"}
                     onClick={() => handleIncement(product)}
+                    isLoading={loadingIncrement}
                   >
                     <MinusIcon size={5} />
                   </Button>
@@ -88,6 +95,7 @@ const ItemCart = ({
                     borderLeft={"none"}
                     h="full"
                     onClick={() => handleDercement(product)}
+                    isLoading={loadingDecrement}
                   >
                     <PlusIcon size={5} />
                   </Button>
@@ -113,6 +121,7 @@ const ItemCart = ({
                 fontSize="12px"
                 rightIcon={<CloseIcon size={4} />}
                 _hover={{ background: "#f1f1f1" }}
+                isLoading={loadingRemove}
               >
                 Xóa
               </Button>

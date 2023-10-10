@@ -93,6 +93,7 @@ const Gallery = ({ assets, name }: Props) => {
                 <SwiperSlide
                   style={{
                     height: "100px",
+                    overflow: "hidden",
                   }}
                   key={index}
                 >

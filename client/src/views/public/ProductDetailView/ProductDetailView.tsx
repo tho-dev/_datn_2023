@@ -21,26 +21,29 @@ import Sku from "./components/Sku";
 import Subcate from "./components/Subcate";
 import { CommentView } from "~/components/Comment";
 import ViewedProduct from "~/components/ViewedThinkPro/ViewedProduct";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useGetBySlugQuery } from "~/redux/api/product";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { v4 as uuidv4 } from "uuid";
-import { useAddToCartMutation } from "~/redux/api/cart";
+import { useAddToCartMutation, useByNowMutation } from "~/redux/api/cart";
 import { addCart } from "~/redux/slices/cartSlice";
+import { useToast } from "@chakra-ui/react";
 
 type Props = {};
 
 const ProductDetailView = (props: Props) => {
   const { slug } = useParams();
   const [quantity, setQuantity] = useState<number>(1);
-
+  const toast = useToast();
   const isLogin = useAppSelector(
     (state) => state.persistedReducer.global.isLogin
   );
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.persistedReducer.global.user);
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const dispatch = useAppDispatch();
-  const [addToCart] = useAddToCartMutation();
+  const [addToCart, { isLoading }] = useAddToCartMutation();
+  const [byNow, { isLoading: loading }] = useByNowMutation();
   const {
     data: product,
     isError,
@@ -48,7 +51,7 @@ const ProductDetailView = (props: Props) => {
   } = useGetBySlugQuery(slug as string);
 
   if (isFetching) {
-    return <Box>Loading...</Box>;
+    return <Box>isFetching...</Box>;
   }
 
   if (isError) {
@@ -68,23 +71,108 @@ const ProductDetailView = (props: Props) => {
     if (isLogin) {
       addToCart({ ...data, user_id: user._id })
         .unwrap()
-        .then(({ data }) => {
-          dispatch(addCart(data.cart_id));
+        .then(() => {
+          toast({
+            title: "Hệ thống thông báo",
+            description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
         })
         .catch((err) => {
           console.log(err);
+          toast({
+            title: "Hệ thống thông báo",
+            description: `Lỗi khi thêm sản phẩm`,
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
         });
       return;
     }
     addToCart(data)
       .unwrap()
-      .then(({ data }) => {
-        dispatch(addCart(data.cart_id));
+      .then(() => {
+        toast({
+          title: "Hệ thống thông báo",
+          description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
       })
       .catch((err) => {
         console.log(err);
+        toast({
+          title: "Hệ thống thông báo",
+          description: `Lỗi khi thêm sản phẩm`,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       });
   };
+  const handleByNow = async () => {
+    const data = {
+      cart_id: cart_id || uuidv4(),
+      product: {
+        sku_id: product.data._id,
+        quantity,
+        price: product.data.price,
+        price_before_discount: product.data.price_before_discount,
+        price_discount_percent: product.data.price_discount_percent,
+      },
+    };
+    if (isLogin) {
+      byNow({ ...data, user_id: user._id })
+        .unwrap()
+        .then(() => {
+          toast({
+            title: "Hệ thống thông báo",
+            description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            title: "Hệ thống thông báo",
+            description: `Lỗi khi thêm sản phẩm`,
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
+        });
+    } else {
+      byNow(data)
+        .unwrap()
+        .then(() => {
+          toast({
+            title: "Hệ thống thông báo",
+            description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            title: "Hệ thống thông báo",
+            description: `Lỗi khi thêm sản phẩm`,
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
+        });
+    }
+    navigate("/gio-hang");
+  };
+
   const handleDercement = () => {
     if (quantity == 1) return;
     setQuantity(quantity - 1);
@@ -123,9 +211,6 @@ const ProductDetailView = (props: Props) => {
             <Divider my="5" />
             {/* Chi Nhánh */}
             <Branch />
-            <Divider my="5" />
-            {/* Vận chuyển */}
-            <Transport />
             <Divider my="5" />
             {/* Bảo Hành */}
             <Warranty />
@@ -167,7 +252,10 @@ const ProductDetailView = (props: Props) => {
             handleDercement={handleDercement}
             handleIncement={handleIncement}
             handleAddToCart={handleAddToCart}
+            handleByNow={handleByNow}
             quantity={quantity}
+            isLoading={isLoading}
+            loading={loading}
           />
           {/* Danh mục con */}
           <Subcate />

@@ -85,7 +85,7 @@ const Cart = ({ data }: Props) => {
                         textOverflow: "ellipsis",
                       }}
                     >
-                      {product?.slug}
+                      {product?.name}
                     </Text>
                   </Link>
 
@@ -112,7 +112,7 @@ const Cart = ({ data }: Props) => {
                     </Text>
                   </Flex>
                 </Flex>
-                <Box
+                {/* <Box
                   position="absolute"
                   right="0"
                   display="inline-flex"
@@ -126,7 +126,7 @@ const Cart = ({ data }: Props) => {
                   }}
                 >
                   <CloseSmallIcon size={4} />
-                </Box>
+                </Box> */}
               </Flex>
             );
           })}
