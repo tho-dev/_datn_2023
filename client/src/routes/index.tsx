@@ -42,6 +42,7 @@ import DemandView from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
 import { HistoryOrderView } from "~/views/public/HistoryOrderView";
 import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordView";
+import { protectedRouter } from "./protected";
 
 const routes: RouteObject[] = [
 	{
@@ -128,7 +129,9 @@ const routes: RouteObject[] = [
 			},
 		],
 	},
-	{
+];
+if (protectedRouter() == true) {
+	routes.push({
 		path: "/admin",
 		element: <AdminLayout />,
 		children: [
@@ -199,7 +202,11 @@ const routes: RouteObject[] = [
 				],
 			},
 		],
-	},
-];
-
+	});
+} else {
+	routes.push({
+		path: "/admin",
+		element: <NotFoundView />,
+	});
+}
 export default routes;
