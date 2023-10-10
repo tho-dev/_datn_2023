@@ -21,10 +21,8 @@ TextFlow.useKey(process.env.SMS_API);
 
 export const createOrder = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const { shipping_address, shipping_method } = req.body;
-    const cart = await Cart.findById(id);
-
+    const { shipping_address, shipping_method, cart_id, address } = req.body;
+    const cart = await Cart.findOne({ cart_id });
     // Kiểm tra xem sản phẩm còn hàng không
     const check_sku_stock = async (product) => {
       try {
@@ -35,8 +33,12 @@ export const createOrder = async (req, res, next) => {
             message: `Sản phẩm ${sku.name} vượt quá số lượng hàng còn trong kho`,
           };
         }
-        sku.stock -= product.quantity;
-        await sku.save();
+        const new_stock = sku.stock - product.quantity;
+        await Sku.findByIdAndUpdate(product.sku_id, {
+          $set: {
+            stock: new_stock,
+          },
+        });
         return {
           status: true,
           message: "thành công",
@@ -58,6 +60,11 @@ export const createOrder = async (req, res, next) => {
     const new_order = await Order.create({
       ...req.body,
       total_amount: cart.total_money,
+      status_detail: [
+        {
+          status_order: "processing",
+        },
+      ],
     });
     const add_product_item = async (product) => {
       const new_item = await Order_Detail.create({
@@ -96,13 +103,16 @@ export const createOrder = async (req, res, next) => {
           image: data_sku.image,
           quantity: item.quantity,
           total_money: item.total_money,
-          shared_url: data_sku.shared_url,
         };
       })
     );
     const order_created = new_order.toObject();
     if (shipping_method === "shipped") {
-      const shipping_infor = await Shipping.create({ shipping_address });
+      const detail_address = address + "," + shipping_address;
+
+      const shipping_infor = await Shipping.create({
+        shipping_address: detail_address,
+      });
       new_order.shipping_info = shipping_infor._id;
       await new_order.save();
       // lấy mã vùng
@@ -148,7 +158,8 @@ export const createOrder = async (req, res, next) => {
           {
             $set: {
               order_code: orderCode.data.data.order_code,
-              estimatedDeliveryDate: orderCode.data.data.expected_delivery_time,
+              estimated_delivery_date:
+                orderCode.data.data.expected_delivery_time,
             },
           }
         );
@@ -612,7 +623,7 @@ export const sendOtpCode = async (req, res, next) => {
     const { phone_number } = req.body;
     const verificationOptions = {
       service_name: "PolyTech",
-      seconds: 600,
+      seconds: 60,
     };
     const result = await TextFlow.sendVerificationSMS(
       phone_number,
@@ -733,6 +744,27 @@ export const getTokenPrintBills = async (req, res, next) => {
       status: token_bill.code,
       message: token_bill.message,
       data: token_bill.data?.token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatePaymentStatus = async (req, res, next) => {
+  try {
+    const { _id, orderInfo } = req.body;
+    const order = await Order.findByIdAndUpdate(_id, {
+      $set: {
+        payment_status: "paid",
+        payment_method: orderInfo,
+      },
+    });
+    if (!order) {
+      throw createError.NotFound("Không tìm thấy đơn hàng");
+    }
+    return res.json({
+      status: 200,
+      message: "Thành công",
     });
   } catch (error) {
     next(error);

@@ -42,15 +42,6 @@ const PaySummary = ({ data, transport_fee }: Props) => {
           {(data.total_money + transport_fee).toLocaleString()}
         </Box>
       </Flex>
-      <Button
-        w={"full"}
-        fontSize={"16px"}
-        fontWeight={"600 "}
-        type="submit"
-        _hover={{ bgColor: "red" }}
-      >
-        Mua Ngay
-      </Button>
     </Box>
   );
 };

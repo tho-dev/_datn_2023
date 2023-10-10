@@ -1,5 +1,11 @@
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout";
-import { Radio, RadioGroup, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Button,
+  Radio,
+  RadioGroup,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
@@ -8,7 +14,7 @@ import ProductPay from "./components/ProductPay";
 import { useForm } from "react-hook-form";
 import axios, { Axios } from "axios";
 import { useNavigate } from "react-router";
-import { useAppSelector } from "~/redux/hook/hook";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { useGetCartQuery } from "~/redux/api/cart";
 import PopupCheckOtp from "./components/PopupCheckOtp";
 import {
@@ -24,19 +30,25 @@ import {
 import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Transport from "./components/Transport";
-
+import { chuyenDoiSoDienThoai } from "~/utils/fc";
 type Props = {};
 
 const Payment = (props: Props) => {
+  const [dataOrder, setDataOrder] = useState({} as any);
   const [methodOrder, setMethodOrder] = React.useState("at_store");
   const [methodPayment, setMethodPayment] = React.useState("tructiep");
   const [address, setAddress] = React.useState("");
   const [transportFee, setTransportFee] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+  const { user, isLogin } = useAppSelector(
+    (state) => state.persistedReducer.global
+  );
   const { data, isLoading, isError } = useGetCartQuery(cart_id);
   const [open, setOpen] = useState(false);
 
+  const shopAdress =
+    "13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam";
   const {
     register,
     handleSubmit,
@@ -44,10 +56,23 @@ const Payment = (props: Props) => {
     formState: { errors },
   } = useForm();
 
-  const submitForm = (data: any) => {
+  const submitForm = (order_infor: any) => {
+    // kiểm tra số điện thoại
+    const compare_phone_number = chuyenDoiSoDienThoai(order_infor.phone_number);
+    if (!compare_phone_number) {
+      alert("Số điện thoại không hợp lệ");
+      return;
+    }
+    const new_data = {
+      ...order_infor,
+      cart_id: cart_id,
+      total_amount: data.data.total_money + transportFee,
+      phone_number: compare_phone_number,
+    };
+    setDataOrder(new_data);
     setOpen(!open);
-    console.log("value_", data);
   };
+
   const handleChooseAdress = (data: any) => {
     const checkData = data.every((select: any) => select !== undefined);
     if (checkData) {
@@ -114,6 +139,7 @@ const Payment = (props: Props) => {
                   }
                 }}
                 value={methodOrder}
+                isDisabled={data.data.products.length === 0}
               >
                 <Stack direction="row" gap={"24px"}>
                   <Radio
@@ -140,7 +166,7 @@ const Payment = (props: Props) => {
               </Text>
               {/* tên người nhận và số điện thoại */}
               <Flex gap={"16px"}>
-                <FormControl isInvalid={errors.name as any}>
+                <FormControl isInvalid={errors.customer_name as any}>
                   <FormLabel>Tên người nhận</FormLabel>
                   <Input
                     type="text"
@@ -153,6 +179,10 @@ const Payment = (props: Props) => {
                     {...register("customer_name", {
                       required: "Trường bắt buộc nhập",
                     })}
+                    defaultValue={
+                      (isLogin && user.first_name + " " + user.last_name) || ""
+                    }
+                    isDisabled={data.data.products.length === 0}
                   />
                   <FormErrorMessage>
                     {" "}
@@ -160,10 +190,10 @@ const Payment = (props: Props) => {
                       (errors?.customer_name?.message as any)}
                   </FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={errors.phone as any}>
+                <FormControl isInvalid={errors.phone_number as any}>
                   <FormLabel>Số điện thoại</FormLabel>
                   <Input
-                    type="text"
+                    type="number"
                     border={"none"}
                     p={"8px 12px"}
                     placeholder="Nhập số điện thoại"
@@ -173,6 +203,8 @@ const Payment = (props: Props) => {
                     {...register("phone_number", {
                       required: "Trường bắt buộc nhập",
                     })}
+                    isDisabled={data.data.products.length === 0}
+                    defaultValue={(isLogin && `0${user.phone}`) || ""}
                   />
                   <FormErrorMessage>
                     {" "}
@@ -184,7 +216,7 @@ const Payment = (props: Props) => {
               {/* khu vực và địa chỉ nhận hàng */}
               {methodOrder == "shipped" && (
                 <Flex gap={"16px"} mt={"16px"}>
-                  <FormControl isInvalid={errors?.district as any}>
+                  <FormControl isInvalid={errors?.shipping_address as any}>
                     <FormLabel>Khu Vực</FormLabel>
                     <Box
                       border={"none"}
@@ -212,6 +244,7 @@ const Payment = (props: Props) => {
                         })}
                         value={address}
                         onClick={handleChooseAdress}
+                        isDisabled={data.data.products.length === 0}
                       />
                       <NavArrowRightIcon
                         size={4}
@@ -237,6 +270,7 @@ const Payment = (props: Props) => {
                       {...register("address", {
                         required: "Trường bắt buộc nhập",
                       })}
+                      isDisabled={data.data.products.length === 0}
                     />
                     <FormErrorMessage>
                       {(errors?.address as any) &&
@@ -263,8 +297,8 @@ const Payment = (props: Props) => {
                       isChecked
                       fontSize={"12px"}
                       {...register("shop_address")}
-                      value="Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh Văn
-                          Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam"
+                      value={shopAdress.trim()}
+                      isDisabled={data.data.products.length === 0}
                     >
                       <Box p="4" rounded="md" fontSize="sm" color="text.black">
                         <Text fontWeight="semibold">Thủ đô Hà Nội</Text>
@@ -303,7 +337,11 @@ const Payment = (props: Props) => {
               <Box mt={"16px"}>
                 <FormControl isInvalid={errors?.payment as any}>
                   <FormLabel>Chọn phương thức thanh toán</FormLabel>
-                  <RadioGroup onChange={setMethodPayment} value={methodPayment}>
+                  <RadioGroup
+                    onChange={setMethodPayment}
+                    value={methodPayment}
+                    isDisabled={data.data.products.length === 0}
+                  >
                     <Stack direction="row" gap={"16px"} spacing={4}>
                       <Radio
                         value="tructiep"
@@ -333,6 +371,7 @@ const Payment = (props: Props) => {
                     fontSize={"14px"}
                     {...register("content")}
                     border={"none"}
+                    isDisabled={data.data.products.length === 0}
                   />
                 </FormControl>
               </Flex>
@@ -346,6 +385,16 @@ const Payment = (props: Props) => {
               px={"5"}
             >
               <PaySummary data={data.data} transport_fee={transportFee} />
+              <Button
+                w={"full"}
+                fontSize={"16px"}
+                fontWeight={"600 "}
+                type="submit"
+                _hover={{ bgColor: "red" }}
+                isDisabled={data.data.products.length === 0}
+              >
+                Mua Ngay
+              </Button>
             </Box>
             <Box
               backgroundColor={"white"}
@@ -359,7 +408,7 @@ const Payment = (props: Props) => {
           </Box>
         </Box>
       </form>
-      <PopupCheckOtp open={open} />
+      <PopupCheckOtp open={open} dataOrder={dataOrder} />
       <Transport
         isOpen={isOpen}
         onOpen={onOpen}

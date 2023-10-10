@@ -10,10 +10,10 @@ type Props = {
 const ItemProductPay = ({ product }: Props) => {
   return (
     <>
-      <Flex justifyContent={"space-between"} my={"4"} px={"5"}>
+      <Flex justifyContent={"space-between"} my={"4"} px={"2"}>
         <Flex>
           <Box>
-            <Image src={product?.image.url} alt="name" />
+            <Image src={product?.image.url} alt="name" w="78px" height="68px" />
           </Box>
           <Box ml={"5"}>
             <Text as={"p"} fontSize={"14px"}>

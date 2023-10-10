@@ -12,3 +12,16 @@ export function sortJSON(data: any[]) {
 
     return data;
 }
+
+export function chuyenDoiSoDienThoai(soDienThoai: any) {
+    // Sử dụng biểu thức chính quy để tìm và thay thế số điện thoại
+    // từ định dạng Việt Nam sang định dạng quốc tế
+    const regex = /^0(\d{9})$/; // Kiểm tra xem số điện thoại có bắt đầu bằng số 0 và có 10 chữ số không
+    if (regex.test(soDienThoai)) {
+        // Nếu số điện thoại hợp lệ
+        return '+84' + soDienThoai.substr(1); // Thay thế số 0 bằng +84
+    } else {
+        // Nếu số điện thoại không hợp lệ
+        return false;
+    }
+}

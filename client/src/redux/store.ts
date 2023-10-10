@@ -11,6 +11,8 @@ import cartSlice from "./slices/cartSlice";
 import authApi from "../redux/api/user";
 import productApi from "./api/product";
 import cartApi from "./api/cart";
+import orderApi from "./api/order";
+
 const persistConfig = {
     key: 'root',
     storage,
@@ -23,13 +25,14 @@ const rootReducer = combineReducers({
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const middleware = [authApi.middleware, productApi.middleware, cartApi.middleware]
+const middleware = [authApi.middleware, productApi.middleware, cartApi.middleware, orderApi.middleware]
 const store = configureStore({
     reducer: {
         persistedReducer,
         [authApi.reducerPath]: authApi.reducer,
         [productApi.reducerPath]: productApi.reducer,
         [cartApi.reducerPath]: cartApi.reducer,
+        [orderApi.reducerPath]: orderApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(...middleware),

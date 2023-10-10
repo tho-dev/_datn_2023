@@ -15,6 +15,8 @@ const OrderSummary = ({ handlePayment, data }: Props) => {
     }, 0);
     return discount;
   };
+  console.log(data);
+
   return (
     <Box>
       <Text as={"h5"} fontSize={"18px"} fontWeight={"600"} lineHeight={"27px"}>
@@ -47,6 +49,8 @@ const OrderSummary = ({ handlePayment, data }: Props) => {
         fontSize={"md"}
         fontWeight={"600"}
         onClick={handlePayment}
+        _hover={{ bg: "bg.red" }}
+        bgColor={data.products.length <= 0 ? "bg.darkGray" : "bg.red"}
       >
         Mua Ngay
       </Button>

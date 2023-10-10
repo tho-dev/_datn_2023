@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
 import ItemCart from "./components/ItemCart";
 import OrderSummary from "./components/OrderSummary";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import NotData from "./components/NotData";
 import { useAppSelector } from "~/redux/hook/hook";
 import {
@@ -22,16 +22,19 @@ const CartView = (props: Props) => {
   const [decrement] = useDecrementMutation();
   const [increment] = useIncrementMutation();
   const [remove] = useRemoveMutation();
-
+  const navigate = useNavigate();
   if (isLoading) {
     return <Box>Loading...</Box>;
   }
   if (isError) {
     return <Box>Error...</Box>;
   }
+
   const handlePayment = () => {
-    console.log("payment");
+    if (data?.data?.products?.length <= 0) return;
+    navigate("/thanh-toan");
   };
+
   const handleDercement = (product: any) => {
     const data = {
       sku_id: product.sku_id,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
-import { Image, Text, Input, Button } from "@chakra-ui/react";
+import { Image, Text, Input, Button, IconButton } from "@chakra-ui/react";
 import { ChevronDownIcon } from "~/components/common/Icons";
 import ItemProductPay from "./ItemProductPay";
 
@@ -24,11 +24,15 @@ const ProductPay = ({ products }: Props) => {
         >
           Sản Phẩm trong đơn
         </Text>
-        <Box as={"button"} onClick={() => showHandle()}>
-          <ChevronDownIcon color="black" size={8} />
-        </Box>
+        <IconButton
+          aria-label="refresh otp"
+          icon={<ChevronDownIcon color="black" size={8} />}
+          bg="none"
+          padding={3}
+          onClick={showHandle}
+        />
       </Flex>
-      <Box display={show ? "block" : "none"}>
+      <Box display={show ? "block" : "none"} overflow="hidden">
         {products.map((product: any) => {
           return (
             <Box key={product._id}>

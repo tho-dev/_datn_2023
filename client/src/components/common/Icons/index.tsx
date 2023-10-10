@@ -2158,3 +2158,25 @@ export const HeadphoneIcon = ({ size = 35, ...props }) => (
     <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
   </Icon>
 );
+export const RefreshIcon = ({
+  size = 35,
+  strokeWidth = 1.5,
+  color = "currentColor",
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M23 4v6h-6"></path>
+    <path d="M1 20v-6h6"></path>
+    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+    <path d="m1 14 4.64 4.36A9 9 0 0 0 20.49 15"></path>
+  </Icon>
+);
