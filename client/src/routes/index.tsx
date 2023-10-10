@@ -37,11 +37,12 @@ import { BrandView } from "~/views/private/BrandView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import PostManagementView from "~/views/private/PostManagementView";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
-import DemandView from "~/views/private/DemandView";
+import { DemandView } from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
 import { HistoryOrderView } from "~/views/public/HistoryOrderView";
 import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordView";
 import { ThankView } from "~/views/public/ThankView";
+import PostCategoryView from "~/views/private/PostCategoryView";
 
 const routes: RouteObject[] = [
   {
@@ -151,6 +152,10 @@ const routes: RouteObject[] = [
       {
         path: "danh-muc",
         element: <CategoryManagerView />,
+      },
+      {
+        path: "danh-muc-bai-viet",
+        element: <PostCategoryView />,
       },
       {
         path: "bai-viet",
