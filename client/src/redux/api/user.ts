@@ -1,8 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IUser } from '~/interface/user';
-import { RootState } from '../store';
-
-
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { IUser } from "~/interface/user";
 
 const authApi = createApi({
     reducerPath: "auth",
@@ -11,7 +8,7 @@ const authApi = createApi({
         baseUrl: process.env.VITE_API_URL,
         // xét token vào headers
         prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).persistedReducer.global.accessToken
+            const token = (getState() as any).persistedReducer.global.accessToken
             if (token) {
                 headers.set('authorization', `Bearer ${token}`)
             }
@@ -70,4 +67,4 @@ export const {
 
 export const authReducer = authApi.reducer;
 
-export default authApi
+export default authApi;

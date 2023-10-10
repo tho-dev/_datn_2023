@@ -37,7 +37,6 @@ export async function getAllCategory(req, res, next) {
 			_order = "desc",
 			_limit = 10,
 			_type = _type || 'category_brand',
-			_parent = true
 		} = req.query;
 
 		const options = {
@@ -51,37 +50,7 @@ export async function getAllCategory(req, res, next) {
 
 		const { docs, ...paginate } = await Category.paginate({
 			type: _type,
-			parent_id: JSON.parse(_parent) ? null : { $ne: null }
 		}, options);
-
-		if (!JSON.parse(_parent)) {
-			// hàm lấy ra danh mục cha
-			const getParent = async (category, parentId) => {
-				const doc = await Category.findById(parentId)
-
-				return {
-					...category.toObject(),
-					parent: {
-						_id: doc._id,
-						name: doc.name,
-						slug: doc.slug,
-						type: doc.type,
-						description: doc.description
-					}
-				}
-			}
-
-			const repsonse = await Promise.all(docs.map((item) => getParent(item, item.parent_id)))
-
-			return res.json({
-				status: 200,
-				message: "Thành công",
-				data: {
-					items: repsonse,
-					paginate
-				},
-			})
-		}
 
 		return res.json({
 			status: 200,

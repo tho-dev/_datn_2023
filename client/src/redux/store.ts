@@ -6,18 +6,19 @@ import storage from 'redux-persist/lib/storage';
 import globalSlice from "./slices/globalSlice";
 import cartSlice from "./slices/cartSlice";
 
-
 //api
 import authApi from "../redux/api/user";
 import productApi from "./api/product";
 import cartApi from "./api/cart";
 import orderApi from "./api/order";
+import brandApi from "../redux/api/brand";
+import categoryApi from "../redux/api/category";
 
 const persistConfig = {
-    key: 'root',
+    key: "root",
     storage,
-    blacklist: ['_persist']
-}
+    blacklist: ["_persist"],
+};
 
 const rootReducer = combineReducers({
     global: globalSlice,
@@ -25,7 +26,7 @@ const rootReducer = combineReducers({
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const middleware = [authApi.middleware, productApi.middleware, cartApi.middleware, orderApi.middleware]
+const middleware = [authApi.middleware, productApi.middleware, cartApi.middleware, orderApi.middleware, categoryApi.middleware, brandApi.middleware]
 const store = configureStore({
     reducer: {
         persistedReducer,
@@ -33,13 +34,15 @@ const store = configureStore({
         [productApi.reducerPath]: productApi.reducer,
         [cartApi.reducerPath]: cartApi.reducer,
         [orderApi.reducerPath]: orderApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer,
+        [brandApi.reducerPath]: brandApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(...middleware),
 });
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export default store;
 export const persistor = persistStore(store);

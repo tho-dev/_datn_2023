@@ -27,7 +27,6 @@ import { UpdateProductManagerView } from "~/views/private/ProductManagerView/com
 import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
-import SubCategoryView from "~/views/private/SubCategoryView";
 import { ShippingView } from "~/views/private/ShippingView";
 import ShippingList from "~/views/private/ShippingView/ShippingList";
 import Shipments from "~/views/private/ShippingView/Shipments";
@@ -37,7 +36,6 @@ import { SearchView } from "~/views/public/SearchView";
 import { BrandView } from "~/views/private/BrandView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import PostManagementView from "~/views/private/PostManagementView";
-import PostCategoryManagement from "~/views/private/CategoryManagerView/PostCategoryManagement";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import DemandView from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
