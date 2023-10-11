@@ -1,70 +1,65 @@
 import Category from "../models/category.model"
 import Brand from "../models/brand.model"
-import { Product } from "../models/product.model"
+import { Product, Option, OptionValue, Sku, Variant } from "../models/product.model"
 import { Demand } from "../models/demand.model"
 import createError from "http-errors"
 
 // Hàm đệ quy để xây dựng danh sách thương hiệu con (sub_brands)
-function nestedBrands(input, parentId) {
-	const output = [];
-	let brands = null;
+// function nestedBrands(input, parentId) {
+// 	const output = [];
+// 	let brands = null;
 
-	if (parentId) {
-		brands = input.filter((brand) => String(brand.parent_id) == String(parentId));
-	} else {
-		brands = input.filter((brand) => !brand.parent_id);
-	}
+// 	if (parentId) {
+// 		brands = input.filter((brand) => String(brand.parent_id) == String(parentId));
+// 	} else {
+// 		brands = input.filter((brand) => !brand.parent_id);
+// 	}
 
-	for (let brand of brands) {
-		output.push({
-			_id: brand?._id,
-			parent_id: parentId,
-			name: brand?.name,
-			slug: brand?.slug,
-			shared_url: brand?.shared_url,
-			thumbnail: brand?.thumbnail.url,
-			description: brand?.description,
-			children: nestedBrands(input, brand?._id).length == 0 ? undefined : nestedBrands(input, brand?._id),
-		});
-	}
+// 	for (let brand of brands) {
+// 		output.push({
+// 			_id: brand?._id,
+// 			parent_id: parentId,
+// 			name: brand?.name,
+// 			slug: brand?.slug,
+// 			shared_url: brand?.shared_url,
+// 			thumbnail: brand?.thumbnail.url,
+// 			description: brand?.description,
+// 			children: nestedBrands(input, brand?._id).length == 0 ? undefined : nestedBrands(input, brand?._id),
+// 		});
+// 	}
 
-	return output;
-}
+// 	return output;
+// }
 
-function nestedCategories(input, parent_id) {
-	const output = [];
-	let brands = null;
+// function nestedCategories(input, parent_id) {
+// 	const output = [];
+// 	let brands = null;
 
-	if (parent_id) {
-		brands = input.filter((brand) => String(brand.parent_id) == String(parent_id));
-	} else {
-		brands = input.filter((brand) => brand.parent_id == parent_id);
-	}
+// 	if (parent_id) {
+// 		brands = input.filter((brand) => String(brand.parent_id) == String(parent_id));
+// 	} else {
+// 		brands = input.filter((brand) => brand.parent_id == parent_id);
+// 	}
 
-	for (let brand of brands) {
-		output.push({
-			_id: brand?._id,
-			parent_id: parent_id,
-			name: brand?.name,
-			slug: brand?.slug,
-			thumbnail: brand?.thumbnail?.url,
-			description: brand?.description,
-			children: nestedCategories(input, brand?._id).length == 0 ? undefined : nestedCategories(input, brand._id)
-		});
-	}
+// 	for (let brand of brands) {
+// 		output.push({
+// 			_id: brand?._id,
+// 			parent_id: parent_id,
+// 			name: brand?.name,
+// 			slug: brand?.slug,
+// 			thumbnail: brand?.thumbnail?.url,
+// 			description: brand?.description,
+// 			children: nestedCategories(input, brand?._id).length == 0 ? undefined : nestedCategories(input, brand._id)
+// 		});
+// 	}
 
-	return output;
-}
-
+// 	return output;
+// }
 
 export async function filterBrandAndCategory(req, res, next) {
 	try {
 		const { slug } = req.query
 		let data = null
-
-		// lấy all category và brands
-		const categories = await Category.find({})
-		const brands = await Brand.find({})
 
 		let category = await Category.findOne({
 			slug: slug
@@ -313,5 +308,135 @@ export async function filterBrandAndCategory(req, res, next) {
 	}
 }
 
+export async function collectionProducts(req, res, next) {
+	try {
+		const {
+			_page = 1,
+			_sort = "created_at",
+			_order = "desc",
+			_limit = 10,
+			_category = null
+		} = req.query;
 
+		const options = {
+			page: _page,
+			limit: _limit,
+			sort: {
+				[_sort]: _order == "desc" ? -1 : 1,
+			},
+			select: [
+				"-assets",
+				"-attributes",
+				"-description",
+				"-specs",
+				"-category_id",
+				"-brand_id",
+				"-deleted",
+				"-deleted_at",
+				"-created_at",
+				"-updated_at",
+			],
+		};
+
+		if (!_category) {
+			throw createError.NotFound("Không có dữ liệu")
+		}
+
+		let category = await Category.findOne({
+			slug: _category
+		}).select("-deleted -deleted_at -thumbnail.id -created_at -updated_at")
+
+		let brand = await Brand.findOne({
+			shared_url: _category
+		}).select("-deleted -deleted_at -thumbnail.id -created_at -updated_at")
+
+		if (!brand && !category) {
+			throw createError.NotFound('Không có dữ liệu')
+		}
+
+		// hàm lấy ra các 1 sku của một sản phẩm
+		const getSku = async (product, id) => {
+			const sku = await Sku.findOne({
+				product_id: id,
+			}).select("-assets -stock -created_at -updated_at");
+
+			// lấy ra biến thể của sku
+			const variant = await Variant.find({
+				sku_id: sku?._id,
+			}).populate(["option_value_id"]);
+
+			const optionValue = variant?.map(
+				(item) => item?.toObject()?.option_value_id?.label
+			);
+
+			// lấy ra các options
+			const options = await Option.find({
+				product_id: id,
+			});
+
+			// lấy ra option màu
+			const option = options?.find((option) => option.name == "color");
+			const colors = await OptionValue.find({
+				option_id: option?._id,
+			}).select("-_id value label");
+
+			return {
+				...product?.toObject(),
+				...sku?.toObject(),
+				image: sku?.image?.url,
+				option_value: optionValue,
+				colors,
+			};
+		};
+
+		if (category) {
+			const { docs, ...paginate } = await Product.paginate({
+				category_id: category?._id
+			}, options);
+
+			const data = await Promise.all(
+				docs?.map((item) => getSku(item, item?._id))
+			);
+
+			return res.json({
+				status: 200,
+				message: 'Thành công',
+				data: {
+					items: data,
+					paginate,
+				}
+			})
+		}
+
+		if (brand) {
+			const brands = await Brand.find({
+				category_id: brand?.category_id,
+				shared_url: { $regex: brand?.slug, $options: 'i' }
+			});
+
+			const ids = brands?.map((brand) => brand?._id)
+
+			// lấy ra tất cả sản thuộc thương hiệu
+			const { docs, ...paginate } = await Product.paginate({
+				brand_id: { $in: ids }
+			}, options);
+
+			const data = await Promise.all(
+				docs?.map((item) => getSku(item, item?._id))
+			);
+
+			return res.json({
+				status: 200,
+				message: 'Thành công',
+				data: {
+					items: data,
+					paginate,
+				}
+			})
+		}
+
+	} catch (error) {
+		next(error)
+	}
+}
 
