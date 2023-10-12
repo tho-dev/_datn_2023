@@ -19,8 +19,8 @@ const orderApi = createApi({
     }),
     endpoints: (builder) => ({
         getAllShipping: builder.query({
-            query: () => ({
-                url: "/order/shipping",
+            query: (data) => ({
+                url: `/order/shipping?q=${data}`,
                 method: "GET",
             }),
             providesTags: ["Order"]

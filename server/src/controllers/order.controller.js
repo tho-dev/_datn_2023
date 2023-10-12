@@ -779,7 +779,7 @@ export const getAllShipping = async (req, res, next) => {
       _order = "asc",
       _limit = 10,
     } = req.query;
-
+    const customer_name = req.query.q;
     const options = {
       page: _page,
       limit: _limit,
@@ -787,29 +787,60 @@ export const getAllShipping = async (req, res, next) => {
         [_sort]: _order == "desc" ? -1 : 1,
       },
     };
-    const { docs, ...paginate } = await Order.paginate(
-      { shipping_method: "shipped" },
-      options
-    );
+    if (customer_name) {
+      const { docs, ...paginate } = await Order.paginate(
+        {
+          shipping_method: "shipped",
+          customer_name: { $regex: customer_name, $options: "i" },
+        },
+        options
+      );
 
-    const new_docs = await Promise.all(
-      docs.map(async (item) => {
-        const order_details = await Order_Detail.find({ order_id: item._id });
-        const orders = item.toObject();
-        return {
-          ...orders,
-          products: order_details,
-        };
-      })
-    );
-    return res.json({
-      status: 200,
-      message: "Lấy toàn bộ đơn hàng thành công",
-      data: {
-        items: new_docs,
-        paginate,
-      },
-    });
+      const new_docs = await Promise.all(
+        docs.map(async (item) => {
+          const order_details = await Order_Detail.find({ order_id: item._id });
+          const orders = item.toObject();
+          return {
+            ...orders,
+            products: order_details,
+          };
+        })
+      );
+      return res.json({
+        status: 200,
+        message: "Lấy toàn bộ đơn hàng thành công",
+        data: {
+          items: new_docs,
+          paginate,
+        },
+      });
+    } else {
+      const { docs, ...paginate } = await Order.paginate(
+        {
+          shipping_method: "shipped",
+        },
+        options
+      );
+
+      const new_docs = await Promise.all(
+        docs.map(async (item) => {
+          const order_details = await Order_Detail.find({ order_id: item._id });
+          const orders = item.toObject();
+          return {
+            ...orders,
+            products: order_details,
+          };
+        })
+      );
+      return res.json({
+        status: 200,
+        message: "Lấy toàn bộ đơn hàng thành công",
+        data: {
+          items: new_docs,
+          paginate,
+        },
+      });
+    }
   } catch (error) {
     next(error);
   }

@@ -15,7 +15,7 @@ const ListCardShipping = ({ items, handleViewOrderDetail }: Props) => {
       gap={4}
       overflow="auto"
     >
-      {items &&
+      {items.length > 0 ? (
         items.map((item: any) => {
           return (
             <Box key={item._id}>
@@ -25,7 +25,10 @@ const ListCardShipping = ({ items, handleViewOrderDetail }: Props) => {
               />
             </Box>
           );
-        })}
+        })
+      ) : (
+        <Box>Không tìm thấy đơn hàng</Box>
+      )}
     </Flex>
   );
 };
