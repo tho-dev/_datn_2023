@@ -14,6 +14,7 @@ import {
   getOrderByPhoneNumber,
   getTokenPrintBills,
   updatePaymentStatus,
+  getAllShipping,
 } from "../controllers/order.controller";
 
 const router = express.Router();
@@ -27,8 +28,9 @@ router.post("/getTokenPrintBill", getTokenPrintBills);
 
 router.post("/", createOrder);
 router.get("/", getAll);
+router.get("/shipping", getAllShipping);
 router.get("/:id", getOne);
-router.put("/cancel/:id", cancelOrder);
+router.delete("/cancel/:id", cancelOrder);
 router.put("/updateStatus/:id", updateStatus);
 router.put("/updateInfoCustomer/:id", update_info_customer);
 router.post("/pay-momo", payMomo);

@@ -89,15 +89,19 @@ const Payment = (props: Props) => {
     }
   };
   const addressWatch = watch("shipping_address");
-  if (addressWatch && methodOrder == "shipped") {
-    axios
-      .post(`${process.env.VITE_API_URL}/order/calculateFee`, {
-        location: addressWatch,
-      })
-      .then(({ data }) => {
-        setTransportFee(data.data);
-      });
-  }
+
+  useEffect(() => {
+    if (addressWatch && methodOrder == "shipped") {
+      axios
+        .post(`${process.env.VITE_API_URL}/order/calculateFee`, {
+          location: addressWatch,
+        })
+        .then(({ data }) => {
+          setTransportFee(data.data);
+        });
+    }
+  }, [addressWatch, methodOrder]);
+
   if (isLoading) {
     return <Box>Loading...</Box>;
   }

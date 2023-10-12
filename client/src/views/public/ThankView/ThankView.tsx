@@ -2,15 +2,8 @@ import { Box, Heading, Text, Flex, Image, Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import logo from "~/assets/images/logo-thinkpro.svg";
-import {
-  useCreateCartMutation,
-  useDeleteCartMutation,
-  useRemoveMutation,
-} from "~/redux/api/cart";
 import { usePaymentStatusMutation } from "~/redux/api/order";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { addCart, removeCart } from "~/redux/slices/cartSlice";
-import { v4 as uuidv4 } from "uuid";
+
 type Props = {};
 
 const ThankView = (props: Props) => {
@@ -19,10 +12,6 @@ const ThankView = (props: Props) => {
   const [time, setTime] = useState<number>(5);
   const navigate = useNavigate();
   const [paymentStatus] = usePaymentStatusMutation();
-  const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
-  const dispatch = useAppDispatch();
-  const [createCart] = useCreateCartMutation();
-  const [deleteCart] = useDeleteCartMutation();
 
   for (const entry of searchParams.entries()) {
     const [param, value] = entry;
@@ -33,27 +22,6 @@ const ThankView = (props: Props) => {
   }
 
   useEffect(() => {
-    const del_cart = async () => {
-      try {
-        const res: any = await deleteCart(cart_id);
-        if (res.data.status === 200) {
-          const data = {
-            cart_id: uuidv4(),
-            product: {},
-          };
-          createCart(data)
-            .unwrap()
-            .then(() => {
-              dispatch(addCart(data.cart_id));
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
     const fetchApi = async () => {
       try {
         const data = await paymentStatus(payment);
@@ -62,7 +30,6 @@ const ThankView = (props: Props) => {
       }
     };
     fetchApi();
-    del_cart();
   }, []);
 
   useEffect(() => {

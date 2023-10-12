@@ -1,32 +1,38 @@
 import { Box, Text, Flex, Grid, GridItem, IconButton } from "@chakra-ui/react";
 import React from "react";
-import { CartIcon } from "~/components/common/Icons";
 
-type Props = {};
+type Props = {
+  title: string;
+  id: string;
+  total?: string;
+  date?: string;
+  icon: any;
+  color: any;
+};
 
-const CardShippingDetail = (props: Props) => {
+const CardShippingDetail = ({ title, id, total, date, icon, color }: Props) => {
   return (
     <Grid
-      border="1px solid #ccc"
       padding={4}
       borderRadius="4px"
-      bgColor="white"
+      bgColor={color}
       gridTemplateColumns="repeat(4,1fr)"
       gap={2}
+      minH="150px"
     >
       <GridItem colSpan={3}>
         <Text fontSize="18px" fontWeight="bold" margin="10px 0">
-          Order Information
+          {title}
         </Text>
         <Box>
-          <Text fontSize="14px" fontWeight="500">
-            ID: #TBT84000142101
+          <Text fontSize="14px" fontWeight="semibold">
+            {id}
           </Text>
-          <Text fontSize="14px" fontWeight="500">
-            Amount Total: $723.65
+          <Text fontSize="14px" fontWeight="semibold">
+            {total}
           </Text>
-          <Text fontSize="14px" fontWeight="500">
-            Order Date: 05 Jan, 2023
+          <Text fontSize="14px" fontWeight="semibold">
+            {date}
           </Text>
         </Box>
       </GridItem>
@@ -34,10 +40,9 @@ const CardShippingDetail = (props: Props) => {
         <IconButton
           px="10px"
           py="6px"
-          border="1px"
           aria-label="Search database"
-          icon={<CartIcon size={6} />}
-          bgColor="inherit"
+          icon={icon}
+          bgColor="transparent"
           color="black"
           boxShadow="xl"
         />

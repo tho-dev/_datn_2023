@@ -28,6 +28,9 @@ import { useNavigate } from "react-router";
 import Time from "./Time";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { resetOtp, setCheckOtp } from "~/redux/slices/globalSlice";
+import { useCreateCartMutation, useDeleteCartMutation } from "~/redux/api/cart";
+import { v4 as uuidv4 } from "uuid";
+import { addCart } from "~/redux/slices/cartSlice";
 type Props = {
   open: any;
   dataOrder: any;
@@ -36,9 +39,12 @@ type Props = {
 const PopupCheckOtp = ({ open, dataOrder }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [value, setValue] = React.useState("");
+  const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
   const [paymentMomo] = usePaymentMomoMutation();
+  const [deleteCart] = useDeleteCartMutation();
+  const [createCart] = useCreateCartMutation();
   const { time, isCheckOtp } = useAppSelector(
     (state) => state.persistedReducer.global
   );
@@ -77,6 +83,7 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
 
     const createdOrder: any = await create(dataOrder);
     if (createdOrder.data.status !== 200) {
+      onClose();
       return toast({
         title: "Đơn hàng",
         description: "Đơn hàng của bạn đã tạo thất bại",
@@ -86,19 +93,27 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
         position: "bottom-right",
       });
     }
+    const res: any = await deleteCart(cart_id);
+    if (res.data.status === 200) {
+      const data = {
+        cart_id: uuidv4(),
+        product: {},
+      };
+      const created = await createCart(data);
+      dispatch(addCart(data.cart_id));
+    }
+    dispatch(resetOtp(false));
     setLoading(false);
+    onClose();
     if (payment_method == "online") {
       const payment_momo: any = await paymentMomo({
         bill: dataOrder.total_amount,
         orderId: createdOrder.data.data._id,
       });
-      console.log(payment_momo.data.message);
       if (payment_momo.data.message === "successfully") {
         window.location.assign(`${payment_momo.data.data.url}`);
       }
     } else {
-      dispatch(resetOtp(false));
-      onClose();
       navigate("/thanks");
     }
   };

@@ -87,7 +87,7 @@ const CartView = (props: Props) => {
       <Heading pt={"4"} fontSize={"20px"}>
         Giỏ hàng ({data?.data?.products?.length || 0})
       </Heading>
-      {isFetching ? (
+      {isFetching || isLoading ? (
         <Box
           display="flex"
           flexDirection={{ base: "column", md: "row" }}

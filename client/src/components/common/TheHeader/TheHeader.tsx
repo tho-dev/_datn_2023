@@ -31,12 +31,7 @@ const TheHeader = (props: Props) => {
     isLoading,
     isError,
   } = useGetCartQuery(cart_id);
-  if (isLoading) {
-    return <Box>Loading...</Box>;
-  }
-  if (isFetching) {
-    return <Box>isFetching...</Box>;
-  }
+
   if (isError) {
     return <Box>isError...</Box>;
   }
@@ -159,11 +154,9 @@ const TheHeader = (props: Props) => {
               display: isOpen ? "flex" : "none",
             }}
           >
-            <Cart data={data?.data} />
+            <Cart data={data ? data?.data : []} />
           </SlideFade>
-          <Link
-            to="/gio-hang"
-            as={ReactRouterLink}
+          <Box
             w="44px"
             h="44px"
             display="inline-flex"
@@ -190,9 +183,8 @@ const TheHeader = (props: Props) => {
             >
               {data?.data.products.length || 0}
             </Box>
-
             <CartIcon size={4} strokeWidth={2} color="text.black" />
-          </Link>
+          </Box>
         </Flex>
         {isLogin ? (
           <Link

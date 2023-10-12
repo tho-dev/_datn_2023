@@ -1,8 +1,10 @@
 import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/layout";
-import { Button, Table } from "@chakra-ui/react";
+import { Button, Table, useDisclosure } from "@chakra-ui/react";
 import React from "react";
 import {
+  AddressIcon,
   CarIcon,
+  CloseIcon,
   DownloadIcon,
   LocationIcon,
   OrderIcon,
@@ -13,29 +15,38 @@ import MetricItem from "../components/MetricItem";
 import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
 import OrderDetailMetricItem from "../components/OrderDetailMetric";
-import { Progress } from '@chakra-ui/react'
+import { Progress } from "@chakra-ui/react";
 import { mt } from "date-fns/locale";
+import { useParams } from "react-router";
+import {
+  useCancelOrderMutation,
+  useGetOneShippingQuery,
+} from "~/redux/api/order";
+import OrderStatus from "../../ShippingView/components/OrderStatus";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import { useToast } from "@chakra-ui/react";
 
 type Props = {};
 
 const OrderDetailView = (props: Props) => {
-  const data = [
-    {
-      productId: 111,
-      productName: "Demo 1",
-      productPrice: 100000,
-      productQty: 2,
-      amount: 200000,
-    },
-    {
-      productId: 222,
-      productName: "Demo 1",
-      productPrice: 100000,
-      productQty: 2,
-      amount: 200000,
-    },
-  ];
+  const { id } = useParams();
+  const toast = useToast();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
+    id,
+  });
+  const [cancelOrder] = useCancelOrderMutation();
   const columnHelper = createColumnHelper<any>();
+
+  if (isLoading) {
+    return <Box>Loading...</Box>;
+  }
+  if (isFetching) {
+    return <Box>isFetching...</Box>;
+  }
+  if (isError) {
+    return <Box>isError...</Box>;
+  }
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -44,35 +55,66 @@ const OrderDetailView = (props: Props) => {
       },
       header: "#",
     }),
-    columnHelper.accessor("productId", {
+
+    columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue()}</h1>;
+        return <h1>{info.getValue()._id}</h1>;
       },
       header: "ID sản phẩm",
     }),
-    columnHelper.accessor("productName", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("sku_id", {
+      cell: (info) => {
+        return <h1>{info.getValue().name}</h1>;
+      },
       header: "Tên sản phẩm",
     }),
-    columnHelper.accessor("productPrice", {
-      cell: (info) => info.getValue().toLocaleString(),
+    columnHelper.accessor("price", {
+      cell: (info) => info.getValue()?.toLocaleString(),
       header: "Đơn giá",
       meta: {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor("productQty", {
+    columnHelper.accessor("quantity", {
       cell: (info) => info.getValue(),
       header: "Số lượng",
       meta: {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor("amount", {
-      cell: (info) => info.getValue().toLocaleString(),
+    columnHelper.accessor("#", {
+      cell: (info) =>
+        (
+          info.row.original.price * info.row.original.quantity
+        )?.toLocaleString(),
       header: "Thành tiền",
     }),
   ];
+  const handleCancelOrder = (id: string) => {
+    cancelOrder({ id })
+      .unwrap()
+      .then((data: any) => {
+        toast({
+          title: "Hệ thống thông báo",
+          description: `${data.data.message}`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        toast({
+          title: "Hệ thống thông báo",
+          description: `${error.data.errors.message}`,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+    onClose();
+  };
+
   return (
     <Box w="full" h="full">
       <Flex justifyContent="space-between" alignItems={"center"}>
@@ -83,7 +125,7 @@ const OrderDetailView = (props: Props) => {
       </Flex>
       <Flex justifyContent="space-between" alignItems={"center"}>
         <Heading as="h1" fontSize="16">
-          <Text>ID đơn hàng: #111</Text>
+          <Text>ID đơn hàng: #{data?.data._id}</Text>
         </Heading>
       </Flex>
       <Grid
@@ -100,19 +142,25 @@ const OrderDetailView = (props: Props) => {
       >
         <OrderDetailMetricItem
           heading="Thông tin KH"
-          text="NGÔ BÁ KHÁ"
+          text={data?.data.customer_name}
+          phone={data?.data.phone_number}
           icon={<UserIcon size={6} color="green" />}
           color="green"
         />
         <OrderDetailMetricItem
           heading="Địa chỉ nhận"
-          text="Tô Vĩnh Diện, Khương Trung, Thanh Xuân, Hà Nội"
+          text={
+            data?.data.shipping_method === "at_store"
+              ? data?.data.shop_address
+              : data?.data.shipping_info.shipping_address
+          }
+          phone={data?.data.shipping_method}
           icon={<LocationIcon size={24} color="blue" />}
           color="blue"
         />
         <OrderDetailMetricItem
           heading="Phương thức thanh toán"
-          text="Thẻ visa"
+          text={data?.data.payment_method}
           icon={<OrderIcon size={6} color="cyan" />}
           color="cyan"
         />
@@ -128,13 +176,69 @@ const OrderDetailView = (props: Props) => {
           rounded="md"
           w={"75%"}
         >
-          <TableThinkPro columns={columns} data={data} />
+          <TableThinkPro columns={columns} data={data?.data.products} />
+          <Flex alignItems="flex-end" flexDirection="column" py={4}>
+            <Box width="30%" minH="250px">
+              <Flex
+                my={1}
+                justifyContent="space-between"
+                p={2}
+                borderBottom="1px solid #ccc"
+              >
+                <Text fontSize={16} fontWeight="semibold">
+                  Tổng số lượng:{" "}
+                </Text>
+                <Text>
+                  {data.data.products.reduce(
+                    (acc: any, product: any) => acc + product.quantity,
+                    0
+                  )}
+                </Text>
+              </Flex>
+              <Flex
+                my={1}
+                justifyContent="space-between"
+                p={2}
+                borderBottom="1px solid #ccc"
+              >
+                <Text fontSize={16} fontWeight="semibold">
+                  Tổng Tiền:{" "}
+                </Text>
+                <Text>{data?.data.total_amount.toLocaleString()}</Text>
+              </Flex>
+              <Flex
+                my={1}
+                justifyContent="space-between"
+                p={2}
+                borderBottom="1px solid #ccc"
+              >
+                <Text fontSize={16} fontWeight="semibold">
+                  Giảm Giá:{" "}
+                </Text>
+                <Text>0</Text>
+              </Flex>
+              <Flex
+                my={1}
+                justifyContent="space-between"
+                p={2}
+                borderBottom="1px solid #ccc"
+              >
+                <Text fontSize={16} fontWeight="bold">
+                  Thành tiền:{" "}
+                </Text>
+                <Text>{data?.data.total_amount.toLocaleString()}</Text>
+              </Flex>
+            </Box>
+          </Flex>
         </Box>
         <Box w="25%">
           {/* Vận chuyển */}
           <Box my="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
             <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
-              Vận chuyển:
+              Vận chuyển:{" "}
+              {data?.data.shipping_method === "at_store"
+                ? "Mua trực tiếp"
+                : "shipping"}
             </Heading>
             <Flex justifyContent="center" alignItems="center" fontSize={15}>
               <Flex
@@ -144,9 +248,20 @@ const OrderDetailView = (props: Props) => {
                 alignItems={"center"}
               >
                 <CarIcon />
-                <Text fontWeight={700}>Shopee Express</Text>
-                <Text>ID: #111111</Text>
-                <Text>Phương thức thanh toán: Thẻ tín dụng</Text>
+                <Text fontWeight={700}>
+                  {data?.data.shipping_method === "at_store"
+                    ? "Tại Cửa hàng"
+                    : "Giao hàng nhanh"}
+                </Text>
+                <Text fontSize="12px" fontWeight="semibold">
+                  Trạng thái thanh toán:{" "}
+                  {data?.data.payment_status == "unpaid"
+                    ? "Chưa thanh toán"
+                    : "Đã thanh toán"}
+                </Text>
+                <Text fontSize="12px" fontWeight="semibold">
+                  Phương thức thanh toán: {data?.data.payment_method}
+                </Text>
               </Flex>
             </Flex>
           </Box>
@@ -155,107 +270,82 @@ const OrderDetailView = (props: Props) => {
             <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
               Chi tiết thanh toán:
             </Heading>
-            <Flex pt={4} flexDir="column" gap={2} fontSize={15}>
-              <Flex>
-                <Text w="40%">Mã giao dịch:</Text>
-                <Text>#1111111111111</Text>
+            {data?.data.payment_status == "unpaid" ? (
+              <Box>Chưa thanh toán</Box>
+            ) : (
+              <Flex pt={4} flexDir="column" gap={2} fontSize={15}>
+                <Flex>
+                  <Text w="40%">Mã giao dịch:</Text>
+                  <Text>#1111111111111</Text>
+                </Flex>
+                <Flex>
+                  <Text w="40%">Phương thức:</Text>
+                  <Text>Thẻ tín dụng</Text>
+                </Flex>
+                <Flex>
+                  <Text w="40%">Số thẻ:</Text>
+                  <Text>1111 1111 1111</Text>
+                </Flex>
+                <Flex>
+                  <Text w="40%">Tên chủ thẻ:</Text>
+                  <Text>NGO BA KHA</Text>
+                </Flex>
+                <Flex>
+                  <Text w="40%">TỔNG TIỀN:</Text>
+                  <Text>400 000</Text>
+                </Flex>
               </Flex>
-              <Flex>
-                <Text w="40%">Phương thức:</Text>
-                <Text>Thẻ tín dụng</Text>
-              </Flex>
-              <Flex>
-                <Text w="40%">Số thẻ:</Text>
-                <Text>1111 1111 1111</Text>
-              </Flex>
-              <Flex>
-                <Text w="40%">Tên chủ thẻ:</Text>
-                <Text>NGO BA KHA</Text>
-              </Flex>
-              <Flex>
-                <Text w="40%">TỔNG TIỀN:</Text>
-                <Text>400 000</Text>
-              </Flex>
-            </Flex>
+            )}
           </Box>
         </Box>
       </Flex>
-      <Box m="16px 0 30px 0" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
-        <Flex justifyContent={"space-between"} pb={4} borderBottomWidth={1}>
-          <Heading fontSize={18}> Trạng thái đơn hàng:</Heading>
-          <Flex gap={2}>
+      <Box
+        m="16px 0 30px 0"
+        px="5"
+        py="6"
+        gap="2"
+        bgColor="bg.white"
+        rounded="md"
+        minH="400px"
+      >
+        <Flex
+          justifyContent={"space-between"}
+          pb={4}
+          borderBottomWidth={1}
+          my={6}
+        >
+          <Heading fontSize={18}>
+            {" "}
+            Trạng thái đơn hàng: {data?.data.status}
+          </Heading>
+          <Flex gap={4}>
             <Button
-              bgColor="blue.100"
-              color={"blue.400"}
-              leftIcon={<LocationIcon size={25} />}
-              _hover={{
-                bgColor: "blue.400",
-                color: "white",
-              }}
+              leftIcon={<AddressIcon size={6} />}
+              bg="#FFCCFF"
+              _hover={{ bg: "#CCCCFF" }}
             >
-              Sửa địa chỉ
+              Thay đổi địa chỉ
             </Button>
             <Button
-              bgColor="red.100"
-              color={"red.400"}
-              leftIcon={<LocationIcon size={25} />}
-              _hover={{
-                bgColor: "red.400",
-                color: "white",
-              }}
+              leftIcon={<CloseIcon size={6} />}
+              bg="bg.red"
+              _hover={{ bg: "#666633" }}
+              onClick={() => onOpen()}
             >
-              Hủy đơn hàng
+              Huỷ đơn hàng
             </Button>
           </Flex>
         </Flex>
-
-        <Box pt={8}>
-          <Progress hasStripe value={50} colorScheme="green" size={"md"} w={"78%"} m={"0 auto"} />
-          <Flex w={"90%"} m="40px auto 0 auto" justifyContent={"space-between"}>
-            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
-              <Heading fontSize={18}>
-                Đơn hàng được đặt
-              </Heading>
-              <Text fontSize={15} mt={2}>
-                Mon, 24 Dec, 2022
-              </Text>
-            </Box>
-            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
-              <Heading fontSize={18}>
-                Đóng gói
-              </Heading>
-              <Text fontSize={15} mt={2}>
-                Mon, 24 Dec, 2022
-              </Text>
-            </Box>
-            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
-              <Heading fontSize={18}>
-                Giao cho ĐVVC
-              </Heading>
-              <Text fontSize={15} mt={2}>
-                Mon, 24 Dec, 2022
-              </Text>
-            </Box>
-            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
-              <Heading fontSize={18}>
-                Đang giao
-              </Heading>
-              <Text fontSize={15} mt={2}>
-                Mon, 24 Dec, 2022
-              </Text>
-            </Box>
-            <Box textAlign={"center"} borderWidth={1} rounded={"md"} p={5} w={"64"}>
-              <Heading fontSize={18}>
-                Đã giao
-              </Heading>
-              <Text fontSize={15} mt={2}>
-                Mon, 24 Dec, 2022
-              </Text>
-            </Box>
-
-          </Flex>
+        <Box padding={4}>
+          <OrderStatus data={data?.data.status} />
         </Box>
       </Box>
+      <ConfirmThinkPro
+        isOpen={isOpen}
+        onClose={onClose}
+        handleClick={() => handleCancelOrder(data?.data._id)}
+        content="Bạn có muốn xoá đơn hàng này"
+      />
     </Box>
   );
 };

@@ -59,7 +59,7 @@ const ProductDetailView = (props: Props) => {
   }
   const handleAddToCart = async () => {
     const data = {
-      cart_id: cart_id || uuidv4(),
+      cart_id: cart_id,
       product: {
         sku_id: product.data._id,
         quantity,
@@ -116,7 +116,7 @@ const ProductDetailView = (props: Props) => {
   };
   const handleByNow = async () => {
     const data = {
-      cart_id: cart_id || uuidv4(),
+      cart_id: cart_id,
       product: {
         sku_id: product.data._id,
         quantity,
@@ -136,9 +136,9 @@ const ProductDetailView = (props: Props) => {
             duration: 2000,
             isClosable: true,
           });
+          navigate("/gio-hang");
         })
         .catch((err) => {
-          console.log(err);
           toast({
             title: "Hệ thống thông báo",
             description: `Lỗi khi thêm sản phẩm`,
@@ -158,9 +158,9 @@ const ProductDetailView = (props: Props) => {
             duration: 2000,
             isClosable: true,
           });
+          navigate("/gio-hang");
         })
         .catch((err) => {
-          console.log(err);
           toast({
             title: "Hệ thống thông báo",
             description: `Lỗi khi thêm sản phẩm`,
@@ -170,7 +170,6 @@ const ProductDetailView = (props: Props) => {
           });
         });
     }
-    navigate("/gio-hang");
   };
 
   const handleDercement = () => {

@@ -1,9 +1,12 @@
-import { Flex } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
 import CardShipping from "./CardShipping";
 
-type Props = {};
+type Props = {
+  items: any;
+  handleViewOrderDetail: (orderId: string) => void;
+};
 
-const ListCardShipping = (props: Props) => {
+const ListCardShipping = ({ items, handleViewOrderDetail }: Props) => {
   return (
     <Flex
       maxHeight="100vh"
@@ -12,13 +15,17 @@ const ListCardShipping = (props: Props) => {
       gap={4}
       overflow="auto"
     >
-      <CardShipping />
-      <CardShipping />
-      <CardShipping />
-      <CardShipping />
-      <CardShipping />
-      <CardShipping />
-      <CardShipping />
+      {items &&
+        items.map((item: any) => {
+          return (
+            <Box key={item._id}>
+              <CardShipping
+                item={item}
+                handleViewOrderDetail={handleViewOrderDetail}
+              />
+            </Box>
+          );
+        })}
     </Flex>
   );
 };
