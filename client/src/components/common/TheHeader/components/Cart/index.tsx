@@ -1,8 +1,8 @@
 import React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Text, Link } from "@chakra-ui/layout";
-import { Image } from "@chakra-ui/react";
-import { CloseSmallIcon } from "~/components/common/Icons";
+import { Button, Image } from "@chakra-ui/react";
+import { CartNotFoundIcon, CloseSmallIcon } from "~/components/common/Icons";
 
 type Props = {
   data: any;
@@ -33,8 +33,8 @@ const Cart = ({ data }: Props) => {
         </Link>
       </Flex>
       <Flex px="4" flexDirection="column">
-        {data &&
-          data.products.map((product: any) => {
+        {data.length > 0 ? (
+          data?.products.map((product: any) => {
             return (
               <Flex
                 w="full"
@@ -61,12 +61,12 @@ const Cart = ({ data }: Props) => {
                     rounded="sm"
                     fontWeight="semibold"
                   >
-                    x{product.quantity}
+                    x{product?.quantity}
                   </Box>
                 </Box>
                 <Flex ml="4" fontSize="md" flexDirection="column">
                   <Link
-                    to={product.shared_url}
+                    to={product?.shared_url}
                     as={ReactRouterLink}
                     color="text.black"
                   >
@@ -95,7 +95,7 @@ const Cart = ({ data }: Props) => {
                     color="text.black"
                     fontWeight="medium"
                   >
-                    {product.option_value.toString()}
+                    {product?.option_value.toString()}
                   </Text>
                   <Flex
                     gap="2"
@@ -105,10 +105,10 @@ const Cart = ({ data }: Props) => {
                     mt="1"
                   >
                     <Text as="span" color="text.red">
-                      {product.price.toLocaleString()}
+                      {product?.price.toLocaleString()}
                     </Text>
                     <Text as="span" textDecoration="line-through">
-                      {product.price_before_discount.toLocaleString()}
+                      {product?.price_before_discount.toLocaleString()}
                     </Text>
                   </Flex>
                 </Flex>
@@ -129,7 +129,22 @@ const Cart = ({ data }: Props) => {
                 </Box> */}
               </Flex>
             );
-          })}
+          })
+        ) : (
+          <Box>
+            <Box textAlign={"center"}>
+              <CartNotFoundIcon />
+              <Text
+                fontSize={"18px"}
+                lineHeight={"150%"}
+                fontWeight={600}
+                my={"12px"}
+              >
+                Giỏ hàng trống{" "}
+              </Text>
+            </Box>
+          </Box>
+        )}
       </Flex>
       <Flex
         alignItems="center"
@@ -142,7 +157,7 @@ const Cart = ({ data }: Props) => {
       >
         <Text fontSize="sm">Tổng tiền:</Text>
         <Text fontSize="xl">
-          {data ? data.total_money.toLocaleString() : 0} đ
+          {data.length > 0 ? data.total_money.toLocaleString() : 0} đ
         </Text>
       </Flex>
     </Box>
