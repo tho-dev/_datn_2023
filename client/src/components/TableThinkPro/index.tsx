@@ -37,7 +37,7 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 			px="6"
 			py="8"
 			borderWidth="1px"
-			borderColor="border.gray"
+			borderColor="border.primary"
 			rounded="lg"
 		>
 			<Table>
@@ -63,7 +63,7 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 										color="text.admin2"
 										lineHeight="1.6"
 										borderBottom="none"
-										px="4"
+										px="2"
 										fontSize="xs"
 										_first={{
 											paddingLeft: 5,
@@ -78,7 +78,7 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 										w="max-content"
 									>
 										<Flex
-											justifyContent="space-between"
+											justifyContent="space-around"
 											alignItems="center"
 											w="inherit"
 											gap="8"
@@ -133,10 +133,11 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 										isNumeric={meta?.isNumeric}
 										fontSize="sm"
 										py="3"
-										px="4"
+										px="3"
 										textAlign="start"
 										borderBottomWidth="1px"
-										borderColor="#f1f4f9"
+										borderStyle="solid"
+										borderColor="border.primary"
 										style={{
 											textAlign: "start",
 										}}

@@ -49,7 +49,7 @@ const GlobalStyles = {
 			bgWarning: "#fcf2da",
 		},
 		border: {
-			primary: "#ced4da",
+			primary: "#e9ebec",
 			error: "#E53E3E",
 		},
 	},

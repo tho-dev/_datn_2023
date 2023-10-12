@@ -1,192 +1,364 @@
-import React, { useState } from "react";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
-  Button,
-  Link,
-  Input,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  useDisclosure,
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	Button,
+	Image,
+	Input,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
+	useDisclosure,
 } from "@chakra-ui/react";
-import {
-  AddAdminIcon,
-  AirplayIcon,
-  ArrowTopRightIcon,
-  EditIcon,
-  FilterIcon,
-  SearchAdminIcon,
-  TraskIcon,
-} from "~/components/common/Icons";
-import { Link as ReactRouterLink } from "react-router-dom";
-import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
+import { useState } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import thinkpro from "~/data/clone-thinkpro.json";
+import TableThinkPro from "~/components/TableThinkPro";
+import { AirplayIcon, EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { useGetAllProductQuery } from "~/redux/api/product";
+import { formatNumber } from "~/utils/fc";
 
 type Props = {};
 
 const ProductManagerView = (props: Props) => {
-  const columnHelper = createColumnHelper<any>();
-  const [id, setId] = useState(null);
-  const {
-    isOpen: isOpenConfirm,
-    onOpen: onOpenConfirm,
-    onClose: onCloseConfirm,
-  } = useDisclosure();
+	const columnHelper = createColumnHelper<any>();
+	const [id, setId] = useState(null);
+	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
 
-  // hàm xóa sản phẩm
-  const handleDeleteProduct = async () => {
-    console.log("number", id);
-    onCloseConfirm();
-  };
+	const { data: products } = useGetAllProductQuery({
+		_page: 1,
+		_limit: 20,
+		_order: "asc",
+		_sort: "created_at",
+	});
 
-  const columns = [
-    columnHelper.accessor("#", {
-      cell: (info) => {
-        const index = info.row.index;
-        return index + 1;
-      },
-      header: "#",
-    }),
-    columnHelper.accessor("thumbnail", {
-      cell: (info) => {
-        return <h1>{info.getValue()?.filename}</h1>;
-      },
-      header: "Tên sản phẩm",
-    }),
-    columnHelper.accessor("slug", {
-      cell: (info) => info.getValue(),
-      header: "Slug",
-    }),
-    columnHelper.accessor("desc", {
-      cell: (info) => info.getValue(),
-      header: "Mô tả",
-      meta: {
-        isNumeric: true,
-      },
-    }),
-    columnHelper.accessor("action", {
-      cell: () => {
-        return (
-          <Menu>
-            <MenuButton textAlign="center">
-              <Text fontSize="18" fontWeight="semibold" textAlign="center" ml={3}>
-                ...
-              </Text>
-            </MenuButton>
-            <MenuList w="100px">
-              <MenuItem
-                py="2"
-                icon={<TraskIcon size={4} />}
-                onClick={() => {
-                  setId(1 as any);
-                  onOpenConfirm();
-                }}
-              >
-                Xóa
-              </MenuItem>
-              <MenuItem py="2" icon={<AirplayIcon size={4} />}>
-                Preview
-              </MenuItem>
-              <MenuItem
-                as={ReactRouterLink}
-                to="/admin/san-pham/slug/update"
-                py="2"
-                icon={<EditIcon size={4} />}
-              >
-                Cập Nhật
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        );
-      },
-      header: "Action",
-    }),
-  ];
+	// hàm xóa sản phẩm
+	const handleDeleteProduct = async () => {
+		console.log("number", id);
+		onCloseConfirm();
+	};
 
-  return (
-    <Box>
-      <Flex alignItems="center" justifyContent="space-between">
-        <Heading fontSize="18" color="text.black" lineHeight="100%">
-          Quản lý sản phẩm
-        </Heading>
-        <Flex gap="4" >
-          <Button
-            color="text.black"
-            bgColor="bg.white"
-            size="small"
-            px="6"
-            leftIcon={<ArrowTopRightIcon size={5} strokeWidth={1.2} />}
-            fontSize={14}
-          >
-            Export
-          </Button>
-          <Link as={ReactRouterLink} to="/admin/san-pham/add">
-            <Button
-              bgColor="#06d6a0"
-              size="small"
-              px="6"
-              leftIcon={<AddAdminIcon size={4} />}
-              fontSize={14}
-              _hover={{
-                textDecoration: "none",  
-              }}
-            >
-              Tạo mới
-            </Button>
-          </Link>
+	const columns = [
+		columnHelper.accessor("#", {
+			cell: (info) => {
+				const index = info.row.index;
+				return (
+					<Text
+						fontSize="13px"
+						fontWeight="medium"
+					>
+						{index + 1}
+					</Text>
+				);
+			},
+			header: "#",
+		}),
+		columnHelper.accessor("name", {
+			cell: ({ getValue }) => {
+				return (
+					<Text
+						fontSize="13px"
+						fontWeight="medium"
+					>
+						{getValue()}
+					</Text>
+				);
+			},
+			header: "Sản phẩm",
+		}),
+		columnHelper.accessor("category", {
+			cell: ({ getValue }) => {
+				return (
+					<Text
+						fontSize="13px"
+						fontWeight="medium"
+					>
+						{getValue()}
+					</Text>
+				);
+			},
+			header: "Danh mục",
+		}),
+		columnHelper.accessor("brand", {
+			cell: ({ getValue }) => {
+				return (
+					<Text
+						fontSize="13px"
+						fontWeight="medium"
+					>
+						{getValue()}
+					</Text>
+				);
+			},
+			header: "Thương hiệu",
+		}),
+		columnHelper.accessor("image", {
+			cell: ({ getValue }) => (
+				<Image
+					w="64px"
+					h="64px"
+					p="2"
+					objectFit="contain"
+					src={getValue()}
+					alt={getValue()}
+					bgColor="bg.gray"
+					rounded="md"
+				/>
+			),
+			header: "Ảnh",
+		}),
+		columnHelper.accessor("price_before_discount", {
+			cell: ({ getValue }) => (
+				<Text
+					fontSize="13px"
+					fontWeight="medium"
+				>
+					{formatNumber(`${getValue()}VND`)}
+				</Text>
+			),
+			header: "Giá gốc",
+		}),
+		columnHelper.accessor("colors", {
+			cell: ({ getValue }) => {
+				const colors = getValue();
+				return (
+					<Flex gap="2">
+						{colors?.map((color: any) => {
+							return (
+								<Box
+									w="14px"
+									h="14px"
+									bgColor={color.value}
+									rounded="2px"
+								/>
+							);
+						})}
+					</Flex>
+				);
+			},
+			header: "Màu sắc",
+		}),
+		columnHelper.accessor("option_value", {
+			cell: ({ getValue }) => {
+				const option_values = getValue();
 
-        </Flex>
-      </Flex>
-      <Flex alignItems="center" justifyContent="space-between" mt="4">
-        <Button
-          color="text.black"
-          bgColor="bg.white"
-          size="small"
-          px="4"
-          fontWeight="semibold"
-          fontSize={14}
-          leftIcon={<FilterIcon size={7} />}
-        >
-          Lọc
-        </Button>
-        <Flex
-          alignItems="center"
-          justifyContent="space-around"
-          bgColor="bg.white"
-          rounded="4px"
-          border="1px solid #F1F4F9"
-          px="4"
-        >
-          <Flex as="span" display="inline-flex" mt="1" mr="2">
-            <SearchAdminIcon size={5} />
-          </Flex>
-          <Input
-            maxH="38px"
-            border="none"
-            px="0"
-            placeholder="Tìm kiếm"
-            w="200px"
-            maxW="full"
-            _placeholder={{
-              fontSize: "14",
-            }}
-          />
-        </Flex>
-      </Flex>
-      <Box bgColor="bg.white" pl="8" pt="6" pr="4" mt="4" rounded="6px">
-        <TableThinkPro columns={columns} data={thinkpro.data} />
-      </Box>
+				return (
+					<Flex
+						gap="2"
+						flexWrap="wrap"
+					>
+						{option_values?.map((item: any) => {
+							return (
+								<Box
+									py="1"
+									px="2"
+									fontSize="13px"
+									fontWeight="medium"
+									borderWidth="1px"
+									borderColor="bg.primary"
+									rounded="4px"
+								>
+									{item}
+								</Box>
+							);
+						})}
+					</Flex>
+				);
+			},
+			header: "Biến thể",
+		}),
+		columnHelper.accessor("status", {
+			cell: ({ getValue }) => (
+				<Text>
+					{getValue() ? (
+						<Box
+							display="inline-block"
+							px="2"
+							py="1"
+							fontSize="xs"
+							fontWeight="semibold"
+							bgColor="bg.bgSuccess"
+							color="text.textSuccess"
+							rounded="4px"
+						>
+							Đang Bán
+						</Box>
+					) : (
+						<Box
+							display="inline-block"
+							px="2"
+							py="1"
+							fontSize="xs"
+							fontWeight="semibold"
+							bgColor="bg.bgDelete"
+							color="text.textDelete"
+							rounded="md"
+						>
+							Ngừng Bán
+						</Box>
+					)}
+				</Text>
+			),
+			header: "Trạng thái",
+		}),
+		columnHelper.accessor("action", {
+			cell: () => {
+				return (
+					<Menu>
+						<MenuButton textAlign="center">
+							<Text
+								fontSize="18"
+								fontWeight="semibold"
+								textAlign="center"
+								ml={3}
+							>
+								...
+							</Text>
+						</MenuButton>
+						<MenuList w="100px">
+							<MenuItem
+								py="2"
+								icon={<TraskIcon size={4} />}
+								onClick={() => {
+									setId(1 as any);
+									onOpenConfirm();
+								}}
+							>
+								Xóa
+							</MenuItem>
+							<MenuItem
+								py="2"
+								icon={<AirplayIcon size={4} />}
+							>
+								Preview
+							</MenuItem>
+							<MenuItem
+								as={ReactRouterLink}
+								to="/admin/san-pham/slug/update"
+								py="2"
+								icon={<EditIcon size={4} />}
+							>
+								Cập Nhật
+							</MenuItem>
+						</MenuList>
+					</Menu>
+				);
+			},
+			header: "Action",
+		}),
+	];
 
-      <ConfirmThinkPro
-        isOpen={isOpenConfirm}
-        onClose={onCloseConfirm}
-        handleClick={handleDeleteProduct}
-      />
-    </Box>
-  );
+	return (
+		<Box
+			bgColor="bg.white"
+			px="6"
+			py="8"
+			mb="8"
+			rounded="lg"
+		>
+			<Flex
+				alignItems="center"
+				justifyContent="space-between"
+				pb="5"
+			>
+				<Heading
+					as="h2"
+					fontSize="18"
+				>
+					Quản lý sản phẩm
+				</Heading>
+				<Box>
+					<Breadcrumb
+						spacing="8px"
+						separator="/"
+						fontSize="sm"
+					>
+						<BreadcrumbItem>
+							<BreadcrumbLink
+								as={ReactRouterLink}
+								to="/admin"
+							>
+								Home
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+
+						<BreadcrumbItem isCurrentPage>
+							<BreadcrumbLink
+								as={ReactRouterLink}
+								to="/admin/nhu-cau"
+							>
+								Sản phẩm
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+					</Breadcrumb>
+				</Box>
+			</Flex>
+
+			<Flex
+				alignItems="center"
+				justifyContent="space-between"
+				mb="6"
+			>
+				<Flex
+					px="4"
+					rounded="4px"
+					alignItems="center"
+					borderWidth="1px"
+					borderColor="#e9ebec"
+				>
+					<Flex
+						as="span"
+						alignItems="center"
+						justifyContent="center"
+					>
+						<SearchIcon
+							size={5}
+							color="text.black"
+							strokeWidth={1}
+						/>
+					</Flex>
+					<Input
+						border="none"
+						padding="0.6rem 0.9rem"
+						fontSize="15"
+						fontWeight="medium"
+						lineHeight="1.5"
+						w="260px"
+						placeholder="Tìm kiếm..."
+					/>
+				</Flex>
+				<Button
+					leftIcon={
+						<PlusCircleIcon
+							size={5}
+							color="text.white"
+						/>
+					}
+					px="4"
+					lineHeight="2"
+					bgColor="bg.green"
+					// onClick={onOpenActionCreateDemand}
+				>
+					Tạo Mới
+				</Button>
+			</Flex>
+
+			{/* hiểu thị dữ liệu */}
+			<TableThinkPro
+				columns={columns}
+				data={products?.data?.items || []}
+			/>
+
+			<ConfirmThinkPro
+				isOpen={isOpenConfirm}
+				onClose={onCloseConfirm}
+				handleClick={handleDeleteProduct}
+			/>
+		</Box>
+	);
 };
 
 export default ProductManagerView;
