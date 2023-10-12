@@ -18,6 +18,27 @@ const orderApi = createApi({
         },
     }),
     endpoints: (builder) => ({
+        getAllShipping: builder.query({
+            query: () => ({
+                url: "/order/shipping",
+                method: "GET",
+            }),
+            providesTags: ["Order"]
+        }),
+        getAllOrder: builder.query({
+            query: () => ({
+                url: "/order",
+                method: "GET",
+            }),
+            providesTags: ["Order"]
+        }),
+        getOneShipping: builder.query({
+            query: ({ id }) => ({
+                url: `/order/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["Order"]
+        }),
         create: builder.mutation<any, any>({
             query: (data) => ({
                 url: `/order`,
@@ -58,14 +79,25 @@ const orderApi = createApi({
             }),
             invalidatesTags: ["Order"]
         }),
+        cancelOrder: builder.mutation<any, any>({
+            query: ({ id }) => ({
+                url: `/order/cancel/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Order"]
+        }),
     })
 });
 export const {
+    useGetAllOrderQuery,
+    useGetAllShippingQuery,
+    useGetOneShippingQuery,
     useCreateMutation,
     useSendOtpMutation,
     useCheckOtpMutation,
     usePaymentMomoMutation,
-    usePaymentStatusMutation
+    usePaymentStatusMutation,
+    useCancelOrderMutation
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

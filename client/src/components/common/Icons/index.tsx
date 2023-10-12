@@ -2180,3 +2180,24 @@ export const RefreshIcon = ({
     <path d="m1 14 4.64 4.36A9 9 0 0 0 20.49 15"></path>
   </Icon>
 );
+
+export const AddressIcon = ({
+  size = 35,
+  strokeWidth = 1.5,
+  color = "currentColor",
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+    <path d="M12 7a3 3 0 1 0 0 6 3 3 0 1 0 0-6z"></path>
+  </Icon>
+);

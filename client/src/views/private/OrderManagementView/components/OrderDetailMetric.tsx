@@ -1,13 +1,20 @@
-import { GridItem, Flex, Heading, Box, Text } from "@chakra-ui/layout"; 
+import { GridItem, Flex, Heading, Box, Text } from "@chakra-ui/layout";
 
 type Props = {
-  heading: string;
-  text: string;
-  icon: any;
-  color: string;
+  heading?: string;
+  text?: string;
+  icon?: any;
+  color?: string;
+  phone?: string;
 };
 
-const OrderDetailMetricItem = ({ heading, text, icon, color }: Props) => {
+const OrderDetailMetricItem = ({
+  heading,
+  text,
+  icon,
+  color,
+  phone,
+}: Props) => {
   return (
     <GridItem
       borderWidth={{
@@ -27,14 +34,21 @@ const OrderDetailMetricItem = ({ heading, text, icon, color }: Props) => {
         bgColor: "gray.200",
       }}
     >
-      <Flex padding={5} justifyContent="space-between" gap={4}>
+      <Flex padding={4} justifyContent="space-between" gap={4}>
         <Box>
           <Heading as="h3" fontSize="18" my="2">
             {heading}
           </Heading>
-          <Flex gap="1" alignItems="center">
-            <Text fontSize="15" fontWeight="semibold">
+          <Flex gap="1" flexDirection="column">
+            <Text
+              fontSize="15"
+              fontWeight="semibold"
+              textTransform="capitalize"
+            >
               {text}
+            </Text>
+            <Text fontSize="15" fontWeight="semibold">
+              {phone}
             </Text>
           </Flex>
         </Box>

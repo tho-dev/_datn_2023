@@ -14,13 +14,15 @@ import Metrics from "./components/Metrics";
 import { Link } from "react-router-dom";
 import OrderFilter from "./components/OrderFilter";
 import { useEffect, useState } from "react";
-
+import { useGetAllOrderQuery } from "~/redux/api/order";
+import moment from "moment";
 type Props = {};
 
 const OrderManagementView = (props: Props) => {
+  const { data, isLoading, isFetching } = useGetAllOrderQuery("");
+
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [orders, setOrders] = useState(thinkpro.orders);
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -29,41 +31,41 @@ const OrderManagementView = (props: Props) => {
       },
       header: "#",
     }),
-    columnHelper.accessor("id", {
+    columnHelper.accessor("_id", {
       cell: (info) => {
         return <h1>{info.getValue()}</h1>;
       },
       header: "ID đơn hàng",
     }),
-    columnHelper.accessor("customerName", {
+    columnHelper.accessor("customer_name", {
       cell: (info) => info.getValue(),
       header: "Tên khách hàng",
     }),
-    columnHelper.accessor("amount", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("total_amount", {
+      cell: (info) => info.getValue()?.toLocaleString(),
       header: "Tổng tiền",
       meta: {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor("orderDate", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("created_at", {
+      cell: (info) => moment(info.getValue()).format("YYYY-MM-DD"),
       header: "Ngày đặt",
     }),
-    columnHelper.accessor("deliveryDate", {
-      cell: (info) => info.getValue(),
-      header: "Ngày giao",
+    columnHelper.accessor("phone_number", {
+      cell: (info) => `+${info.getValue()}`,
+      header: "Số điện thoại",
     }),
-    columnHelper.accessor("payment", {
+    columnHelper.accessor("payment_method", {
       cell: (info) => info.getValue(),
-      header: "Phương thức",
+      header: "Phương thức thanh toán",
     }),
-    columnHelper.accessor("deliveryStatus", {
+    columnHelper.accessor("payment_status", {
       cell: (info) => info.getValue(),
-      header: "Trạng thái",
+      header: "Trạng thái thanh toán",
     }),
-    columnHelper.accessor("action", {
-      cell: () => {
+    columnHelper.accessor("_id", {
+      cell: (info) => {
         return (
           <Menu>
             <MenuButton
@@ -91,7 +93,9 @@ const OrderManagementView = (props: Props) => {
             <MenuList>
               <MenuItem onClick={onOpen}>Xóa</MenuItem>
               <MenuItem>
-                <Link to="/admin/don-hang/id">Xem chi tiết</Link>
+                <Link to={`/admin/don-hang/${info.getValue()}`}>
+                  Xem chi tiết
+                </Link>
               </MenuItem>
               <MenuItem>Cập nhật</MenuItem>
             </MenuList>
@@ -101,6 +105,7 @@ const OrderManagementView = (props: Props) => {
       header: "Action",
     }),
   ];
+
   // const showFilteredOrders = (filter: {
   //   search: string;
   //   status: string;
@@ -109,6 +114,9 @@ const OrderManagementView = (props: Props) => {
   //  let filteredOrders = orders.filter(order => Object.values())
   //   setOrders(filteredOrders)
   // };
+  if (isLoading) return <Box>Loading...</Box>;
+  if (isFetching) return <Box>isFetching...</Box>;
+  console.log(data);
   return (
     <Box w="full" h="full">
       <Heading as="h1" fontSize={"18"}>
@@ -117,7 +125,7 @@ const OrderManagementView = (props: Props) => {
       <Metrics />
       <OrderFilter />
       <Box bgColor="bg.white" mt="6" p="6">
-        <TableThinkPro columns={columns} data={orders} />
+        <TableThinkPro columns={columns} data={data?.data.items} />
       </Box>
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>

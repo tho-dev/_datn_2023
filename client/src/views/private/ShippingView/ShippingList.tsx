@@ -1,13 +1,29 @@
 import { Box, Grid, GridItem } from "@chakra-ui/layout";
 import { Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ListCardShipping from "./components/ListCardShipping";
 import { SearchIcon } from "~/components/common/Icons";
 import ShippingDetail from "./components/ShippingDetail";
+import { useGetAllShippingQuery } from "~/redux/api/order";
 
 type Props = {};
 
 const ShippingList = (props: Props) => {
+  const { data, isLoading, isFetching, isError } = useGetAllShippingQuery("");
+  const [orderId, setOrderId] = useState(data?.data.items[0]._id as string);
+  if (isLoading) {
+    return <Box>isLoading...</Box>;
+  }
+  if (isFetching) {
+    return <Box>isFetching...</Box>;
+  }
+  if (isError) {
+    return <Box>isError...</Box>;
+  }
+  const handleViewOrderDetail = (orderId: string) => {
+    setOrderId(orderId);
+  };
+
   return (
     <Box width="100%" minHeight="100vh">
       <Text
@@ -34,10 +50,13 @@ const ShippingList = (props: Props) => {
               />
             </InputGroup>
           </Box>
-          <ListCardShipping />
+          <ListCardShipping
+            items={data?.data.items}
+            handleViewOrderDetail={handleViewOrderDetail}
+          />
         </GridItem>
         <GridItem colSpan={5} padding={8} bgColor="bg.white">
-          <ShippingDetail />
+          {orderId ? <ShippingDetail orderId={orderId} /> : <Box>Loading</Box>}
         </GridItem>
       </Grid>
     </Box>

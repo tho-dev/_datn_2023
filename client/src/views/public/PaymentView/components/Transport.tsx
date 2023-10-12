@@ -42,7 +42,7 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
   const [district, setDistrict] = useState<any>([]);
   const [provider, setProvider] = useState<any>([]);
   const [conscious, setConscious] = useState([]);
-
+  const [districted, setDistricted] = useState([]);
   useEffect(() => {
     handleChooseAdress([
       selectedWard.value,
@@ -65,6 +65,7 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
       .get(`https://provinces.open-api.vn/api/p/${item.code}?depth=3`)
       .then(({ data }) => {
         setDistrict(data.districts);
+        setDistricted(data.districts);
         setSelectedProvince({ ...selectedProvince, value: data.name });
         setSelectedDistrict({ ...selectedDistrict, label: "Quận | Huyện" });
         setConscious([]);
@@ -82,7 +83,20 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
       onClose();
     }, 1000);
   };
-
+  const handleChooseConsious = () => {
+    axios.get("https://provinces.open-api.vn/api/").then(({ data }) => {
+      setConscious(data);
+      setSelectedProvince({ ...selectedProvince, label: "Tỉnh | Thành Phố" });
+    });
+  };
+  const handleChooseDistrict = () => {
+    setConscious([]);
+    setDistrict(districted);
+  };
+  const handleChooseProvider = () => {
+    setDistrict([]);
+    setProvider(provider);
+  };
   return (
     <Box>
       <Flex>
@@ -95,13 +109,28 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
         >
           <Box>
             <Flex justifyContent={"flex-start"} gap={2}>
-              <Button bg="none" color="black" padding={0}>
+              <Button
+                bg="none"
+                color="black"
+                padding={0}
+                onClick={handleChooseConsious}
+              >
                 {selectedProvince.value ?? selectedProvince.label}
               </Button>
-              <Button bg="none" color="black" padding={0}>
+              <Button
+                bg="none"
+                color="black"
+                padding={0}
+                onClick={handleChooseDistrict}
+              >
                 {selectedDistrict.value ?? selectedDistrict.label}
               </Button>
-              <Button bg="none" color="black" padding={0}>
+              <Button
+                bg="none"
+                color="black"
+                padding={0}
+                onClick={handleChooseProvider}
+              >
                 {selectedWard.value ?? selectedWard.label}
               </Button>
             </Flex>

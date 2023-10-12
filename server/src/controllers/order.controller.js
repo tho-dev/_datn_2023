@@ -59,7 +59,6 @@ export const createOrder = async (req, res, next) => {
     }
     const new_order = await Order.create({
       ...req.body,
-      total_amount: cart.total_money,
       status_detail: [
         {
           status_order: "processing",
@@ -231,7 +230,9 @@ export const getOne = async (req, res, next) => {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
     const orderObj = order.toObject();
-    const order_details = await Order_Detail.find({ order_id: id });
+    const order_details = await Order_Detail.find({ order_id: id }).populate({
+      path: "sku_id",
+    });
 
     if (!order) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
@@ -267,7 +268,7 @@ export const cancelOrder = async (req, res, next) => {
     const id = req.params.id;
     const ordered = await Order.findById(id);
     if (ordered.status === "cancelled") {
-      throw createError.BadRequest("Đơn hàng đã được huỷ");
+      throw createError.BadRequest("Đơn hàng đã được huỷ rồi");
     }
     if (ordered.status === "delivering") {
       throw createError.BadRequest("Không thể huỷ đơn hàng đang giao");
@@ -765,6 +766,49 @@ export const updatePaymentStatus = async (req, res, next) => {
     return res.json({
       status: 200,
       message: "Thành công",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getAllShipping = async (req, res, next) => {
+  try {
+    const {
+      _page = 1,
+      _sort = "createdAt",
+      _order = "asc",
+      _limit = 10,
+    } = req.query;
+
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        [_sort]: _order == "desc" ? -1 : 1,
+      },
+    };
+    const { docs, ...paginate } = await Order.paginate(
+      { shipping_method: "shipped" },
+      options
+    );
+
+    const new_docs = await Promise.all(
+      docs.map(async (item) => {
+        const order_details = await Order_Detail.find({ order_id: item._id });
+        const orders = item.toObject();
+        return {
+          ...orders,
+          products: order_details,
+        };
+      })
+    );
+    return res.json({
+      status: 200,
+      message: "Lấy toàn bộ đơn hàng thành công",
+      data: {
+        items: new_docs,
+        paginate,
+      },
     });
   } catch (error) {
     next(error);

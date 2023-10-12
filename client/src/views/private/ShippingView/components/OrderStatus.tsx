@@ -12,21 +12,25 @@ import {
   useSteps,
   Box,
   Flex,
+  Text,
 } from "@chakra-ui/react";
 
-type Props = {};
+type Props = {
+  data: any;
+};
 
 const steps = [
-  { title: "First", description: "Contact Info" },
-  { title: "Second", description: "Date & Time" },
-  { title: "Third", description: "Select Rooms" },
-  { title: "Third", description: "Select Rooms" },
-  { title: "Third", description: "Select Rooms" },
+  { title: "First", description: "processing", tran: "chờ xác nhận" },
+  { title: "Second", description: "confirmed", tran: "Đã xác nhận" },
+  { title: "Third", description: "delivering", tran: "Đang vận chuyển" },
+  { title: "Third", description: "delivered", tran: "Đã vận chuyển" },
+  { title: "Third", description: "cancelled", tran: "Đã huỷ đơn" },
 ];
 
-const OrderStatus = (props: Props) => {
+const OrderStatus = ({ data }: Props) => {
+  const findIndex = steps.findIndex((item) => item.description === data);
   const { activeStep } = useSteps({
-    index: 1,
+    index: findIndex + 1,
     count: steps.length,
   });
 
@@ -44,7 +48,9 @@ const OrderStatus = (props: Props) => {
             </StepIndicator>
             <Box>
               <Box textAlign="center">{step.title}</Box>
-              <StepDescription>{step.description}</StepDescription>
+              <StepDescription>
+                <Text textTransform="capitalize">{step.tran}</Text>
+              </StepDescription>
             </Box>
           </Flex>
 
