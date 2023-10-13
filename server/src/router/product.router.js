@@ -1,6 +1,7 @@
 import express from "express"
 import {
 	getAllProduct,
+	getAllProductManager,
 	getSingleProduct,
 	createProduct,
 	getAllOptionValues,
@@ -21,6 +22,7 @@ import {
 const router = express.Router();
 
 // api product 
+router.get('/manager', getAllProductManager)
 router.get('/:slug', getSingleProduct)
 router.get('/', getAllProduct)
 router.post("/", createProduct)

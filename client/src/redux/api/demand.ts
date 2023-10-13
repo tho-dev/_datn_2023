@@ -1,5 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IDemand } from "~/interface/demand";
+import { objectToUrlParams } from "~/utils/fc";
+
+type TQuery = {
+	_order?: string;
+	_sort?: string;
+	_page?: number;
+	_limit?: number;
+};
 
 const demandApi = createApi({
 	reducerPath: "demand",
@@ -9,7 +17,7 @@ const demandApi = createApi({
 	tagTypes: ["DemandTag"],
 	endpoints: (build) => ({
 		getAllDemand: build.query({
-			query: () => "",
+			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
 			providesTags: ["DemandTag"],
 		}),
 		getSingleDemand: build.query({
