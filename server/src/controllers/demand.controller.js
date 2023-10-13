@@ -4,11 +4,31 @@ import moment from "moment/moment"
 
 export async function getAllDemand(req, res, next) {
 	try {
-		const demands = await Demand.find({})
+		const {
+			_page = 1,
+			_sort = "created_at",
+			_order = "desc",
+			_limit = 10,
+		} = req.query;
+
+		const options = {
+			page: _page,
+			limit: _limit,
+			sort: {
+				[_sort]: _order == "desc" ? -1 : 1,
+			},
+			select: ['-deleted', '-deleted_at']
+		};
+
+		const { docs, ...paginate } = await Demand.paginate({}, options);
+
 		return res.json({
 			status: 200,
 			message: 'Thành công',
-			data: demands
+			data: {
+				items: docs,
+				paginate
+			},
 		})
 	} catch (error) {
 		next(error)

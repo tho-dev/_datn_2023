@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Button, Table, Tbody, Td, Th, Thead, Tr, Spinner } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
 	ColumnDef,
@@ -10,16 +10,28 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { ArrowDownAdminIcon, ArrowRightIcon } from "../common/Icons";
 
 export type TableThinkProProps<Data extends object> = {
-	data: Data[];
 	columns: ColumnDef<Data, any>[];
+	useData?: any;
+	query?: any;
+	defaultPageSize?: number;
 };
 
-export default function TableThinkPro<Data extends object>({ data, columns }: TableThinkProProps<Data>) {
-	const [sorting, setSorting] = React.useState<SortingState>([]);
+export default function TableThinkPro<Data extends object>({
+	columns,
+	useData,
+	query,
+	defaultPageSize = 10,
+}: TableThinkProProps<Data>) {
+	const [sorting, setSorting] = useState<SortingState>([]);
+	const [data, setData] = useState<any>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [controlledPageCount, setPageCount] = useState(0);
+	const [recordsPerPage, setRecordsPerPage] = useState(defaultPageSize);
+
 	const table = useReactTable({
 		columns,
 		data,
@@ -30,14 +42,39 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 		state: {
 			sorting,
 		},
+		initialState: {
+			pagination: {
+				pageIndex: 0,
+				pageSize: recordsPerPage,
+			},
+		},
+		debugTable: true,
+		manualPagination: true,
+		pageCount: controlledPageCount,
 	});
+
+	const {
+		data: result,
+		isLoading,
+		isFetching,
+	} = useData({
+		...query,
+		_page: table.getState().pagination.pageIndex + 1,
+	});
+
+	useEffect(() => {
+		setLoading(isLoading || isFetching);
+		setData(!(isLoading || isFetching) ? result?.data?.items : []);
+		setPageCount(result?.data?.paginate?.totalPages);
+		setRecordsPerPage(result?.data?.paginate?.limit);
+	}, [result, table.getState().pagination.pageIndex, table.getState().pagination.pageSize]);
 
 	return (
 		<Box
 			px="6"
 			py="8"
 			borderWidth="1px"
-			borderColor="border.gray"
+			borderColor="border.primary"
 			rounded="lg"
 		>
 			<Table>
@@ -63,7 +100,7 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 										color="text.admin2"
 										lineHeight="1.6"
 										borderBottom="none"
-										px="4"
+										px="2"
 										fontSize="xs"
 										_first={{
 											paddingLeft: 5,
@@ -78,7 +115,7 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 										w="max-content"
 									>
 										<Flex
-											justifyContent="space-between"
+											justifyContent="space-around"
 											alignItems="center"
 											w="inherit"
 											gap="8"
@@ -122,104 +159,123 @@ export default function TableThinkPro<Data extends object>({ data, columns }: Ta
 						</Tr>
 					))}
 				</Thead>
-				<Tbody>
-					{table.getRowModel().rows.map((row) => (
-						<Tr key={row.id}>
-							{row.getVisibleCells().map((cell) => {
-								const meta: any = cell.column.columnDef.meta;
-								return (
-									<Td
-										key={cell.id}
-										isNumeric={meta?.isNumeric}
-										fontSize="sm"
-										py="3"
-										px="4"
-										textAlign="start"
-										borderBottomWidth="1px"
-										borderColor="#f1f4f9"
-										style={{
-											textAlign: "start",
-										}}
-										_first={{
-											paddingLeft: 5,
-										}}
-										_last={{
-											paddingRight: 5,
-										}}
-										w="auto"
-									>
-										<motion.div
-											layout
-											animate={{
-												opacity: 1,
+				<Tbody
+					h={loading ? "9" : "auto"}
+					position="relative"
+				>
+					{!loading ? (
+						table.getRowModel().rows.map((row) => (
+							<Tr key={row.id}>
+								{row.getVisibleCells().map((cell) => {
+									const meta: any = cell.column.columnDef.meta;
+									return (
+										<Td
+											key={cell.id}
+											isNumeric={meta?.isNumeric}
+											fontSize="sm"
+											py="3"
+											px="3"
+											textAlign="start"
+											borderBottomWidth="1px"
+											borderStyle="solid"
+											borderColor="border.primary"
+											style={{
+												textAlign: "start",
 											}}
-											initial={{
-												opacity: 0,
+											_first={{
+												paddingLeft: 5,
 											}}
-											transition={{
-												duration: 0.25,
+											_last={{
+												paddingRight: 5,
 											}}
+											w="inherit"
+											maxW="360px"
 										>
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
-										</motion.div>
-									</Td>
-								);
-							})}
-						</Tr>
-					))}
+											<motion.div
+												layout
+												animate={{
+													opacity: 1,
+												}}
+												initial={{
+													opacity: 0,
+												}}
+												transition={{
+													duration: 0.25,
+												}}
+											>
+												{flexRender(cell.column.columnDef.cell, cell.getContext())}
+											</motion.div>
+										</Td>
+									);
+								})}
+							</Tr>
+						))
+					) : (
+						<Flex
+							w="full"
+							py="4"
+							justifyContent="center"
+							alignItems="center"
+							position="absolute"
+						>
+							<Spinner />
+						</Flex>
+					)}
 				</Tbody>
 			</Table>
-			<Flex
-				py="6"
-				px="0"
-				alignItems="flex-end"
-				justifyContent="space-between"
-			>
-				<Button
-					h="38px"
-					bgColor="bg.white"
-					border="1px solid #D9E1E7CC"
-					rounded="lg"
-					transition="all 0.3s"
-					color={table.getCanPreviousPage() ? "text.black" : "#1c1f2366"}
-					cursor={table.getCanPreviousPage() ? "pointer" : "not-allowed"}
-					leftIcon={
-						<ArrowRightIcon
-							size={4}
-							transform="rotate(180deg)"
-						/>
-					}
-					onClick={() => {
-						if (!table.getCanPreviousPage()) return;
-						table.previousPage();
-					}}
-				>
-					Previous
-				</Button>
+			{!loading && (
 				<Flex
-					fontSize="sm"
-					color="text.black"
-					fontWeight="semibold"
+					py="6"
+					px="0"
+					alignItems="flex-end"
+					justifyContent="space-between"
 				>
-					{`Trang 1/${table.getPageCount()}`}
+					<Button
+						h="38px"
+						bgColor="bg.white"
+						border="1px solid #D9E1E7CC"
+						rounded="lg"
+						transition="all 0.3s"
+						color={table.getCanPreviousPage() ? "text.black" : "#1c1f2366"}
+						cursor={table.getCanPreviousPage() ? "pointer" : "not-allowed"}
+						leftIcon={
+							<ArrowRightIcon
+								size={4}
+								transform="rotate(180deg)"
+							/>
+						}
+						onClick={() => {
+							if (!table.getCanPreviousPage()) return;
+							table.previousPage();
+						}}
+					>
+						Previous
+					</Button>
+					<Flex
+						fontSize="sm"
+						color="text.black"
+						fontWeight="semibold"
+					>
+						{`Trang ${table.getState().pagination.pageIndex + 1}/${table.getPageCount()}`}
+					</Flex>
+					<Button
+						h="38px"
+						bgColor="bg.white"
+						border="1px solid #D9E1E7CC"
+						rounded="lg"
+						transition="all 0.3s"
+						color={table.getCanNextPage() ? "text.black" : "#1c1f2366"}
+						cursor={table.getCanNextPage() ? "pointer" : "not-allowed"}
+						rightIcon={<ArrowRightIcon size={4} />}
+						onClick={() => {
+							if (!table.getCanNextPage()) return;
+							table.nextPage();
+						}}
+					>
+						Next
+					</Button>
 				</Flex>
-				<Button
-					h="38px"
-					bgColor="bg.white"
-					border="1px solid #D9E1E7CC"
-					rounded="lg"
-					transition="all 0.3s"
-					color={table.getCanNextPage() ? "text.black" : "#1c1f2366"}
-					cursor={table.getCanNextPage() ? "pointer" : "not-allowed"}
-					rightIcon={<ArrowRightIcon size={4} />}
-					onClick={() => {
-						if (!table.getCanNextPage()) return;
-						table.nextPage();
-					}}
-				>
-					Next
-				</Button>
-			</Flex>
+			)}
 		</Box>
 	);
 }

@@ -1,22 +1,13 @@
 import { useForm } from "react-hook-form";
-import {
-	FormErrorMessage,
-	FormLabel,
-	FormControl,
-	Input,
-	Button,
-	Flex, 
-	useToast,
-} from "@chakra-ui/react";
-import { CloseSmallIcon } from "~/components/common/Icons"; 
+import { FormErrorMessage, FormLabel, FormControl, Input, Button, Flex, useToast } from "@chakra-ui/react";
+import { CloseSmallIcon } from "~/components/common/Icons";
 import { useCreateDemandMutation } from "~/redux/api/demand";
 
 type Props = {
 	onClose: () => void;
-	parents: any;
 };
 
-const ActionDemand = ({ onClose, parents }: Props) => {
+const ActionDemand = ({ onClose }: Props) => {
 	const toast = useToast();
 	const {
 		handleSubmit,
@@ -28,11 +19,6 @@ const ActionDemand = ({ onClose, parents }: Props) => {
 	const [createDemand, { isLoading }] = useCreateDemandMutation();
 
 	const onSubmit = async (data: any) => {
-		data = {
-			...data,
-			parent_id: data?.parent_id?.value,
-		};
-
 		try {
 			await createDemand(data).unwrap();
 			toast({
@@ -40,7 +26,7 @@ const ActionDemand = ({ onClose, parents }: Props) => {
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Tạo danh mục thành công",
+				description: "Tạo nhu cầu thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -61,7 +47,7 @@ const ActionDemand = ({ onClose, parents }: Props) => {
 			<Flex
 				flexDir="column"
 				gap="4"
-			> 
+			>
 				<FormControl isInvalid={errors.name as any}>
 					<FormLabel
 						htmlFor="name"
@@ -79,7 +65,6 @@ const ActionDemand = ({ onClose, parents }: Props) => {
 					/>
 					<FormErrorMessage>{(errors.name as any) && errors?.name?.message}</FormErrorMessage>
 				</FormControl>
-				
 			</Flex>
 			<Flex
 				gap="3"

@@ -1,23 +1,14 @@
 import { useForm } from "react-hook-form";
-import {
-	FormErrorMessage,
-	FormLabel,
-	FormControl,
-	Input,
-	Button,
-	Flex, 
-	useToast,
-} from "@chakra-ui/react";
-import { CloseSmallIcon } from "~/components/common/Icons"; 
+import { FormErrorMessage, FormLabel, FormControl, Input, Button, Flex, useToast } from "@chakra-ui/react";
+import { CloseSmallIcon } from "~/components/common/Icons";
 import { useUpdateDemandMutation } from "~/redux/api/demand";
 
 type Props = {
 	onClose: () => void;
-	parents: any;
 	demand: any;
 };
 
-const ActionUpdateDemand = ({ onClose, parents, demand }: Props) => {
+const ActionUpdateDemand = ({ onClose, demand }: Props) => {
 	const toast = useToast();
 	const {
 		handleSubmit,
@@ -31,11 +22,6 @@ const ActionUpdateDemand = ({ onClose, parents, demand }: Props) => {
 	const [updateDemand, { isLoading }] = useUpdateDemandMutation();
 
 	const onSubmit = async (data: any) => {
-		data = {
-			...data,
-			parent_id: data?.parent_id?.value,
-		};
-
 		try {
 			await updateDemand(data).unwrap();
 			toast({
@@ -43,7 +29,7 @@ const ActionUpdateDemand = ({ onClose, parents, demand }: Props) => {
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Cập nhật danh mục thành công",
+				description: "Cập nhật nhu cầu thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -65,25 +51,23 @@ const ActionUpdateDemand = ({ onClose, parents, demand }: Props) => {
 				flexDir="column"
 				gap="4"
 			>
-				 
 				<FormControl isInvalid={errors.name as any}>
 					<FormLabel
 						htmlFor="name"
 						fontSize="15"
 						fontWeight="semibold"
 					>
-						Thương hiệu
+						Nhu Cầu
 					</FormLabel>
 					<Input
 						id="name"
-						placeholder="VD: Dell"
+						placeholder="VD: Học tập, giải trí"
 						{...register("name", {
 							required: "Không được để trống !!!",
 						})}
 					/>
 					<FormErrorMessage>{(errors.name as any) && errors?.name?.message}</FormErrorMessage>
 				</FormControl>
-				 
 			</Flex>
 			<Flex
 				gap="3"

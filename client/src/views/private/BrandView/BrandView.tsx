@@ -24,6 +24,7 @@ import { useGetAllCategoryQuery } from "~/redux/api/category";
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import moment from "moment/moment";
 
 type Props = {};
 
@@ -171,6 +172,28 @@ const BrandView = (props: Props) => {
 				);
 			},
 			header: "Mô tả",
+		}),
+		columnHelper.accessor("created_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày tạo",
+		}),
+		columnHelper.accessor("updated_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày cập nhật",
 		}),
 		columnHelper.accessor("action", {
 			cell: ({ row }) => {
@@ -322,8 +345,16 @@ const BrandView = (props: Props) => {
 				{/* Danh sách */}
 				<TableThinkPro
 					columns={columns}
-					// data={brands?.data?.items}
-					data={brands?.data?.items || []}
+					useData={useGetAllBrandsQuery}
+					defaultPageSize={15}
+					query={{
+						_limit: 20,
+						_page: 1,
+						_parent: true,
+						_sort: "created_at",
+						_order: "desc",
+						_type: "category_brand",
+					}}
 				/>
 
 				{/* Cofirm */}
