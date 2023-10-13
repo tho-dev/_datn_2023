@@ -86,6 +86,21 @@ const orderApi = createApi({
             }),
             invalidatesTags: ["Order"]
         }),
+        tokenPrintOrder: builder.mutation<any, any>({
+            query: (data) => ({
+                url: `/order/getTokenPrintBill`,
+                method: "POST",
+                body: data
+            }),
+        }),
+        updateStatusOrder: builder.mutation<any, any>({
+            query: (data) => ({
+                url: `/order/updateStatus/${data.id}`,
+                method: "PUT",
+                body: data
+            }),
+            invalidatesTags: ["Order"]
+        }),
     })
 });
 export const {
@@ -97,7 +112,9 @@ export const {
     useCheckOtpMutation,
     usePaymentMomoMutation,
     usePaymentStatusMutation,
-    useCancelOrderMutation
+    useCancelOrderMutation,
+    useTokenPrintOrderMutation,
+    useUpdateStatusOrderMutation
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

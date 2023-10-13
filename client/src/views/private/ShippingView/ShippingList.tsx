@@ -24,7 +24,6 @@ const ShippingList = (props: Props) => {
   const handleViewOrderDetail = (orderId: string) => {
     setOrderId(orderId);
   };
-
   return (
     <Box width="100%" minHeight="100vh">
       <Text

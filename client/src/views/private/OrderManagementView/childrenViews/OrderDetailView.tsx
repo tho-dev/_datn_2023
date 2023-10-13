@@ -1,6 +1,6 @@
 import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/layout";
 import { Button, Table, useDisclosure } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import {
   AddressIcon,
   CarIcon,
@@ -21,21 +21,27 @@ import { useParams } from "react-router";
 import {
   useCancelOrderMutation,
   useGetOneShippingQuery,
+  useTokenPrintOrderMutation,
+  useUpdateStatusOrderMutation,
 } from "~/redux/api/order";
 import OrderStatus from "../../ShippingView/components/OrderStatus";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import { useToast } from "@chakra-ui/react";
-
+import ModelPrint from "./ModalPrint";
 type Props = {};
 
 const OrderDetailView = (props: Props) => {
   const { id } = useParams();
   const toast = useToast();
+  const [openPrint, setOpenPrint] = useState(false);
+  const [tokenPrint, setTokenPrint] = useState("");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
     id,
   });
   const [cancelOrder] = useCancelOrderMutation();
+  const [tokenPrintOrder] = useTokenPrintOrderMutation();
+  const [updateStatusOrder] = useUpdateStatusOrderMutation();
   const columnHelper = createColumnHelper<any>();
 
   if (isLoading) {
@@ -114,14 +120,57 @@ const OrderDetailView = (props: Props) => {
       });
     onClose();
   };
-
+  const handlePrinOrder = async () => {
+    console.log(data?.data.status);
+    if (
+      data?.data.status == ("processing" as any) ||
+      data?.data.status == ("confirmed" as any)
+    ) {
+      const data_token: any = await tokenPrintOrder({ order_id: id });
+      setTokenPrint(data_token.data.data);
+      setOpenPrint(true);
+      return;
+    }
+    toast({
+      title: "Hệ thống thông báo",
+      description: `Không thể thực hiện in đơn đã huỷ`,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+  const handlePrint = async (value: string) => {
+    const data_update = {
+      id: id,
+      status: "confirmed",
+    };
+    const update_status: any = await updateStatusOrder(data_update);
+    if (update_status.data.status !== 200) {
+      toast({
+        title: "Hệ thống thông báo",
+        description: `Không thể in vận đơn`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    const newTab = window.open(
+      `https://dev-online-gateway.ghn.vn/a5/public-api/${value}?token=${tokenPrint}`,
+      "_blank"
+    );
+    newTab?.focus();
+  };
   return (
     <Box w="full" h="full">
       <Flex justifyContent="space-between" alignItems={"center"}>
         <Heading as="h1" fontSize="18">
           <Text>Chi tiết đơn hàng</Text>
         </Heading>
-        <Button leftIcon={<DownloadIcon size={24} />}> Xuất HĐ</Button>
+        <Button leftIcon={<DownloadIcon size={24} />} onClick={handlePrinOrder}>
+          {" "}
+          In vận đơn
+        </Button>
       </Flex>
       <Flex justifyContent="space-between" alignItems={"center"}>
         <Heading as="h1" fontSize="16">
@@ -345,6 +394,11 @@ const OrderDetailView = (props: Props) => {
         onClose={onClose}
         handleClick={() => handleCancelOrder(data?.data._id)}
         content="Bạn có muốn xoá đơn hàng này"
+      />
+      <ModelPrint
+        isOpen={openPrint}
+        onClose={() => setOpenPrint(false)}
+        handlePrint={handlePrint}
       />
     </Box>
   );
