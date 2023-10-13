@@ -181,19 +181,48 @@ export const getAll = async (req, res, next) => {
   try {
     const {
       _page = 1,
-      _sort = "createdAt",
-      _order = "asc",
+      _sort = "created_at",
+      _order = "desc",
       _limit = 10,
+      search,
+      status,
+      date,
+      payment_method,
     } = req.query;
+    const conditions = {};
 
+    if (search) {
+      conditions.customer_name = { $regex: new RegExp(search, "i") };
+    }
+
+    if (status) {
+      conditions.status = status;
+    }
+
+    if (date) {
+      const targetMoment = moment(date);
+      const yearToSearch = targetMoment.year();
+      const monthToSearch = targetMoment.month();
+      const dayToSearch = targetMoment.date();
+
+      conditions.created_at = {
+        $gte: new Date(yearToSearch, monthToSearch, dayToSearch),
+        $lt: new Date(yearToSearch, monthToSearch, dayToSearch + 1),
+      };
+    }
+
+    if (payment_method) {
+      conditions.payment_method = payment_method;
+    }
     const options = {
       page: _page,
       limit: _limit,
       sort: {
         [_sort]: _order == "desc" ? -1 : 1,
       },
+      select: ["-deleted", "-deleted_at"],
     };
-    const { docs, ...paginate } = await Order.paginate({}, options);
+    const { docs, ...paginate } = await Order.paginate(conditions, options);
 
     const new_docs = await Promise.all(
       docs.map(async (item) => {

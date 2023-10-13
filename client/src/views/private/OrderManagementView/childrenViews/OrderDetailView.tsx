@@ -28,6 +28,7 @@ import OrderStatus from "../../ShippingView/components/OrderStatus";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import { useToast } from "@chakra-ui/react";
 import ModelPrint from "./ModalPrint";
+import TableProduct from "./TableProduct";
 type Props = {};
 
 const OrderDetailView = (props: Props) => {
@@ -225,7 +226,7 @@ const OrderDetailView = (props: Props) => {
           rounded="md"
           w={"75%"}
         >
-          <TableThinkPro columns={columns} data={data?.data.products} />
+          <TableProduct columns={columns} data={data?.data.products} />
           <Flex alignItems="flex-end" flexDirection="column" py={4}>
             <Box width="30%" minH="250px">
               <Flex

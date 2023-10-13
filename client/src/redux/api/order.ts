@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
+import { objectToUrlParams } from '~/utils/fc';
 
 
 
@@ -26,8 +27,8 @@ const orderApi = createApi({
             providesTags: ["Order"]
         }),
         getAllOrder: builder.query({
-            query: () => ({
-                url: "/order",
+            query: (query) => ({
+                url: `/order?${objectToUrlParams(query)}`,
                 method: "GET",
             }),
             providesTags: ["Order"]

@@ -16,10 +16,28 @@ import OrderFilter from "./components/OrderFilter";
 import { useEffect, useState } from "react";
 import { useGetAllOrderQuery } from "~/redux/api/order";
 import moment from "moment";
+import { debounce } from "lodash";
 type Props = {};
 
 const OrderManagementView = (props: Props) => {
-  const { data, isLoading, isFetching } = useGetAllOrderQuery("");
+  const [search, setSearch] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState({
+    search: "",
+    date: "",
+    status: "",
+    payment_method: "",
+  });
+
+  const { data, isLoading, isFetching } = useGetAllOrderQuery({
+    _limit: 10,
+    _page: 1,
+    _sort: "created_at",
+    _order: "desc",
+    search: debouncedSearchTerm.search,
+    status: debouncedSearchTerm.status,
+    date: debouncedSearchTerm.date,
+    payment_method: debouncedSearchTerm.payment_method,
+  });
 
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -33,12 +51,20 @@ const OrderManagementView = (props: Props) => {
     }),
     columnHelper.accessor("_id", {
       cell: (info) => {
-        return <h1>{info.getValue()}</h1>;
+        return (
+          <Text fontWeight="medium" fontSize="13px">
+            {info.getValue()}
+          </Text>
+        );
       },
       header: "ID đơn hàng",
     }),
     columnHelper.accessor("customer_name", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Text fontWeight="medium" fontSize="13px">
+          {info.getValue()}
+        </Text>
+      ),
       header: "Tên khách hàng",
     }),
     columnHelper.accessor("total_amount", {
@@ -57,11 +83,19 @@ const OrderManagementView = (props: Props) => {
       header: "Số điện thoại",
     }),
     columnHelper.accessor("payment_method", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Text fontWeight="medium" fontSize="13px">
+          {info.getValue()}
+        </Text>
+      ),
       header: "Phương thức thanh toán",
     }),
     columnHelper.accessor("payment_status", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Text fontWeight="medium" fontSize="13px">
+          {info.getValue()}
+        </Text>
+      ),
       header: "Trạng thái thanh toán",
     }),
     columnHelper.accessor("_id", {
@@ -105,27 +139,60 @@ const OrderManagementView = (props: Props) => {
       header: "Action",
     }),
   ];
-
-  // const showFilteredOrders = (filter: {
-  //   search: string;
-  //   status: string;
-  //   payment: string;
-  // }) => {
-  //  let filteredOrders = orders.filter(order => Object.values())
-  //   setOrders(filteredOrders)
-  // };
   if (isLoading) return <Box>Loading...</Box>;
-  if (isFetching) return <Box>isFetching...</Box>;
-  console.log(data);
+
+  const debouncedSearch = debounce(({ name, value }: any) => {
+    setDebouncedSearchTerm({
+      ...debouncedSearchTerm,
+      [name]: value,
+    });
+  }, 2000);
+  const handleSearch = (e: any) => {
+    if (e.target.name == "search") {
+      setSearch(e.target.value);
+    }
+
+    debouncedSearch(e.target);
+  };
+  const handleDate = (data: any) => {
+    const parsedDate = moment(
+      data,
+      "ddd MMM DD YYYY HH:mm:ss [GMT]Z (Giờ Đông Dương)"
+    );
+    const formattedDate = parsedDate.toISOString();
+    const new_data = {
+      name: "date",
+      value: formattedDate,
+    };
+    debouncedSearch(new_data);
+  };
   return (
     <Box w="full" h="full">
       <Heading as="h1" fontSize={"18"}>
         <Text>Danh sách đơn hàng</Text>
       </Heading>
       <Metrics />
-      <OrderFilter />
+      <OrderFilter
+        handleSearch={handleSearch}
+        search={search}
+        handleDate={handleDate}
+      />
       <Box bgColor="bg.white" mt="6" p="6">
-        <TableThinkPro columns={columns} data={data?.data.items} />
+        <TableThinkPro
+          columns={columns}
+          useData={useGetAllOrderQuery}
+          defaultPageSize={10}
+          query={{
+            _limit: 10,
+            _page: 1,
+            _sort: "created_at",
+            _order: "desc",
+            search: debouncedSearchTerm.search,
+            status: debouncedSearchTerm.status,
+            date: debouncedSearchTerm.date,
+            payment_method: debouncedSearchTerm.payment_method,
+          }}
+        />
       </Box>
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>

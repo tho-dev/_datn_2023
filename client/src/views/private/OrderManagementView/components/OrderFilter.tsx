@@ -4,23 +4,17 @@ import React, { useEffect, useState } from "react";
 import Datepicker from "./Datepicker";
 import { Button, Select } from "@chakra-ui/react";
 import { SearchAdminIcon } from "~/components/common/Icons";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_green.css";
 
 type Props = {
+  handleSearch: (e: any) => void;
+  search: any;
+  handleDate: (date: any) => void;
 };
 
-const OrderFilter = (props: Props) => {
-  const [filter, setFilter] = useState<{
-    search: string;
-    status: string;
-    payment: string;
-  }>({
-    search: "",
-    status: "",
-    payment: ""
-  });
-  // useEffect(()=>{
-  //   showFilteredOrders(filter)
-  // },[filter])
+const OrderFilter = ({ handleSearch, search, handleDate }: Props) => {
+  const [date, setDate] = React.useState<Date>();
   return (
     <Box mt="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
       <Flex gap={4} justifyContent={"space-between"}>
@@ -33,7 +27,7 @@ const OrderFilter = (props: Props) => {
           px="4"
           w={"22%"}
         >
-          <Flex as="span" display="inline-flex" mt="1" mr={2} >
+          <Flex as="span" display="inline-flex" mt="1" mr={2}>
             <SearchAdminIcon size={5} />
           </Flex>
           <Input
@@ -46,16 +40,43 @@ const OrderFilter = (props: Props) => {
             _placeholder={{
               fontSize: "14",
             }}
+            value={search}
+            name="search"
+            onChange={(e) => handleSearch(e)}
           />
         </Flex>
-        <Datepicker />
+        <Flex
+          w={"20%"}
+          borderWidth={1}
+          borderColor={"gray.200"}
+          px={4}
+          alignItems={"center"}
+          rounded={"sm"}
+        >
+          <Flatpickr
+            placeholder="Chọn ngày..."
+            options={{
+              mode: "single",
+              dateFormat: "d/m/Y",
+            }}
+            value={date}
+            onChange={([date]) => {
+              setDate(date);
+              handleDate(date);
+            }}
+          />
+        </Flex>
         <Select
           w={"22%"}
           fontSize={15}
           color={"gray.500"}
-          onChange={(e) => setFilter({ ...filter, status: e.target.value })}
+          onChange={(e) => handleSearch(e)}
+          name="status"
         >
-          <option value="pending">Chờ xử lí</option>
+          <option value="">Trạng thái đơn hàng</option>
+          <option value="processing">Chờ xử lí</option>
+          <option value="confirmed">Đã xác nhận</option>
+          <option value="delivering">Đang giao</option>
           <option value="delivered">Đã giao</option>
           <option value="canceled">Đã hủy</option>
         </Select>
@@ -63,12 +84,12 @@ const OrderFilter = (props: Props) => {
           w={"22%"}
           fontSize={15}
           color={"gray.500"}
-          onChange={(e) => setFilter({ ...filter, payment: e.target.value })}
+          onChange={(e) => handleSearch(e)}
+          name="payment_method"
         >
-          <option value="visa">VISA</option>
-          <option value="cod">COD</option>
-          <option value="debit">Thẻ ghi nợ</option>
-          <option value="credit">Thẻ tín dụng</option>
+          <option value="">Phương thức thanh toán</option>
+          <option value="Thanh Toán MoMo">Momo</option>
+          <option value="tructiep">Trực tiếp</option>
         </Select>
         <Button fontSize={15} bgColor={"cyan.400"} color={"white"} w={"10%"}>
           Lọc
