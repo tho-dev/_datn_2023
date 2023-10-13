@@ -13,7 +13,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -25,21 +25,16 @@ type Props = {};
 
 const ProductManagerView = (props: Props) => {
 	const columnHelper = createColumnHelper<any>();
-	const [id, setId] = useState(null);
-	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
-
-	const { data: products } = useGetAllProductQuery({
-		_page: 1,
-		_limit: 20,
-		_order: "asc",
-		_sort: "created_at",
+	const [pagination, setPagination] = useState<{
+		pageIndex: number;
+		pageSize: number;
+		pageCount: number;
+	}>({
+		pageIndex: 0,
+		pageSize: 0,
+		pageCount: 0,
 	});
-
-	// hàm xóa sản phẩm
-	const handleDeleteProduct = async () => {
-		console.log("number", id);
-		onCloseConfirm();
-	};
+	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
 
 	const columns = [
 		columnHelper.accessor("#", {
@@ -126,9 +121,10 @@ const ProductManagerView = (props: Props) => {
 				const colors = getValue();
 				return (
 					<Flex gap="2">
-						{colors?.map((color: any) => {
+						{colors?.map((color: any, index: number) => {
 							return (
 								<Box
+									key={index}
 									w="14px"
 									h="14px"
 									bgColor={color.value}
@@ -150,9 +146,10 @@ const ProductManagerView = (props: Props) => {
 						gap="2"
 						flexWrap="wrap"
 					>
-						{option_values?.map((item: any) => {
+						{option_values?.map((item: any, index: number) => {
 							return (
 								<Box
+									key={index}
 									py="1"
 									px="2"
 									fontSize="13px"
@@ -223,7 +220,6 @@ const ProductManagerView = (props: Props) => {
 								py="2"
 								icon={<TraskIcon size={4} />}
 								onClick={() => {
-									setId(1 as any);
 									onOpenConfirm();
 								}}
 							>
@@ -349,13 +345,20 @@ const ProductManagerView = (props: Props) => {
 			{/* hiểu thị dữ liệu */}
 			<TableThinkPro
 				columns={columns}
-				data={products?.data?.items || []}
+				useData={useGetAllProductQuery}
+				defaultPageSize={10}
+				query={{
+					_page: 1,
+					_limit: 20,
+					_order: "desc",
+					_sort: "created_at",
+				}}
 			/>
 
 			<ConfirmThinkPro
 				isOpen={isOpenConfirm}
 				onClose={onCloseConfirm}
-				handleClick={handleDeleteProduct}
+				// handleClick={handleDeleteProduct}
 			/>
 		</Box>
 	);

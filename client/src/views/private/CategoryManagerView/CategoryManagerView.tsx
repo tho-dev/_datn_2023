@@ -23,6 +23,7 @@ import { useDeleteCategoryMutation, useGetAllCategoryQuery } from "~/redux/api/c
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import moment from "moment/moment";
 
 type Props = {};
 
@@ -96,18 +97,39 @@ const CategoryManagerView = (props: Props) => {
 		columnHelper.accessor("#", {
 			cell: (info) => {
 				const index = info.row.index;
-				return index + 1;
+				return (
+					<Text
+						fontSize="13px"
+						fontWeight="medium"
+					>
+						{index + 1}
+					</Text>
+				);
 			},
 			header: "#",
 		}),
 		columnHelper.accessor("name", {
 			cell: (info) => {
-				return <Text fontSize="sm">{info.getValue()}</Text>;
+				return (
+					<Text
+						fontWeight="medium"
+						fontSize="13px"
+					>
+						{info.getValue()}
+					</Text>
+				);
 			},
 			header: "Danh mục",
 		}),
 		columnHelper.accessor("slug", {
-			cell: (info) => `/${info.getValue()}`,
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					/{info.getValue()}
+				</Text>
+			),
 			header: "Đường dẫn",
 		}),
 		columnHelper.accessor("thumbnail", {
@@ -126,11 +148,13 @@ const CategoryManagerView = (props: Props) => {
 			},
 			header: "Ảnh",
 		}),
+
 		columnHelper.accessor("description", {
 			cell: (info) => {
 				return (
 					<Text
-						fontSize="sm"
+						fontWeight="medium"
+						fontSize="13px"
 						css={{
 							display: "-webkit-box",
 							WebkitLineClamp: 2,
@@ -143,6 +167,28 @@ const CategoryManagerView = (props: Props) => {
 				);
 			},
 			header: "Mô tả",
+		}),
+		columnHelper.accessor("created_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày tạo",
+		}),
+		columnHelper.accessor("updated_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày cập nhật",
 		}),
 		columnHelper.accessor("action", {
 			cell: ({ row }) => {
@@ -290,8 +336,16 @@ const CategoryManagerView = (props: Props) => {
 				{/* Danh sách */}
 				<TableThinkPro
 					columns={columns}
-					// data={brands?.data?.items}
-					data={categories?.data?.items || []}
+					useData={useGetAllCategoryQuery}
+					defaultPageSize={10}
+					query={{
+						_limit: 20,
+						_page: 1,
+						_parent: true,
+						_sort: "created_at",
+						_order: "desc",
+						_type: "category_brand",
+					}}
 				/>
 
 				{/* Cofirm */}

@@ -22,15 +22,14 @@ import { useDeleteDemandMutation, useGetAllDemandQuery } from "~/redux/api/deman
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import moment from "moment/moment";
 
 type Props = {};
 
 const DemandView = (props: Props) => {
 	const toast = useToast();
-
 	const [id, setId] = useState(null);
 	const [demand, setDemand] = useState<any>(null);
-	const [parents, setParents] = useState<any>([]);
 	const columnHelper = createColumnHelper<any>();
 	const {
 		isOpen: isOpenActionCreateDemand,
@@ -45,20 +44,6 @@ const DemandView = (props: Props) => {
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
 	const [deleteDemand] = useDeleteDemandMutation();
-	const { data: demands, isLoading } = useGetAllDemandQuery({});
-
-	useEffect(() => {
-		if (demands) {
-			const parentsFilter = demands?.data?.map((demand: any) => {
-				return {
-					label: demand?.name,
-					value: demand?._id,
-				};
-			});
-
-			setParents(parentsFilter);
-		}
-	}, [demands, isLoading]);
 
 	const handleDeleteDemand = async () => {
 		try {
@@ -102,6 +87,29 @@ const DemandView = (props: Props) => {
 			header: "Đường dẫn",
 		}),
 
+		columnHelper.accessor("created_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày tạo",
+		}),
+		columnHelper.accessor("updated_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày cập nhật",
+		}),
+
 		columnHelper.accessor("action", {
 			cell: ({ row }) => {
 				const doc = row?.original;
@@ -133,18 +141,10 @@ const DemandView = (props: Props) => {
 								py="2"
 								icon={<EditIcon size={4} />}
 								onClick={() => {
-									const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
-
 									setDemand({
 										_id: doc?._id,
 										name: doc?.name,
-										thumbnail: doc?.thumbnail,
-										parent_id: parent_id,
-										category_id: {
-											label: doc?.category?.name,
-											value: doc?.category?.category_id,
-										},
-										description: doc?.description,
+										slug: doc?.slug,
 									});
 									onOpenActionUpdateDemand();
 								}}
@@ -251,7 +251,14 @@ const DemandView = (props: Props) => {
 				{/* Danh sách */}
 				<TableThinkPro
 					columns={columns}
-					data={demands?.data || []}
+					useData={useGetAllDemandQuery}
+					defaultPageSize={10}
+					query={{
+						_page: 1,
+						_limit: 10,
+						_order: "desc",
+						_sort: "created_at",
+					}}
 				/>
 
 				{/* Cofirm */}
@@ -269,10 +276,7 @@ const DemandView = (props: Props) => {
 				isCentered
 				title={<Heading fontSize="18">Tạo mới nhu cầu</Heading>}
 			>
-				<ActionCreateDemand
-					onClose={onCloseActionCreateDemand}
-					parents={parents}
-				/>
+				<ActionCreateDemand onClose={onCloseActionCreateDemand} />
 			</DialogThinkPro>
 			<DialogThinkPro
 				isOpen={isOpenActionUpdateDemand}
@@ -283,7 +287,6 @@ const DemandView = (props: Props) => {
 				<ActionUpdateDemand
 					onClose={onCloseActionUpdateDemand}
 					demand={demand}
-					parents={parents}
 				/>
 			</DialogThinkPro>
 		</>
