@@ -78,7 +78,7 @@ const OrderFilter = ({ handleSearch, search, handleDate }: Props) => {
           <option value="confirmed">Đã xác nhận</option>
           <option value="delivering">Đang giao</option>
           <option value="delivered">Đã giao</option>
-          <option value="canceled">Đã hủy</option>
+          <option value="cancelled">Đã hủy</option>
         </Select>
         <Select
           w={"22%"}

@@ -33,6 +33,13 @@ const orderApi = createApi({
             }),
             providesTags: ["Order"]
         }),
+        getAllTotalOrder: builder.query({
+            query: () => ({
+                url: `/order/statistical`,
+                method: "GET",
+            }),
+            providesTags: ["Order"]
+        }),
         getOneShipping: builder.query({
             query: ({ id }) => ({
                 url: `/order/${id}`,
@@ -108,6 +115,7 @@ export const {
     useGetAllOrderQuery,
     useGetAllShippingQuery,
     useGetOneShippingQuery,
+    useGetAllTotalOrderQuery,
     useCreateMutation,
     useSendOtpMutation,
     useCheckOtpMutation,
@@ -115,7 +123,7 @@ export const {
     usePaymentStatusMutation,
     useCancelOrderMutation,
     useTokenPrintOrderMutation,
-    useUpdateStatusOrderMutation
+    useUpdateStatusOrderMutation,
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

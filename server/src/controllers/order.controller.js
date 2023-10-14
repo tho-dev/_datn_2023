@@ -800,6 +800,7 @@ export const updatePaymentStatus = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getAllShipping = async (req, res, next) => {
   try {
     const {
@@ -870,6 +871,47 @@ export const getAllShipping = async (req, res, next) => {
         },
       });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllOrder = async (req, res, next) => {
+  try {
+    const orders = await Order.find();
+
+    const new_docs = await Promise.all(
+      orders.map(async (item) => {
+        const order_details = await Order_Detail.find({ order_id: item._id });
+        const order = item.toObject();
+        return {
+          ...order,
+          products: order_details,
+        };
+      })
+    );
+    const total_order = new_docs.length;
+    const mangKetQua = [...new Set(new_docs.map((item) => item.customer_name))];
+    const total_user = mangKetQua.length;
+    const total_order_money = new_docs
+      .reduce((total_order, item) => {
+        return total_order + item.total_amount;
+      }, 0)
+      .toLocaleString();
+    const total_order_product = new_docs.reduce((total_order, item) => {
+      return total_order + item.products.length;
+    }, 0);
+    return res.json({
+      status: 200,
+      message: "Lấy toàn bộ đơn hàng thành công",
+      data: {
+        total_order,
+        total_user,
+        total_order_money,
+        total_order_product,
+        new_docs,
+      },
+    });
   } catch (error) {
     next(error);
   }

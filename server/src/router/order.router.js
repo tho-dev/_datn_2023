@@ -15,6 +15,7 @@ import {
   getTokenPrintBills,
   updatePaymentStatus,
   getAllShipping,
+  getAllOrder,
 } from "../controllers/order.controller";
 
 const router = express.Router();
@@ -28,6 +29,7 @@ router.post("/getTokenPrintBill", getTokenPrintBills);
 
 router.post("/", createOrder);
 router.get("/", getAll);
+router.get("/statistical", getAllOrder);
 router.get("/shipping", getAllShipping);
 router.get("/:id", getOne);
 router.delete("/cancel/:id", cancelOrder);
