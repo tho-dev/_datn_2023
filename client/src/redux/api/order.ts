@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
+import { objectToUrlParams } from '~/utils/fc';
 
 
 
@@ -19,15 +20,22 @@ const orderApi = createApi({
     }),
     endpoints: (builder) => ({
         getAllShipping: builder.query({
-            query: () => ({
-                url: "/order/shipping",
+            query: (data) => ({
+                url: `/order/shipping?q=${data}`,
                 method: "GET",
             }),
             providesTags: ["Order"]
         }),
         getAllOrder: builder.query({
+            query: (query) => ({
+                url: `/order?${objectToUrlParams(query)}`,
+                method: "GET",
+            }),
+            providesTags: ["Order"]
+        }),
+        getAllTotalOrder: builder.query({
             query: () => ({
-                url: "/order",
+                url: `/order/statistical`,
                 method: "GET",
             }),
             providesTags: ["Order"]
@@ -86,18 +94,36 @@ const orderApi = createApi({
             }),
             invalidatesTags: ["Order"]
         }),
+        tokenPrintOrder: builder.mutation<any, any>({
+            query: (data) => ({
+                url: `/order/getTokenPrintBill`,
+                method: "POST",
+                body: data
+            }),
+        }),
+        updateStatusOrder: builder.mutation<any, any>({
+            query: (data) => ({
+                url: `/order/updateStatus/${data.id}`,
+                method: "PUT",
+                body: data
+            }),
+            invalidatesTags: ["Order"]
+        }),
     })
 });
 export const {
     useGetAllOrderQuery,
     useGetAllShippingQuery,
     useGetOneShippingQuery,
+    useGetAllTotalOrderQuery,
     useCreateMutation,
     useSendOtpMutation,
     useCheckOtpMutation,
     usePaymentMomoMutation,
     usePaymentStatusMutation,
-    useCancelOrderMutation
+    useCancelOrderMutation,
+    useTokenPrintOrderMutation,
+    useUpdateStatusOrderMutation,
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

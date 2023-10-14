@@ -9,13 +9,14 @@ import { useGetAllShippingQuery } from "~/redux/api/order";
 type Props = {};
 
 const ShippingList = (props: Props) => {
-  const { data, isLoading, isFetching, isError } = useGetAllShippingQuery("");
-  const [orderId, setOrderId] = useState(data?.data.items[0]._id as string);
+  const [searchValue, setSearchValue] = useState("");
+  const { data, isLoading, isFetching, isError } =
+    useGetAllShippingQuery(searchValue);
+  const [orderId, setOrderId] = useState(
+    (data?.data.items?.[0]?._id as string) || ""
+  );
   if (isLoading) {
     return <Box>isLoading...</Box>;
-  }
-  if (isFetching) {
-    return <Box>isFetching...</Box>;
   }
   if (isError) {
     return <Box>isError...</Box>;
@@ -23,7 +24,6 @@ const ShippingList = (props: Props) => {
   const handleViewOrderDetail = (orderId: string) => {
     setOrderId(orderId);
   };
-
   return (
     <Box width="100%" minHeight="100vh">
       <Text
@@ -44,19 +44,29 @@ const ShippingList = (props: Props) => {
               </InputLeftElement>
               <Input
                 type="text"
-                placeholder="Tìm kiếm hoá đơn..."
+                placeholder="Tìm kiếm theo tên..."
                 outline="none"
                 border="1px solid #ccc"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
               />
             </InputGroup>
           </Box>
-          <ListCardShipping
-            items={data?.data.items}
-            handleViewOrderDetail={handleViewOrderDetail}
-          />
+          {isFetching ? (
+            <Box>đang tìm</Box>
+          ) : (
+            <ListCardShipping
+              items={data?.data.items}
+              handleViewOrderDetail={handleViewOrderDetail}
+            />
+          )}
         </GridItem>
         <GridItem colSpan={5} padding={8} bgColor="bg.white">
-          {orderId ? <ShippingDetail orderId={orderId} /> : <Box>Loading</Box>}
+          {orderId || isFetching ? (
+            <ShippingDetail orderId={orderId} />
+          ) : (
+            <Box>Loading</Box>
+          )}
         </GridItem>
       </Grid>
     </Box>

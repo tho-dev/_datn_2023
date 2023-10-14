@@ -7,15 +7,13 @@ import { useGetOneShippingQuery } from "~/redux/api/order";
 import moment from "moment";
 import { CartIcon, UserIcon, AddressIcon } from "~/components/common/Icons";
 type Props = {
-  orderId?: string;
+  orderId: any;
 };
 
 const ShippingDetail = ({ orderId }: Props) => {
   const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
     id: orderId,
   });
-  const lat = data?.data?.order_info.data.to_location.lat ?? 0;
-  const long = data?.data?.order_info.data.to_location.long ?? 0;
   if (isLoading) {
     return <Box>isLoading...</Box>;
   }
@@ -25,6 +23,7 @@ const ShippingDetail = ({ orderId }: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
+  console.log(data);
   return (
     <Box width="100%">
       <Flex
@@ -90,12 +89,24 @@ const ShippingDetail = ({ orderId }: Props) => {
           Xem bản đồ
         </Text>
         <Box width="100%" minH="700px">
-          <MapContainer center={[lat, long]} zoom={13} scrollWheelZoom={false}>
+          <MapContainer
+            center={[
+              data?.data?.order_info.data.to_location.lat,
+              data?.data?.order_info.data.to_location.long,
+            ]}
+            zoom={13}
+            scrollWheelZoom={false}
+          >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={[lat, long]}>
+            <Marker
+              position={[
+                data?.data?.order_info.data.to_location.lat,
+                data?.data?.order_info.data.to_location.long,
+              ]}
+            >
               <Popup>
                 A pretty CSS3 popup. <br /> Easily customizable.
               </Popup>

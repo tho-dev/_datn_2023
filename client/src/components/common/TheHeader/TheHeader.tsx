@@ -32,6 +32,12 @@ const TheHeader = (props: Props) => {
     isError,
   } = useGetCartQuery(cart_id);
 
+  if (isFetching) {
+    return <Box>isFetching...</Box>;
+  }
+  if (isLoading) {
+    return <Box>isLoading...</Box>;
+  }
   if (isError) {
     return <Box>isError...</Box>;
   }
@@ -154,7 +160,7 @@ const TheHeader = (props: Props) => {
               display: isOpen ? "flex" : "none",
             }}
           >
-            <Cart data={data ? data?.data : []} />
+            <Cart data={data && data?.data} />
           </SlideFade>
           <Box
             w="44px"

@@ -19,15 +19,14 @@ type Props = {
   data: any;
 };
 
-const steps = [
-  { title: "First", description: "processing", tran: "chờ xác nhận" },
-  { title: "Second", description: "confirmed", tran: "Đã xác nhận" },
-  { title: "Third", description: "delivering", tran: "Đang vận chuyển" },
-  { title: "Third", description: "delivered", tran: "Đã vận chuyển" },
-  { title: "Third", description: "cancelled", tran: "Đã huỷ đơn" },
-];
-
 const OrderStatus = ({ data }: Props) => {
+  const steps = [
+    { title: "First", description: "processing", tran: "chờ xác nhận" },
+    { title: "Second", description: "confirmed", tran: "Đã xác nhận" },
+    { title: "Third", description: "cancelled", tran: "Đã huỷ đơn" },
+    { title: "Third", description: "delivering", tran: "Đang vận chuyển" },
+    { title: "Third", description: "delivered", tran: "Đã vận chuyển" },
+  ];
   const findIndex = steps.findIndex((item) => item.description === data);
   const { activeStep } = useSteps({
     index: findIndex + 1,

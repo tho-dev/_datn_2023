@@ -15,7 +15,7 @@ const CardShipping = ({ item, handleViewOrderDetail }: Props) => {
     <Box border="1px solid #ccc" padding={4} borderRadius="4px" bgColor="white">
       <Flex justifyContent="space-between" margin="5px 0">
         <Text fontSize="18px" fontWeight="bold">
-          Giao hàng nhanh
+          {item?.customer_name}
         </Text>
         <Tag textTransform="capitalize" fontSize="12px">
           {item.status}

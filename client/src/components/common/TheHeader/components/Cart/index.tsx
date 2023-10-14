@@ -33,7 +33,7 @@ const Cart = ({ data }: Props) => {
         </Link>
       </Flex>
       <Flex px="4" flexDirection="column">
-        {data.length > 0 ? (
+        {data.products.length > 0 ? (
           data?.products.map((product: any) => {
             return (
               <Flex
@@ -157,7 +157,7 @@ const Cart = ({ data }: Props) => {
       >
         <Text fontSize="sm">Tổng tiền:</Text>
         <Text fontSize="xl">
-          {data.length > 0 ? data.total_money.toLocaleString() : 0} đ
+          {data.products.length > 0 ? data.total_money.toLocaleString() : 0} đ
         </Text>
       </Flex>
     </Box>

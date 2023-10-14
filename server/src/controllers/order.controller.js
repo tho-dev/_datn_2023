@@ -181,19 +181,48 @@ export const getAll = async (req, res, next) => {
   try {
     const {
       _page = 1,
-      _sort = "createdAt",
-      _order = "asc",
+      _sort = "created_at",
+      _order = "desc",
       _limit = 10,
+      search,
+      status,
+      date,
+      payment_method,
     } = req.query;
+    const conditions = {};
 
+    if (search) {
+      conditions.customer_name = { $regex: new RegExp(search, "i") };
+    }
+
+    if (status) {
+      conditions.status = status;
+    }
+
+    if (date) {
+      const targetMoment = moment(date);
+      const yearToSearch = targetMoment.year();
+      const monthToSearch = targetMoment.month();
+      const dayToSearch = targetMoment.date();
+
+      conditions.created_at = {
+        $gte: new Date(yearToSearch, monthToSearch, dayToSearch),
+        $lt: new Date(yearToSearch, monthToSearch, dayToSearch + 1),
+      };
+    }
+
+    if (payment_method) {
+      conditions.payment_method = payment_method;
+    }
     const options = {
       page: _page,
       limit: _limit,
       sort: {
         [_sort]: _order == "desc" ? -1 : 1,
       },
+      select: ["-deleted", "-deleted_at"],
     };
-    const { docs, ...paginate } = await Order.paginate({}, options);
+    const { docs, ...paginate } = await Order.paginate(conditions, options);
 
     const new_docs = await Promise.all(
       docs.map(async (item) => {
@@ -771,6 +800,7 @@ export const updatePaymentStatus = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getAllShipping = async (req, res, next) => {
   try {
     const {
@@ -779,7 +809,7 @@ export const getAllShipping = async (req, res, next) => {
       _order = "asc",
       _limit = 10,
     } = req.query;
-
+    const customer_name = req.query.q;
     const options = {
       page: _page,
       limit: _limit,
@@ -787,27 +817,99 @@ export const getAllShipping = async (req, res, next) => {
         [_sort]: _order == "desc" ? -1 : 1,
       },
     };
-    const { docs, ...paginate } = await Order.paginate(
-      { shipping_method: "shipped" },
-      options
-    );
+    if (customer_name) {
+      const { docs, ...paginate } = await Order.paginate(
+        {
+          shipping_method: "shipped",
+          customer_name: { $regex: customer_name, $options: "i" },
+        },
+        options
+      );
+
+      const new_docs = await Promise.all(
+        docs.map(async (item) => {
+          const order_details = await Order_Detail.find({ order_id: item._id });
+          const orders = item.toObject();
+          return {
+            ...orders,
+            products: order_details,
+          };
+        })
+      );
+      return res.json({
+        status: 200,
+        message: "Lấy toàn bộ đơn hàng thành công",
+        data: {
+          items: new_docs,
+          paginate,
+        },
+      });
+    } else {
+      const { docs, ...paginate } = await Order.paginate(
+        {
+          shipping_method: "shipped",
+        },
+        options
+      );
+
+      const new_docs = await Promise.all(
+        docs.map(async (item) => {
+          const order_details = await Order_Detail.find({ order_id: item._id });
+          const orders = item.toObject();
+          return {
+            ...orders,
+            products: order_details,
+          };
+        })
+      );
+      return res.json({
+        status: 200,
+        message: "Lấy toàn bộ đơn hàng thành công",
+        data: {
+          items: new_docs,
+          paginate,
+        },
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllOrder = async (req, res, next) => {
+  try {
+    const orders = await Order.find();
 
     const new_docs = await Promise.all(
-      docs.map(async (item) => {
+      orders.map(async (item) => {
         const order_details = await Order_Detail.find({ order_id: item._id });
-        const orders = item.toObject();
+        const order = item.toObject();
         return {
-          ...orders,
+          ...order,
           products: order_details,
         };
       })
     );
+    const total_order = new_docs.length;
+    const mangKetQua = [...new Set(new_docs.map((item) => item.customer_name))];
+    const total_user = mangKetQua.length;
+    const total_order_money = new_docs
+      .reduce((total_order, item) => {
+        return total_order + item.total_amount;
+      }, 0)
+      .toLocaleString();
+    const total_order_product = new_docs.reduce((total_order, item) => {
+      return total_order + item.products.length;
+    }, 0);
     return res.json({
       status: 200,
       message: "Lấy toàn bộ đơn hàng thành công",
       data: {
-        items: new_docs,
-        paginate,
+        total_order,
+        total_user,
+        total_order_money,
+        total_order_product,
+        new_docs,
       },
     });
   } catch (error) {

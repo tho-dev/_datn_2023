@@ -11,9 +11,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import thinkpro from "~/data/clone-thinkpro.json";
-type Props = {};
+import { Link } from "react-router-dom";
+type Props = {
+  data: any;
+};
 
-const TableShipment = (props: Props) => {
+const TableShipment = ({ data }: Props) => {
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const columns = [
@@ -24,46 +27,49 @@ const TableShipment = (props: Props) => {
       },
       header: "#",
     }),
-    columnHelper.accessor("name", {
+    columnHelper.accessor("_id", {
       cell: (info) => {
-        return <h1>{info.getValue()}</h1>;
+        return <p>{info?.getValue()}</p>;
       },
-      header: "Tên sản phẩm",
+      header: "Mã đơn hàng",
     }),
-    columnHelper.accessor("thumbnail", {
+    columnHelper.accessor("customer_name", {
       cell: (info) => {
-        return (
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <img
-              src={info.getValue()?.path}
-              alt=""
-              width="50px"
-              height="50px"
-            />
-          </div>
-        );
+        return <p>{info?.getValue()}</p>;
       },
-      header: "Hình ảnh",
+      header: "Tên khách hàng",
     }),
-    columnHelper.accessor("price", {
-      cell: (info) => info.getValue(),
-      header: "Price",
+    columnHelper.accessor("total_amount", {
+      cell: (info) => <p>{info?.getValue()}</p>,
+      header: "Tổng tiền",
     }),
-    columnHelper.accessor("desc", {
-      cell: (info) => info.getValue(),
-      header: "Mô tả",
+    columnHelper.accessor("payment_status", {
+      cell: (info) => (
+        <p>
+          {info?.getValue() == "paid" ? "Đã thanh toán" : "Chưa thanh toán"}
+        </p>
+      ),
+      header: "Trạng thái thanh toán",
       meta: {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor("action", {
-      cell: () => {
+    columnHelper.accessor("payment_method", {
+      cell: (info) => <p>{info.getValue()}</p>,
+      header: "Phương thức thanh toán",
+      meta: {
+        isNumeric: true,
+      },
+    }),
+    columnHelper.accessor("status", {
+      cell: (info) => <p>{info.getValue()}</p>,
+      header: "Trạng thái đơn hàng",
+      meta: {
+        isNumeric: true,
+      },
+    }),
+    columnHelper.accessor("_id", {
+      cell: (info) => {
         return (
           <Menu>
             <MenuButton
@@ -89,7 +95,11 @@ const TableShipment = (props: Props) => {
             </MenuButton>
             <MenuList>
               <MenuItem onClick={onOpen}>Xóa</MenuItem>
-              <MenuItem>Xem chi tiết</MenuItem>
+              <MenuItem>
+                <Link to={`/admin/don-hang/${info.getValue()}`}>
+                  Xem chi tiết
+                </Link>
+              </MenuItem>
               <MenuItem>Cập nhật</MenuItem>
             </MenuList>
           </Menu>
@@ -101,7 +111,7 @@ const TableShipment = (props: Props) => {
 
   return (
     <Box>
-      <TableThinkPro columns={columns} data={thinkpro.data} />
+      <TableThinkPro columns={columns} data={data} />
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>
   );
