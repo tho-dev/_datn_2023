@@ -51,7 +51,6 @@ const CategoryManagerView = (props: Props) => {
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
 		_sort: "created_at",
 		_order: "desc",
 		_type: "category_brand",
@@ -95,14 +94,16 @@ const CategoryManagerView = (props: Props) => {
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: (info) => {
-				const index = info.row.index;
+			cell: ({ row, table }) => {
+				const index = row.index + 1;
+				const { pageIndex, pageSize } = table.getState().pagination;
+
 				return (
 					<Text
 						fontSize="13px"
 						fontWeight="medium"
 					>
-						{index + 1}
+						{pageIndex * pageSize + index}
 					</Text>
 				);
 			},
@@ -341,7 +342,6 @@ const CategoryManagerView = (props: Props) => {
 					query={{
 						_limit: 20,
 						_page: 1,
-						_parent: true,
 						_sort: "created_at",
 						_order: "desc",
 						_type: "category_brand",

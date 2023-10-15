@@ -3,7 +3,7 @@ import { Box, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
 import { Controller, useFieldArray } from "react-hook-form";
 import { Button, FormControl, FormErrorMessage, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { AddAdminIcon, CloseSmallIcon } from "~/components/common/Icons";
-import { Select, chakraComponents } from "chakra-react-select";
+import SelectThinkPro from "~/components/SelectThinkPro";
 
 type Props = {
 	register?: any;
@@ -30,42 +30,6 @@ const options: any = [
 	},
 ];
 
-const visuals = [
-	{
-		label: "Color",
-		value: "color",
-	},
-	{
-		label: "Text",
-		value: "text",
-	},
-];
-
-const OptionComponent = {
-	Option: ({ children, ...props }: any) => (
-		<chakraComponents.Option {...props}>
-			<Text
-				as="div"
-				fontSize="sm"
-			>
-				{children}
-			</Text>
-		</chakraComponents.Option>
-	),
-	Control: ({ children, ...props }: any) => (
-		<chakraComponents.Control {...props}>
-			<Text
-				as="div"
-				w="full"
-				display="flex"
-				fontSize="sm"
-			>
-				{children}
-			</Text>
-		</chakraComponents.Control>
-	),
-};
-
 const OptionNested = ({ nestIndex, control, register, errors }: any) => {
 	const { fields, remove, append } = useFieldArray({
 		control,
@@ -73,13 +37,13 @@ const OptionNested = ({ nestIndex, control, register, errors }: any) => {
 	});
 
 	return (
-		<Box>
+		<Box
+			w="full"
+			h="auto"
+		>
 			<Flex
-				mt="4"
 				flexDir="column"
 				alignItems="flex-end"
-				maxH="240px"
-				minH="240px"
 				overflowY="auto"
 				css={{
 					"&::-webkit-scrollbar": {
@@ -98,78 +62,96 @@ const OptionNested = ({ nestIndex, control, register, errors }: any) => {
 				{fields?.map((item, k) => {
 					return (
 						<Flex
-							flexDir="column"
-							gap="2"
+							gap="4"
 							w="full"
-							position="relative"
-							px="6"
-							py="4"
 							key={item?.id}
 						>
-							<FormControl isInvalid={errors?.variants?.[nestIndex]?.options?.[k]?.label as any}>
-								<Input
-									{...register(`variants.${nestIndex}.options.${k}.label`, {
-										required: "Không được để trống",
-									})}
-									bgColor="transparent"
-									placeholder="Đen, FHD+ 16GB, 512GB, Mới, Full box, ..."
-									borderColor={
-										errors?.variants?.[nestIndex]?.options?.[k]?.label
-											? "border.error"
-											: "border.primary"
-									}
-								/>
-								<FormErrorMessage>
-									{(errors?.variants?.[nestIndex]?.options?.[k]?.label as any) &&
-										errors?.variants?.[nestIndex]?.options?.[k]?.label?.message}
-								</FormErrorMessage>
-							</FormControl>
-							<FormControl isInvalid={errors?.variants?.[nestIndex]?.options?.[k]?.value as any}>
-								<Input
-									{...register(`variants.${nestIndex}.options.${k}.value`, {
-										required: "Không được để trống",
-									})}
-									bgColor="transparent"
-									placeholder="Đen, FHD+ 16GB, 512GB, Mới, Full box, ..."
-									borderColor={
-										errors?.variants?.[nestIndex]?.options?.[k]?.value
-											? "border.error"
-											: "border.primary"
-									}
-								/>
-								<FormErrorMessage>
-									{(errors?.variants?.[nestIndex]?.options?.[k]?.value as any) &&
-										errors?.variants?.[nestIndex]?.options?.[k]?.value?.message}
-								</FormErrorMessage>
-							</FormControl>
 							<Flex
-								position="absolute"
-								top="1"
-								right="2"
-								display="inline-flex"
+								flex="1"
+								gap="3"
+								flexDir="column"
+								mb="2"
+							>
+								<FormControl isInvalid={errors?.variants?.[nestIndex]?.options?.[k]?.label as any}>
+									<FormLabel
+										fontSize="sm"
+										fontWeight="semibold"
+									>
+										Nhãn
+									</FormLabel>
+									<Input
+										size="small"
+										{...register(`variants.${nestIndex}.options.${k}.label`, {
+											required: "Không được để trống",
+										})}
+										bgColor="transparent"
+										placeholder="Thêm label nhãn mới"
+										borderColor={
+											errors?.variants?.[nestIndex]?.options?.[k]?.label
+												? "border.error"
+												: "border.primary"
+										}
+									/>
+									<FormErrorMessage>
+										{(errors?.variants?.[nestIndex]?.options?.[k]?.label as any) &&
+											errors?.variants?.[nestIndex]?.options?.[k]?.label?.message}
+									</FormErrorMessage>
+								</FormControl>
+								<FormControl isInvalid={errors?.variants?.[nestIndex]?.options?.[k]?.value as any}>
+									<Input
+										size="small"
+										{...register(`variants.${nestIndex}.options.${k}.value`, {
+											required: "Không được để trống",
+										})}
+										bgColor="transparent"
+										placeholder="Thêm value nhãn mới"
+										borderColor={
+											errors?.variants?.[nestIndex]?.options?.[k]?.value
+												? "border.error"
+												: "border.primary"
+										}
+									/>
+									<FormErrorMessage>
+										{(errors?.variants?.[nestIndex]?.options?.[k]?.value as any) &&
+											errors?.variants?.[nestIndex]?.options?.[k]?.value?.message}
+									</FormErrorMessage>
+								</FormControl>
+							</Flex>
+							<Flex
+								display="flex"
 								alignItems="center"
 								justifyContent="center"
 								cursor="pointer"
 								onClick={() => remove(k)}
 								w="4"
-								h="4"
-								bgColor="bg.white"
+								bgColor="bg.admin"
 								rounded="full"
 							>
-								<CloseSmallIcon
-									size={3}
-									color="text.black"
-									strokeWidth={1.5}
-								/>
+								<Flex
+									w="full"
+									h="4"
+									mt="6"
+									bgColor="bg.bgDelete"
+									rounded="full"
+									alignItems="center"
+									justifyContent="center"
+								>
+									<CloseSmallIcon
+										size={3}
+										color="text.textDelete"
+										strokeWidth={1.5}
+									/>
+								</Flex>
 							</Flex>
 						</Flex>
 					);
 				})}
 			</Flex>
 			<Button
+				mt="4"
 				bgColor="text.textSuccess"
 				size="small"
-				fontWeight="bold"
+				fontWeight="medium"
 				px="4"
 				leftIcon={<AddAdminIcon size={4} />}
 				_hover={{
@@ -199,7 +181,7 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 		<Box>
 			<Grid
 				gap="4"
-				templateColumns="repeat(3, 1fr)"
+				templateColumns="repeat(1, 1fr)"
 				overflowY="auto"
 				css={{
 					"&::-webkit-scrollbar": {
@@ -217,131 +199,61 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 			>
 				{fields.map((item, index) => {
 					if (index <= 2) {
+						const filterOptions = options.filter((option: any, k: any) => {
+							if (index == 1) {
+								return option.value != watch(`variants.${[0]}.name.value`);
+							} else if (index == 2) {
+								const array = [
+									watch(`variants.${[0]}.name.value`),
+									watch(`variants.${[1]}.name.value`),
+								];
+
+								return !array?.includes(option.value);
+							} else {
+								return option;
+							}
+						});
+
 						return (
 							<GridItem key={item.id}>
 								<Flex
-									flexDir="column"
+									// flexDir="column"
 									bgColor="bg.gray"
 									px="6"
 									py="5"
 									rounded="lg"
 									position="relative"
+									gap="6"
 								>
-									<Flex justifyContent="flex-start">
+									<Flex
+										flex="1"
+										justifyContent="flex-start"
+									>
 										<Flex
 											gap="4"
 											flexDir="column"
 											w="full"
 										>
-											<Controller
+											<SelectThinkPro
+												title="Thuộc tính"
 												control={control}
 												name={`variants.${[index]}.name`}
 												rules={{ required: "Không được để trống" }}
-												render={({
-													field: { onChange, onBlur, value, name, ref },
-													fieldState: { error },
-												}) => {
-													const filterOptions = options.filter((option: any, k: any) => {
-														if (index == 1) {
-															return option.value != watch(`variants.${[0]}.name.value`);
-														} else if (index == 2) {
-															const array = [
-																watch(`variants.${[0]}.name.value`),
-																watch(`variants.${[1]}.name.value`),
-															];
-
-															return !array?.includes(option.value);
-														} else {
-															return option;
-														}
-													});
-
-													return (
-														<FormControl isInvalid={!!error}>
-															<FormLabel
-																htmlFor="price"
-																fontSize="sm"
-																fontWeight="semibold"
-															>
-																Thuộc tính
-															</FormLabel>
-
-															<Select
-																name={name}
-																ref={ref}
-																onChange={onChange}
-																onBlur={onBlur}
-																value={value}
-																options={filterOptions}
-																placeholder={
-																	<Text
-																		as="span"
-																		fontSize="sm"
-																	>
-																		Màu, Phiên Bản, Loại Hàng
-																	</Text>
-																}
-																components={OptionComponent}
-																closeMenuOnSelect={false}
-															/>
-
-															<FormErrorMessage>
-																{error && error.message}
-															</FormErrorMessage>
-														</FormControl>
-													);
-												}}
-											/>
-
-											<Controller
-												control={control}
-												name={`variants.${[index]}.visual`}
-												rules={{ required: "Không được để trống" }}
-												render={({
-													field: { onChange, onBlur, value, name, ref },
-													fieldState: { error },
-												}) => (
-													<FormControl isInvalid={!!error}>
-														<FormLabel
-															fontSize="sm"
-															fontWeight="semibold"
-														>
-															Hiển thị
-														</FormLabel>
-
-														<Select
-															name={name}
-															ref={ref}
-															onChange={onChange}
-															onBlur={onBlur}
-															value={value}
-															options={visuals}
-															placeholder={
-																<Text
-																	as="span"
-																	fontSize="sm"
-																>
-																	Màu, Chữ
-																</Text>
-															}
-															components={OptionComponent}
-															closeMenuOnSelect={false}
-														/>
-
-														<FormErrorMessage>{error && error.message}</FormErrorMessage>
-													</FormControl>
-												)}
+												placeholder="Màu, Phiên Bản, Loại Hàng"
+												data={filterOptions}
 											/>
 										</Flex>
 									</Flex>
 
-									{/* Thuộc tính lồng nhau */}
-									<OptionNested
-										nestIndex={index}
-										control={control}
-										register={register}
-										errors={errors}
-									/>
+									<Flex flex="2">
+										{/* Thuộc tính lồng nhau */}
+										<OptionNested
+											nestIndex={index}
+											control={control}
+											register={register}
+											errors={errors}
+										/>
+									</Flex>
 									<Flex
 										position="absolute"
 										top="2"
@@ -353,12 +265,12 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 										onClick={() => remove(index)}
 										w="5"
 										h="5"
-										bgColor="bg.white"
+										bgColor="bg.bgDelete"
 										rounded="full"
 									>
 										<CloseSmallIcon
 											size={4}
-											color="text.black"
+											color="text.textDelete"
 											strokeWidth={1.5}
 										/>
 									</Flex>
@@ -370,10 +282,10 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 			</Grid>
 			<Button
 				bgColor="text.textSuccess"
-				size="medium"
+				size="small"
 				px="4"
 				mt="4"
-				leftIcon={<AddAdminIcon size={5} />}
+				leftIcon={<AddAdminIcon size={4} />}
 				_hover={{
 					textDecor: "none",
 				}}
@@ -397,7 +309,6 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 							...(getValues().variants || []),
 							{
 								name: "",
-								visual: "",
 								options: [{ label: "", value: "" }],
 							},
 						]);
@@ -408,7 +319,6 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 									...(getValues().variants || []),
 									{
 										name: "",
-										visual: "",
 										options: [{ label: "", value: "" }],
 									},
 								]);
@@ -421,7 +331,6 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 									...(getValues().variants || []),
 									{
 										name: "",
-										visual: "",
 										options: [{ label: "", value: "" }],
 									},
 								]);

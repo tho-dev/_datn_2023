@@ -70,15 +70,17 @@ const DemandView = (props: Props) => {
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: (info) => {
-				const index = info.row.index;
-				return index + 1;
+			cell: ({ row, table }) => {
+				const index = row.index + 1;
+				const { pageIndex, pageSize } = table.getState().pagination;
+
+				return <Text fontSize="13px">{pageIndex * pageSize + index}</Text>;
 			},
 			header: "#",
 		}),
 		columnHelper.accessor("name", {
 			cell: (info) => {
-				return <Text fontSize="sm">{info.getValue()}</Text>;
+				return <Text fontSize="13px">{info.getValue()}</Text>;
 			},
 			header: "Nhu cầu",
 		}),
@@ -88,25 +90,11 @@ const DemandView = (props: Props) => {
 		}),
 
 		columnHelper.accessor("created_at", {
-			cell: (info) => (
-				<Text
-					fontWeight="medium"
-					fontSize="13px"
-				>
-					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
-				</Text>
-			),
+			cell: (info) => <Text fontSize="13px">{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}</Text>,
 			header: "Ngày tạo",
 		}),
 		columnHelper.accessor("updated_at", {
-			cell: (info) => (
-				<Text
-					fontWeight="medium"
-					fontSize="13px"
-				>
-					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
-				</Text>
-			),
+			cell: (info) => <Text fontSize="13px">{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}</Text>,
 			header: "Ngày cập nhật",
 		}),
 

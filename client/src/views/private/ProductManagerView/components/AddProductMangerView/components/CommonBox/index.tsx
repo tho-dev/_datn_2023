@@ -17,8 +17,8 @@ const CommonBox = ({ title, children }: Props) => {
 			boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 		>
 			<Heading
-				fontSize="md"
-				fontWeight="semibold"
+				fontSize="sm"
+				fontWeight="bold"
 			>
 				{title}
 			</Heading>

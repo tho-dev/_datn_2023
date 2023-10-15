@@ -42,7 +42,9 @@ import { ProfileManagerView } from "~/views/private/ProfileManagerView";
 import { HistoryOrderView } from "~/views/public/HistoryOrderView";
 import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordView";
 import { ThankView } from "~/views/public/ThankView";
+import PostCategoryView from "~/views/private/PostCategoryView";
 import { protectedRouter } from "./protected";
+
 const routes: RouteObject[] = [
 	{
 		path: "/",
@@ -159,6 +161,10 @@ if (protectedRouter() == true) {
 				element: <PostManagementView />,
 			},
 			{
+				path: "danh-muc-bai-viet",
+				element: <PostCategoryView />,
+			},
+			{
 				path: "don-hang",
 				element: <OrderManagementView />,
 			},
@@ -203,10 +209,10 @@ if (protectedRouter() == true) {
 		],
 	});
 }
+
 routes.push({
 	path: "/admin",
 	element: <NotFoundView />,
 });
-console.log(routes);
 
 export default routes;

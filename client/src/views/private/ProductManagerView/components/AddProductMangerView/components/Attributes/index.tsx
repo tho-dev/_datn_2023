@@ -19,13 +19,13 @@ const AttributeNested = ({ nestIndex, control, register, errors }: any) => {
 	});
 
 	return (
-		<Box>
+		<Box
+			w="full"
+			h="auto"
+		>
 			<Flex
-				mt="4"
 				flexDir="column"
 				alignItems="flex-end"
-				maxH="240px"
-				minH="240px"
 				overflowY="auto"
 				css={{
 					"&::-webkit-scrollbar": {
@@ -44,77 +44,94 @@ const AttributeNested = ({ nestIndex, control, register, errors }: any) => {
 				{fields?.map((item, k) => {
 					return (
 						<Flex
-							flexDir="column"
-							gap="2"
+							gap="4"
 							w="full"
-							position="relative"
-							px="6"
-							py="4"
 							key={item?.id}
 						>
-							<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.label as any}>
-								<Input
-									{...register(`attributes.${nestIndex}.items.${k}.label`, {
-										required: "Không được để trống",
-									})}
-									placeholder="Kích thước/Cao tối đa lưng ghế,..."
-									borderColor={
-										errors?.attributes?.[nestIndex]?.items?.[k]?.label
-											? "border.error"
-											: "transparent"
-									}
-								/>
-								<FormErrorMessage>
-									{(errors?.attributes?.[nestIndex]?.items?.[k]?.label as any) &&
-										errors?.attributes?.[nestIndex]?.items?.[k]?.label?.message}
-								</FormErrorMessage>
-							</FormControl>
-							<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.value as any}>
-								<Input
-									{...register(`attributes.${nestIndex}.items.${k}.value`, {
-										required: "Không được để trống",
-									})}
-									placeholder="66cm, 55cm,..."
-									borderColor={
-										errors?.attributes?.[nestIndex]?.items?.[k]?.value
-											? "border.error"
-											: "transparent"
-									}
-								/>
-								<FormErrorMessage>
-									{(errors?.attributes?.[nestIndex]?.items?.[k]?.value as any) &&
-										errors?.attributes?.[nestIndex]?.items?.[k]?.value?.message}
-								</FormErrorMessage>
-							</FormControl>
 							<Flex
-								position="absolute"
-								top="1"
-								right="2"
-								display="inline-flex"
+								flex="1"
+								gap="3"
+								flexDir="column"
+								mb="2"
+							>
+								<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.label as any}>
+									<FormLabel
+										fontSize="sm"
+										fontWeight="semibold"
+									>
+										Chi tiết
+									</FormLabel>
+									<Input
+										size="small"
+										{...register(`attributes.${nestIndex}.items.${k}.label`, {
+											required: "Không được để trống",
+										})}
+										placeholder="Kích thước/Cao tối đa lưng ghế,..."
+										borderColor={
+											errors?.attributes?.[nestIndex]?.items?.[k]?.label
+												? "border.error"
+												: "transparent"
+										}
+									/>
+									<FormErrorMessage>
+										{(errors?.attributes?.[nestIndex]?.items?.[k]?.label as any) &&
+											errors?.attributes?.[nestIndex]?.items?.[k]?.label?.message}
+									</FormErrorMessage>
+								</FormControl>
+								<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.value as any}>
+									<Input
+										size="small"
+										{...register(`attributes.${nestIndex}.items.${k}.value`, {
+											required: "Không được để trống",
+										})}
+										placeholder="66cm, 55cm,..."
+										borderColor={
+											errors?.attributes?.[nestIndex]?.items?.[k]?.value
+												? "border.error"
+												: "transparent"
+										}
+									/>
+									<FormErrorMessage>
+										{(errors?.attributes?.[nestIndex]?.items?.[k]?.value as any) &&
+											errors?.attributes?.[nestIndex]?.items?.[k]?.value?.message}
+									</FormErrorMessage>
+								</FormControl>
+							</Flex>
+							<Flex
+								display="flex"
 								alignItems="center"
 								justifyContent="center"
 								cursor="pointer"
 								onClick={() => remove(k)}
 								w="4"
-								h="4"
-								bgColor="bg.white"
+								bgColor="bg.admin"
 								rounded="full"
 							>
-								<CloseSmallIcon
-									size={3}
-									color="text.black"
-									strokeWidth={1.5}
-								/>
+								<Flex
+									w="full"
+									h="4"
+									mt="6"
+									bgColor="bg.bgDelete"
+									rounded="full"
+									alignItems="center"
+									justifyContent="center"
+								>
+									<CloseSmallIcon
+										size={3}
+										color="text.textDelete"
+										strokeWidth={1.5}
+									/>
+								</Flex>
 							</Flex>
 						</Flex>
 					);
 				})}
 			</Flex>
 			<Button
+				mt="4"
 				bgColor="text.textSuccess"
 				size="small"
-				fontWeight="bold"
-				px="4"
+				fontWeight="medium"
 				leftIcon={<AddAdminIcon size={4} />}
 				_hover={{
 					textDecor: "none",
@@ -142,7 +159,7 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 		<Box>
 			<Grid
 				gap="4"
-				templateColumns="repeat(3, 1fr)"
+				templateColumns="repeat(1, 1fr)"
 				overflowY="auto"
 				css={{
 					"&::-webkit-scrollbar": {
@@ -162,14 +179,17 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 					return (
 						<GridItem key={item.id}>
 							<Flex
-								flexDir="column"
 								bgColor="bg.gray"
 								px="6"
 								py="5"
 								rounded="lg"
 								position="relative"
+								gap="6"
 							>
-								<Flex justifyContent="flex-start">
+								<Flex
+									flex="1"
+									justifyContent="flex-start"
+								>
 									<Flex
 										gap="4"
 										flexDir="column"
@@ -180,9 +200,10 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 												fontSize="sm"
 												fontWeight="semibold"
 											>
-												Chi tiết
+												Đặc điểm
 											</FormLabel>
 											<Input
+												size="small"
 												{...register(`attributes.${index}.group_name`, {
 													required: "Không để trống",
 												})}
@@ -202,12 +223,14 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 								</Flex>
 
 								{/* Thuộc tính lồng nhau */}
-								<AttributeNested
-									nestIndex={index}
-									control={control}
-									register={register}
-									errors={errors}
-								/>
+								<Flex flex="2">
+									<AttributeNested
+										nestIndex={index}
+										control={control}
+										register={register}
+										errors={errors}
+									/>
+								</Flex>
 								<Flex
 									position="absolute"
 									top="2"
@@ -219,12 +242,12 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 									onClick={() => remove(index)}
 									w="5"
 									h="5"
-									bgColor="bg.white"
+									bgColor="bg.bgDelete"
 									rounded="full"
 								>
 									<CloseSmallIcon
 										size={4}
-										color="text.black"
+										color="text.textDelete"
 										strokeWidth={1.5}
 									/>
 								</Flex>
@@ -235,10 +258,10 @@ const Attributes = ({ control, register, errors, setValue, getValues }: Props) =
 			</Grid>
 			<Button
 				bgColor="text.textSuccess"
-				size="medium"
+				size="small"
 				px="4"
 				mt="4"
-				leftIcon={<AddAdminIcon size={5} />}
+				leftIcon={<AddAdminIcon size={4} />}
 				_hover={{
 					textDecor: "none",
 				}}

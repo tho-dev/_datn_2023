@@ -117,9 +117,10 @@ const BrandView = (props: Props) => {
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: (info) => {
-				const index = info.row.index;
-				return index + 1;
+			cell: ({ row, table }) => {
+				const index = row.index + 1;
+				const { pageIndex, pageSize } = table.getState().pagination;
+				return pageIndex * pageSize + index;
 			},
 			header: "#",
 		}),

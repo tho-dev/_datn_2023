@@ -3,7 +3,7 @@ import DefaultAvatar from "~/assets/images/thumb.png";
 import { Input } from "@chakra-ui/input";
 import { uploadImage, removeFile } from "~/services/upload.service";
 import { Box, Flex, Image, Spinner, Text } from "@chakra-ui/react";
-import { CloseIcon, CloseSmallIcon } from "../common/Icons";
+import { CloseIcon, CloseSmallIcon, UploadImageIcon } from "../common/Icons";
 
 interface UploadImageProps {
 	getDataFn: (data: string) => void;
@@ -81,30 +81,50 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 					transform="translate(-50%, -50%)"
 					zIndex="3"
 				>
-					<Spinner size="md" />
+					<Spinner
+						size="lg"
+						color="bg.blue"
+					/>
 				</Box>
 			)}
 
-			<Image
-				src={selectedImage ? selectedImage?.url : DefaultAvatar}
-				w="full"
-				h="full"
-				rounded="md"
-				position="absolute"
-				top="50%"
-				left="50%"
-				transform="translate(-50%, -50%)"
-				zIndex="2"
-				objectFit="contain"
-				p="2"
-			/>
+			{selectedImage ? (
+				<Image
+					src={selectedImage ? selectedImage?.url : DefaultAvatar}
+					w="full"
+					h="full"
+					rounded="md"
+					position="absolute"
+					top="50%"
+					left="50%"
+					transform="translate(-50%, -50%)"
+					zIndex="2"
+					objectFit="contain"
+					p="2"
+				/>
+			) : (
+				<Flex
+					w="full"
+					h="full"
+					rounded="md"
+					position="absolute"
+					top="50%"
+					left="50%"
+					transform="translate(-50%, -50%)"
+					zIndex="2"
+					justifyContent="center"
+					alignItems="center"
+				>
+					<UploadImageIcon size={10} />
+				</Flex>
+			)}
 
 			{selectedImage && (
 				<Flex
 					w="full"
 					py="1"
 					rounded="full"
-					bgColor="#f03e3e"
+					bgColor="bg.bgDelete"
 					top="-8"
 					opacity="1"
 					position="absolute"
@@ -117,14 +137,14 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 				>
 					<Text
 						fontSize="xs"
-						color="text.white"
+						color="text.textDelete"
 						fontWeight="semibold"
 					>
 						Bỏ chọn ảnh
 					</Text>
 					<CloseSmallIcon
 						size={4}
-						color="bg.white"
+						color="text.textDelete"
 					/>
 				</Flex>
 			)}

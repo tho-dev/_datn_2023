@@ -13,7 +13,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -38,14 +38,16 @@ const ProductManagerView = (props: Props) => {
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: (info) => {
-				const index = info.row.index;
+			cell: ({ table, row }) => {
+				const index = row.index + 1;
+				const { pageIndex, pageSize } = table.getState().pagination;
+
 				return (
 					<Text
 						fontSize="13px"
 						fontWeight="medium"
 					>
-						{index + 1}
+						{pageIndex * pageSize + index}
 					</Text>
 				);
 			},
@@ -284,7 +286,7 @@ const ProductManagerView = (props: Props) => {
 						<BreadcrumbItem isCurrentPage>
 							<BreadcrumbLink
 								as={ReactRouterLink}
-								to="/admin/nhu-cau"
+								to="/admin/san-pham"
 							>
 								Sản phẩm
 							</BreadcrumbLink>
@@ -327,6 +329,8 @@ const ProductManagerView = (props: Props) => {
 					/>
 				</Flex>
 				<Button
+					as={ReactRouterLink}
+					to="/admin/san-pham/add"
 					leftIcon={
 						<PlusCircleIcon
 							size={5}
@@ -336,7 +340,6 @@ const ProductManagerView = (props: Props) => {
 					px="4"
 					lineHeight="2"
 					bgColor="bg.green"
-					// onClick={onOpenActionCreateDemand}
 				>
 					Tạo Mới
 				</Button>

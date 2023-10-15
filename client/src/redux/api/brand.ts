@@ -3,7 +3,6 @@ import { IBrand } from "~/interface/brand";
 import { objectToUrlParams } from "~/utils/fc";
 
 type TQuery = {
-	_parent?: boolean;
 	_order?: string;
 	_sort?: string;
 	_page?: number;

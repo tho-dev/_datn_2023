@@ -59,7 +59,6 @@ const SelectThinkPro = ({ control, name, data, placeholder, title = "Select", de
 				return (
 					<FormControl isInvalid={!!error}>
 						<FormLabel
-							htmlFor="price"
 							fontSize="sm"
 							fontWeight="semibold"
 						>
@@ -77,7 +76,7 @@ const SelectThinkPro = ({ control, name, data, placeholder, title = "Select", de
 							placeholder={
 								<Text
 									as="span"
-									fontSize="sm"
+									fontSize="13px"
 								>
 									{placeholder}
 								</Text>

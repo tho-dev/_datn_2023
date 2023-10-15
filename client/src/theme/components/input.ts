@@ -9,8 +9,11 @@ const baseStyle = definePartsStyle({
 
 const small = defineStyle({
 	px: "4",
-	h: "8",
+	h: "40px",
 	fontSize: "sm",
+	_placeholder: {
+		fontSize: "13px",
+	},
 });
 
 const medium = defineStyle({
