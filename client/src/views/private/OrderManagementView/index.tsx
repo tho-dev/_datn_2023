@@ -85,9 +85,7 @@ const OrderManagementView = (props: Props) => {
     columnHelper.accessor("payment_method", {
       cell: (info) => (
         <Text fontWeight="medium" fontSize="13px">
-          {info.getValue() == "tructiep"
-            ? "Thanh toán trực tiếp"
-            : info.getValue()}
+          {info.getValue()?.orderInfo || info.getValue() || ""}
         </Text>
       ),
       header: "Phương thức thanh toán",

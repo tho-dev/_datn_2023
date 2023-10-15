@@ -88,8 +88,8 @@ const OrderFilter = ({ handleSearch, search, handleDate }: Props) => {
           name="payment_method"
         >
           <option value="">Phương thức thanh toán</option>
-          <option value="Thanh Toán MoMo">Momo</option>
-          <option value="tructiep">Trực tiếp</option>
+          <option value="MOMO">Momo</option>
+          <option value="TIENMAT">Trực tiếp</option>
         </Select>
         <Button fontSize={15} bgColor={"cyan.400"} color={"white"} w={"10%"}>
           Lọc

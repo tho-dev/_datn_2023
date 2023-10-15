@@ -112,7 +112,7 @@ const orderSchema = new Schema(
       default: "unpaid",
     },
     payment_method: {
-      type: String,
+      type: Object,
     },
     status: {
       type: String,
