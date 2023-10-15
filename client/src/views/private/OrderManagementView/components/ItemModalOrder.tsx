@@ -3,23 +3,17 @@ import React from "react";
 import { CheckIcon, ArrowUpIcon } from "~/components/common/Icons";
 
 type Props = {
-  heading: string;
-  text: string;
-  icon: any;
-  color: string;
-  handleOpenModalOrder: (mode: any, title: any) => void;
-  mode: string;
-  title: string;
+  icon?: any;
+  color?: string;
+  title?: string;
+  number?: number | string;
 };
 
-const MetricItem = ({
-  heading,
-  text,
-  icon,
-  color,
-  handleOpenModalOrder,
-  mode,
+const ItemModalOrder = ({
+  icon = <ArrowUpIcon size={4} />,
+  color = "#ccc",
   title,
+  number,
 }: Props) => {
   return (
     <GridItem
@@ -38,7 +32,6 @@ const MetricItem = ({
         transform: "translateY(-10px)",
         bgColor: "gray.200",
       }}
-      onClick={() => handleOpenModalOrder(mode, title)}
     >
       <Flex padding={4} alignItems="center" gap={4}>
         <Box>
@@ -56,12 +49,12 @@ const MetricItem = ({
           </Flex>
         </Box>
         <Box>
-          <Heading as="h3" fontSize="18" my="2" textTransform="uppercase">
-            {heading}
+          <Heading as="h3" fontSize="18" my="2" textTransform="capitalize">
+            {title}
           </Heading>
           <Flex gap="1" alignItems="center">
             <Text color="#1AD598" fontSize="16" fontWeight="semibold">
-              {text}
+              {number}
             </Text>
           </Flex>
         </Box>
@@ -70,4 +63,4 @@ const MetricItem = ({
   );
 };
 
-export default MetricItem;
+export default ItemModalOrder;

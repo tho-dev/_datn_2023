@@ -25,7 +25,7 @@ function App() {
           console.log(err);
         });
     }
-  }, []);
+  }, [cart_id]);
   const router = createBrowserRouter(routes);
   return <RouterProvider router={router} />;
 }

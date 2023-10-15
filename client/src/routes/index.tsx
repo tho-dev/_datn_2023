@@ -1,4 +1,4 @@
-import { RouteObject } from "react-router-dom";
+import { RouteObject, redirect } from "react-router-dom";
 
 // view layout
 import MainLayout from "~/layouts/MainLayout";
@@ -35,7 +35,7 @@ import { CompareView } from "~/views/public/CompareView";
 import { SearchView } from "~/views/public/SearchView";
 import { BrandView } from "~/views/private/BrandView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
-import PostManagementView from "~/views/private/PostManagementView";
+import { PostManagementView } from "~/views/private/PostManagementView";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import { DemandView } from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
@@ -128,9 +128,82 @@ const routes: RouteObject[] = [
 					},
 				],
 			},
+			{
+				path: "/admin",
+				element: <AdminLayout />,
+				children: [
+					{
+						index: true,
+						element: <DashboardView />,
+					},
+					{
+						path: "san-pham",
+						element: <ProductManagerView />,
+					},
+					{
+						path: "san-pham/add",
+						element: <AddProductManagerView />,
+					},
+					{
+						path: "san-pham/:id/update",
+						element: <UpdateProductManagerView />,
+					},
+					{
+						path: "danh-muc",
+						element: <CategoryManagerView />,
+					},
+					{
+						path: "bai-viet",
+						element: <PostManagementView />,
+					},
+					{
+						path: "don-hang",
+						element: <OrderManagementView />,
+					},
+					{
+						path: "don-hang/:id",
+						element: <OrderDetailView />,
+					},
+					{
+						path: "tai-khoan",
+						element: <UserListManagerView />,
+					},
+					{
+						path: "tai-khoan/add",
+						element: <AddUserListManagerView />,
+					},
+					{
+						path: "profile",
+						element: <ProfileManagerView />,
+					},
+					{
+						path: "thuong-hieu",
+						element: <BrandView />,
+					},
+					{
+						path: "nhu-cau",
+						element: <DemandView />,
+					},
+					{
+						path: "shipping",
+						element: <ShippingView />,
+						children: [
+							{
+								index: true,
+								element: <ShippingList />,
+							},
+							{
+								path: "shipments",
+								element: <Shipments />,
+							},
+						],
+					},
+				],
+			},
 		],
 	},
 ];
+
 if (protectedRouter() == true) {
 	routes.push({
 		path: "/admin",

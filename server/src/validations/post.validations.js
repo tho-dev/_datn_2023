@@ -9,7 +9,7 @@ export const postSchema = joi.object({
 	}).required(),
 	content: joi.string().required(),
 	description: joi.string().required(),
-	meta_tile: joi.string().required(),
+	meta_title: joi.string().required(),
 	meta_keyword: joi.string().required(),
 	meta_description: joi.string().required(),
 	created_by: joi.string().default(null),

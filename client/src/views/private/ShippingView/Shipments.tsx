@@ -2,10 +2,21 @@ import React from "react";
 import { Box, Flex, Text, Button } from "@chakra-ui/react";
 import FilterShipments from "./components/FilterShipments";
 import TableShipment from "./components/TableShipment";
+import { useGetAllShippingQuery } from "~/redux/api/order";
 
 type Props = {};
 
 const Shipments = (props: Props) => {
+  const { data, isLoading, isFetching, isError } = useGetAllShippingQuery("");
+  if (isLoading) {
+    return <Box>Loading...</Box>;
+  }
+  if (isFetching) {
+    return <Box>isFetching...</Box>;
+  }
+  if (isError) {
+    return <Box>isError...</Box>;
+  }
   return (
     <Box bgColor="white">
       <Flex
@@ -22,7 +33,7 @@ const Shipments = (props: Props) => {
         <FilterShipments />
       </Box>
       <Box padding={4}>
-        <TableShipment />
+        <TableShipment data={data?.data?.items} />
       </Box>
     </Box>
   );
