@@ -35,7 +35,7 @@ import { CompareView } from "~/views/public/CompareView";
 import { SearchView } from "~/views/public/SearchView";
 import { BrandView } from "~/views/private/BrandView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
-import PostManagementView from "~/views/private/PostManagementView";
+import { PostManagementView } from "~/views/private/PostManagementView";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import { DemandView } from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";

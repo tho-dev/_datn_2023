@@ -114,6 +114,7 @@ const ActionCreateCategory = ({ onClose, parents }: Props) => {
 					placeholder="-- Danh mục cha --"
 					data={parents}
 				/>
+				
 				<FormControl isInvalid={errors.description as any}>
 					<FormLabel
 						fontSize="15"
