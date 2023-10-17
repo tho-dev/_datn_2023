@@ -35,15 +35,15 @@ import { CompareView } from '~/views/public/CompareView';
 import { SearchView } from '~/views/public/SearchView';
 import { BrandView } from '~/views/private/BrandView';
 import { UserListManagerView } from '~/views/private/UserListManagerView';
-import PostManagementView from '~/views/private/PostManagementView';
+import { PostManagementView } from '~/views/private/PostManagementView';
 import { AddUserListManagerView } from '~/views/private/UserListManagerView/components/AddUserListManagerView';
 import { DemandView } from '~/views/private/DemandView';
 import { ProfileManagerView } from '~/views/private/ProfileManagerView';
 import { HistoryOrderView } from '~/views/public/HistoryOrderView';
 import ResetPasswordView from '~/views/public/ResetPasswordView/ResetPasswordView';
 import { ThankView } from '~/views/public/ThankView';
-import CreatePasswordView from '~/views/public/CreatePasswordView/CreatePasswordView';
-
+import PrivateRoute from './protected';
+import { CreatePasswordView } from '~/views/public/CreatePasswordView';
 const routes: RouteObject[] = [
   {
     path: '/',
