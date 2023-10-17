@@ -1,10 +1,14 @@
-import { Box, Heading, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
+import { Link as ReactRouterLink } from "react-router-dom";
 import {
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Breadcrumb,
   useDisclosure,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -147,37 +151,69 @@ const OrderManagementView = (props: Props) => {
       [name]: value,
     });
   }, 2000);
-  const handleSearch = (e: any) => {
-    if (e.target.name == "search") {
-      setSearch(e.target.value);
-    }
 
+  const handleSearch = (e: any) => {
+    setSearch(e.target.value);
     debouncedSearch(e.target);
   };
+
   const handleDate = (data: any) => {
     const parsedDate = moment(
       data,
       "ddd MMM DD YYYY HH:mm:ss [GMT]Z (Giờ Đông Dương)"
     );
     const formattedDate = parsedDate.toISOString();
+
     const new_data = {
       name: "date",
       value: formattedDate,
     };
     debouncedSearch(new_data);
   };
+
+  const handleStatus = (data: any) => {
+    const new_data = {
+      name: "status",
+      value: data,
+    };
+    debouncedSearch(new_data);
+  };
+  const handlePayment = (data: any) => {
+    const new_data = {
+      name: "payment_method",
+      value: data,
+    };
+    debouncedSearch(new_data);
+  };
   return (
-    <Box w="full" h="full">
-      <Heading as="h1" fontSize={"18"}>
-        <Text>Danh sách đơn hàng</Text>
-      </Heading>
-      <Metrics />
+    <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
+      <Flex alignItems="center" justifyContent="space-between" pb="5">
+        <Heading as="h2" fontSize="18">
+          Quản lý đơn hàng
+        </Heading>
+        <Box>
+          <Breadcrumb spacing="8px" separator="/" fontSize="sm">
+            <BreadcrumbItem>
+              <BreadcrumbLink as={ReactRouterLink} to="/admin">
+                Home
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href="don-hang">Đơn hàng</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Box>
+      </Flex>
+      {/* <Metrics /> */}
       <OrderFilter
         handleSearch={handleSearch}
         search={search}
         handleDate={handleDate}
+        handleStatus={handleStatus}
+        handlePayment={handlePayment}
       />
-      <Box bgColor="bg.white" mt="6" p="6">
+      <Box bgColor="bg.white" mt={8}>
         <TableThinkPro
           columns={columns}
           useData={useGetAllOrderQuery}

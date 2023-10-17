@@ -2,25 +2,45 @@ import { Box, Flex, Grid, GridItem } from "@chakra-ui/layout";
 import { Avatar, Button, Image, Text } from "@chakra-ui/react";
 
 type Props = {
-  handlePrevStep: () => void;
+  first_name: string;
+  last_name: string;
+  phone: number;
+  email: string;
+  location: string;
+  role: string;
+  password: string;
+  confirm_password: string;
+  image: any;
 };
-const Confirmation = ({ handlePrevStep }: Props) => {
+const Confirmation = ({
+  first_name,
+  last_name,
+  location,
+  role,
+  email,
+  password,
+  confirm_password,
+  phone,
+  image,
+}: Props) => {
   return (
-    <Box bgColor="white" my={8} padding="16px 24px" borderRadius={6}>
-      <Box
-        w={"100%"}
-        h={40}
-        bg={"#b3e7ff"}
-        borderTopRadius={"6px"}
-        position={"relative"}
-      >
+    <Box
+      bgColor="white"
+      my={8}
+      padding="16px 24px"
+      borderRadius={6}
+      w={"100%"}
+      boxShadow="lg"
+    >
+      <Box h={40} bg={"#b3e7ff"} borderTopRadius={"6px"} position={"relative"}>
         <Image
           position={"absolute"}
           m={"80px 42%"}
           borderRadius="full"
           boxSize="150px"
-          src="https://bit.ly/dan-abramov"
           alt="Dan Abramov"
+          src={image ? image.url : "https://bit.ly/dan-abramov"}
+          objectFit="cover"
         />
       </Box>
 
@@ -43,7 +63,7 @@ const Confirmation = ({ handlePrevStep }: Props) => {
           Location
         </GridItem>
         <GridItem fontSize={16} fontWeight={700}>
-          Địa chỉ
+          {location ? location : "Địa chỉ"}
         </GridItem>
       </Grid>
       <Grid
@@ -64,7 +84,9 @@ const Confirmation = ({ handlePrevStep }: Props) => {
           Họ và tên
         </GridItem>
         <GridItem fontSize={16} fontWeight={700}>
-          Nguyễn văn a
+          {first_name || last_name !== ""
+            ? first_name + " " + last_name
+            : "Tên của bạn"}
         </GridItem>
       </Grid>
       {/* Email */}
@@ -86,7 +108,7 @@ const Confirmation = ({ handlePrevStep }: Props) => {
           Email
         </GridItem>
         <GridItem fontSize={16} fontWeight={700}>
-          abc@gmail.com
+          {email ? email : "Email của bạn"}
         </GridItem>
       </Grid>
 
@@ -109,7 +131,7 @@ const Confirmation = ({ handlePrevStep }: Props) => {
           Số điện thoại
         </GridItem>
         <GridItem fontSize={16} fontWeight={700}>
-          (+84)842 842 842
+          (+84){phone ? phone : "Số điện thoại"}
         </GridItem>
       </Grid>
 
@@ -129,33 +151,10 @@ const Confirmation = ({ handlePrevStep }: Props) => {
           fontWeight={500}
           color={"gray"}
         >
-          Vị trí
+          Vai trò
         </GridItem>
         <GridItem fontSize={16} fontWeight={700}>
-          Admin
-        </GridItem>
-      </Grid>
-
-      {/* Account type */}
-      <Grid
-        mt={"17px"}
-        templateColumns={{
-          sm: "repeat(1, 1fr)",
-          md: "repeat(1, 1fr)",
-          xl: "repeat(2, 1fr)",
-        }}
-      >
-        <GridItem
-          fontSize={16}
-          textAlign={"end"}
-          mr={10}
-          fontWeight={500}
-          color={"gray"}
-        >
-          Tài khoản
-        </GridItem>
-        <GridItem fontSize={16} fontWeight={700}>
-          Company
+          {role ? role : "Vai trò của bạn"}
         </GridItem>
       </Grid>
       {/* Address line 2 */}
@@ -177,7 +176,7 @@ const Confirmation = ({ handlePrevStep }: Props) => {
           Mật khẩu
         </GridItem>
         <GridItem fontSize={16} fontWeight={700}>
-          1234567
+          {password ? password : "*******"}
         </GridItem>
       </Grid>
       <Grid
@@ -198,51 +197,10 @@ const Confirmation = ({ handlePrevStep }: Props) => {
           Xác nhận mật khẩu
         </GridItem>
         <GridItem fontSize={16} fontWeight={700}>
-          1234567
+          {confirm_password ? confirm_password : "*******"}
         </GridItem>
       </Grid>
       {/* Zip code */}
-      <Grid
-        mt={"17px"}
-        templateColumns={{
-          sm: "repeat(1, 1fr)",
-          md: "repeat(1, 1fr)",
-          xl: "repeat(2, 1fr)",
-        }}
-      >
-        <GridItem
-          fontSize={16}
-          textAlign={"end"}
-          mr={10}
-          fontWeight={500}
-          color={"gray"}
-        >
-          Zip code
-        </GridItem>
-        <GridItem fontSize={16} fontWeight={700}>
-          100000
-        </GridItem>
-      </Grid>
-
-      <Flex justifyContent="space-between" alignItems="center" mt={4}>
-        <Button
-          type="submit"
-          bgColor="#377dff"
-          textColor="text.white"
-          fontWeight="bold"
-          onClick={handlePrevStep}
-        >
-          Prev
-        </Button>
-        <Button
-          type="submit"
-          bgColor="bg.green"
-          textColor="text.white"
-          fontWeight="bold"
-        >
-          Tạo mới
-        </Button>
-      </Flex>
     </Box>
   );
 };

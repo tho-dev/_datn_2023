@@ -35,6 +35,10 @@ const userSchema = new Schema(
       default: "customer",
       enum: ["customer", "manager", "expert", "admin"],
     },
+    is_block: {
+      type: Boolean,
+      default: false,
+    },
     date_of_birth: {
       type: Date,
     },

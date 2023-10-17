@@ -1,22 +1,43 @@
 import { Input } from "@chakra-ui/input";
-import { Box, Flex } from "@chakra-ui/layout";
-import React, { useEffect, useState } from "react";
+import { Box, Flex, Text } from "@chakra-ui/layout";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Datepicker from "./Datepicker";
 import { Button, Select } from "@chakra-ui/react";
-import { SearchAdminIcon } from "~/components/common/Icons";
+import { PlusCircleIcon, SearchAdminIcon } from "~/components/common/Icons";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+} from "@chakra-ui/react";
+
+import { Radio, RadioGroup, Stack } from "@chakra-ui/react";
 
 type Props = {
   handleSearch: (e: any) => void;
   search: any;
   handleDate: (date: any) => void;
+  handleStatus: (data: any) => void;
+  handlePayment: (data: any) => void;
 };
 
-const OrderFilter = ({ handleSearch, search, handleDate }: Props) => {
+const OrderFilter = ({
+  handleSearch,
+  search,
+  handleDate,
+  handleStatus,
+  handlePayment,
+}: Props) => {
   const [date, setDate] = React.useState<Date>();
   return (
-    <Box mt="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
+    <Box>
       <Flex gap={4} justifyContent={"space-between"}>
         <Flex
           alignItems="center"
@@ -31,10 +52,10 @@ const OrderFilter = ({ handleSearch, search, handleDate }: Props) => {
             <SearchAdminIcon size={5} />
           </Flex>
           <Input
-            maxH="38px"
+            maxH="40px"
             border="none"
             px="0"
-            placeholder="Tìm kiếm"
+            placeholder="Tìm kiếm theo tên khách hàng..."
             // w="200px"
             maxW="full"
             _placeholder={{
@@ -45,55 +66,112 @@ const OrderFilter = ({ handleSearch, search, handleDate }: Props) => {
             onChange={(e) => handleSearch(e)}
           />
         </Flex>
-        <Flex
-          w={"20%"}
-          borderWidth={1}
-          borderColor={"gray.200"}
-          px={4}
-          alignItems={"center"}
-          rounded={"sm"}
-        >
-          <Flatpickr
-            placeholder="Chọn ngày..."
-            options={{
-              mode: "single",
-              dateFormat: "d/m/Y",
-            }}
-            value={date}
-            onChange={([date]) => {
-              setDate(date);
-              handleDate(date);
-            }}
-          />
-        </Flex>
-        <Select
-          w={"22%"}
-          fontSize={15}
-          color={"gray.500"}
-          onChange={(e) => handleSearch(e)}
-          name="status"
-        >
-          <option value="">Trạng thái đơn hàng</option>
-          <option value="processing">Chờ xử lí</option>
-          <option value="confirmed">Đã xác nhận</option>
-          <option value="delivering">Đang giao</option>
-          <option value="delivered">Đã giao</option>
-          <option value="cancelled">Đã hủy</option>
-        </Select>
-        <Select
-          w={"22%"}
-          fontSize={15}
-          color={"gray.500"}
-          onChange={(e) => handleSearch(e)}
-          name="payment_method"
-        >
-          <option value="">Phương thức thanh toán</option>
-          <option value="MOMO">Momo</option>
-          <option value="TIENMAT">Trực tiếp</option>
-        </Select>
-        <Button fontSize={15} bgColor={"cyan.400"} color={"white"} w={"10%"}>
-          Lọc
-        </Button>
+        <Popover>
+          <PopoverTrigger>
+            <Button
+              leftIcon={<PlusCircleIcon size={5} color="text.white" />}
+              px="4"
+              lineHeight="2"
+              bgColor="bg.green"
+            >
+              Lọc
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverBody>
+              <Box padding={2}>
+                <Text fontSize="16px" fontWeight="bold" my={2}>
+                  Phương thức thanh toán
+                </Text>
+                <RadioGroup
+                  onChange={(e) => handlePayment(e)}
+                  name="payment_method"
+                >
+                  <Radio value="" defaultChecked>
+                    <Text fontSize="14px" fontWeight="semibold">
+                      Tất cả phương thức
+                    </Text>
+                  </Radio>
+                  <Radio value="MOMO">
+                    <Text fontSize="14px" fontWeight="semibold">
+                      Thanh toán Momo
+                    </Text>
+                  </Radio>
+                  <Radio value="TIENMAT">
+                    <Text fontSize="14px" fontWeight="semibold">
+                      Thanh toán Tiền mặt
+                    </Text>
+                  </Radio>
+                </RadioGroup>
+              </Box>
+
+              <Box padding={2}>
+                <Text fontSize="16px" fontWeight="bold" my={2}>
+                  Trạng thái đơn hàng
+                </Text>
+                <RadioGroup onChange={(e) => handleStatus(e)} name="status">
+                  <Stack spacing={4} direction="column">
+                    <Radio value="">
+                      <Text fontSize="14px" fontWeight="semibold">
+                        Tất cả
+                      </Text>
+                    </Radio>
+                    <Radio value="processing">
+                      <Text fontSize="14px" fontWeight="semibold">
+                        Chờ xử lí
+                      </Text>
+                    </Radio>
+                    <Radio value="confirmed">
+                      <Text fontSize="14px" fontWeight="semibold">
+                        Đã xác nhận
+                      </Text>
+                    </Radio>
+                    <Radio value="delivering">
+                      <Text fontSize="14px" fontWeight="semibold">
+                        Đang giao
+                      </Text>
+                    </Radio>
+                    <Radio value="delivered">
+                      <Text fontSize="14px" fontWeight="semibold">
+                        Đã giao
+                      </Text>
+                    </Radio>
+                    <Radio value="cancelled">
+                      <Text fontSize="14px" fontWeight="semibold">
+                        Đã huỷ
+                      </Text>
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
+              </Box>
+              <Box padding={2}>
+                <Text fontSize="16px" fontWeight="bold" my={2}>
+                  Chọn ngày
+                </Text>
+                <Flex>
+                  <Flatpickr
+                    placeholder="Chọn ngày..."
+                    options={{
+                      mode: "single",
+                      dateFormat: "d/m/Y",
+                    }}
+                    value={date}
+                    onChange={([date]) => {
+                      setDate(date);
+                      handleDate(date);
+                    }}
+                    style={{
+                      border: "1px solid black",
+                      padding: "4px",
+                      borderRadius: "4px",
+                    }}
+                  />
+                </Flex>
+              </Box>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </Flex>
     </Box>
   );

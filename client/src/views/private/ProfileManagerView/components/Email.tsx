@@ -12,9 +12,11 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-type Props = {};
+type Props = {
+  data: any;
+};
 
-const Email = (props: Props) => {
+const Email = ({ data }: Props) => {
   const {
     register,
     formState: { errors, isSubmitting },
@@ -34,7 +36,7 @@ const Email = (props: Props) => {
       <Divider />
       <Flex color={"#797a7b"} mt={5}>
         <Text mr={1}>Địa chỉ email hiện tại là: </Text>
-        <Text fontWeight={600}> mark@site.com</Text>
+        <Text fontWeight={600}> {data?.email}</Text>
       </Flex>
       <Grid
         mt={5}
@@ -56,6 +58,8 @@ const Email = (props: Props) => {
               {...register("email", {
                 required: "Không được để trống !!!",
               })}
+              readOnly
+              bg="bg.gray"
             />
             <FormErrorMessage>
               {(errors.email as any) && errors?.email?.message}
@@ -70,6 +74,7 @@ const Email = (props: Props) => {
         textColor="text.white"
         fontWeight="bold"
         m={"20px 0 0 auto"}
+        isDisabled
       >
         Lưu thay đổi
       </Button>

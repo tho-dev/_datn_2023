@@ -11,12 +11,8 @@ import {
   PhoneIcon,
   UserIcon,
 } from "~/components/common/Icons";
-import MetricItem from "../components/MetricItem";
-import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
 import OrderDetailMetricItem from "../components/OrderDetailMetric";
-import { Progress } from "@chakra-ui/react";
-import { mt } from "date-fns/locale";
 import { useParams } from "react-router";
 import {
   useCancelOrderMutation,
@@ -165,7 +161,7 @@ const OrderDetailView = (props: Props) => {
     newTab?.focus();
   };
   return (
-    <Box w="full" h="full">
+    <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
       <Flex justifyContent="space-between" alignItems={"center"}>
         <Heading as="h1" fontSize="18">
           <Text>Chi tiết đơn hàng</Text>
@@ -227,6 +223,7 @@ const OrderDetailView = (props: Props) => {
           bgColor="bg.white"
           rounded="md"
           w={"75%"}
+          shadow="md"
         >
           <TableProduct columns={columns} data={data?.data.products} />
           <Flex alignItems="flex-end" flexDirection="column" py={4}>
@@ -285,7 +282,15 @@ const OrderDetailView = (props: Props) => {
         </Box>
         <Box w="25%">
           {/* Vận chuyển */}
-          <Box my="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
+          <Box
+            my="4"
+            px="5"
+            py="6"
+            gap="2"
+            bgColor="bg.white"
+            rounded="md"
+            shadow="md"
+          >
             <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
               Vận chuyển:{" "}
               {data?.data.shipping_method === "at_store"
@@ -321,7 +326,15 @@ const OrderDetailView = (props: Props) => {
             </Flex>
           </Box>
           {/* Thanh toán */}
-          <Box my="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
+          <Box
+            my="4"
+            px="5"
+            py="6"
+            gap="2"
+            bgColor="bg.white"
+            rounded="md"
+            shadow="md"
+          >
             <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
               Chi tiết thanh toán:
             </Heading>

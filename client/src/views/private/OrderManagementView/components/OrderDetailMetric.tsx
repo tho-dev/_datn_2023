@@ -33,6 +33,7 @@ const OrderDetailMetricItem = ({
         transform: "translateY(-10px)",
         bgColor: "gray.200",
       }}
+      shadow="md"
     >
       <Flex padding={4} justifyContent="space-between" gap={4}>
         <Box>

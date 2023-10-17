@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IUser } from "~/interface/user";
+import { objectToUrlParams } from "~/utils/fc";
 
 const authApi = createApi({
     reducerPath: "auth",
@@ -16,6 +17,20 @@ const authApi = createApi({
         },
     }),
     endpoints: (builder) => ({
+        getAll: builder.query({
+            query: (query) => ({
+                url: `/user?${objectToUrlParams(query)}`,
+                method: "GET",
+            }),
+            providesTags: ["Auth"],
+        }),
+        getOne: builder.query({
+            query: (id) => ({
+                url: `/user/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["Auth"],
+        }),
         signin: builder.mutation<any, { email: string, password: string }>({
             query: (credentials) => ({
                 url: `/user/login`,
@@ -31,38 +46,45 @@ const authApi = createApi({
             })
         }),
         update: builder.mutation<any, any>({
-            query: (credentials) => ({
-                url: `/user/${credentials._id}`,
+            query: ({ data, id }) => ({
+                url: `/user/${id}`,
                 method: "PUT",
-                body: credentials,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
+                body: data,
+            }),
+            invalidatesTags: ["Auth"]
         }),
         updatePassWord: builder.mutation<any, any>({
-            query: (credentials) => ({
-                url: `/user/updatePassword/${credentials.id}`,
+            query: ({ data, id }) => ({
+                url: `/user/updatePassword/${id}`,
                 method: "PUT",
-                body: credentials
+                body: data
             })
         }),
         logoutUser: builder.mutation<any, any>({
-            query: (user) => ({
+            query: () => ({
                 url: `/user/logout`,
                 method: "POST",
-                body: user
             }),
             invalidatesTags: ["Auth"]
+        }),
+        deleteUser: builder.mutation<any, string>({
+            query: (id) => ({
+                url: `/user/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Auth"],
         }),
     })
 });
 export const {
+    useGetAllQuery,
     useSigninMutation,
     useSignupMutation,
     useUpdateMutation,
     useUpdatePassWordMutation,
-    useLogoutUserMutation
+    useLogoutUserMutation,
+    useDeleteUserMutation,
+    useGetOneQuery
 } = authApi;
 
 export const authReducer = authApi.reducer;

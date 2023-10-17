@@ -99,6 +99,10 @@ const orderSchema = new Schema(
       type: Number,
       required: true,
     },
+    user_id: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     shop_address: {
       type: String,
     },
