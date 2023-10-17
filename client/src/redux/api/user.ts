@@ -74,6 +74,20 @@ const authApi = createApi({
       }),
       invalidatesTags: ["Auth"],
     }),
+    resetPassword: builder.mutation<IEmail, Partial<IEmail>>({
+      query: (credentials) => ({
+        url: `/user/resetPassword`,
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
+    sendOtpResetPassword: builder.mutation<IEmail, Partial<IEmail>>({
+      query: (credentials) => ({
+        url: `/user/sent-otp`,
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
   })
 });
 
@@ -85,7 +99,9 @@ export const {
   useUpdatePassWordMutation,
   useLogoutUserMutation,
   useDeleteUserMutation,
-  useGetOneQuery
+  useGetOneQuery,
+  useResetPasswordMutation,
+  useSendOtpResetPasswordMutation
 } = authApi;
 
 export const authReducer = authApi.reducer;
