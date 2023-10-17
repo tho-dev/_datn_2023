@@ -79,13 +79,13 @@ const SignUpView = (props: Props) => {
     <Center h="full" px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}>
       <Flex w="460px" h="full" direction="column" pt="8">
         <Box>
-          <Link as={ReactRouterLink} to="/">
+          <Link as={ReactRouterLink} to="/dang-nhap">
             <ArrowLeftCirleIcon boxSize="10" />
           </Link>
         </Box>
         <Stack direction="row" gap="0" pt="8" pb="12">
           <Heading as="h3" color="primary.font" size="lg" fontWeight="semibold">
-            Think
+            Poly
           </Heading>
           <Heading
             as="h3"
@@ -94,7 +94,7 @@ const SignUpView = (props: Props) => {
             fontWeight="semibold"
             position="relative"
           >
-            Pro
+            Tech
             <CodeIcon boxSize="5" position="absolute" color="primary.font" />
           </Heading>
         </Stack>

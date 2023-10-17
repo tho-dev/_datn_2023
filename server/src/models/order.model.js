@@ -99,6 +99,10 @@ const orderSchema = new Schema(
       type: Number,
       required: true,
     },
+    user_id: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     shop_address: {
       type: String,
     },
@@ -112,7 +116,7 @@ const orderSchema = new Schema(
       default: "unpaid",
     },
     payment_method: {
-      type: String,
+      type: Object,
     },
     status: {
       type: String,

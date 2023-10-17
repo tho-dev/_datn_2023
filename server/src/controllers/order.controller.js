@@ -64,6 +64,12 @@ export const createOrder = async (req, res, next) => {
           status_order: "processing",
         },
       ],
+      payment_method: {
+        message: "failed",
+        orderInfo: "Thanh toán trực tiếp",
+        orderType: "cash",
+        partnerCode: "TIENMAT",
+      },
     });
     const add_product_item = async (product) => {
       const new_item = await Order_Detail.create({
@@ -212,7 +218,7 @@ export const getAll = async (req, res, next) => {
     }
 
     if (payment_method) {
-      conditions.payment_method = payment_method;
+      conditions["payment_method.partnerCode"] = payment_method;
     }
     const options = {
       page: _page,
@@ -786,7 +792,7 @@ export const updatePaymentStatus = async (req, res, next) => {
     const order = await Order.findByIdAndUpdate(_id, {
       $set: {
         payment_status: "paid",
-        payment_method: orderInfo,
+        payment_method: req.body,
       },
     });
     if (!order) {
