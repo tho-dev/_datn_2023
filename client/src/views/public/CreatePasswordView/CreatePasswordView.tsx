@@ -3,30 +3,29 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { ArrowLeftCirleIcon, CodeIcon } from '~/components/common/Icons';
 import { FormErrorMessage, FormControl, Input, Button, Center, Box, Flex, Link, Stack, Heading, Text, Divider, AbsoluteCenter, useToast } from '@chakra-ui/react';
 import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
-import { ResetPasswordSchema } from '~/validate/user';
+import { sendOtpPasswordSchema } from '~/validate/user';
+import { useSendOtpResetPasswordMutation } from '~/redux/api/user';
+import { resetForm, resetPassword } from '~/redux/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '~/redux/hook/hook';
-import { resetForm } from '~/redux/slices/userSlice';
-import { useResetPasswordMutation } from '~/redux/api/user';
 
 type Props = {};
 
 type State = {};
 
-const ResetPasswordView = (props: Props) => {
+const CreatePasswordView = (props: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<any>({
-    resolver: joiResolver(ResetPasswordSchema),
+    resolver: joiResolver(sendOtpPasswordSchema),
   });
-  const dispatch = useAppDispatch();
-  const [resetPassWord, { isLoading }] = useResetPasswordMutation();
   const toast = useToast();
-  const { isEmail } = useAppSelector((state: any) => state.persistedReducer?.user);
+  const dispatch = useAppDispatch();
+  const [sendOtpResetPassword, { isLoading }] = useSendOtpResetPasswordMutation();
+  const navigate = useNavigate();
   const onSubmit = async (data: any) => {
-    console.log('submit', data);
-    const result: any = await resetPassWord(data);
+    const result: any = await sendOtpResetPassword(data);
     if (result.data?.status === 200) {
       toast({
         title: 'Thiết lập thành công',
@@ -39,7 +38,7 @@ const ResetPasswordView = (props: Props) => {
     } else {
       toast({
         title: 'Thiết lập mật khẩu thất bại',
-        description: result.error.data?.errors?.message,
+        description: result.error.data.errors.message,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -47,8 +46,9 @@ const ResetPasswordView = (props: Props) => {
       });
     }
     dispatch(resetForm(result));
+    dispatch(resetPassword({ result: result.data || result.error, email: data.email }));
+    navigate('/thiet-lap-mat-khau');
   };
-
   return (
     <Center h='full' px={{ sm: 5, md: 5, lg: 0, xl: 0, '2xl': 0 }}>
       <Flex w='460px' h='full' direction='column' pt='8'>
@@ -68,9 +68,13 @@ const ResetPasswordView = (props: Props) => {
         </Stack>
         <Stack direction='column' gap='0' pb='12'>
           <Heading as='h3' size='lg'>
-            Quên mật khẩu
+            Thiết lập mật khẩu
           </Heading>
+          <Text fontSize='lg' fontWeight='medium' mt='4'>
+            Nhập email đăng nhập của bạn để thiết lập lại mật khẩu.
+          </Text>
         </Stack>
+
         <form
           style={{
             width: '100%',
@@ -79,18 +83,10 @@ const ResetPasswordView = (props: Props) => {
         >
           <Flex direction='column' gap='4'>
             <FormControl isInvalid={errors.email as any}>
-              <Input id='email' value={isEmail} type='email' placeholder='Email' size='lager' {...register('email')} />
+              <Input id='email' type='email' placeholder='Email' size='lager' {...register('email')} />
               <FormErrorMessage>{(errors.email as any) && (errors?.email?.message as any)}</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={errors.new_password as any}>
-              <Input id='new_password' type='password' placeholder='Nhập mật khẩu mới' size='lager' {...register('new_password')} />
-              <FormErrorMessage>{(errors?.new_password as any) && (errors?.new_password?.message as any)}</FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={errors.otp_code as any}>
-              <Input id='otp_code' type='text' placeholder='Nhập Mã OTP' size='lager' {...register('otp_code')} />
-              <FormErrorMessage>{(errors.otp_code as any) && (errors?.otp_code?.message as any)}</FormErrorMessage>
-            </FormControl>
-            <Button isLoading={isLoading} loadingText={isLoading ? 'Đang thiết lập' : ''} size='lager' type='submit' w='full' mt='4' rounded='full'>
+            <Button size='lager' type='submit' w='full' mt='4' rounded='full' isLoading={isLoading} loadingText={isLoading ? 'Đang thiết lập' : ''}>
               Thiết lập lại mật khẩu
             </Button>
           </Flex>
@@ -99,4 +95,4 @@ const ResetPasswordView = (props: Props) => {
     </Center>
   );
 };
-export default ResetPasswordView;
+export default CreatePasswordView;
