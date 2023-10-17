@@ -15,18 +15,13 @@ import {
 } from "@chakra-ui/react";
 import Info from "./components/Info";
 import ChangePassword from "./components/ChangePassword";
-import { LogoutIcon } from "~/components/common/Icons";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { logout } from "~/redux/slices/globalSlice";
-import { useNavigate } from "react-router-dom";
 import { InforOrder } from "./components/InforOrder";
-import { removeCart } from "~/redux/slices/cartSlice";
 
 type Props = {};
 
 const ProfileView = (props: Props) => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
-
   return (
     <Box my="6" px="6" py="4" rounded="xl" bgColor="bg.white">
       <Flex justifyContent="space-between" alignItems="center">
