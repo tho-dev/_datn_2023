@@ -14,6 +14,7 @@ import orderApi from "./api/order";
 import brandApi from "../redux/api/brand";
 import categoryApi from "../redux/api/category";
 import demandApi from "../redux/api/demand";
+import collectionApi from "../redux/api/collection";
 
 const persistConfig = {
 	key: "root",
@@ -35,6 +36,7 @@ const middleware = [
 	categoryApi.middleware,
 	brandApi.middleware,
 	demandApi.middleware,
+	collectionApi.middleware,
 ];
 
 const store = configureStore({
@@ -47,6 +49,7 @@ const store = configureStore({
 		[categoryApi.reducerPath]: categoryApi.reducer,
 		[brandApi.reducerPath]: brandApi.reducer,
 		[demandApi.reducerPath]: demandApi.reducer,
+		[collectionApi.reducerPath]: collectionApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
 });
