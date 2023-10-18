@@ -1,5 +1,4 @@
-import React from "react";
-import { Box, Flex, Heading, Link, Text, Grid, GridItem } from "@chakra-ui/layout";
+import { Box, Text, Grid, GridItem } from "@chakra-ui/layout";
 import {
 	Popover,
 	PopoverTrigger,
@@ -8,18 +7,17 @@ import {
 	PopoverBody,
 	Button,
 	Radio,
-	RadioGroup,
 	Checkbox,
-	CheckboxGroup,
 	PopoverArrow,
 } from "@chakra-ui/react";
 import { ArrowUpIcon } from "~/components/common/Icons";
 
 type Props = {
 	title: string;
+	data: any;
 };
 
-const FilterProduct = ({ title }: Props) => {
+const FilterProduct = ({ title, data }: Props) => {
 	return (
 		<Popover isLazy>
 			<PopoverTrigger>
@@ -49,12 +47,19 @@ const FilterProduct = ({ title }: Props) => {
 							columnGap="2rem"
 							rowGap="0.25rem"
 						>
-							<GridItem>
-								<Checkbox value="Asus">
-									<Text fontSize="14px">Asus</Text>
-								</Checkbox>
-							</GridItem>
-							<GridItem>
+							{data?.map((option: any, index: number) => {
+								return (
+									<GridItem>
+										<Checkbox value={option?.value}
+											key={index}
+										>
+											<Text fontSize="14px">{option?.label}</Text>
+										</Checkbox>
+									</GridItem>
+								)
+							})}
+
+							{/* <GridItem>
 								<Checkbox
 									value="Asus"
 									fontSize="sm"
@@ -101,7 +106,7 @@ const FilterProduct = ({ title }: Props) => {
 								>
 									<Text fontSize="14px">Asus</Text>
 								</Checkbox>
-							</GridItem>
+							</GridItem> */}
 						</Grid>
 					</Box>
 				</PopoverHeader>
