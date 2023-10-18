@@ -11,12 +11,8 @@ import {
   PhoneIcon,
   UserIcon,
 } from "~/components/common/Icons";
-import MetricItem from "../components/MetricItem";
-import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
 import OrderDetailMetricItem from "../components/OrderDetailMetric";
-import { Progress } from "@chakra-ui/react";
-import { mt } from "date-fns/locale";
 import { useParams } from "react-router";
 import {
   useCancelOrderMutation,
@@ -54,6 +50,8 @@ const OrderDetailView = (props: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
+  console.log(data);
+
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -163,7 +161,7 @@ const OrderDetailView = (props: Props) => {
     newTab?.focus();
   };
   return (
-    <Box w="full" h="full">
+    <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
       <Flex justifyContent="space-between" alignItems={"center"}>
         <Heading as="h1" fontSize="18">
           <Text>Chi tiết đơn hàng</Text>
@@ -210,7 +208,7 @@ const OrderDetailView = (props: Props) => {
         />
         <OrderDetailMetricItem
           heading="Phương thức thanh toán"
-          text={data?.data.payment_method}
+          text={data?.data.payment_method.orderInfo}
           icon={<OrderIcon size={6} color="cyan" />}
           color="cyan"
         />
@@ -225,6 +223,7 @@ const OrderDetailView = (props: Props) => {
           bgColor="bg.white"
           rounded="md"
           w={"75%"}
+          shadow="md"
         >
           <TableProduct columns={columns} data={data?.data.products} />
           <Flex alignItems="flex-end" flexDirection="column" py={4}>
@@ -283,7 +282,15 @@ const OrderDetailView = (props: Props) => {
         </Box>
         <Box w="25%">
           {/* Vận chuyển */}
-          <Box my="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
+          <Box
+            my="4"
+            px="5"
+            py="6"
+            gap="2"
+            bgColor="bg.white"
+            rounded="md"
+            shadow="md"
+          >
             <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
               Vận chuyển:{" "}
               {data?.data.shipping_method === "at_store"
@@ -304,48 +311,67 @@ const OrderDetailView = (props: Props) => {
                     : "Giao hàng nhanh"}
                 </Text>
                 <Text fontSize="12px" fontWeight="semibold">
-                  Trạng thái thanh toán:{" "}
-                  {data?.data.payment_status == "unpaid"
-                    ? "Chưa thanh toán"
-                    : "Đã thanh toán"}
+                  Trạng thái thanh toán:
+                  {data?.data.payment_status == "paid"
+                    ? "Đã thanh toán"
+                    : "Chưa thanh toán"}
                 </Text>
                 <Text fontSize="12px" fontWeight="semibold">
-                  Phương thức thanh toán: {data?.data.payment_method}
+                  Phương thức Giao hàng:{" "}
+                  {data?.data.shipping_method == "at_store"
+                    ? "Tại cửa hàng"
+                    : "Shipping"}
                 </Text>
               </Flex>
             </Flex>
           </Box>
           {/* Thanh toán */}
-          <Box my="4" px="5" py="6" gap="2" bgColor="bg.white" rounded="md">
+          <Box
+            my="4"
+            px="5"
+            py="6"
+            gap="2"
+            bgColor="bg.white"
+            rounded="md"
+            shadow="md"
+          >
             <Heading size="md" pb={4} borderBottomWidth={1} fontSize={18}>
               Chi tiết thanh toán:
             </Heading>
-            {data?.data.payment_status == "unpaid" ? (
-              <Box>Chưa thanh toán</Box>
-            ) : (
-              <Flex pt={4} flexDir="column" gap={2} fontSize={15}>
-                <Flex>
-                  <Text w="40%">Mã giao dịch:</Text>
-                  <Text>#1111111111111</Text>
-                </Flex>
-                <Flex>
-                  <Text w="40%">Phương thức:</Text>
-                  <Text>Thẻ tín dụng</Text>
-                </Flex>
-                <Flex>
-                  <Text w="40%">Số thẻ:</Text>
-                  <Text>1111 1111 1111</Text>
-                </Flex>
-                <Flex>
-                  <Text w="40%">Tên chủ thẻ:</Text>
-                  <Text>NGO BA KHA</Text>
-                </Flex>
-                <Flex>
-                  <Text w="40%">TỔNG TIỀN:</Text>
-                  <Text>400 000</Text>
-                </Flex>
+            <Flex pt={4} flexDir="column" gap={2} fontSize={15}>
+              <Flex>
+                <Text w="40%" fontWeight="semibold">
+                  Trạng thái thanh toán:
+                </Text>
+                <Text>
+                  {data?.data.payment_method.message == "failed"
+                    ? "Chưa thanh toán"
+                    : "Đã thanh toán"}
+                </Text>
               </Flex>
-            )}
+              <Flex>
+                <Text w="40%" fontWeight="semibold">
+                  Phương thức:
+                </Text>
+                <Text>{data?.data.payment_method.orderInfo}</Text>
+              </Flex>
+              <Flex>
+                <Text w="40%" fontWeight="semibold">
+                  Hình thức thanh toán:
+                </Text>
+                <Text>
+                  {data?.data.payment_method.orderType == "cash"
+                    ? "Tiền mặt"
+                    : data?.data.payment_method.orderType}
+                </Text>
+              </Flex>
+              <Flex>
+                <Text w="40%" fontWeight="semibold">
+                  Mã:
+                </Text>
+                <Text>{data?.data.payment_method.partnerCode}</Text>
+              </Flex>
+            </Flex>
           </Box>
         </Box>
       </Flex>

@@ -11,6 +11,7 @@ import {
   logout,
   resetPassWord,
   sendOtp_resetPassword,
+  deleteUser,
 } from "../controllers/user.controller";
 
 const router = express.Router();
@@ -26,9 +27,6 @@ router.get("/verify/:userId/:uniqueString", verifyEmail);
 router.get("/verified", verifiedEmail);
 router.post("/sent-otp", sendOtp_resetPassword);
 router.post("/resetPassword", resetPassWord);
+router.delete("/:id", deleteUser);
 
 export default router;
-
-
-
-

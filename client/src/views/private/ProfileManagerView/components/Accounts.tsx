@@ -39,7 +39,7 @@ const Accounts = () => {
           Confirm that I want to delete my account.
         </Checkbox>
         <Flex justifyContent="flex-end" alignItems="center">
-          <Button type="submit" bgColor="#ed4c78" textColor="white">
+          <Button type="submit" bgColor="#ed4c78" textColor="white" isDisabled>
             Delete
           </Button>
         </Flex>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -35,6 +35,7 @@ import { addCart } from "~/redux/slices/cartSlice";
 type Props = {};
 
 const SignInView = (props: Props) => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -49,37 +50,43 @@ const SignInView = (props: Props) => {
 
   const [signin] = useSigninMutation();
   const [getCartByUserId] = useGetCartByUserIdMutation();
-  const cart_id = useAppSelector((state) => {
-    state.persistedReducer.cart.carts;
-  });
-  const onSubmit = async (data: any) => {
-    const result: any = await signin(data);
-    if (result.data.status === 200) {
-      const user_id = result.data.data._id;
-      const cart_user: any = await getCartByUserId(user_id);
 
-      toast({
-        title: "Đăng nhập thành công",
-        description: result.data.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-      if (cart_user.data.data) {
-        dispatch(addCart(cart_user.data.data.cart_id));
+  const onSubmit = async (data: any) => {
+    try {
+      setLoading(true);
+      const result: any = await signin(data);
+      if (result.data?.status === 200) {
+        const user_id = result.data.data._id;
+        const cart_user: any = await getCartByUserId(user_id);
+        toast({
+          title: "Đăng nhập thành công",
+          description: result.data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+        if (cart_user.data.data) {
+          dispatch(addCart(cart_user.data.data.cart_id));
+        }
+        dispatch(login(result.data));
+        setLoading(false);
+        navigate("/");
+      } else {
+        console.log(result);
+        toast({
+          title: "Đăng nhập thất bại",
+          description: result.error.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
       }
-      dispatch(login(result.data));
-      navigate("/");
-    } else {
-      toast({
-        title: "Đăng nhập thất bại",
-        description: result.data.message,
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
-      });
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,7 +100,7 @@ const SignInView = (props: Props) => {
         </Box>
         <Stack direction="row" gap="0" pt="8" pb="12">
           <Heading as="h3" color="primary.font" size="lg" fontWeight="semibold">
-            Think
+            Poly
           </Heading>
           <Heading
             as="h3"
@@ -102,7 +109,7 @@ const SignInView = (props: Props) => {
             fontWeight="semibold"
             position="relative"
           >
-            Pro
+            Tech
             <CodeIcon boxSize="5" position="absolute" color="primary.font" />
           </Heading>
         </Stack>
@@ -133,7 +140,7 @@ const SignInView = (props: Props) => {
               textDecoration: "none",
             }}
           >
-            <Text fontSize="sm" fontWeight="medium">
+            <Text fontSize="sm" fontWeight="medium" color="blue">
               Quên mật khẩu?
             </Text>
           </Link>
@@ -170,7 +177,15 @@ const SignInView = (props: Props) => {
               </FormErrorMessage>
             </FormControl>
 
-            <Button size="lager" type="submit" w="full" mt="4" rounded="full">
+            <Button
+              size="lager"
+              type="submit"
+              w="full"
+              mt="4"
+              rounded="full"
+              isLoading={loading}
+              _hover={{ bg: "red" }}
+            >
               Đăng Nhập
             </Button>
           </Flex>

@@ -19,7 +19,7 @@ type Props = {};
 const OrderView = (props: Props) => {
   const deliveryStatus = [
     "all",
-    "pending",
+    "processing",
     "delivering",
     "delivered",
     "canceled",
@@ -37,7 +37,7 @@ const OrderView = (props: Props) => {
               Tất cả
             </Tab>
             <Tab fontSize="sm" fontWeight="semibold">
-              Chờ thanh toán
+              Chờ xác nhận
             </Tab>
             <Tab fontSize="sm" fontWeight="semibold">
               Vận chuyển
