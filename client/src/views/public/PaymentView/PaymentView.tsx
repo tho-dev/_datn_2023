@@ -68,7 +68,6 @@ const Payment = (props: Props) => {
       cart_id: cart_id,
       total_amount: data.data.total_money + transportFee,
       phone_number: compare_phone_number,
-      user_id: isLogin ? user._id : null,
     };
     setDataOrder(new_data);
     setOpen(!open);

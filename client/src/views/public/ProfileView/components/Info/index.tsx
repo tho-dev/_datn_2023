@@ -18,8 +18,6 @@ import {
   PicIcon,
 } from "~/components/common/Icons";
 import { useUpdateMutation } from "~/redux/api/user";
-import { useAppDispatch } from "~/redux/hook/hook";
-import { login } from "~/redux/slices/globalSlice";
 
 type Props = {
   user: any;
@@ -35,14 +33,15 @@ const Info = ({ user }: Props) => {
     watch,
     formState: { errors, isSubmitting },
   } = useForm();
-
   const image = watch("avatar");
   const [file, setFile] = useState<any>(null);
   const onSubmit = async (data: any) => {
     if (
-      data?.email === user?.email &&
-      data?.name === user?.first_name + " " + user?.last_name &&
-      data.avatar?.length <= 0
+      data.email === user?.email &&
+      data.name === user?.first_name + " " + user?.last_name &&
+      data.location === user.location &&
+      data.phone == user.phone &&
+      !data.thumbnail
     ) {
       return;
     }
@@ -53,9 +52,9 @@ const Info = ({ user }: Props) => {
       last_name,
       avatar: user.avatar,
       email: data.email,
-      _id: user._id,
+      location: data.location,
     };
-    const result: any = await update(payload);
+    const result: any = await update({ data: payload, id: user._id });
     if (result.data.data?.status === 200) {
       toast({
         title: "Cập nhật thông tin thành công",
@@ -251,14 +250,6 @@ const Info = ({ user }: Props) => {
           size="medium"
         >
           Lưu lại
-        </Button>
-        <Button
-          colorScheme="blue"
-          leftIcon={<CloseSmallIcon size={5} />}
-          variant="outline"
-          size="medium"
-        >
-          Hủy
         </Button>
       </Stack>
     </form>

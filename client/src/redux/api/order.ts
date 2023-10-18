@@ -45,6 +45,13 @@ const orderApi = createApi({
       }),
       providesTags: ['Order'],
     }),
+    getOrderByUserId: builder.query({
+      query: (id) => ({
+        url: `/order/orderByUserId/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['Order'],
+    }),
     getOneShipping: builder.query({
       query: ({ id }) => ({
         url: `/order/${id}`,
@@ -130,6 +137,7 @@ export const {
   useCancelOrderMutation,
   useTokenPrintOrderMutation,
   useUpdateStatusOrderMutation,
+  useGetOrderByUserIdQuery
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

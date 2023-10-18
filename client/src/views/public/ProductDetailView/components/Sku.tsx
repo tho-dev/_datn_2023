@@ -148,7 +148,7 @@ const Sku = ({
           <Grid templateColumns="repeat(3, 1fr)" gap={4}>
             <GridItem>
               <Text fontSize={"lg"} fontWeight={600} color={"#FE3464"}>
-                {product?.price.toLocaleString()}
+                {product?.price.toLocaleString() ?? 0}
               </Text>
               <Flex pt={"1"} gap={2}>
                 <Text
@@ -158,7 +158,7 @@ const Sku = ({
                   lineHeight={"18px"}
                   pl={"1"}
                 >
-                  {product?.price_before_discount.toLocaleString()}
+                  {product?.price_before_discount?.toLocaleString() ?? 0}
                 </Text>
                 <Text
                   as={"p"}
@@ -166,7 +166,7 @@ const Sku = ({
                   lineHeight={"18px"}
                   color={"#FE3464"}
                 >
-                  {product?.price_discount_percent}%
+                  {product?.price_discount_percent ?? 0}%
                 </Text>
               </Flex>
             </GridItem>
