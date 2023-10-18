@@ -52,35 +52,41 @@ const SignInView = (props: Props) => {
   const [getCartByUserId] = useGetCartByUserIdMutation();
 
   const onSubmit = async (data: any) => {
-    setLoading(true);
-    const result: any = await signin(data);
-    if (result.data.status === 200) {
-      const user_id = result.data.data._id;
-      const cart_user: any = await getCartByUserId(user_id);
-      toast({
-        title: "Đăng nhập thành công",
-        description: result.data.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-      if (cart_user.data.data) {
-        dispatch(addCart(cart_user.data.data.cart_id));
+    try {
+      setLoading(true);
+      const result: any = await signin(data);
+      if (result.data?.status === 200) {
+        const user_id = result.data.data._id;
+        const cart_user: any = await getCartByUserId(user_id);
+        toast({
+          title: "Đăng nhập thành công",
+          description: result.data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+        if (cart_user.data.data) {
+          dispatch(addCart(cart_user.data.data.cart_id));
+        }
+        dispatch(login(result.data));
+        setLoading(false);
+        navigate("/");
+      } else {
+        console.log(result);
+        toast({
+          title: "Đăng nhập thất bại",
+          description: result.error.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
       }
-      dispatch(login(result.data));
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
       setLoading(false);
-      navigate("/");
-    } else {
-      setLoading(false);
-      toast({
-        title: "Đăng nhập thất bại",
-        description: result.data.message,
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
-      });
     }
   };
 
