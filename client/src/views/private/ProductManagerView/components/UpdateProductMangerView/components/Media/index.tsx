@@ -25,30 +25,32 @@ const Media = ({ register, watch, errors, setValue, getValues, control }: Props)
 			minH="280px"
 			templateColumns="repeat(12, 1fr)"
 		>
-			<GridItem colSpan={4}>
+			<GridItem colSpan={3}>
 				<Flex
 					rounded="lg"
 					w="full"
 					h="full"
 				>
-					<FileUploadThinkPro
-						getDataFn={(data) => setValue(`images.${0}`, data)}
-						fileName="thumbnail"
-						setData={watch(`images.${0}.url`)}
-					/>
+					{getValues(`images.0`) && (
+						<FileUploadThinkPro
+							getDataFn={(data) => setValue(`images.${0}`, data)}
+							fileName="thumbnail"
+							setData={getValues(`images.0`) || watch(`images.0`)}
+						/>
+					)}
 				</Flex>
 			</GridItem>
-			<GridItem colSpan={8}>
+			<GridItem colSpan={9}>
 				<Grid
 					rounded="lg"
 					w="full"
 					h="full"
 					gap="4"
 					rowGap="10"
-					templateColumns="repeat(5, 1fr)"
+					templateColumns="repeat(6, 1fr)"
 					templateRows="max-content"
 				>
-					{fields?.map((item, index) => {
+					{fields.slice(1).map((item, index) => {
 						return (
 							<Box
 								key={index}
@@ -65,7 +67,7 @@ const Media = ({ register, watch, errors, setValue, getValues, control }: Props)
 									<FileUploadThinkPro
 										getDataFn={(data) => setValue(`images.${index + 1}`, data)}
 										fileName="assets"
-										setData={watch(`images.${index + 1}.url`)}
+										setData={watch(`images.${index + 1}`)}
 									/>
 								</Box>
 								<Flex

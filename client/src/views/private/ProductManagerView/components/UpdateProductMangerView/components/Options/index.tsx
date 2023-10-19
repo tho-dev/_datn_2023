@@ -1,8 +1,10 @@
-import { Box, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
+import React, { useState, useEffect } from "react";
+import { Box, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
+import { Controller, useFieldArray } from "react-hook-form";
 import { Button, FormControl, FormErrorMessage, FormLabel, Input, useToast } from "@chakra-ui/react";
-import { useFieldArray } from "react-hook-form";
-import SelectThinkPro from "~/components/SelectThinkPro";
 import { AddAdminIcon, CloseSmallIcon } from "~/components/common/Icons";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { FLUSH } from "redux-persist";
 
 type Props = {
 	register?: any;
@@ -335,7 +337,6 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 							...(getValues().variants || []),
 							{
 								name: "",
-								position: 1,
 								options: [{ label: "", value: "" }],
 							},
 						]);
@@ -346,7 +347,6 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 									...(getValues().variants || []),
 									{
 										name: "",
-										position: 2,
 										options: [{ label: "", value: "" }],
 									},
 								]);
@@ -359,7 +359,6 @@ const Options = ({ control, register, errors, setValue, getValues, watch, resetF
 									...(getValues().variants || []),
 									{
 										name: "",
-										position: 3,
 										options: [{ label: "", value: "" }],
 									},
 								]);

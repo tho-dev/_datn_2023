@@ -52,7 +52,6 @@ const BrandView = (props: Props) => {
 	const { data: brands, isLoading } = useGetAllBrandsQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
 		_sort: "created_at",
 		_order: "desc",
 	});
@@ -60,7 +59,6 @@ const BrandView = (props: Props) => {
 	const { data: categories } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
 		_sort: "created_at",
 		_order: "desc",
 		_type: "category_brand",

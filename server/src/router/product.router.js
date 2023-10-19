@@ -3,6 +3,7 @@ import {
 	getAllProduct,
 	getAllProductManager,
 	getSingleProduct,
+	getProductById,
 	createProduct,
 	getAllOptionValues,
 	createOptionValues,
@@ -23,6 +24,7 @@ const router = express.Router();
 
 // api product 
 router.get('/manager', getAllProductManager)
+router.get('/manager/:id', getProductById)
 router.get('/:slug', getSingleProduct)
 router.get('/', getAllProduct)
 router.post("/", createProduct)

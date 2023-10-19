@@ -1,94 +1,43 @@
-import React, { useEffect, useState } from "react";
 import {
 	Box,
+	Button,
+	Checkbox,
+	CheckboxGroup,
 	Flex,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
 	Grid,
 	GridItem,
 	Heading,
-	FormErrorMessage,
-	FormLabel,
-	FormControl,
 	Input,
-	Button,
-	Text,
+	Radio,
 	RadioGroup,
 	Stack,
-	Radio,
-	Tabs,
-	TabList,
-	Tab,
-	TabIndicator,
-	TabPanels,
-	TabPanel,
+	Text,
+	useToast,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import QuillThinkPro from "~/components/QuillThinkPro";
-import SEO from "./components/SEO";
-import Variants from "./components/Variants";
-import Options from "./components/Options";
-import Attributes from "./components/Attributes";
-import CommonBox from "./components/CommonBox";
-import { chakraComponents, Select } from "chakra-react-select";
 import { TagsInput } from "react-tag-input-component";
-import Media from "./components/Media";
+import QuillThinkPro from "~/components/QuillThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import { useGetAllBrandsQuery } from "~/redux/api/brand";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
+import Attributes from "./components/Attributes";
+import CommonBox from "./components/CommonBox";
+import Media from "./components/Media";
+import Options from "./components/Options";
+import SEO from "./components/SEO";
+import Variants from "./components/Variants";
+import { useCreateProductMutation, useSaveVariantsMutation } from "~/redux/api/product";
+import { useNavigate } from "react-router";
 
 type Props = {};
 
-const categories = [
-	{
-		label: "Laptop",
-		value: "latop",
-	},
-	{
-		label: "Bàn phím",
-		value: "ban-phim",
-	},
-];
-
-const brands = [
-	{
-		label: "Dell",
-		value: "dell",
-	},
-	{
-		label: "Lenovo",
-		value: "lenovo",
-	},
-	{
-		label: "Haki",
-		value: "haki",
-	},
-];
-
-const OptionComponent = {
-	Option: ({ children, ...props }: any) => (
-		<chakraComponents.Option {...props}>
-			<Text
-				as="div"
-				fontSize="sm"
-			>
-				{children}
-			</Text>
-		</chakraComponents.Option>
-	),
-	Control: ({ children, ...props }: any) => (
-		<chakraComponents.Control {...props}>
-			<Text
-				as="div"
-				w="full"
-				display="flex"
-				fontSize="sm"
-			>
-				{children}
-			</Text>
-		</chakraComponents.Control>
-	),
-};
-
 const AddProductMangerView = (props: Props) => {
+	const toast = useToast();
+	const navigate = useNavigate();
 	// xử lý value quill và react-hook-form
 	const {
 		control,
@@ -120,6 +69,9 @@ const AddProductMangerView = (props: Props) => {
 		_sort: "created_at",
 		_type: "category_brand",
 	});
+
+	const [createProduct] = useCreateProductMutation();
+	const [saveVariants] = useSaveVariantsMutation();
 
 	useEffect(() => {
 		if (brands && categories) {
@@ -153,9 +105,45 @@ const AddProductMangerView = (props: Props) => {
 	const specs = watch("specs");
 	const description = watch("description");
 
-	// ...
+	// call api
 	const onSubmit = async (data: any) => {
-		console.log("data", data);
+		const dataForm = {
+			...data,
+			has_gift: data?.has_gift ? Boolean(data?.has_gift) : false,
+			is_avaiable: data?.is_avaiable ? Boolean(data?.is_avaiable) : false,
+			status: data?.status ? Boolean(data?.status) : false,
+			price: Number(data?.price),
+			price_before_discount: Number(data?.price_before_discount),
+			brand_id: data?.brand_id?.value,
+			category_id: data?.category_id?.value,
+		};
+
+		try {
+			const res = await createProduct(dataForm).unwrap();
+			const productID = res?.data?.product?._id;
+			// gọi api tự động đăng ký biến thế sản phẩm
+			await saveVariants({
+				product_id: productID,
+			});
+
+			toast({
+				title: "Thành công",
+				duration: 1600,
+				position: "top-right",
+				status: "success",
+				description: "Tạo sản phẩm thành công",
+			});
+
+			navigate(`/admin/san-pham/${productID}/update`);
+		} catch (error: any) {
+			toast({
+				title: "Có lỗi",
+				duration: 1600,
+				position: "top-right",
+				status: "error",
+				description: JSON.stringify(error?.data?.errors),
+			});
+		}
 	};
 
 	return (
@@ -219,24 +207,24 @@ const AddProductMangerView = (props: Props) => {
 												{(errors?.name as any) && errors?.name?.message}
 											</FormErrorMessage>
 										</FormControl>
-										<FormControl isInvalid={errors?.sku as any}>
+										<FormControl isInvalid={errors?.SKU as any}>
 											<FormLabel
-												htmlFor="sku"
+												htmlFor="SKU"
 												fontSize="sm"
 												fontWeight="semibold"
 											>
 												SKU
 											</FormLabel>
 											<Input
-												id="sku"
-												{...register("sku", {
+												id="SKU"
+												{...register("SKU", {
 													required: "Không được để trống",
 												})}
 												placeholder="Inspiron351103NU, ..."
-												borderColor={errors?.sku && "border.error"}
+												borderColor={errors?.SKU && "border.error"}
 											/>
 											<FormErrorMessage>
-												{(errors?.sku as any) && errors?.sku?.message}
+												{(errors?.SKU as any) && errors?.SKU?.message}
 											</FormErrorMessage>
 										</FormControl>
 										<FormControl isInvalid={errors?.video_review as any}>
@@ -344,7 +332,7 @@ const AddProductMangerView = (props: Props) => {
 								</CommonBox>
 								{/* Biến thể của sản phẩm */}
 								<CommonBox title="Biến thể">
-									<Variants />
+									<Variants watch={watch} />
 								</CommonBox>
 								{/* SEO */}
 								<CommonBox title="SEO meta tags">
@@ -397,8 +385,8 @@ const AddProductMangerView = (props: Props) => {
 												/>
 												<Text
 													color="#8c98a4"
-													fontSize="sm"
-													fontWeight="semibold"
+													fontSize="13px"
+													fontWeight="medium"
 												>
 													VNĐ
 												</Text>
@@ -438,8 +426,8 @@ const AddProductMangerView = (props: Props) => {
 												/>
 												<Text
 													color="#8c98a4"
-													fontSize="sm"
-													fontWeight="semibold"
+													fontSize="13px"
+													fontWeight="medium"
 												>
 													VNĐ
 												</Text>
@@ -461,7 +449,7 @@ const AddProductMangerView = (props: Props) => {
 											control={control}
 											name="has_gift"
 											render={({
-												field: { onChange, onBlur, value = "false", name, ref },
+												field: { onChange, onBlur, value, name, ref },
 												fieldState: { error },
 											}) => (
 												<FormControl
@@ -476,83 +464,33 @@ const AddProductMangerView = (props: Props) => {
 														Khuyến mãi
 													</FormLabel>
 
-													<RadioGroup
+													<CheckboxGroup
 														onChange={onChange}
-														value={value}
-														defaultValue={"false"}
-														name={name}
-														ref={ref}
+														value={[value]}
 													>
-														<Stack
-															direction="row"
-															gap="4"
+														<Checkbox
+															onChange={onChange}
+															value={value}
+															name={name}
+															ref={ref}
 														>
-															<Radio value="true">
-																<Text
-																	fontSize="sm"
-																	fontWeight="medium"
-																>
-																	Có
-																</Text>
-															</Radio>
-															<Radio value="false">
-																<Text
-																	fontSize="sm"
-																	fontWeight="medium"
-																>
-																	Không
-																</Text>
-															</Radio>
-														</Stack>
-													</RadioGroup>
-
-													<FormErrorMessage>{error && error.message}</FormErrorMessage>
+															<Text
+																fontSize="13px"
+																fontWeight="semibold"
+															>
+																Áp dụng khuyến mãi
+															</Text>
+														</Checkbox>
+													</CheckboxGroup>
 												</FormControl>
 											)}
 										/>
-										{/* Check xem khuyến mại thì hiện thị ô input */}
-										{watch("has_gift") == "true" && (
-											<FormControl isInvalid={errors?.gift_amount as any}>
-												<Flex
-													alignItems="center"
-													justifyContent="space-between"
-													borderWidth="1px"
-													rounded="4px"
-													px="4"
-													borderColor={errors?.gift_amount && "border.error"}
-												>
-													<Input
-														id="gift_amount"
-														{...register("gift_amount", {
-															required: "Không được để trống",
-															pattern: {
-																value: /^\d+$/,
-																message: "Vui lòng nhập số",
-															},
-														})}
-														border="none"
-														placeholder="20.000.000"
-														px="0"
-													/>
-													<Text
-														color="#8c98a4"
-														fontSize="sm"
-														fontWeight="semibold"
-													>
-														VNĐ
-													</Text>
-												</Flex>
-												<FormErrorMessage>
-													{(errors?.gift_amount as any) && errors?.gift_amount?.message}
-												</FormErrorMessage>
-											</FormControl>
-										)}
 										{/* Trạng thái của sản phẩm */}
 										<Controller
 											control={control}
 											name="status"
 											render={({
-												field: { onChange, onBlur, value = "true", name, ref },
+												field: { onChange, onBlur, value, name, ref },
 												fieldState: { error },
 											}) => (
 												<FormControl
@@ -567,37 +505,24 @@ const AddProductMangerView = (props: Props) => {
 														Trạng thái
 													</FormLabel>
 
-													<RadioGroup
+													<CheckboxGroup
 														onChange={onChange}
-														value={value}
-														defaultValue={value}
-														name={name}
-														ref={ref}
+														value={[value]}
 													>
-														<Stack
-															direction="row"
-															gap="4"
+														<Checkbox
+															onChange={onChange}
+															value={value}
+															name={name}
+															ref={ref}
 														>
-															<Radio value="true">
-																<Text
-																	fontSize="sm"
-																	fontWeight="medium"
-																>
-																	Đang bán
-																</Text>
-															</Radio>
-															<Radio value="false">
-																<Text
-																	fontSize="sm"
-																	fontWeight="medium"
-																>
-																	Ngừng bán
-																</Text>
-															</Radio>
-														</Stack>
-													</RadioGroup>
-
-													<FormErrorMessage>{error && error.message}</FormErrorMessage>
+															<Text
+																fontSize="13px"
+																fontWeight="semibold"
+															>
+																Đang bán
+															</Text>
+														</Checkbox>
+													</CheckboxGroup>
 												</FormControl>
 											)}
 										/>
@@ -606,59 +531,48 @@ const AddProductMangerView = (props: Props) => {
 											control={control}
 											name="is_avaiable"
 											render={({
-												field: { onChange, onBlur, value = "true", name, ref },
+												field: { onChange, onBlur, value, name, ref },
 												fieldState: { error },
-											}) => (
-												<FormControl
-													isInvalid={!!error}
-													id="is_avaiable"
-												>
-													<FormLabel
-														htmlFor="is_avaiable"
-														fontSize="sm"
-														fontWeight="semibold"
+											}) => {
+												return (
+													<FormControl
+														isInvalid={!!error}
+														id="is_avaiable"
 													>
-														Có sẵn hàng không?
-													</FormLabel>
-
-													<RadioGroup
-														onChange={onChange}
-														value={value}
-														defaultValue={"true"}
-														name={name}
-														ref={ref}
-													>
-														<Stack
-															direction="row"
-															gap="4"
+														<FormLabel
+															htmlFor="is_avaiable"
+															fontSize="sm"
+															fontWeight="semibold"
 														>
-															<Radio value="true">
+															Sẵn hàng
+														</FormLabel>
+
+														<CheckboxGroup
+															onChange={onChange}
+															value={[value]}
+														>
+															<Checkbox
+																onChange={onChange}
+																value={value}
+																name={name}
+																ref={ref}
+															>
 																<Text
-																	fontSize="sm"
-																	fontWeight="medium"
+																	fontSize="13px"
+																	fontWeight="semibold"
 																>
 																	Có sẵn
 																</Text>
-															</Radio>
-															<Radio value="false">
-																<Text
-																	fontSize="sm"
-																	fontWeight="medium"
-																>
-																	Hết hàng
-																</Text>
-															</Radio>
-														</Stack>
-													</RadioGroup>
-
-													<FormErrorMessage>{error && error.message}</FormErrorMessage>
-												</FormControl>
-											)}
+															</Checkbox>
+														</CheckboxGroup>
+													</FormControl>
+												);
+											}}
 										/>
 									</Flex>
 								</CommonBox>
 								{/* Thông tin về hàng tồn kho */}
-								<CommonBox title="Hàng tồn kho">
+								{/* <CommonBox title="Hàng tồn kho">
 									<Flex
 										flexDir="column"
 										gap="4"
@@ -688,7 +602,7 @@ const AddProductMangerView = (props: Props) => {
 											</FormErrorMessage>
 										</FormControl>
 									</Flex>
-								</CommonBox>
+								</CommonBox> */}
 								{/* Tùy chọn */}
 								<CommonBox title="Tùy chọn">
 									<Flex
@@ -715,7 +629,7 @@ const AddProductMangerView = (props: Props) => {
 
 										<Controller
 											control={control}
-											name="tags"
+											name="seo.tags"
 											render={({
 												field: { onChange, onBlur, value = [], name, ref },
 												fieldState: { error },
@@ -776,7 +690,6 @@ const AddProductMangerView = (props: Props) => {
 				>
 					<Button
 						w={"40"}
-						isLoading={isSubmitting}
 						bgColor="bg.bgDelete"
 						color="text.textDelete"
 						onClick={() => reset()}

@@ -55,7 +55,6 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 
 	return (
 		<Box
-			onClick={handleClickSelectFile}
 			position="relative"
 			w="full"
 			h="full"
@@ -64,62 +63,72 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 			role="group"
 			bgColor="bg.gray"
 		>
-			<Input
-				type="file"
-				ref={inputFileRef}
-				onChange={handleFileChange}
+			<Box
+				onClick={handleClickSelectFile}
+				position="relative"
 				w="full"
 				h="full"
-				visibility="hidden"
-			/>
-
-			{spinner && (
-				<Box
-					position="absolute"
-					top="50%"
-					left="50%"
-					transform="translate(-50%, -50%)"
-					zIndex="3"
-				>
-					<Spinner
-						size="lg"
-						color="bg.blue"
-					/>
-				</Box>
-			)}
-
-			{selectedImage ? (
-				<Image
-					src={selectedImage ? selectedImage?.url : DefaultAvatar}
+				cursor="pointer"
+				rounded="md"
+				role="group"
+				bgColor="bg.gray"
+			>
+				<Input
+					type="file"
+					ref={inputFileRef}
+					onChange={handleFileChange}
 					w="full"
 					h="full"
-					rounded="md"
-					position="absolute"
-					top="50%"
-					left="50%"
-					transform="translate(-50%, -50%)"
-					zIndex="2"
-					objectFit="contain"
-					p="2"
+					visibility="hidden"
 				/>
-			) : (
-				<Flex
-					w="full"
-					h="full"
-					rounded="md"
-					position="absolute"
-					top="50%"
-					left="50%"
-					transform="translate(-50%, -50%)"
-					zIndex="2"
-					justifyContent="center"
-					alignItems="center"
-				>
-					<UploadImageIcon size={10} />
-				</Flex>
-			)}
 
-			{selectedImage && (
+				{spinner && (
+					<Box
+						position="absolute"
+						top="50%"
+						left="50%"
+						transform="translate(-50%, -50%)"
+						zIndex="3"
+					>
+						<Spinner
+							size="lg"
+							color="bg.blue"
+						/>
+					</Box>
+				)}
+
+				{selectedImage?.url ? (
+					<Image
+						src={selectedImage ? selectedImage?.url : DefaultAvatar}
+						w="full"
+						h="full"
+						rounded="md"
+						position="absolute"
+						top="50%"
+						left="50%"
+						transform="translate(-50%, -50%)"
+						zIndex="2"
+						objectFit="contain"
+						p="2"
+					/>
+				) : (
+					<Flex
+						w="full"
+						h="full"
+						rounded="md"
+						position="absolute"
+						top="50%"
+						left="50%"
+						transform="translate(-50%, -50%)"
+						zIndex="2"
+						justifyContent="center"
+						alignItems="center"
+					>
+						<UploadImageIcon size={10} />
+					</Flex>
+				)}
+			</Box>
+			{selectedImage?.url && (
 				<Flex
 					w="full"
 					py="1"

@@ -16,6 +16,9 @@ const optionSchema = new Schema({
   name: {
     type: String
   },
+  position: {
+    type: Number
+  },
   created_at: {
     type: Date,
     default: Date.now
@@ -100,18 +103,16 @@ const skuSchema = new Schema(
     price_discount_percent: {
       type: Number,
     },
-    is_avaiable: {
-      // check xem có sẵn hay không
-      type: Boolean,
-      default: false,
-    },
     stock: {
       type: Number,
       default: 0,
     },
     image: {
-      id: String,
-      url: String,
+      type: {
+        id: String,
+        url: String,
+      },
+      default: {}
     },
     assets: [
       {
@@ -198,6 +199,10 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
+    SKU: {
+      type: String,
+      default: true
+    },
     slug: {
       type: String,
       slug: "name",
@@ -216,6 +221,12 @@ const productSchema = new Schema(
       type: String,
       default: "",
     },
+    images: [
+      {
+        id: String,
+        url: String,
+      },
+    ],
     price: {
       type: Number,
       default: 200000,
@@ -224,9 +235,6 @@ const productSchema = new Schema(
       type: Number,
     },
     price_discount_percent: {
-      type: Number,
-    },
-    gift_amount: {
       type: Number,
     },
     has_gift: {
@@ -258,6 +266,25 @@ const productSchema = new Schema(
       },
     ],
     status: {
+      type: Boolean,
+      default: false,
+    },
+    seo: {
+      meta_title: {
+        type: String,
+        default: ''
+      },
+      meta_description: {
+        type: String,
+        default: ''
+      },
+      tags: {
+        type: Array,
+        default: []
+      }
+    },
+    is_avaiable: {
+      // check xem có sẵn hay không
       type: Boolean,
       default: false,
     },

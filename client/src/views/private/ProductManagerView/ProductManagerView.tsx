@@ -20,20 +20,12 @@ import TableThinkPro from "~/components/TableThinkPro";
 import { AirplayIcon, EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
 import { useGetAllProductQuery } from "~/redux/api/product";
 import { formatNumber } from "~/utils/fc";
+import moment from "moment/moment";
 
 type Props = {};
 
 const ProductManagerView = (props: Props) => {
 	const columnHelper = createColumnHelper<any>();
-	const [pagination, setPagination] = useState<{
-		pageIndex: number;
-		pageSize: number;
-		pageCount: number;
-	}>({
-		pageIndex: 0,
-		pageSize: 0,
-		pageCount: 0,
-	});
 	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
 
 	const columns = [
@@ -139,36 +131,6 @@ const ProductManagerView = (props: Props) => {
 			},
 			header: "Màu sắc",
 		}),
-		columnHelper.accessor("option_value", {
-			cell: ({ getValue }) => {
-				const option_values = getValue();
-
-				return (
-					<Flex
-						gap="2"
-						flexWrap="wrap"
-					>
-						{option_values?.map((item: any, index: number) => {
-							return (
-								<Box
-									key={index}
-									py="1"
-									px="2"
-									fontSize="13px"
-									fontWeight="medium"
-									borderWidth="1px"
-									borderColor="bg.primary"
-									rounded="4px"
-								>
-									{item}
-								</Box>
-							);
-						})}
-					</Flex>
-				);
-			},
-			header: "Biến thể",
-		}),
 		columnHelper.accessor("status", {
 			cell: ({ getValue }) => (
 				<Text>
@@ -203,8 +165,32 @@ const ProductManagerView = (props: Props) => {
 			),
 			header: "Trạng thái",
 		}),
+		columnHelper.accessor("created_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày tạo",
+		}),
+		columnHelper.accessor("updated_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày cập nhật",
+		}),
 		columnHelper.accessor("action", {
-			cell: () => {
+			cell: ({ row }) => {
+				console.log("row", row);
+
 				return (
 					<Menu>
 						<MenuButton textAlign="center">
@@ -235,7 +221,7 @@ const ProductManagerView = (props: Props) => {
 							</MenuItem>
 							<MenuItem
 								as={ReactRouterLink}
-								to="/admin/san-pham/slug/update"
+								to={`/admin/san-pham/${row?.original?._id}/update`}
 								py="2"
 								icon={<EditIcon size={4} />}
 							>

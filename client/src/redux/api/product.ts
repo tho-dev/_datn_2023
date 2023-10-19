@@ -31,12 +31,45 @@ const productApi = createApi({
 			}),
 			providesTags: (result, error, slug) => [{ type: "ProductTag", slug }],
 		}),
+		getAllVariant: builder.query({
+			query: ({ id }: { id: string }) => ({
+				url: `/${id}/variants`,
+				method: "GET",
+			}),
+		}),
 		getAllProduct: builder.query({
 			query: (query: TQuery) => `/manager?${objectToUrlParams(query)}`,
+		}),
+		getProductById: builder.query({
+			query: ({ id }: { id: string }) => ({
+				url: `/manager/${id}`,
+				method: "GET",
+			}),
+		}),
+		createProduct: builder.mutation({
+			query: (body) => ({
+				url: "",
+				method: "POST",
+				body,
+			}),
+		}),
+		saveVariants: builder.mutation({
+			query: ({ product_id }) => ({
+				url: `/${product_id}/variants`,
+				method: "POST",
+				body: {},
+			}),
 		}),
 	}),
 });
 
-export const { useGetBySlugQuery, useGetAllProductQuery } = productApi;
+export const {
+	useGetBySlugQuery,
+	useGetAllProductQuery,
+	useCreateProductMutation,
+	useSaveVariantsMutation,
+	useGetProductByIdQuery,
+	useGetAllVariantQuery,
+} = productApi;
 export const productReducer = productApi.reducer;
 export default productApi;

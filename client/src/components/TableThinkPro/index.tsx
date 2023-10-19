@@ -189,7 +189,7 @@ export default function TableThinkPro<Data extends object>({
 												paddingRight: 5,
 											}}
 											w="inherit"
-											maxW="360px"
+											maxW="320px"
 											fontWeight="medium"
 										>
 											<motion.div
