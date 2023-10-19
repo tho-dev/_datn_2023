@@ -43,6 +43,7 @@ import { HistoryOrderView } from "~/views/public/HistoryOrderView";
 import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordView";
 import { ThankView } from "~/views/public/ThankView";
 import PostCategoryView from "~/views/private/PostCategoryView";
+import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import { protectedRouter } from "./protected";
 
 const routes: RouteObject[] = [
@@ -117,8 +118,12 @@ const routes: RouteObject[] = [
 								element: <SignUpView />,
 							},
 							{
-								path: "quen-mat-khau",
+								path: "thiet-lap-mat-khau",
 								element: <ResetPasswordView />,
+							},
+							{
+								path: "quen-mat-khau",
+								element: <CreatePasswordView />,
 							},
 						],
 					},
@@ -151,6 +156,10 @@ const routes: RouteObject[] = [
 					{
 						path: "danh-muc",
 						element: <CategoryManagerView />,
+					},
+					{
+						path: "danh-muc-bai-viet",
+						element: <PostCategoryView />,
 					},
 					{
 						path: "bai-viet",

@@ -16,6 +16,7 @@ import {
   updatePaymentStatus,
   getAllShipping,
   getAllOrder,
+  getOrderByUserId,
 } from "../controllers/order.controller";
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post("/payment-status", updatePaymentStatus);
 router.post("/verify-otp", verifyOtpCode);
 router.post("/calculateFee", serviceFree);
 router.post("/orderByPhoneNumber", getOrderByPhoneNumber);
+router.get("/orderByUserId/:id", getOrderByUserId);
 router.post("/getTokenPrintBill", getTokenPrintBills);
 
 router.post("/", createOrder);

@@ -1,10 +1,11 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 // slice
-import globalSlice from "./slices/globalSlice";
-import cartSlice from "./slices/cartSlice";
+import globalSlice from './slices/globalSlice';
+import cartSlice from './slices/cartSlice';
+import userSlice from './slices/userSlice';
 
 //api
 import authApi from "../redux/api/user";
@@ -14,17 +15,19 @@ import orderApi from "./api/order";
 import brandApi from "../redux/api/brand";
 import categoryApi from "../redux/api/category";
 import demandApi from "../redux/api/demand";
-import postApi from "../redux/api/post";
+import collectionApi from "../redux/api/collection";
+import postApi from './api/post';
 
 const persistConfig = {
-	key: "root",
+	key: 'root',
 	storage,
-	blacklist: ["_persist"],
+	blacklist: ['_persist'],
 };
 
 const rootReducer = combineReducers({
 	global: globalSlice,
 	cart: cartSlice,
+	user: userSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -36,6 +39,7 @@ const middleware = [
 	categoryApi.middleware,
 	brandApi.middleware,
 	demandApi.middleware,
+	collectionApi.middleware,
 	postApi.middleware,
 ];
 
@@ -49,10 +53,11 @@ const store = configureStore({
 		[categoryApi.reducerPath]: categoryApi.reducer,
 		[brandApi.reducerPath]: brandApi.reducer,
 		[demandApi.reducerPath]: demandApi.reducer,
+		[collectionApi.reducerPath]: collectionApi.reducer,
 		[postApi.reducerPath]: postApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
-});
+})
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

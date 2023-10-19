@@ -17,12 +17,24 @@ import crypto from "crypto";
 import sortObject from "sortobject";
 import querystring from "query-string";
 import TextFlow from "textflow.js";
+import { getAuthToken } from "../utils/token";
+import jwt from "jsonwebtoken";
 TextFlow.useKey(process.env.SMS_API);
 
 export const createOrder = async (req, res, next) => {
   try {
     const { shipping_address, shipping_method, cart_id, address } = req.body;
     const cart = await Cart.findOne({ cart_id });
+    let user_id = null;
+    const token = getAuthToken(req);
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET_ACCESS_TOKEN, (err, payload) => {
+        if (err) {
+          return next(createError.Unauthorized(err.message));
+        }
+        user_id = payload._id;
+      });
+    }
     // Kiểm tra xem sản phẩm còn hàng không
     const check_sku_stock = async (product) => {
       try {
@@ -64,6 +76,13 @@ export const createOrder = async (req, res, next) => {
           status_order: "processing",
         },
       ],
+      payment_method: {
+        message: "failed",
+        orderInfo: "Thanh toán trực tiếp",
+        orderType: "cash",
+        partnerCode: "TIENMAT",
+      },
+      user_id,
     });
     const add_product_item = async (product) => {
       const new_item = await Order_Detail.create({
@@ -212,7 +231,7 @@ export const getAll = async (req, res, next) => {
     }
 
     if (payment_method) {
-      conditions.payment_method = payment_method;
+      conditions["payment_method.partnerCode"] = payment_method;
     }
     const options = {
       page: _page,
@@ -754,7 +773,49 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
     next(error);
   }
 };
+// lấy đơn hàng theo user_id
+export const getOrderByUserId = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await Order.find({ user_id: id });
+    if (result.length <= 0) {
+      throw createError.NotFound("Không tìm thấy đơn hàng");
+    }
 
+    // const order_details = await Order_Detail.find({ order_id: result._id });
+    const order_details = await Promise.all(
+      result.map(async (item) => {
+        const order_detail = await Order_Detail.find({ order_id: item._id });
+        const new_order_details = await Promise.all(
+          order_detail.map(async (item) => {
+            const sku = await Sku.findOne({ _id: item.sku_id }).select(
+              "name shared_url image"
+            );
+            const new_item = item.toObject();
+            const new_sku = sku.toObject();
+            return {
+              ...new_item,
+              ...new_sku,
+            };
+          })
+        );
+        const new_item = item.toObject();
+        return {
+          ...new_item,
+          new_order_details,
+        };
+      })
+    );
+
+    return res.json({
+      status: 200,
+      message: "Tìm thấy đơn hàng thành công",
+      data: order_details,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export const getTokenPrintBills = async (req, res, next) => {
   try {
     const { order_id } = req.body;
@@ -786,7 +847,7 @@ export const updatePaymentStatus = async (req, res, next) => {
     const order = await Order.findByIdAndUpdate(_id, {
       $set: {
         payment_status: "paid",
-        payment_method: orderInfo,
+        payment_method: req.body,
       },
     });
     if (!order) {

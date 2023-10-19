@@ -1,25 +1,28 @@
 import { Box, Flex, Link } from "@chakra-ui/layout";
-import { Image } from "@chakra-ui/react";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Collapse, Image } from "@chakra-ui/react";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import logo from "~/assets/images/logo-thinkpro.svg";
 import Search from "./components/Search";
 import { Button, SlideFade, useDisclosure, Avatar } from "@chakra-ui/react";
 import {
-  PhoneIcon,
-  PhonesIcon,
   NewIcon,
-  MapIcon,
   CartIcon,
   UserIcon,
+  LogoutIcon,
+  DashboardIcon,
 } from "../Icons";
 import Cart from "./components/Cart";
-import { useAppSelector } from "~/redux/hook/hook";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { useGetCartQuery } from "~/redux/api/cart";
+import { useLogoutUserMutation } from "~/redux/api/user";
+import { removeCart } from "~/redux/slices/cartSlice";
+import { logout } from "~/redux/slices/globalSlice";
 
 type Props = {};
 
 const TheHeader = (props: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenUser, onToggle: onToggleUser } = useDisclosure();
   const { user, isLogin } = useAppSelector(
     (state) => state.persistedReducer.global
   );
@@ -31,7 +34,9 @@ const TheHeader = (props: Props) => {
     isLoading,
     isError,
   } = useGetCartQuery(cart_id);
-
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [logoutUser] = useLogoutUserMutation();
   if (isFetching) {
     return <Box>isFetching...</Box>;
   }
@@ -41,6 +46,13 @@ const TheHeader = (props: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
+  const handleLogOut = () => {
+    logoutUser(user).then(() => {
+      dispatch(logout());
+      dispatch(removeCart(""));
+      navigate("/");
+    });
+  };
   return (
     <Flex h="20" alignItems="center">
       {/* Logo */}
@@ -59,8 +71,9 @@ const TheHeader = (props: Props) => {
         }}
         justifyContent={{
           sm: "flex-end",
-          lg: "space-between",
+          lg: "flex-end",
         }}
+        gap={4}
       >
         <Flex
           gap="3"
@@ -92,34 +105,7 @@ const TheHeader = (props: Props) => {
               Tra cứu đơn hàng
             </Button>
           </Link>
-          <Button
-            h="45px"
-            px="4"
-            bgColor="bg.white"
-            transition="all 0.25s ease"
-            color="text.black"
-            fontWeight="semibold"
-            _hover={{
-              bgColor: "bg.gray",
-            }}
-            leftIcon={<MapIcon size={5} color="text.blue" strokeWidth={2} />}
-          >
-            Địa chỉ cửa hàng
-          </Button>
-          <Button
-            h="45px"
-            px="4"
-            bgColor="bg.white"
-            transition="all 0.25s ease"
-            color="text.black"
-            fontWeight="semibold"
-            _hover={{
-              bgColor: "bg.gray",
-            }}
-            leftIcon={<PhonesIcon size={5} color="text.blue" strokeWidth={2} />}
-          >
-            Khiếu nại
-          </Button>
+
           <Link
             to="/tin-tuc"
             as={ReactRouterLink}
@@ -193,26 +179,109 @@ const TheHeader = (props: Props) => {
           </Box>
         </Flex>
         {isLogin ? (
-          <Link
-            to="/thong-tin"
-            as={ReactRouterLink}
-            w="44px"
-            h="44px"
-            display="inline-flex"
-            alignItems="center"
-            justifyContent="center"
-            backgroundColor="bg.gray"
-            rounded="full"
-            position="relative"
-            border="1px solid #ccc"
-          >
-            <Avatar
-              name={user?.first_name + " " + user?.last_name}
-              src={user?.avatar}
-              width="100%"
-              height="100%"
-            />
-          </Link>
+          <>
+            <Flex
+              gap="4"
+              alignItems="center"
+              justifyContent="center"
+              position="relative"
+              rounded="full"
+              _hover={{ bg: "bg.gray" }}
+              cursor="pointer"
+              onClick={onToggleUser}
+            >
+              <Avatar
+                name={user?.first_name + " " + user?.last_name}
+                src={user?.avatar}
+                w="12"
+                h="12"
+                color="#12AFF0"
+                fontSize="xs"
+                bgColor="#12AFF033"
+                border="1px solid #ccc"
+              />
+              <Collapse
+                in={isOpenUser}
+                animateOpacity
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: 52,
+                  zIndex: 999,
+                }}
+              >
+                <Flex
+                  w="200px"
+                  p="3"
+                  mt="4"
+                  color="text.black"
+                  bg="bg.white"
+                  rounded="md"
+                  shadow="md"
+                  boxShadow="2xl"
+                  flexDir="column"
+                  style={{
+                    boxShadow:
+                      "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px",
+                  }}
+                >
+                  {user.role !== "customer" && (
+                    <Button
+                      as={ReactRouterLink}
+                      to="/admin"
+                      fontSize="sm"
+                      fontWeight="semibold"
+                      display="flex"
+                      p="2"
+                      w="full"
+                      bg="none"
+                      color="black"
+                      _hover={{
+                        bg: "bg.gray",
+                      }}
+                      leftIcon={<DashboardIcon size={4} />}
+                    >
+                      Trang quản trị
+                    </Button>
+                  )}
+                  <Button
+                    as={ReactRouterLink}
+                    to="/thong-tin"
+                    fontSize="sm"
+                    fontWeight="semibold"
+                    display="flex"
+                    p="2"
+                    w="full"
+                    bg="none"
+                    color="black"
+                    _hover={{
+                      bg: "bg.gray",
+                    }}
+                    leftIcon={<UserIcon size={4} />}
+                  >
+                    Trang cá nhân
+                  </Button>
+
+                  <Button
+                    bg="none"
+                    color="black"
+                    fontSize="sm"
+                    fontWeight="semibold"
+                    display="flex"
+                    p="2"
+                    w="full"
+                    _hover={{
+                      bg: "bg.gray",
+                    }}
+                    leftIcon={<LogoutIcon size={4} />}
+                    onClick={handleLogOut}
+                  >
+                    Đăng xuất
+                  </Button>
+                </Flex>
+              </Collapse>
+            </Flex>
+          </>
         ) : (
           <Link
             to="/dang-nhap"

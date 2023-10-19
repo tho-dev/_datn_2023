@@ -32,12 +32,12 @@ const ItemCart = ({
             justifyContent={"space-between"}
             my={"4"}
             px={"5"}
-            key={product._id}
+            key={product?._id}
           >
             <Flex gap="2" alignItems="center">
               <Box w="76px" h="76px">
                 <Image
-                  src={product.image.url}
+                  src={product?.image?.url}
                   alt="name"
                   w="full"
                   h="full"
@@ -45,7 +45,7 @@ const ItemCart = ({
                 />
               </Box>
               <Box ml={"5"}>
-                <Link to={`/${product.shared_url}`} color="text.black">
+                <Link to={`/${product?.shared_url}`} color="text.black">
                   <Text as={"p"} fontSize={"14px"} fontWeight="semibold">
                     {product.name}
                   </Text>
