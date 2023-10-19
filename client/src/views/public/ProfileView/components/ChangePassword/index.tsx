@@ -192,14 +192,6 @@ const ChangePassword = ({ user }: Props) => {
         >
           Lưu lại
         </Button>
-        <Button
-          colorScheme="blue"
-          leftIcon={<CloseSmallIcon size={5} />}
-          variant="outline"
-          size="medium"
-        >
-          Hủy
-        </Button>
       </Stack>
     </form>
   );

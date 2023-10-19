@@ -49,7 +49,7 @@ const Cart = ({ data }: Props) => {
                     h="full"
                     objectFit="cover"
                     borderRadius="md"
-                    src={product?.image.url}
+                    src={product?.image?.url}
                   />
                   <Box
                     position="absolute"

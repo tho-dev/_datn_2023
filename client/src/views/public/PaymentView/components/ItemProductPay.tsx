@@ -13,7 +13,12 @@ const ItemProductPay = ({ product }: Props) => {
       <Flex justifyContent={"space-between"} my={"4"} px={"2"}>
         <Flex>
           <Box>
-            <Image src={product?.image.url} alt="name" w="78px" height="68px" />
+            <Image
+              src={product?.image?.url}
+              alt="name"
+              w="78px"
+              height="68px"
+            />
           </Box>
           <Box ml={"5"}>
             <Text as={"p"} fontSize={"14px"}>

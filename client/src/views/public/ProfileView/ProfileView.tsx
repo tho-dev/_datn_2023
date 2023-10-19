@@ -15,49 +15,19 @@ import {
 } from "@chakra-ui/react";
 import Info from "./components/Info";
 import ChangePassword from "./components/ChangePassword";
-import { LogoutIcon } from "~/components/common/Icons";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { logout } from "~/redux/slices/globalSlice";
-import { useNavigate } from "react-router-dom";
 import { InforOrder } from "./components/InforOrder";
-import { removeCart } from "~/redux/slices/cartSlice";
-import { useLogoutUserMutation } from "~/redux/api/user";
 
 type Props = {};
 
 const ProfileView = (props: Props) => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
-
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const [logoutUser] = useLogoutUserMutation();
-
-  const handleLogOut = () => {
-    logoutUser(user).then(() => {
-      dispatch(logout(false));
-      dispatch(removeCart(""));
-      navigate("/");
-    });
-  };
-
   return (
     <Box my="6" px="6" py="4" rounded="xl" bgColor="bg.white">
       <Flex justifyContent="space-between" alignItems="center">
         <Heading py="4" color="text.black" fontSize="xl">
           Thông tin tài khoản
         </Heading>
-        <Tooltip label="Đăng xuất">
-          <IconButton
-            aria-label="logout button"
-            icon={<LogoutIcon size={6} color="black" />}
-            background="none"
-            onClick={handleLogOut}
-            padding="10px"
-            bgColor="bg.gray"
-            _hover={{ bgColor: "#ccc" }}
-            rounded="full"
-          />
-        </Tooltip>
       </Flex>
       <Divider />
       <Box my="6">
