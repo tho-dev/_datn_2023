@@ -25,6 +25,7 @@ import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
 import { useGetAllCategoryQuery } from "~/redux/api/category";  
+import PostDialogThinkPro from "~/components/DialogThinkPro/PostDialogThinkPro";
 
 
 type Props = {};
@@ -380,7 +381,7 @@ const PostView = (props: Props) => {
 				/>
 			</Box>
 			{/* Form */}
-			<DialogThinkPro
+			<PostDialogThinkPro
 				isOpen={isOpenActionCreatePost}
 				onClose={onCloseActionCreatePost}
 				isCentered
@@ -390,7 +391,7 @@ const PostView = (props: Props) => {
 					onClose={onCloseActionCreatePost}
 					parents={parents} 
 				/>
-			</DialogThinkPro>
+			</PostDialogThinkPro>
 			<DialogThinkPro
 				isOpen={isOpenActionUpdatePost}
 				onClose={onCloseActionUpdatePost}

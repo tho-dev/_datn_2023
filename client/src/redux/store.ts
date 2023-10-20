@@ -15,8 +15,12 @@ import orderApi from "./api/order";
 import brandApi from "../redux/api/brand";
 import categoryApi from "../redux/api/category";
 import demandApi from "../redux/api/demand";
+<<<<<<< HEAD
+import postApi from "../redux/api/post";
+=======
 import collectionApi from "../redux/api/collection";
 import postApi from './api/post';
+>>>>>>> 975039391c6947bd2dfbc878497566efdacfc070
 
 const persistConfig = {
 	key: 'root',
@@ -39,7 +43,10 @@ const middleware = [
 	categoryApi.middleware,
 	brandApi.middleware,
 	demandApi.middleware,
+<<<<<<< HEAD
+=======
 	collectionApi.middleware,
+>>>>>>> 975039391c6947bd2dfbc878497566efdacfc070
 	postApi.middleware,
 ];
 
@@ -53,7 +60,10 @@ const store = configureStore({
 		[categoryApi.reducerPath]: categoryApi.reducer,
 		[brandApi.reducerPath]: brandApi.reducer,
 		[demandApi.reducerPath]: demandApi.reducer,
+<<<<<<< HEAD
+=======
 		[collectionApi.reducerPath]: collectionApi.reducer,
+>>>>>>> 975039391c6947bd2dfbc878497566efdacfc070
 		[postApi.reducerPath]: postApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
