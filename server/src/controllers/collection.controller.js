@@ -58,15 +58,15 @@ import createError from "http-errors"
 
 export async function filterBrandAndCategory(req, res, next) {
 	try {
-		const { slug } = req.query
+		const { _slug } = req.query
 		let data = null
 
 		let category = await Category.findOne({
-			slug: slug
+			slug: _slug
 		}).select("-deleted -deleted_at -thumbnail.id -created_at -updated_at")
 
 		let brand = await Brand.findOne({
-			shared_url: slug
+			shared_url: _slug
 		}).select("-deleted -deleted_at -thumbnail.id -created_at -updated_at")
 
 		if (!brand && !category) {
@@ -148,7 +148,13 @@ export async function filterBrandAndCategory(req, res, next) {
 
 			const minPrice = products[0]?.price
 			const maxPrice = products[products?.length - 1]?.price
-			const optionFilterPrice = generateDynamicPriceOptions(minPrice, maxPrice)
+			let optionFilterPrice = generateDynamicPriceOptions(minPrice, maxPrice)
+			optionFilterPrice = {
+				name: 'gia',
+				type: 'checkbox',
+				label: 'Khoảng giá',
+				options: optionFilterPrice
+			}
 
 			// bộ lọc khuyến mãi
 			const promotionFilter = {
@@ -328,7 +334,6 @@ export async function collectionProducts(req, res, next) {
 				"-assets",
 				"-attributes",
 				"-description",
-				"-specs",
 				"-category_id",
 				"-brand_id",
 				"-deleted",
@@ -439,4 +444,3 @@ export async function collectionProducts(req, res, next) {
 		next(error)
 	}
 }
-

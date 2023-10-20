@@ -5,9 +5,10 @@ import CardThinkPro from "~/components/CardThinkPro";
 type Props = {
 	mt?: any; // margin-top
 	columns?: any; // số cột
+	data?: any;
 };
 
-const ListThinkPro = ({ mt = 6, columns = 5 }: Props) => {
+const ListThinkPro = ({ mt = 6, columns = 5, data }: Props) => {
 	return (
 		<Grid
 			w="full"
@@ -19,7 +20,14 @@ const ListThinkPro = ({ mt = 6, columns = 5 }: Props) => {
 				xl: `repeat(${columns}, 1fr)`,
 			}}
 		>
-			<GridItem>
+			{data?.map((product: any, index: number) => {
+				return (
+					<GridItem key={index}>
+						<CardThinkPro product={product} />
+					</GridItem>
+				)
+			})}
+			{/* <GridItem>
 				<CardThinkPro />
 			</GridItem>
 			<GridItem>
@@ -33,7 +41,7 @@ const ListThinkPro = ({ mt = 6, columns = 5 }: Props) => {
 			</GridItem>
 			<GridItem>
 				<CardThinkPro />
-			</GridItem>
+			</GridItem> */}
 		</Grid>
 	);
 };
