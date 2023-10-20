@@ -3,7 +3,11 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Datepicker from "./Datepicker";
 import { Button, Select } from "@chakra-ui/react";
-import { PlusCircleIcon, SearchAdminIcon } from "~/components/common/Icons";
+import {
+  FilterIcon,
+  PlusCircleIcon,
+  SearchAdminIcon,
+} from "~/components/common/Icons";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css";
 import {
@@ -37,8 +41,8 @@ const OrderFilter = ({
 }: Props) => {
   const [date, setDate] = React.useState<Date>();
   return (
-    <Box>
-      <Flex gap={4} justifyContent={"space-between"}>
+    <Box w={"70%"}>
+      <Flex gap={4}>
         <Flex
           alignItems="center"
           justifyContent="space-around"
@@ -46,7 +50,7 @@ const OrderFilter = ({
           rounded="4px"
           border="1px solid #e2e8f0"
           px="4"
-          w={"22%"}
+          w={"32%"}
         >
           <Flex as="span" display="inline-flex" mt="1" mr={2}>
             <SearchAdminIcon size={5} />
@@ -69,13 +73,12 @@ const OrderFilter = ({
         <Popover>
           <PopoverTrigger>
             <Button
-              leftIcon={<PlusCircleIcon size={5} color="text.white" />}
+              leftIcon={<FilterIcon size={5} color="text.white" />}
               px="4"
               lineHeight="2"
               bgColor="bg.green"
-            >
-              Lọc
-            </Button>
+              _hover={{ bg: "green.400" }}
+            ></Button>
           </PopoverTrigger>
           <PopoverContent>
             <PopoverArrow />
