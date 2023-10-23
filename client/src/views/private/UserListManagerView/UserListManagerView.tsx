@@ -137,7 +137,7 @@ const UserListManagerView = (props: Props) => {
         mt="6"
         p="6"
       >
-        <TableThinkPro columns={columns} data={fakeData} />
+        {/* <TableThinkPro columns={columns} data={fakeData} /> */}
       </Box>
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>

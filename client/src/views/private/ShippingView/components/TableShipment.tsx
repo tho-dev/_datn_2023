@@ -111,7 +111,7 @@ const TableShipment = ({ data }: Props) => {
 
   return (
     <Box>
-      <TableThinkPro columns={columns} data={data} />
+      {/* <TableThinkPro columns={columns} data={data} /> */}
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>
   );

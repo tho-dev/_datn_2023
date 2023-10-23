@@ -104,7 +104,7 @@ const TableProduct = (props: Props) => {
 
   return (
     <Box>
-      <TableThinkPro columns={columns} data={props.dataProducts} />
+      {/* <TableThinkPro columns={columns} data={props.dataProducts} /> */}
       <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
     </Box>
   );
