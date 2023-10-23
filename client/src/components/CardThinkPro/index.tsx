@@ -16,13 +16,8 @@ type Props = {
 
 const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
   const dispatch = useAppDispatch();
-
-  const handleViewProduct = () => {
-    const productData = {
-      productName: "LG Gram 14 2022",
-      price: "19.999.000",
-    };
-    dispatch(addViewedItem(productData));
+  const handleViewProduct = (product: any) => {
+    dispatch(addViewedItem(product));
   };
 
   return (
@@ -38,53 +33,23 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
       _hover={{
         textDecoration: "none",
       }}
-      onClick={handleViewProduct}
+      onClick={() => handleViewProduct(product)}
     >
-      <Box
-        pb="100%"
-        position="relative"
-      >
-        <Box
-          top="0"
-          position="absolute"
-          bgColor="bg.white"
-        >
-          <Image
-            w="full"
-            h="full"
-            objectFit="cover"
-            src={product?.image}
-          />
+      <Box pb="100%" position="relative">
+        <Box top="0" position="absolute" bgColor="bg.white">
+          <Image w="full" h="full" objectFit="cover" src={product?.image} />
         </Box>
       </Box>
-      <Flex
-        p="4"
-        flexDirection="column"
-      >
-        <Heading
-          as="h4"
-          fontSize="sm"
-          fontWeight="semibold"
-        >
+      <Flex p="4" flexDirection="column">
+        <Heading as="h4" fontSize="sm" fontWeight="semibold">
           {product?.name}
         </Heading>
-        <Flex
-          gap="1"
-          mt="1"
-          alignItems="center"
-          fontWeight="semibold"
-        >
-          <Text
-            fontSize="xs"
-            color="text.gray"
-          >
+        <Flex gap="1" mt="1" alignItems="center" fontWeight="semibold">
+          <Text fontSize="xs" color="text.gray">
             Từ
           </Text>
-          <Text
-            fontSize="md"
-            color="text.red"
-          >
-            {formatNumber(`${product?.price_before_discount}`)}
+          <Text fontSize="md" color="text.red">
+            {formatNumber(`${product?.price}`)}
           </Text>
           <Text
             p="2px"
@@ -95,26 +60,14 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
             {`${product?.price_discount_percent}%`}
           </Text>
         </Flex>
-        <Flex
-          gap="1"
-          alignItems="center"
-          fontWeight="semibold"
-        >
-          <Text
-            fontSize="xs"
-            color="text.gray"
-          >
+        <Flex gap="1" alignItems="center" fontWeight="semibold">
+          <Text fontSize="xs" color="text.gray">
             Màu
           </Text>
           <Flex gap="1">
             {product?.colors?.map((color: any, index: number) => {
               return (
-                <Box
-                  w="3"
-                  h="3"
-                  rounded="sm"
-                  backgroundColor={color?.value}
-                />
+                <Box w="3" h="3" rounded="sm" backgroundColor={color?.value} />
               );
             })}
           </Flex>
