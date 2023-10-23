@@ -1,48 +1,214 @@
-import { Box, Heading, Text} from "@chakra-ui/layout";
-import ActiveUser from "./components/ActiveUser";
+import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
+import React, { useState } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import UserSearch from "./components/UserSearch";
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Image,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   useDisclosure,
+  useToast,
+  Select,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-
-
-
+import {
+  useDeleteUserMutation,
+  useGetAllQuery,
+  useUpdateMutation,
+} from "~/redux/api/user";
+import moment from "moment";
+import { useAppSelector } from "~/redux/hook/hook";
 type Props = {};
 
 const UserListManagerView = (props: Props) => {
+  const { user } = useAppSelector((state) => state.persistedReducer.global);
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isOpenBlock,
+    onClose: onCloseBlock,
+    onOpen: onOpenBlock,
+  } = useDisclosure();
 
+  const [search, setSearch] = useState("");
+  const [idUser, setIdUser] = useState("");
+  const toast = useToast();
+  const { data, isLoading } = useGetAllQuery({
+    _limit: 10,
+    _page: 1,
+    _sort: "created_at",
+    _order: "desc",
+    search: search,
+  });
+  const [deleteUser] = useDeleteUserMutation();
+  const [update] = useUpdateMutation();
+
+  const handleOpenModalDelete = (id: any) => {
+    setIdUser(id);
+    onOpen();
+  };
+  const handleUpdateRole = (e: any, id: any) => {
+    const data = { role: e.target.value };
+    update({ data, id })
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Thành công",
+          duration: 1600,
+          position: "bottom-right",
+          status: "success",
+          description: "Vai trò đã được cập nhật",
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Thất bại",
+          duration: 1600,
+          position: "bottom-right",
+          status: "error",
+          description: err.data.errors.message,
+        });
+      });
+  };
+  const handleDelete = () => {
+    deleteUser(idUser)
+      .then((data) => {
+        console.log(data);
+        toast({
+          title: "Thành công",
+          duration: 1600,
+          position: "bottom-right",
+          status: "success",
+          description: "Đã xoá user",
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Thất bại",
+          duration: 1600,
+          position: "bottom-right",
+          status: "error",
+          description: err.data.errors.message,
+        });
+      })
+      .finally(() => {
+        onClose();
+      });
+  };
+  const handleBlockUser = () => {
+    if (idUser == user._id) {
+      onCloseBlock();
+      return toast({
+        title: "Thất bại",
+        duration: 1600,
+        position: "bottom-right",
+        status: "warning",
+        description: "Bạn không thể chặn chính mình",
+      });
+    }
+    const data = { is_block: true };
+    update({ data, id: idUser })
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Thành công",
+          duration: 1600,
+          position: "bottom-right",
+          status: "success",
+          description: "Bạn đã chặn thành công user",
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Thất bại",
+          duration: 1600,
+          position: "bottom-right",
+          status: "error",
+          description: err.data.errors.message,
+        });
+      })
+      .finally(() => {
+        onCloseBlock();
+      });
+  };
   const columns = [
     columnHelper.accessor("#", {
-      cell: (data) => {
-        const index = data.row.index;
+      cell: (info) => {
+        const index = info.row.index;
         return index + 1;
       },
       header: "#",
     }),
-    columnHelper.accessor("name", {
-      cell: (data) => data.getValue(),
-      header: "User Name",
+    columnHelper.accessor("", {
+      cell: (data) => (
+        <Text fontSize="sm">
+          {data.row.original.first_name + " " + data.row.original.last_name}
+        </Text>
+      ),
+      header: "Tên tài khoản",
+    }),
+    columnHelper.accessor("avatar", {
+      cell: (data) => (
+        <Image
+          src={data.getValue()}
+          w="64px"
+          h="64px"
+          objectFit="contain"
+          bgColor="bg.gray"
+          p={2}
+        />
+      ),
+      header: "Ảnh",
     }),
     columnHelper.accessor("email", {
-      cell: (data) => data.getValue(),
+      cell: (data) => <Text fontSize="sm">{data.getValue()}</Text>,
       header: "Email",
     }),
-    columnHelper.accessor("create_date", {
-      cell: (data) => data.getValue(),
-      header: "Create Date",
+    columnHelper.accessor("location", {
+      cell: (data) => <Text fontSize="sm">{data.getValue()}</Text>,
+      header: "Địa chỉ",
     }),
-    columnHelper.accessor("status", {
-      cell: (data) => data.getValue(),
-      header: "Account Status",
+    columnHelper.accessor("role", {
+      cell: (data) => (
+        <Select
+          size="sm"
+          value={data.getValue()}
+          onChange={(e) => handleUpdateRole(e, data.row.original._id)}
+        >
+          <option value="customer" disabled={data.row.original._id == user._id}>
+            Customer
+          </option>
+          <option value="manager" disabled={data.row.original._id == user._id}>
+            Manager
+          </option>
+          <option value="expert" disabled={data.row.original._id == user._id}>
+            Expert
+          </option>
+          <option value="admin" disabled={data.row.original._id == user._id}>
+            Admin
+          </option>
+        </Select>
+      ),
+      header: "Vai trò",
+    }),
+    columnHelper.accessor("created_at", {
+      cell: (data) => (
+        <Text fontWeight="medium" fontSize="13px">
+          {moment(data.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+        </Text>
+      ),
+      header: "Ngày tạo",
+    }),
+    columnHelper.accessor("verified", {
+      cell: (data) => (data.getValue() ? "Đã xác thực" : "Chưa xác thực"),
+      header: "Trạng thái",
     }),
     columnHelper.accessor("action", {
       cell: (data) => {
@@ -70,64 +236,57 @@ const UserListManagerView = (props: Props) => {
               ...
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={onOpen}>Xóa</MenuItem>
-              <MenuItem >Cập nhật</MenuItem>
+              <MenuItem
+                onClick={() => handleOpenModalDelete(data.row.original._id)}
+              >
+                Xóa
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setIdUser(data.row.original._id);
+                  onOpenBlock();
+                }}
+              >
+                Chặn
+              </MenuItem>
+              <MenuItem>Cập nhật</MenuItem>
             </MenuList>
           </Menu>
         );
       },
-      header: "Action",
+      header: "Hành động",
     }),
   ];
 
-  // Data fake
-  const fakeData = [
-    {
-      id: 1,
-      name: "duythuan",
-      email: "duythuan123@gmail.com",
-      create_date: "1/9/2023",
-      status: "Active"
-    },
-    {
-      id: 2,
-      name: "duythuan",
-      email: "duythuan123@gmail.com",
-      create_date: "1/9/2023",
-      status: "Active"
-    },
-    {
-      id: 3,
-      name: "duythuan",
-      email: "duythuan123@gmail.com",
-      create_date: "1/9/2023",
-      status: "Active"
-    },
-    {
-      id: 4,
-      name: "duythuan",
-      email: "duythuan123@gmail.com",
-      create_date: "1/9/2023",
-      status: "Active"
-    },
-    {
-      id: 5,
-      name: "duythuan",
-      email: "duythuan123@gmail.com",
-      create_date: "1/9/2023",
-      status: "Active"
-    },
-  ];
+  if (isLoading) return <Box>Loading...</Box>;
+
+  const handleSearched = (e: any) => {
+    setSearch(e.target.value as string);
+  };
+
   return (
-    <Box w="full" h="full">
-      <Heading as="h1" fontSize={18}  >
-        <Text>Users list</Text>
-      </Heading>
+    <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
+      <Flex alignItems="center" justifyContent="space-between" pb="5">
+        <Heading as="h2" fontSize="18px" fontWeight="semibold">
+          Quản lý tài khoản
+        </Heading>
+        <Box>
+          <Breadcrumb spacing="8px" separator="/" fontSize="sm">
+            <BreadcrumbItem>
+              <BreadcrumbLink as={ReactRouterLink} to="/admin">
+                Home
+              </BreadcrumbLink>
+            </BreadcrumbItem>
 
-      <ActiveUser />
-
-      <UserSearch />
-
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href="/admin/tai-khoan">
+                Quản lý tài khoản
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Box>
+      </Flex>
+      <UserSearch search={search} handleSearched={handleSearched} />
       <Box
         w={{
           sm: "100%",
@@ -135,15 +294,33 @@ const UserListManagerView = (props: Props) => {
         }}
         bgColor="bg.white"
         mt="6"
-        p="6"
       >
         {/* <TableThinkPro columns={columns} data={fakeData} /> */}
+        <TableThinkPro
+          columns={columns}
+          useData={useGetAllQuery}
+          query={{
+            _limit: 10,
+            _page: 1,
+            _sort: "created_at",
+            _order: "desc",
+            search,
+          }}
+        />
       </Box>
-      <ConfirmThinkPro isOpen={isOpen} onClose={onClose} />
+      <ConfirmThinkPro
+        isOpen={isOpen}
+        onClose={onClose}
+        handleClick={handleDelete}
+      />
+      <ConfirmThinkPro
+        isOpen={isOpenBlock}
+        onClose={onCloseBlock}
+        content="Bạn có chắc chắn muốn chặn user này?"
+        handleClick={handleBlockUser}
+      />
     </Box>
   );
 };
 
 export default UserListManagerView;
-
-

@@ -18,8 +18,6 @@ import {
   PicIcon,
 } from "~/components/common/Icons";
 import { useUpdateMutation } from "~/redux/api/user";
-import { useAppDispatch } from "~/redux/hook/hook";
-import { login } from "~/redux/slices/globalSlice";
 
 type Props = {
   user: any;
@@ -31,43 +29,51 @@ const Info = ({ user }: Props) => {
   const {
     handleSubmit,
     register,
+    setValue,
     watch,
     formState: { errors, isSubmitting },
   } = useForm();
-
   const image = watch("avatar");
   const [file, setFile] = useState<any>(null);
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     if (
-      data.email === user.email &&
-      data.name === user.first_name + " " + user.last_name &&
-      data.avatar.length <= 0
+      data.email === user?.email &&
+      data.name === user?.first_name + " " + user?.last_name &&
+      data.location === user.location &&
+      data.phone == user.phone &&
+      !data.thumbnail
     ) {
       return;
     }
     const first_name = data.name.split(" ")[0];
     const last_name = data.name.split(" ")[1];
-    update({
+    const payload = {
       first_name,
       last_name,
       avatar: user.avatar,
       email: data.email,
-      _id: user._id,
-    })
-      .unwrap()
-      .then((data) => {
-        toast({
-          title: "Hệ thống thông báo",
-          description: data.message,
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-          position: "bottom-right",
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+      location: data.location,
+    };
+    const result: any = await update({ data: payload, id: user._id });
+    if (result.data.data?.status === 200) {
+      toast({
+        title: "Cập nhật thông tin thành công",
+        description: result.data.data?.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom-right",
       });
+    } else {
+      toast({
+        title: "Cập nhật thông tin thất bại",
+        description: result.data.data?.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
   };
 
   useEffect(() => {
@@ -95,31 +101,12 @@ const Info = ({ user }: Props) => {
             </Text>
           </GridItem>
           <GridItem colSpan={4} position="relative">
-            <Image
-              rounded="full"
-              boxSize="120px"
-              src={file ?? user?.avatar}
-              alt="Dan Abramov"
-              objectFit="cover"
-              border="1px solid #ccc"
-            />
-            <Box
-              w="50px"
-              height="50px"
-              position="absolute"
-              bottom={-4}
-              left={20}
-              display="flex"
-              alignItems="center"
-              cursor="pointer"
-            >
+            <Box w="120px" h="120px">
               <FileUploadThinkPro
-                accept={"image/*"}
-                multiple
-                register={register("avatar")}
-              >
-                <PicIcon size={8} color="text.gray" />
-              </FileUploadThinkPro>
+                fileName="brand"
+                getDataFn={(data: any) => setValue("thumbnail", data)}
+                setData={watch("thumbnail")}
+              />
             </Box>
           </GridItem>
         </Grid>
@@ -181,10 +168,73 @@ const Info = ({ user }: Props) => {
                   },
                 })}
                 borderColor={errors?.email ? "border.error" : ""}
-                defaultValue={user?.email}
+                value={user?.email}
+                readOnly
               />
               <FormErrorMessage>
                 {errors?.email && (errors.email.message as any)}
+              </FormErrorMessage>
+            </FormControl>
+          </GridItem>
+        </Grid>
+        <Grid
+          templateColumns={{
+            sm: "repeat(1, 1fr)",
+            md: "repeat(6, 1fr)",
+            xl: "repeat(6, 1fr)",
+          }}
+          gap={4}
+          alignItems="center"
+        >
+          <GridItem colSpan={1}>
+            <FormLabel fontWeight="semibold" htmlFor="name" fontSize="sm">
+              Địa chỉ
+            </FormLabel>
+          </GridItem>
+          <GridItem colSpan={4}>
+            <FormControl isInvalid={errors.location as any}>
+              <Input
+                id="location"
+                placeholder="Nhập địa chỉ"
+                {...register("location", {
+                  required: "Vui lòng điền thông tin ",
+                })}
+                borderColor={errors?.location ? "border.error" : ""}
+                defaultValue={user?.location}
+              />
+              <FormErrorMessage>
+                {errors?.location && (errors.location.message as any)}
+              </FormErrorMessage>
+            </FormControl>
+          </GridItem>
+        </Grid>
+        <Grid
+          templateColumns={{
+            sm: "repeat(1, 1fr)",
+            md: "repeat(6, 1fr)",
+            xl: "repeat(6, 1fr)",
+          }}
+          gap={4}
+          alignItems="center"
+        >
+          <GridItem colSpan={1}>
+            <FormLabel fontWeight="semibold" htmlFor="phone" fontSize="sm">
+              Số điện thoại
+            </FormLabel>
+          </GridItem>
+          <GridItem colSpan={4}>
+            <FormControl isInvalid={errors.phone as any}>
+              <Input
+                id="phone"
+                placeholder="Nhập số điện thoại"
+                {...register("phone", {
+                  required: "Vui lòng điền thông tin ",
+                })}
+                borderColor={errors?.phone ? "border.error" : ""}
+                defaultValue={user?.phone}
+              />
+              <FormErrorMessage>
+                {errors?.phone && (errors.phone.message as any)}
               </FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -200,14 +250,6 @@ const Info = ({ user }: Props) => {
           size="medium"
         >
           Lưu lại
-        </Button>
-        <Button
-          colorScheme="blue"
-          leftIcon={<CloseSmallIcon size={5} />}
-          variant="outline"
-          size="medium"
-        >
-          Hủy
         </Button>
       </Stack>
     </form>

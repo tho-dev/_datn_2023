@@ -1,11 +1,13 @@
 import React from "react";
-import { Box, Text, Button } from "@chakra-ui/react";
+import { Box, Text, Button, Image, filter } from "@chakra-ui/react";
 import { Link, Flex } from "@chakra-ui/layout";
 import { Link as ReactRouterLink } from "react-router-dom";
 
-type Props = {};
+type Props = {
+	filters: any;
+};
 
-const Title = (props: Props) => {
+const Title = ({ filters }: Props) => {
 	return (
 		<Box
 			w="100%"
@@ -14,61 +16,87 @@ const Title = (props: Props) => {
 			my={6}
 			borderRadius={12}
 		>
-			<Box my={1}>
-				<Text
-					fontSize="2xl"
-					fontWeight="bold"
-				>
-					Laptop
-				</Text>
-				<Text
-					fontSize="sm"
-					w="100%"
-					maxW="600px"
-					fontWeight={500}
-					lineHeight="20px"
-					my="2"
-				>
-					Laptop là một thiết bị máy tính có kích thước nhỏ gọn và di động. Nó được thiết kế để sử dụng trong
-					các hoạt động làm việc, giải trí hoặc học tập khi di chuyển mà không cần phải sử dụng những chiếc
-					máy tính để bàn cồng kềnh.
-				</Text>
-			</Box>
-			<Box
-				w="100%"
-				h="1px"
-				bgColor="bg.gray"
-				my="4"
-			></Box>
 			<Flex
-				gap="4"
-				mt="4"
-				flexWrap="wrap"
+				my={1}
+				gap="6"
+				alignItems="center"
 			>
-				{Array.from([1, 2, 3, 4, 5, 6, 7, 8, 9]).map((item) => {
-					return (
-						<Link
-							to="/"
-							as={ReactRouterLink}
-							_hover={{
-								textDecoration: "none",
-							}}
-						>
-							<Button
-								h="auto"
-								px="4"
-								py="3"
-								size="small"
-								lineHeight="150%"
-								rounded="lg"
-								color="text.black"
-								backgroundColor="bg.gray"
+				{filters?.type == "category_brand" && (
+					<Box
+						w="84px"
+						h="84px"
+						rounded="full"
+						overflow="hidden"
+						bgColor="bg.gray"
+					>
+						<Image
+							w="full"
+							h="full"
+							objectFit="cover"
+							src={filters?.detail?.thumbnail}
+							p="2"
+						/>
+					</Box>
+				)}
+
+				<Box flex="1">
+					<Text
+						fontSize="2xl"
+						fontWeight="bold"
+					>
+						{filters?.detail?.name}
+					</Text>
+					<Text
+						fontSize="sm"
+						w="100%"
+						maxW="600px"
+						fontWeight={500}
+						lineHeight="20px"
+						my="2"
+					>
+						{filters?.detail?.description}
+					</Text>
+					{filters?.detail?.brands?.length > 0 && (
+						<>
+							<Box
+								w="100%"
+								h="1px"
+								bgColor="bg.gray"
+								my="4"
+							></Box>
+							<Flex
+								gap="4"
+								mt="4"
+								flexWrap="wrap"
 							>
-								Dell
-							</Button>
-						</Link>
-					);
-				})}
+								{filters?.detail?.brands.map((item: any) => {
+									return (
+										<Link
+											to={`/${item?.shared_url}`}
+											as={ReactRouterLink}
+											_hover={{
+												textDecoration: "none",
+											}}
+										>
+											<Button
+												h="auto"
+												px="4"
+												py="3"
+												size="small"
+												lineHeight="150%"
+												rounded="lg"
+												color="text.black"
+												backgroundColor="bg.gray"
+											>
+												{item?.name}
+											</Button>
+										</Link>
+									);
+								})}
+							</Flex>
+						</>
+					)}
+				</Box>
 			</Flex>
 		</Box>
 	);

@@ -64,8 +64,8 @@ const ProductDetailView = (props: Props) => {
         sku_id: product.data._id,
         quantity,
         price: product.data.price,
-        price_before_discount: product.data.price_before_discount,
-        price_discount_percent: product.data.price_discount_percent,
+        price_before_discount: product.data.price_before_discount ?? 0,
+        price_discount_percent: product.data.price_discount_percent ?? 0,
       },
     };
     if (isLogin) {
@@ -121,8 +121,8 @@ const ProductDetailView = (props: Props) => {
         sku_id: product.data._id,
         quantity,
         price: product.data.price,
-        price_before_discount: product.data.price_before_discount,
-        price_discount_percent: product.data.price_discount_percent,
+        price_before_discount: product.data.price_before_discount ?? 0,
+        price_discount_percent: product.data.price_discount_percent ?? 0,
       },
     };
     if (isLogin) {

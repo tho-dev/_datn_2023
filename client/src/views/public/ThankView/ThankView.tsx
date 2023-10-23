@@ -20,7 +20,6 @@ const ThankView = (props: Props) => {
       [param]: value,
     };
   }
-
   useEffect(() => {
     const fetchApi = async () => {
       try {

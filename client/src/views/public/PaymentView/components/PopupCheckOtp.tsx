@@ -39,12 +39,14 @@ type Props = {
 const PopupCheckOtp = ({ open, dataOrder }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [value, setValue] = React.useState("");
+
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
   const [paymentMomo] = usePaymentMomoMutation();
   const [deleteCart] = useDeleteCartMutation();
   const [createCart] = useCreateCartMutation();
+
   const { time, isCheckOtp } = useAppSelector(
     (state) => state.persistedReducer.global
   );

@@ -15,6 +15,7 @@ import {
 import randomstring from "randomstring";
 import resetPassWordModel from "../models/reset-password.model";
 import pug from "pug";
+import moment from "moment";
 
 export async function getAllUser(req, res, next) {
   try {
@@ -23,6 +24,7 @@ export async function getAllUser(req, res, next) {
       _sort = "createdAt",
       _order = "asc",
       _limit = 10,
+      search,
     } = req.query;
 
     const options = {
@@ -32,7 +34,11 @@ export async function getAllUser(req, res, next) {
         [_sort]: _order == "desc" ? -1 : 1,
       },
     };
-    const { docs, ...paginate } = await User.paginate({}, options);
+    let query = {};
+    if (search) {
+      query.email = { $regex: new RegExp(search, "i") };
+    }
+    const { docs, ...paginate } = await User.paginate(query, options);
     if (!docs) {
       throw createError.NotFound("Không tìm thấy sản phẩm");
     }
@@ -40,7 +46,7 @@ export async function getAllUser(req, res, next) {
       status: 200,
       message: "Thành công",
       data: {
-        docs,
+        items: docs,
         paginate,
       },
     });
@@ -51,8 +57,8 @@ export async function getAllUser(req, res, next) {
 
 export async function getOneUser(req, res, next) {
   try {
-    const { id } = req.params.id;
-    const user = await User.findById({ id });
+    const { id } = req.params;
+    const user = await User.findById(id);
     if (!user) throw createError.NotFound("Không tìm thấy user");
     return res.json({
       status: 200,
@@ -287,6 +293,9 @@ export const login = async (req, res, next) => {
     if (!user.verified) {
       throw createError.Unauthorized("Email chưa được xác thực");
     }
+    if (user.is_block) {
+      throw createError.Unauthorized("Email đã bị chặn");
+    }
     const isMatchPassWord = await bcrypt.compare(password, user.password);
     if (!isMatchPassWord) {
       throw createError.BadRequest("Mật khẩu không chính xác");
@@ -342,6 +351,29 @@ export async function logout(req, res, next) {
     return res.json({
       status: 200,
       message: "logged out successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+export async function deleteUser(req, res, next) {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+
+    if (!user) {
+      throw createError.NotFound("Không tìm thấy");
+    }
+
+    // cách xóa mềm
+    await user.delete();
+    user.deleted_at = moment(new Date()).toISOString();
+    await user.save();
+
+    return res.json({
+      status: 200,
+      message: "Thành công",
+      data: user,
     });
   } catch (error) {
     next(error);
