@@ -231,7 +231,7 @@ const RecentOrders = () => {
         <Text fontSize='18' fontWeight='bold' mb='6'>
           Đặt hàng
         </Text>
-        {/* <TableThinkPro columns={columns} data={OrderList} /> */}
+        <TableThinkPro columns={columns} data={OrderList} />
       </Box>
     </Box>
   );
