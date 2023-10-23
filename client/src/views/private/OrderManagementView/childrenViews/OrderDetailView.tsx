@@ -29,6 +29,9 @@ import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import { useToast } from "@chakra-ui/react";
 import ModelPrint from "./ModalPrint";
 import TableProduct from "./TableProduct";
+import ExportOrderPDF from "./ExportOrderPDF";
+import { PDFViewer } from "@react-pdf/renderer";
+import DialogThinkPro from "~/components/DialogThinkPro";
 type Props = {};
 
 const OrderDetailView = (props: Props) => {
@@ -40,6 +43,11 @@ const OrderDetailView = (props: Props) => {
   const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
     id,
   });
+  const {
+    isOpen: isPDFOpen,
+    onClose: onPDFClose,
+    onOpen: onPDFOpen,
+  } = useDisclosure();
   const [cancelOrder] = useCancelOrderMutation();
   const [tokenPrintOrder] = useTokenPrintOrderMutation();
   const [updateStatusOrder] = useUpdateStatusOrderMutation();
@@ -170,10 +178,21 @@ const OrderDetailView = (props: Props) => {
         <Heading as="h1" fontSize="18">
           <Text>Chi tiết đơn hàng</Text>
         </Heading>
-        <Button leftIcon={<DownloadIcon size={24} />} onClick={handlePrinOrder}>
-          {" "}
-          In vận đơn
-        </Button>
+        <Flex gap={4}>
+          <Button
+            leftIcon={<DownloadIcon size={24} />}
+            onClick={handlePrinOrder}
+          >
+            {" "}
+            In vận đơn
+          </Button>
+          <Button
+            leftIcon={<DownloadIcon size={24} />}
+            onClick={() => onPDFOpen()}
+          >
+            In HĐ thanh toán
+          </Button>
+        </Flex>
       </Flex>
       <Flex justifyContent="space-between" alignItems={"center"}>
         <Heading as="h1" fontSize="16">
@@ -431,6 +450,22 @@ const OrderDetailView = (props: Props) => {
         onClose={() => setOpenPrint(false)}
         handlePrint={handlePrint}
       />
+      <DialogThinkPro
+        isOpen={isPDFOpen}
+        onClose={onPDFClose}
+        title="Xuất hóa đơn"
+        isCentered={true}
+        size="3xl"
+        footer={
+          <Flex gap={4}>
+            <Button onClick={() => onPDFClose()}>Hủy</Button>
+          </Flex>
+        }
+      >
+        <PDFViewer width={"100%"} height={"800px"}>
+          <ExportOrderPDF data={data?.data} />
+        </PDFViewer>
+      </DialogThinkPro>
     </Box>
   );
 };
