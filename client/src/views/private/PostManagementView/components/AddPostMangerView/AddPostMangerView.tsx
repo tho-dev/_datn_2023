@@ -6,7 +6,6 @@ import {
 	Input,
 	Button,
 	Flex,
-	Textarea,
 	Box,
 	useToast,
 	Grid,

@@ -1,7 +1,6 @@
-import { Box, Divider, Flex, Grid, GridItem } from "@chakra-ui/layout";
-import { Avatar, Button, Image, Text } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { useLogoutUserMutation } from "~/redux/api/user";
+import { Box, Divider, Flex } from "@chakra-ui/layout";
+import { Image, Text } from "@chakra-ui/react";
+import { useAppSelector } from "~/redux/hook/hook";
 
 
 type Props = {

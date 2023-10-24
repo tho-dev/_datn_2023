@@ -15,9 +15,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
-import DialogThinkPro from "~/components/DialogThinkPro";
-// import ActionCreatePost from "./components/AddPostMangerView/input";
+import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons"; 
 import ActionUpdatePost from "./components/UpdatePostMangerView/input";
 import { useDeletePostMutation, useGetAllPostQuery } from "~/redux/api/post";
 import { createColumnHelper } from "@tanstack/react-table";
