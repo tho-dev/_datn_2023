@@ -5,7 +5,7 @@ import {
 	BreadcrumbItem,
 	BreadcrumbLink,
 	Button,
-    Image,
+	Image,
 	Input,
 	Menu,
 	MenuButton,
@@ -17,15 +17,16 @@ import {
 import { useEffect, useState } from "react";
 import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
 import DialogThinkPro from "~/components/DialogThinkPro";
-import ActionCreatePost from "./components/AddPostMangerView/input";
+// import ActionCreatePost from "./components/AddPostMangerView/input";
 import ActionUpdatePost from "./components/UpdatePostMangerView/input";
 import { useDeletePostMutation, useGetAllPostQuery } from "~/redux/api/post";
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
-import { useGetAllCategoryQuery } from "~/redux/api/category";  
+import { useGetAllCategoryQuery } from "~/redux/api/category";
 import PostDialogThinkPro from "~/components/DialogThinkPro/PostDialogThinkPro";
+import AddPostMangerView from "./components/AddPostMangerView/AddPostMangerView";
 
 
 type Props = {};
@@ -122,7 +123,7 @@ const PostView = (props: Props) => {
 			},
 			header: "Bài viết",
 		}),
-        columnHelper.accessor("category", {
+		columnHelper.accessor("category", {
 			cell: ({ getValue }) => {
 				return (
 					<Text
@@ -135,7 +136,7 @@ const PostView = (props: Props) => {
 			},
 			header: "Danh mục",
 		}),
-        columnHelper.accessor("thumbnail", {
+		columnHelper.accessor("thumbnail", {
 			cell: ({ getValue }) => {
 				return (
 					<Image
@@ -253,7 +254,7 @@ const PostView = (props: Props) => {
 										content: doc?.content,
 										meta_keyword: doc?.meta_keyword,
 										meta_description: doc?.meta_description,
-										meta_title: doc?.meta_title, 
+										meta_title: doc?.meta_title,
 									});
 									onOpenActionUpdatePost();
 								}}
@@ -267,6 +268,7 @@ const PostView = (props: Props) => {
 			header: "Action",
 		}),
 	];
+	
 	return (
 		<>
 			<Box
@@ -341,7 +343,7 @@ const PostView = (props: Props) => {
 							placeholder="Bài viết..."
 						/>
 					</Flex>
-					<Button
+					<Button 
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
@@ -351,7 +353,9 @@ const PostView = (props: Props) => {
 						px="4"
 						lineHeight="2"
 						bgColor="bg.green"
-						onClick={onOpenActionCreatePost}
+						// onClick={onOpenActionCreatePost}
+						as={ReactRouterLink}
+						to="/admin/bai-viet/add"
 					>
 						Tạo Mới
 					</Button>
@@ -387,12 +391,12 @@ const PostView = (props: Props) => {
 				isCentered
 				title={<Heading fontSize="18">Tạo mới bài viết</Heading>}
 			>
-				<ActionCreatePost
+				<AddPostMangerView
 					onClose={onCloseActionCreatePost}
-					parents={parents} 
-				/>
+					parents={parents}  />
 			</PostDialogThinkPro>
-			<DialogThinkPro
+			
+			<PostDialogThinkPro
 				isOpen={isOpenActionUpdatePost}
 				onClose={onCloseActionUpdatePost}
 				isCentered
@@ -401,11 +405,13 @@ const PostView = (props: Props) => {
 				<ActionUpdatePost
 					onClose={onCloseActionUpdatePost}
 					post={post}
-					parents={parents}  
+					parents={parents}
 				/>
-			</DialogThinkPro>
+			</PostDialogThinkPro>
 		</>
 	);
 };
 
 export default PostView;
+
+
