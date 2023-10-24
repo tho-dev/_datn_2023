@@ -22,7 +22,7 @@ type Props = {
 };
 
 const PostDialogThinkPro = ({
-	size = "7xl",
+	size = "5xl",
 	isOpen,
 	onClose,
 	title,

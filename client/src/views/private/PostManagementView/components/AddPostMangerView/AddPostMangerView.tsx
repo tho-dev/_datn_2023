@@ -6,7 +6,6 @@ import {
 	Input,
 	Button,
 	Flex,
-	Textarea,
 	Box,
 	useToast,
 	Grid,
@@ -16,14 +15,17 @@ import { CloseSmallIcon } from "~/components/common/Icons";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import { useCreatePostMutation } from "~/redux/api/post";
-import ReviewAddPostManger from "./ReviewAddPostManger";
+import ReviewAddPostManger from "./components/ReviewAddPostManger";
+import QuillThinkPro from "~/components/QuillThinkPro";
+import { useEffect } from "react";
+import { useNavigate, Link as ReactRouterLink } from "react-router-dom";
 
 type Props = {
 	onClose: () => void;
 	parents: any;
 };
 
-const ActionCreatePost = ({ onClose, parents }: Props) => {
+const AddPostMangerView = ({ onClose, parents }: Props) => {
 	const toast = useToast();
 	const {
 		control,
@@ -36,6 +38,7 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 	} = useForm();
 
 	const [createPost, { isLoading }] = useCreatePostMutation();
+	const navigate = useNavigate();
 
 	const onSubmit = async (data: any) => {
 		data = {
@@ -53,6 +56,9 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 				status: "success",
 				description: "Tạo danh mục thành công",
 			});
+			reset();
+			navigate("/admin/bai-viet");
+
 		} catch (error: any) {
 			toast({
 				title: "Có lỗi",
@@ -75,23 +81,52 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 	const meta_description = watch("meta_description");
 	const meta_title = watch("meta_title");
 
+	useEffect(() => {
+		register("description", { required: "Không được để trống" });
+		register("content", { required: "Không được để trống" });
+		register("meta_keyword", { required: "Không được để trống" });
+		register("meta_description", { required: "Không được để trống" });
+		register("meta_title", { required: "Không được để trống" });
+	}, [register]);
+
+	const onEditorStateChangeDescription = (value: any) => {
+		setValue("description", value);
+	};
+
+	const onEditorStateChangeContent = (value: any) => {
+		setValue("content", value);
+	};
+
+	const onEditorStateChangeMetaKeyword = (value: any) => {
+		setValue("meta_keyword", value);
+	};
+
+	const onEditorStateChangeMetaDescription = (value: any) => {
+		setValue("meta_description", value);
+	};
+
+	const onEditorStateChangeMetaTitle = (value: any) => {
+		setValue("meta_title", value);
+	};
+
+
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Grid
 				gap={{
-					xl: "8",
+					xl: "6",
 				}}
 				templateColumns={{
 					xl: "repeat(3, 1fr)",
 				}}
 			>
-				<GridItem colSpan={2}>
+				<GridItem colSpan={1}>
 					<Flex
 						flexDir="column"
 						gap="4"
 						bgColor="white"
-						my={8}
+						my={4}
 						padding="16px 24px"
 						borderRadius={6}
 						w={"100%"}
@@ -151,19 +186,11 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 							>
 								Bài viết
 							</FormLabel>
-							<Textarea
-								id="description"
-								size="lager"
-								p="4"
-								rounded="4px"
-								fontSize="sm"
-								boxShadow="none"
-								placeholder="VD: Bài viết..."
-								{...register("description", {
-									required: "Không được để trống !!!",
-								})}
+							<QuillThinkPro
+								data={description}
+								onEditorStateChange={onEditorStateChangeDescription as any}
 							/>
-							<FormErrorMessage>{(errors.content as any) && errors?.content?.message}</FormErrorMessage>
+							<FormErrorMessage>{(errors.description as any) && errors?.description?.message}</FormErrorMessage>
 						</FormControl>
 
 						{/* content */}
@@ -175,17 +202,9 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 							>
 								Nội dung
 							</FormLabel>
-							<Textarea
-								id="content"
-								size="lager"
-								p="4"
-								rounded="4px"
-								fontSize="sm"
-								boxShadow="none"
-								placeholder="VD: Nội dung..."
-								{...register("content", {
-									required: "Không được để trống !!!",
-								})}
+							<QuillThinkPro
+								data={content}
+								onEditorStateChange={onEditorStateChangeContent as any}
 							/>
 							<FormErrorMessage>{(errors.content as any) && errors?.content?.message}</FormErrorMessage>
 						</FormControl>
@@ -199,17 +218,9 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 							>
 								Meta keyword
 							</FormLabel>
-							<Textarea
-								id="meta_keyword"
-								size="lager"
-								p="4"
-								rounded="4px"
-								fontSize="sm"
-								boxShadow="none"
-								placeholder="VD: Meta keyword..."
-								{...register("meta_keyword", {
-									required: "Không được để trống !!!",
-								})}
+							<QuillThinkPro
+								data={meta_keyword}
+								onEditorStateChange={onEditorStateChangeMetaKeyword as any}
 							/>
 							<FormErrorMessage>{(errors.meta_keyword as any) && errors?.meta_keyword?.message}</FormErrorMessage>
 						</FormControl>
@@ -223,17 +234,9 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 							>
 								Meta description
 							</FormLabel>
-							<Textarea
-								id="meta_description"
-								size="lager"
-								p="4"
-								rounded="4px"
-								fontSize="sm"
-								boxShadow="none"
-								placeholder="VD: Meta description..."
-								{...register("meta_description", {
-									required: "Không được để trống !!!",
-								})}
+							<QuillThinkPro
+								data={meta_description}
+								onEditorStateChange={onEditorStateChangeMetaDescription as any}
 							/>
 							<FormErrorMessage>{(errors.meta_description as any) && errors?.meta_description?.message}</FormErrorMessage>
 						</FormControl>
@@ -247,17 +250,9 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 							>
 								Meta title
 							</FormLabel>
-							<Textarea
-								id="meta_title"
-								size="lager"
-								p="4"
-								rounded="4px"
-								fontSize="sm"
-								boxShadow="none"
-								placeholder="VD: Meta title..."
-								{...register("meta_title", {
-									required: "Không được để trống !!!",
-								})}
+							<QuillThinkPro
+								data={meta_title}
+								onEditorStateChange={onEditorStateChangeMetaTitle as any}
 							/>
 							<FormErrorMessage>{(errors.meta_title as any) && errors?.meta_title?.message}</FormErrorMessage>
 						</FormControl>
@@ -277,6 +272,8 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 							}}
 							leftIcon={<CloseSmallIcon size={4} />}
 							onClick={onClose}
+							as={ReactRouterLink}
+							to="/admin/bai-viet"
 						>
 							Đóng
 						</Button>
@@ -292,14 +289,14 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 						</Button>
 					</Flex>
 				</GridItem>
-				<GridItem colSpan={1}>
+				<GridItem colSpan={2}>
 					<ReviewAddPostManger
 						thumbnail={thumbnail}
 						title={title}
 						description={description}
 						content={content}
-						meta_keyword={meta_keyword} 
-						meta_description={meta_description} 
+						meta_keyword={meta_keyword}
+						meta_description={meta_description}
 						meta_title={meta_title}
 					/>
 				</GridItem>
@@ -310,4 +307,4 @@ const ActionCreatePost = ({ onClose, parents }: Props) => {
 	);
 };
 
-export default ActionCreatePost;
+export default AddPostMangerView;

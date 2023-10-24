@@ -46,6 +46,7 @@ import PostCategoryView from "~/views/private/PostCategoryView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import PrivateRoute from "./protected";
 import UpdateUserListManagerView from "~/views/private/UserListManagerView/components/UpdateUserManagerView/UpdateUserListManagerView";
+import AddPostShowManagement from "~/views/private/PostManagementView/components/AddPostMangerView/components/AddPostShowManagement";
 
 const routes: RouteObject[] = [
   {
@@ -165,6 +166,10 @@ const routes: RouteObject[] = [
           {
             path: "bai-viet",
             element: <PostManagementView />,
+          },
+          {
+            path: "bai-viet/add",
+            element: <AddPostShowManagement/>,
           },
           {
             path: "don-hang",
