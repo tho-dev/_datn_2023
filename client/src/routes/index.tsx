@@ -45,6 +45,7 @@ import { ThankView } from "~/views/public/ThankView";
 import PostCategoryView from "~/views/private/PostCategoryView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import PrivateRoute from "./protected";
+import UpdateUserListManagerView from "~/views/private/UserListManagerView/components/UpdateUserManagerView/UpdateUserListManagerView";
 
 const routes: RouteObject[] = [
   {
@@ -180,6 +181,10 @@ const routes: RouteObject[] = [
           {
             path: "tai-khoan/add",
             element: <AddUserListManagerView />,
+          },
+          {
+            path: "tai-khoan/:id/update",
+            element: <UpdateUserListManagerView />,
           },
           {
             path: "profile",

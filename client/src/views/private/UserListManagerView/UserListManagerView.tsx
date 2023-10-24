@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import React, { useState } from "react";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Link, Link as ReactRouterLink } from "react-router-dom";
 import UserSearch from "./components/UserSearch";
 import {
   Breadcrumb,
@@ -249,7 +249,9 @@ const UserListManagerView = (props: Props) => {
               >
                 Chặn
               </MenuItem>
-              <MenuItem>Cập nhật</MenuItem>
+              <MenuItem>
+                <Link to={`${data.row.original._id}/update`}>Cập nhật</Link>
+              </MenuItem>
             </MenuList>
           </Menu>
         );
@@ -295,7 +297,6 @@ const UserListManagerView = (props: Props) => {
         bgColor="bg.white"
         mt="6"
       >
-        {/* <TableThinkPro columns={columns} data={fakeData} /> */}
         <TableThinkPro
           columns={columns}
           useData={useGetAllQuery}

@@ -50,21 +50,6 @@ const AddComment = ({ onClose }: Props) => {
             {(errors.name as any) && errors?.name?.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={errors.file as any}>
-          <Input
-            id="file"
-            placeholder="VD: Dell"
-            size="lager"
-            type="file"
-            display="none"
-            {...register("file", {
-              required: "Không được để trống !!!",
-            })}
-          />
-          <FormErrorMessage>
-            {(errors.file as any) && errors?.file?.message}
-          </FormErrorMessage>
-        </FormControl>
       </Flex>
 
       <Flex gap="3" justifyContent="flex-start" mt="4">
@@ -77,18 +62,6 @@ const AddComment = ({ onClose }: Props) => {
         >
           Gửi đánh giá
         </Button>
-        <FormLabel htmlFor="file" cursor="pointer">
-          <Button
-            type="submit"
-            bgColor="text.textSuccess"
-            leftIcon={<PictureIcon size={4} color="#fff" />}
-            px="4"
-            textColor="text.white"
-            fontWeight="bold"
-          >
-            Thêm ảnh
-          </Button>
-        </FormLabel>
       </Flex>
     </form>
   );

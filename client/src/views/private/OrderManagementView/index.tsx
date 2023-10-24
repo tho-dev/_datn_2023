@@ -9,6 +9,7 @@ import {
   useDisclosure,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -21,6 +22,7 @@ import { useEffect, useState } from "react";
 import { useGetAllOrderQuery } from "~/redux/api/order";
 import moment from "moment";
 import { debounce } from "lodash";
+import { PlusCircleIcon } from "~/components/common/Icons";
 type Props = {};
 
 const OrderManagementView = (props: Props) => {
@@ -206,13 +208,28 @@ const OrderManagementView = (props: Props) => {
         </Box>
       </Flex>
       {/* <Metrics /> */}
-      <OrderFilter
-        handleSearch={handleSearch}
-        search={search}
-        handleDate={handleDate}
-        handleStatus={handleStatus}
-        handlePayment={handlePayment}
-      />
+      <Flex w={"100%"} gap={4} justifyContent={"space-between"}>
+        <OrderFilter
+          handleSearch={handleSearch}
+          search={search}
+          handleDate={handleDate}
+          handleStatus={handleStatus}
+          handlePayment={handlePayment}
+        />
+        <Button
+          // as={ReactRouterLink}
+          // to="add"
+          leftIcon={<PlusCircleIcon size={5} color="text.white" />}
+          px="4"
+          lineHeight="2"
+          bgColor="bg.green"
+          _hover={{ bg: "green.400" }}
+          disabled
+        >
+          Tạo đơn
+        </Button>
+      </Flex>
+
       <Box bgColor="bg.white" mt={8}>
         <TableThinkPro
           columns={columns}

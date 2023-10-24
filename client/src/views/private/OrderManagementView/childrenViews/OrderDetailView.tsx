@@ -11,12 +11,8 @@ import {
   PhoneIcon,
   UserIcon,
 } from "~/components/common/Icons";
-import MetricItem from "../components/MetricItem";
-import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
 import OrderDetailMetricItem from "../components/OrderDetailMetric";
-import { Progress } from "@chakra-ui/react";
-import { mt } from "date-fns/locale";
 import { useParams } from "react-router";
 import {
   useCancelOrderMutation,
@@ -32,6 +28,7 @@ import TableProduct from "./TableProduct";
 import ExportOrderPDF from "./ExportOrderPDF";
 import { PDFViewer } from "@react-pdf/renderer";
 import DialogThinkPro from "~/components/DialogThinkPro";
+
 type Props = {};
 
 const OrderDetailView = (props: Props) => {
@@ -40,14 +37,15 @@ const OrderDetailView = (props: Props) => {
   const [openPrint, setOpenPrint] = useState(false);
   const [tokenPrint, setTokenPrint] = useState("");
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
-    id,
-  });
   const {
     isOpen: isPDFOpen,
     onClose: onPDFClose,
     onOpen: onPDFOpen,
   } = useDisclosure();
+
+  const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
+    id,
+  });
   const [cancelOrder] = useCancelOrderMutation();
   const [tokenPrintOrder] = useTokenPrintOrderMutation();
   const [updateStatusOrder] = useUpdateStatusOrderMutation();
@@ -62,7 +60,6 @@ const OrderDetailView = (props: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
-  console.log(data);
 
   const columns = [
     columnHelper.accessor("#", {
@@ -179,19 +176,22 @@ const OrderDetailView = (props: Props) => {
           <Text>Chi tiết đơn hàng</Text>
         </Heading>
         <Flex gap={4}>
-          <Button
-            leftIcon={<DownloadIcon size={24} />}
-            onClick={handlePrinOrder}
-          >
-            {" "}
-            In vận đơn
-          </Button>
-          <Button
-            leftIcon={<DownloadIcon size={24} />}
-            onClick={() => onPDFOpen()}
-          >
-            In HĐ thanh toán
-          </Button>
+          {data?.data.shipping_method === "at_store" ? (
+            <Button
+              leftIcon={<DownloadIcon size={24} />}
+              onClick={() => onPDFOpen()}
+            >
+              In HĐ thanh toán
+            </Button>
+          ) : (
+            <Button
+              leftIcon={<DownloadIcon size={24} />}
+              onClick={handlePrinOrder}
+            >
+              {" "}
+              In vận đơn
+            </Button>
+          )}
         </Flex>
       </Flex>
       <Flex justifyContent="space-between" alignItems={"center"}>

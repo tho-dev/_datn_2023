@@ -22,7 +22,7 @@ const OrderView = (props: Props) => {
     "processing",
     "delivering",
     "delivered",
-    "canceled",
+    "cancelled",
     "returned",
   ];
   return (
@@ -38,9 +38,6 @@ const OrderView = (props: Props) => {
             </Tab>
             <Tab fontSize="sm" fontWeight="semibold">
               Chờ xác nhận
-            </Tab>
-            <Tab fontSize="sm" fontWeight="semibold">
-              Vận chuyển
             </Tab>
             <Tab fontSize="sm" fontWeight="semibold">
               Đang giao
