@@ -28,6 +28,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useAddToCartMutation, useByNowMutation } from "~/redux/api/cart";
 import { addCart } from "~/redux/slices/cartSlice";
 import { useToast } from "@chakra-ui/react";
+import ListThinkPro from "~/components/ListThinkPro";
 
 type Props = {};
 
@@ -41,6 +42,9 @@ const ProductDetailView = (props: Props) => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.persistedReducer.global.user);
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+  const productViewed = useAppSelector(
+    (state) => state.persistedReducer.global.viewedItems
+  );
   const dispatch = useAppDispatch();
   const [addToCart, { isLoading }] = useAddToCartMutation();
   const [byNow, { isLoading: loading }] = useByNowMutation();
@@ -197,13 +201,13 @@ const ProductDetailView = (props: Props) => {
       </Breadcrumb>
       <Flex gap={"6"} flexWrap={{ base: "wrap", md: "nowrap" }}>
         {/* Content trái */}
-        <Box w={{ base: "100%", md: "60%" }} my={5}>
+        <Box w={{ base: "100%", md: "60%" }} my={5} overflow="hidden">
           {/* slide ảnh */}
           <Gallery assets={product?.data.assets} name={product?.data.name} />
           {/* marrque */}
           <Introduce />
           {/* Đánh Giá */}
-          <Evaluate />
+          <Evaluate demands={product?.data?.demands ?? []} />
           <Box backgroundColor={"bg.white"} borderRadius={"6px"} my={"5"} p="6">
             {/* Cấu hình */}
             <Configuration attributes={product?.data.attributes} />
@@ -262,11 +266,21 @@ const ProductDetailView = (props: Props) => {
       </Flex>
 
       {/* Đánh giá của khách hàng */}
+      <Text fontSize={"18px"} fontWeight={"bold"}>
+        Khách hàng đánh giá
+      </Text>
       <CommentView />
 
       {/* Sản phẩm đã xem */}
       <Box pb={10}>
-        <ViewedProduct title={""} />
+        <Text fontSize={"18px"} fontWeight={"bold"} my={4}>
+          Sản phẩm đã xem
+        </Text>
+        {productViewed.length >= 5 ? (
+          <ViewedProduct products={productViewed} />
+        ) : (
+          <ListThinkPro data={productViewed} />
+        )}
       </Box>
     </Box>
   );

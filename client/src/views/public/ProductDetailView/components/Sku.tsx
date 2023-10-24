@@ -80,17 +80,17 @@ const Sku = ({
         </Text>
         <Divider my="4" />
         <Box>
-          {new_variants.map((item: any, index: number) => {
+          {product.variants.map((item: any, index: number) => {
             return (
               <>
                 <Text fontSize={"14px"} fontWeight="semibold" color={"#6B7075"}>
-                  {item.name == "specs" && "Phiên Bản"}
-                  {item.name == "color" && "Màu"}
-                  {item.name == "type" && "Loại hàng"}
+                  {(item?.name == "specs" && "Phiên Bản") ?? "Phiên bản"}
+                  {item?.name == "color" && "Màu"}
+                  {item?.name == "type" && "Loại hàng"}
                 </Text>
                 <Flex gap="3" mt="2" flexWrap="wrap">
                   <CustomRadio
-                    arrayRadio={item.options}
+                    arrayRadio={item?.options}
                     defaultRadio={new_option_value}
                     handeChangeSku={handeChangeSku}
                     index={index}

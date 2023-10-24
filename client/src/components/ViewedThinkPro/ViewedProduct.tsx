@@ -7,16 +7,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 // data fake
-import thinkpro from "~/data/clone-thinkpro.json";
-import ViewedList from "./components";
+import CardThinkPro from "../CardThinkPro";
 
 type PropTypes = {
-  title: any;
+  products: any;
 };
 
-const ViewedProduct = ({ title }: PropTypes) => {
+const ViewedProduct = ({ products }: PropTypes) => {
   // comps
-
   return (
     <Box
       bg="white"
@@ -30,9 +28,6 @@ const ViewedProduct = ({ title }: PropTypes) => {
         xl: "15",
       }}
     >
-      <Text fontSize={"18px"} fontWeight={"bold"}>
-        Sản phẩm đã xem
-      </Text>
       <Flex position="relative">
         <Swiper
           modules={[Navigation]}
@@ -46,7 +41,6 @@ const ViewedProduct = ({ title }: PropTypes) => {
           breakpoints={{
             0: {
               slidesPerView: 1,
-              spaceBetween: 8,
             },
             768: {
               slidesPerView: 3,
@@ -56,23 +50,10 @@ const ViewedProduct = ({ title }: PropTypes) => {
             },
           }}
         >
-          {thinkpro?.data?.map((item: any, index: number) => {
+          {products?.map((item: any, index: number) => {
             return (
               <SwiperSlide key={index}>
-                <Link
-                  as={ReactRouterLink}
-                  w="full"
-                  rounded="lg"
-                  display="inline-flex"
-                  flexDir="column"
-                  backgroundColor="bg.white"
-                  _hover={{
-                    transition: "all 0.3s ease-in",
-                    textDecoration: "none",
-                  }}
-                >
-                  <ViewedList />
-                </Link>
+                <CardThinkPro product={item} />
               </SwiperSlide>
             );
           })}

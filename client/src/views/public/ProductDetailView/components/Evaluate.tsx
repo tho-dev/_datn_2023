@@ -5,9 +5,11 @@ import { Button, Text } from "@chakra-ui/react";
 import { NavArrowRightIcon } from "~/components/common/Icons";
 import PopupEvalute from "./PopupEvalute";
 
-type Props = {};
+type Props = {
+  demands: any[];
+};
 
-const Evaluate = (props: Props) => {
+const Evaluate = ({ demands }: Props) => {
   return (
     <Box my={"5"} p="6" rounded="6px" bgColor={"bg.white"}>
       <Flex justifyContent={"space-between"} pb={"4"}>
@@ -21,25 +23,22 @@ const Evaluate = (props: Props) => {
           <NavArrowRightIcon size={4} strokeWidth={2} color="text.black" />
         </Button>
       </Flex>
+      {demands.length == 0 && (
+        <Box>
+          <Text fontSize="14px" fontWeight="semibold" textAlign="center">
+            Sản phẩm chưa có đánh giá
+          </Text>
+        </Box>
+      )}
       <Grid templateColumns="repeat(3, 1fr)" gap="6">
-        <GridItem>
-          <Progress rate={100} title="Văn phòng, học tập" />
-        </GridItem>
-        <GridItem>
-          <Progress rate={3} title="Văn phòng, học tập" />
-        </GridItem>
-        <GridItem>
-          <Progress rate={100} title="Văn phòng, học tập" />
-        </GridItem>
-        <GridItem>
-          <Progress rate={100} title="Văn phòng, học tập" />
-        </GridItem>
-        <GridItem>
-          <Progress rate={100} title="Văn phòng, học tập" />
-        </GridItem>
-        <GridItem>
-          <Progress rate={100} title="Văn phòng, học tập" />
-        </GridItem>
+        {demands.length > 0 &&
+          demands.map((item) => {
+            return (
+              <GridItem>
+                <Progress rate={item.point} title={item.name} />
+              </GridItem>
+            );
+          })}
       </Grid>
     </Box>
   );

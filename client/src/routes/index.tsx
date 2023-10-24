@@ -44,8 +44,13 @@ import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordVie
 import { ThankView } from "~/views/public/ThankView";
 import PostCategoryView from "~/views/private/PostCategoryView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
+<<<<<<< HEAD
 import PrivateRoute from "./protected"; 
 import AddPostShowManagement from "~/views/private/PostManagementView/components/AddPostMangerView/components/AddPostShowManagement";
+=======
+import PrivateRoute from "./protected";
+import UpdateUserListManagerView from "~/views/private/UserListManagerView/components/UpdateUserManagerView/UpdateUserListManagerView";
+>>>>>>> 5a57272b313dcb10738a79d3260715e56d9baea0
 
 const routes: RouteObject[] = [
   {
@@ -185,6 +190,10 @@ const routes: RouteObject[] = [
           {
             path: "tai-khoan/add",
             element: <AddUserListManagerView />,
+          },
+          {
+            path: "tai-khoan/:id/update",
+            element: <UpdateUserListManagerView />,
           },
           {
             path: "profile",

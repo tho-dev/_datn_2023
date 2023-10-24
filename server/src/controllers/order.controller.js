@@ -24,6 +24,7 @@ TextFlow.useKey(process.env.SMS_API);
 export const createOrder = async (req, res, next) => {
   try {
     const { shipping_address, shipping_method, cart_id, address } = req.body;
+
     const cart = await Cart.findOne({ cart_id });
     let user_id = null;
     const token = getAuthToken(req);
@@ -135,6 +136,7 @@ export const createOrder = async (req, res, next) => {
       await new_order.save();
       // lấy mã vùng
       const code_ward_district = await getLocation(shipping_address);
+      console.log(code_ward_district);
       // tạo hoá đơn
       const data_shipping = {
         to_name: req.body.customer_name,
@@ -166,6 +168,7 @@ export const createOrder = async (req, res, next) => {
           headers: {
             Token: process.env.GHN_SHOP_TOKEN,
             ShopId: process.env.GHN_SHOP_ID,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -192,6 +195,7 @@ export const createOrder = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
