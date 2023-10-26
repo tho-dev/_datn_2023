@@ -39,9 +39,13 @@ const ProductDetailView = (props: Props) => {
   const isLogin = useAppSelector(
     (state) => state.persistedReducer.global.isLogin
   );
+  const productViewed = useAppSelector(
+    (state) => state.persistedReducer.global.viewedItems
+  );
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.persistedReducer.global.user);
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+
   const dispatch = useAppDispatch();
   const [addToCart, { isLoading }] = useAddToCartMutation();
   const [byNow, { isLoading: loading }] = useByNowMutation();
@@ -293,17 +297,23 @@ const ProductDetailView = (props: Props) => {
       {/* Đánh giá của khách hàng */}
       {/* <CommentView /> */}
 
-      {/* Sản phẩm đã xem */}
-      <Box pb={10}>
-        <ViewedProduct title={""} />
-      </Box>
-
       {/* Sản phẩm liên quan */}
       <Box my="6">
         <Heading fontSize="xl" fontWeight="bold">
           Sản Phẩm Liên Quan
         </Heading>
         <ListThinkPro data={product?.data?.related_products} />
+      </Box>
+      {/* Sản phẩm đã xem */}
+      <Box pb={10}>
+        <Text fontSize={"18px"} fontWeight={"bold"} my={4}>
+          Sản phẩm đã xem
+        </Text>
+        {productViewed.length >= 5 ? (
+          <ViewedProduct products={productViewed} />
+        ) : (
+          <ListThinkPro data={productViewed} />
+        )}
       </Box>
     </Box>
   );
