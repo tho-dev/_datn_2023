@@ -72,13 +72,13 @@ const OrderDetailView = (props: Props) => {
 
     columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue()._id}</h1>;
+        return <h1>{info.getValue()?._id ?? "id"}</h1>;
       },
       header: "ID sản phẩm",
     }),
     columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue().name}</h1>;
+        return <h1>{info.getValue()?.name ?? "Sản phẩm"}</h1>;
       },
       header: "Tên sản phẩm",
     }),
