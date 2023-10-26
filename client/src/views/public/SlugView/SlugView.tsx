@@ -164,7 +164,7 @@ const SlugView = (props: Props) => {
               setPage(products?.data?.paginate?.nextPage);
             }
           }}
-          _hover={{ bg: "bg.gray" }}
+          _hover={{ bg: "gray.300" }}
         >
           Xem thêm
         </Button>

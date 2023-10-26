@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import Introduce from "./components/Introduce";
 import Branch from "./components/Branch";
-import Transport from "./components/Transport";
 import Warranty from "./components/Warranty";
 import Configuration from "./components/Configuration";
 import Describe from "./components/Describe";
@@ -26,7 +25,6 @@ import { useGetBySlugQuery } from "~/redux/api/product";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { v4 as uuidv4 } from "uuid";
 import { useAddToCartMutation, useByNowMutation } from "~/redux/api/cart";
-import { addCart } from "~/redux/slices/cartSlice";
 import { useToast } from "@chakra-ui/react";
 import ListThinkPro from "~/components/ListThinkPro";
 
@@ -62,7 +60,6 @@ const ProductDetailView = (props: Props) => {
   if (isError) {
     return <Box>error...</Box>;
   }
-
   const handleAddToCart = async () => {
     const data = {
       cart_id: cart_id,
@@ -177,7 +174,6 @@ const ProductDetailView = (props: Props) => {
         });
     }
   };
-
   const handleDercement = () => {
     if (quantity == 1) return;
     setQuantity(quantity - 1);
@@ -290,7 +286,10 @@ const ProductDetailView = (props: Props) => {
             loading={loading}
           />
           {/* Danh mục con */}
-          <Subcate />
+          <Subcate
+            brand={product?.data.brand}
+            category={product?.data.category}
+          />
         </Box>
       </Flex>
 
@@ -299,7 +298,7 @@ const ProductDetailView = (props: Props) => {
 
       {/* Sản phẩm liên quan */}
       <Box my="6">
-        <Heading fontSize="xl" fontWeight="bold">
+        <Heading fontSize="18px" fontWeight="bold">
           Sản Phẩm Liên Quan
         </Heading>
         <ListThinkPro data={product?.data?.related_products} />
