@@ -121,7 +121,14 @@ const orderSchema = new Schema(
     status: {
       type: String,
       default: "processing",
-      enum: ["processing", "confirmed", "delivering", "cancelled", "delivered"],
+      enum: [
+        "processing",
+        "confirmed",
+        "delivering",
+        "cancelled",
+        "delivered",
+        "returned",
+      ],
     },
     status_detail: [
       {
@@ -134,6 +141,7 @@ const orderSchema = new Schema(
             "delivering",
             "cancelled",
             "delivered",
+            "returned",
           ],
         },
         created_at: {
