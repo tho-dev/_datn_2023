@@ -10,7 +10,7 @@ import {
 import Gift from "./Gift";
 import Buy from "./Buy";
 import CustomRadio from "./CustomRadio";
-import { sortJSON } from "~/utils/fc";
+import { formatNumber, sortJSON } from "~/utils/fc";
 import { useNavigate } from "react-router";
 import { useToast } from "@chakra-ui/react";
 type Props = {
@@ -38,7 +38,7 @@ const Sku = ({
   const toast = useToast();
   const navigate = useNavigate();
 
-  const new_variants = sortJSON(product.variants);
+  const new_variants = sortJSON(product?.variants);
 
   const handeChangeSku = (value: any, index: any) => {
     const new_option_valued = JSON.parse(JSON.stringify(new_option_value));
@@ -63,6 +63,8 @@ const Sku = ({
     }
   };
 
+  console.log("new_variants", new_variants);
+
   return (
     <>
       <Box bgColor={"white"} rounded={"6px"} p="6" mt="4">
@@ -72,23 +74,21 @@ const Sku = ({
           color="text.black"
           fontWeight="medium"
         >
-          SKU: {product.SKU}
+          SKU: {product?.SKU}
           <CopyIcon size={4} ml="2" color="text.blue" cursor="pointer" />
         </Text>
         <Text fontSize={"md"} fontWeight={600} rounded={"6px"} mt="2">
           {product?.name}
         </Text>
         <Divider my="4" />
-        <Box>
-          {product.variants.map((item: any, index: number) => {
+        <Flex flexDirection="column" gap="3">
+          {new_variants?.map((item: any, index: number) => {
             return (
               <>
-                <Text fontSize={"14px"} fontWeight="semibold" color={"#6B7075"}>
-                  {(item?.name == "specs" && "Phiên Bản") ?? "Phiên bản"}
-                  {item?.name == "color" && "Màu"}
-                  {item?.name == "type" && "Loại hàng"}
+                <Text fontSize={"13px"} fontWeight="semibold" color={"#6B7075"}>
+                  {item?.label}
                 </Text>
-                <Flex gap="3" mt="2" flexWrap="wrap">
+                <Flex gap="1" flexWrap="wrap">
                   <CustomRadio
                     arrayRadio={item?.options}
                     defaultRadio={new_option_value}
@@ -148,7 +148,7 @@ const Sku = ({
           <Grid templateColumns="repeat(3, 1fr)" gap={4}>
             <GridItem>
               <Text fontSize={"lg"} fontWeight={600} color={"#FE3464"}>
-                {product?.price.toLocaleString() ?? 0}
+                {formatNumber(`${product?.price}`)}
               </Text>
               <Flex pt={"1"} gap={2}>
                 <Text
@@ -158,7 +158,7 @@ const Sku = ({
                   lineHeight={"18px"}
                   pl={"1"}
                 >
-                  {product?.price_before_discount?.toLocaleString() ?? 0}
+                  {formatNumber(`${product?.price_before_discount}`)}
                 </Text>
                 <Text
                   as={"p"}
@@ -166,7 +166,7 @@ const Sku = ({
                   lineHeight={"18px"}
                   color={"#FE3464"}
                 >
-                  {product?.price_discount_percent ?? 0}%
+                  {product?.price_discount_percent}%
                 </Text>
               </Flex>
             </GridItem>
@@ -195,10 +195,10 @@ const Sku = ({
               </Button>
             </GridItem>
           </Grid>
-        </Box>
+        </Flex>
       </Box>
       {/* Quà Tặng kèm */}
-      {/* <Gift /> */}
+      <Gift />
       {/* Mua thêm được giảm */}
       {/* <Buy /> */}
     </>

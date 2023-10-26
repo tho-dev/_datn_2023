@@ -13,39 +13,33 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
 import { AirplayIcon, EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
 import { useGetAllProductQuery } from "~/redux/api/product";
 import { formatNumber } from "~/utils/fc";
+import moment from "moment/moment";
 
 type Props = {};
 
 const ProductManagerView = (props: Props) => {
 	const columnHelper = createColumnHelper<any>();
-	const [pagination, setPagination] = useState<{
-		pageIndex: number;
-		pageSize: number;
-		pageCount: number;
-	}>({
-		pageIndex: 0,
-		pageSize: 0,
-		pageCount: 0,
-	});
 	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: (info) => {
-				const index = info.row.index;
+			cell: ({ table, row }) => {
+				const index = row.index + 1;
+				const { pageIndex, pageSize } = table.getState().pagination;
+
 				return (
 					<Text
 						fontSize="13px"
 						fontWeight="medium"
 					>
-						{index + 1}
+						{pageIndex * pageSize + index}
 					</Text>
 				);
 			},
@@ -111,7 +105,7 @@ const ProductManagerView = (props: Props) => {
 					fontSize="13px"
 					fontWeight="medium"
 				>
-					{formatNumber(`${getValue()}VND`)}
+					{formatNumber(`${getValue()}`)}
 				</Text>
 			),
 			header: "Giá gốc",
@@ -136,36 +130,6 @@ const ProductManagerView = (props: Props) => {
 				);
 			},
 			header: "Màu sắc",
-		}),
-		columnHelper.accessor("option_value", {
-			cell: ({ getValue }) => {
-				const option_values = getValue();
-
-				return (
-					<Flex
-						gap="2"
-						flexWrap="wrap"
-					>
-						{option_values?.map((item: any, index: number) => {
-							return (
-								<Box
-									key={index}
-									py="1"
-									px="2"
-									fontSize="13px"
-									fontWeight="medium"
-									borderWidth="1px"
-									borderColor="bg.primary"
-									rounded="4px"
-								>
-									{item}
-								</Box>
-							);
-						})}
-					</Flex>
-				);
-			},
-			header: "Biến thể",
 		}),
 		columnHelper.accessor("status", {
 			cell: ({ getValue }) => (
@@ -201,8 +165,32 @@ const ProductManagerView = (props: Props) => {
 			),
 			header: "Trạng thái",
 		}),
+		columnHelper.accessor("created_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày tạo",
+		}),
+		columnHelper.accessor("updated_at", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+				</Text>
+			),
+			header: "Ngày cập nhật",
+		}),
 		columnHelper.accessor("action", {
-			cell: () => {
+			cell: ({ row }) => {
+				console.log("row", row);
+
 				return (
 					<Menu>
 						<MenuButton textAlign="center">
@@ -233,7 +221,7 @@ const ProductManagerView = (props: Props) => {
 							</MenuItem>
 							<MenuItem
 								as={ReactRouterLink}
-								to="/admin/san-pham/slug/update"
+								to={`/admin/san-pham/${row?.original?._id}/update`}
 								py="2"
 								icon={<EditIcon size={4} />}
 							>
@@ -284,7 +272,7 @@ const ProductManagerView = (props: Props) => {
 						<BreadcrumbItem isCurrentPage>
 							<BreadcrumbLink
 								as={ReactRouterLink}
-								to="/admin/nhu-cau"
+								to="/admin/san-pham"
 							>
 								Sản phẩm
 							</BreadcrumbLink>
@@ -327,6 +315,8 @@ const ProductManagerView = (props: Props) => {
 					/>
 				</Flex>
 				<Button
+					as={ReactRouterLink}
+					to="/admin/san-pham/add"
 					leftIcon={
 						<PlusCircleIcon
 							size={5}
@@ -336,7 +326,6 @@ const ProductManagerView = (props: Props) => {
 					px="4"
 					lineHeight="2"
 					bgColor="bg.green"
-					// onClick={onOpenActionCreateDemand}
 				>
 					Tạo Mới
 				</Button>

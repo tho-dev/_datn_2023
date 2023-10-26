@@ -1,19 +1,6 @@
-import React, { useState, useRef } from "react";
-import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-	useDisclosure,
-	Text,
-	Flex,
-	Box,
-	Heading,
-} from "@chakra-ui/react";
-import { NavArrowRightIcon } from "~/components/common/Icons";
+import { Box, Flex, Heading, Text, useDisclosure } from "@chakra-ui/react";
 import DialogThinkPro from "~/components/DialogThinkPro";
+import { NavArrowRightIcon } from "~/components/common/Icons";
 
 type Props = {};
 
