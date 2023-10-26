@@ -34,31 +34,32 @@ const PopupEvalute = (Props: Props) => {
 				isOpen={isOpen}
 				onClose={onClose}
 				size={"xl"}
+				isCentered
 			>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalHeader fontSize={"20px"}>Đánh giá từ chuyên gia</ModalHeader>
+					<ModalHeader fontSize={"xl"}>Đánh giá từ chuyên gia</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody mx={"2"}>
 						<Flex gap={"6"}>
 							<Box w={"30%"}>
 								<Avatar
 									size="2xl"
-									name="Segun Adebayo"
-									src="https://bit.ly/sage-adebayo"
+									name="Polytech"
+									src="https://thinkpro.vn/demand/expert-employee.png"
 								/>
 							</Box>
 							<Box w={"70%"}>
 								<Text
 									as={"h5"}
-									fontSize={"16px"}
+									fontSize={"md"}
 									fontWeight={600}
 								>
-									ThinkPro Expert
+									Polytech Expert
 								</Text>
 								<Text
 									as={"p"}
-									fontSize={"16px"}
+									fontSize={"sm"}
 									py={"3"}
 								>
 									Đánh giá này dựa trên các chuyên gia máy tính từ ThinkPro. Qua các bài kiểm tra và
@@ -77,69 +78,77 @@ const PopupEvalute = (Props: Props) => {
 											px={"5"}
 											fontSize={"12px"}
 											color={"white"}
+											py="1"
 										>
 											1,2,3
 										</Box>
 										<Text
 											as={"p"}
-											fontSize={"14px"}
+											fontSize={"13px"}
 											mt={"3"}
+											fontWeight="semibold"
 										>
 											Không Phù Hợp
 										</Text>
 									</GridItem>
 									<GridItem textAlign={"center"}>
 										<Box
-											bg={"red"}
+											bg={"#d69e2e"}
 											borderRadius={"3xl"}
 											px={"5"}
+											py="1"
 											fontSize={"12px"}
 											color={"white"}
 										>
-											1,2,3
+											4,5,6
 										</Box>
 										<Text
 											as={"p"}
-											fontSize={"14px"}
+											fontSize={"13px"}
 											mt={"3"}
+											fontWeight="semibold"
 										>
-											Không Phù Hợp
+											Bình thường
 										</Text>
 									</GridItem>
 									<GridItem textAlign={"center"}>
 										<Box
-											bg={"red"}
+											bg={"green"}
 											borderRadius={"3xl"}
 											px={"5"}
 											fontSize={"12px"}
 											color={"white"}
+											py="1"
 										>
-											1,2,3
+											8,9
 										</Box>
 										<Text
 											as={"p"}
-											fontSize={"14px"}
+											fontSize={"13px"}
 											mt={"3"}
+											fontWeight="semibold"
 										>
-											Không Phù Hợp
+											Tốt
 										</Text>
 									</GridItem>
 									<GridItem textAlign={"center"}>
 										<Box
-											bg={"red"}
+											bg={"green"}
 											borderRadius={"3xl"}
 											px={"5"}
+											py="1"
 											fontSize={"12px"}
 											color={"white"}
 										>
-											1,2,3
+											10
 										</Box>
 										<Text
 											as={"p"}
-											fontSize={"14px"}
+											fontSize={"13px"}
 											mt={"3"}
+											fontWeight="semibold"
 										>
-											Không Phù Hợp
+											Tuyệt vời
 										</Text>
 									</GridItem>
 								</Grid>

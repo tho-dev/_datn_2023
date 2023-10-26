@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import DefaultAvatar from "~/assets/images/thumb.png";
 import { Input } from "@chakra-ui/input";
 import { uploadImage, removeFile } from "~/services/upload.service";
@@ -18,7 +18,7 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 
 	useEffect(() => {
 		setSelectedImage(setData || "");
-	}, []);
+	}, [setData]);
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSpinner(true);
@@ -161,4 +161,4 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 	);
 };
 
-export default FileUploadThinkPro;
+export default React.memo(FileUploadThinkPro);

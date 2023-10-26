@@ -25,23 +25,8 @@ const ListThinkPro = ({ mt = 6, columns = 5, data }: Props) => {
 					<GridItem key={index}>
 						<CardThinkPro product={product} />
 					</GridItem>
-				)
+				);
 			})}
-			{/* <GridItem>
-				<CardThinkPro />
-			</GridItem>
-			<GridItem>
-				<CardThinkPro />
-			</GridItem>
-			<GridItem>
-				<CardThinkPro />
-			</GridItem>
-			<GridItem>
-				<CardThinkPro />
-			</GridItem>
-			<GridItem>
-				<CardThinkPro />
-			</GridItem> */}
 		</Grid>
 	);
 };

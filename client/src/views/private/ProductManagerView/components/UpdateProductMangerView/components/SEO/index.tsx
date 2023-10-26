@@ -1,5 +1,6 @@
 import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/layout";
-import { FormControl, FormErrorMessage, FormLabel, Input, Textarea } from "@chakra-ui/react";
+import { useState } from "react";
+import { Checkbox, FormControl, FormErrorMessage, FormLabel, Input, Textarea } from "@chakra-ui/react";
 
 type Props = {
 	register: any;
@@ -7,64 +8,64 @@ type Props = {
 };
 
 const SEO = ({ register, errors }: Props) => {
+	const [show, setShow] = useState<boolean>(false);
+
 	return (
-		<Flex
-			flexDir="column"
-			gap="5"
-		>
-			<FormControl isInvalid={errors?.title as any}>
-				<FormLabel
-					htmlFor="title"
-					fontSize="sm"
-					fontWeight="semibold"
-				>
-					Title
+		<Box>
+			<Box>
+				<Checkbox onChange={(e) => setShow(e.target.checked)}>
 					<Text
-						as="span"
-						fontSize="sm"
-						ml="1"
-						color="#8c98a4"
-						fontWeight="medium"
+						fontSize="13px"
+						fontWeight="semibold"
 					>
-						(không bắt buộc)
+						Thiết lập các thẻ mô tả giúp khách hàng dễ dàng tìm thấy danh mục này trên công cụ tìm kiếm như
+						Google
 					</Text>
-				</FormLabel>
-				<Input
-					id="title"
-					{...register("seo.meta_title")}
-					placeholder="meta title"
-					borderColor={errors?.title && "red.200"}
-				/>
-				<FormErrorMessage>{(errors?.title as any) && errors?.title?.message}</FormErrorMessage>
-			</FormControl>
-			<FormControl isInvalid={errors?.seo_description as any}>
-				<FormLabel
-					htmlFor="seo_description"
-					fontSize="sm"
-					fontWeight="semibold"
+				</Checkbox>
+			</Box>
+			{show && (
+				<Flex
+					mt="4"
+					gap="5"
+					flexDir="column"
 				>
-					Description
-					<Text
-						as="span"
-						fontSize="sm"
-						ml="1"
-						color="#8c98a4"
-						fontWeight="medium"
-					>
-						(không bắt buộc)
-					</Text>
-				</FormLabel>
-				<Textarea
-					id="meta_description"
-					{...register("seo.meta_description")}
-					placeholder="meta description"
-					borderColor={errors?.seo_description && "red.200"}
-				/>
-				<FormErrorMessage>
-					{(errors?.seo_description as any) && errors?.seo_description?.message}
-				</FormErrorMessage>
-			</FormControl>
-		</Flex>
+					<FormControl isInvalid={errors?.title as any}>
+						<FormLabel
+							htmlFor="title"
+							fontSize="sm"
+							fontWeight="semibold"
+						>
+							Tiêu đề trang
+						</FormLabel>
+						<Input
+							id="title"
+							{...register("seo.meta_title")}
+							placeholder="Tiêu đề trang"
+							borderColor={errors?.title && "red.200"}
+						/>
+						<FormErrorMessage>{(errors?.title as any) && errors?.title?.message}</FormErrorMessage>
+					</FormControl>
+					<FormControl isInvalid={errors?.seo_description as any}>
+						<FormLabel
+							htmlFor="seo_description"
+							fontSize="sm"
+							fontWeight="semibold"
+						>
+							Mô tả trang
+						</FormLabel>
+						<Textarea
+							id="meta_description"
+							{...register("seo.meta_description")}
+							placeholder="Mô tả trang"
+							borderColor={errors?.seo_description && "red.200"}
+						/>
+						<FormErrorMessage>
+							{(errors?.seo_description as any) && errors?.seo_description?.message}
+						</FormErrorMessage>
+					</FormControl>
+				</Flex>
+			)}
+		</Box>
 	);
 };
 

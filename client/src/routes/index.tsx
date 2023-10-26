@@ -7,7 +7,6 @@ import DefaultLayout from "~/layouts/DefaultLayout";
 import AdminLayout from "~/layouts/AdminLayout";
 
 // view client
-
 import { HomeView } from "~/views/public/HomeView";
 import { SignInView } from "~/views/public/SignInView";
 import { SignUpView } from "~/views/public/SignUpView";
@@ -24,6 +23,7 @@ import { DashboardView } from "~/views/private/DashboardView";
 import { ProductManagerView } from "~/views/private/ProductManagerView";
 import { AddProductManagerView } from "~/views/private/ProductManagerView/components/AddProductMangerView";
 import { UpdateProductManagerView } from "~/views/private/ProductManagerView/components/UpdateProductMangerView";
+import { VariantMangerView } from "~/views/private/ProductManagerView/components/VariantMangerView";
 import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
@@ -154,6 +154,10 @@ const routes: RouteObject[] = [
 						element: <UpdateProductManagerView />,
 					},
 					{
+						path: "san-pham/:product_id/bien-the/:sku_id",
+						element: <VariantMangerView />,
+					},
+					{
 						path: "danh-muc",
 						element: <CategoryManagerView />,
 					},
@@ -213,84 +217,84 @@ const routes: RouteObject[] = [
 	},
 ];
 
-if (protectedRouter() == true) {
-	routes.push({
-		path: "/admin",
-		element: <AdminLayout />,
-		children: [
-			{
-				index: true,
-				element: <DashboardView />,
-			},
-			{
-				path: "san-pham",
-				element: <ProductManagerView />,
-			},
-			{
-				path: "san-pham/add",
-				element: <AddProductManagerView />,
-			},
-			{
-				path: "san-pham/:id/update",
-				element: <UpdateProductManagerView />,
-			},
-			{
-				path: "danh-muc",
-				element: <CategoryManagerView />,
-			},
-			{
-				path: "bai-viet",
-				element: <PostManagementView />,
-			},
-			{
-				path: "danh-muc-bai-viet",
-				element: <PostCategoryView />,
-			},
-			{
-				path: "don-hang",
-				element: <OrderManagementView />,
-			},
-			{
-				path: "don-hang/:id",
-				element: <OrderDetailView />,
-			},
-			{
-				path: "tai-khoan",
-				element: <UserListManagerView />,
-			},
-			{
-				path: "tai-khoan/add",
-				element: <AddUserListManagerView />,
-			},
-			{
-				path: "profile",
-				element: <ProfileManagerView />,
-			},
-			{
-				path: "thuong-hieu",
-				element: <BrandView />,
-			},
-			{
-				path: "nhu-cau",
-				element: <DemandView />,
-			},
-			{
-				path: "shipping",
-				element: <ShippingView />,
-				children: [
-					{
-						index: true,
-						element: <ShippingList />,
-					},
-					{
-						path: "shipments",
-						element: <Shipments />,
-					},
-				],
-			},
-		],
-	});
-}
+// if (protectedRouter() == true) {
+// 	routes.push({
+// 		path: "/admin",
+// 		element: <AdminLayout />,
+// 		children: [
+// 			{
+// 				index: true,
+// 				element: <DashboardView />,
+// 			},
+// 			{
+// 				path: "san-pham",
+// 				element: <ProductManagerView />,
+// 			},
+// 			{
+// 				path: "san-pham/add",
+// 				element: <AddProductManagerView />,
+// 			},
+// 			{
+// 				path: "san-pham/:id/update",
+// 				element: <UpdateProductManagerView />,
+// 			},
+// 			{
+// 				path: "danh-muc",
+// 				element: <CategoryManagerView />,
+// 			},
+// 			{
+// 				path: "bai-viet",
+// 				element: <PostManagementView />,
+// 			},
+// 			{
+// 				path: "danh-muc-bai-viet",
+// 				element: <PostCategoryView />,
+// 			},
+// 			{
+// 				path: "don-hang",
+// 				element: <OrderManagementView />,
+// 			},
+// 			{
+// 				path: "don-hang/:id",
+// 				element: <OrderDetailView />,
+// 			},
+// 			{
+// 				path: "tai-khoan",
+// 				element: <UserListManagerView />,
+// 			},
+// 			{
+// 				path: "tai-khoan/add",
+// 				element: <AddUserListManagerView />,
+// 			},
+// 			{
+// 				path: "profile",
+// 				element: <ProfileManagerView />,
+// 			},
+// 			{
+// 				path: "thuong-hieu",
+// 				element: <BrandView />,
+// 			},
+// 			{
+// 				path: "nhu-cau",
+// 				element: <DemandView />,
+// 			},
+// 			{
+// 				path: "shipping",
+// 				element: <ShippingView />,
+// 				children: [
+// 					{
+// 						index: true,
+// 						element: <ShippingList />,
+// 					},
+// 					{
+// 						path: "shipments",
+// 						element: <Shipments />,
+// 					},
+// 				],
+// 			},
+// 		],
+// 	});
+// }
 
 routes.push({
 	path: "/admin",

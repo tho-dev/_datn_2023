@@ -50,52 +50,55 @@ const AttributeNested = ({ nestIndex, control, register, errors }: any) => {
 						>
 							<Flex
 								flex="1"
-								gap="3"
-								flexDir="column"
 								mb="2"
+								flexDir="column"
 							>
-								<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.label as any}>
+								<Box>
 									<FormLabel
 										fontSize="sm"
 										fontWeight="semibold"
 									>
 										Chi tiết
 									</FormLabel>
-									<Input
-										size="small"
-										{...register(`attributes.${nestIndex}.items.${k}.label`, {
-											required: "Không được để trống",
-										})}
-										placeholder="Kích thước/Cao tối đa lưng ghế,..."
-										borderColor={
-											errors?.attributes?.[nestIndex]?.items?.[k]?.label
-												? "border.error"
-												: "transparent"
-										}
-									/>
-									<FormErrorMessage>
-										{(errors?.attributes?.[nestIndex]?.items?.[k]?.label as any) &&
-											errors?.attributes?.[nestIndex]?.items?.[k]?.label?.message}
-									</FormErrorMessage>
-								</FormControl>
-								<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.value as any}>
-									<Input
-										size="small"
-										{...register(`attributes.${nestIndex}.items.${k}.value`, {
-											required: "Không được để trống",
-										})}
-										placeholder="66cm, 55cm,..."
-										borderColor={
-											errors?.attributes?.[nestIndex]?.items?.[k]?.value
-												? "border.error"
-												: "transparent"
-										}
-									/>
-									<FormErrorMessage>
-										{(errors?.attributes?.[nestIndex]?.items?.[k]?.value as any) &&
-											errors?.attributes?.[nestIndex]?.items?.[k]?.value?.message}
-									</FormErrorMessage>
-								</FormControl>
+								</Box>
+								<Flex gap="4">
+									<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.label as any}>
+										<Input
+											size="small"
+											{...register(`attributes.${nestIndex}.items.${k}.label`, {
+												required: "Không được để trống",
+											})}
+											placeholder="Kích thước/Cao tối đa lưng ghế,..."
+											borderColor={
+												errors?.attributes?.[nestIndex]?.items?.[k]?.label
+													? "border.error"
+													: "transparent"
+											}
+										/>
+										<FormErrorMessage>
+											{(errors?.attributes?.[nestIndex]?.items?.[k]?.label as any) &&
+												errors?.attributes?.[nestIndex]?.items?.[k]?.label?.message}
+										</FormErrorMessage>
+									</FormControl>
+									<FormControl isInvalid={errors?.attributes?.[nestIndex]?.items?.[k]?.value as any}>
+										<Input
+											size="small"
+											{...register(`attributes.${nestIndex}.items.${k}.value`, {
+												required: "Không được để trống",
+											})}
+											placeholder="66cm, 55cm,..."
+											borderColor={
+												errors?.attributes?.[nestIndex]?.items?.[k]?.value
+													? "border.error"
+													: "transparent"
+											}
+										/>
+										<FormErrorMessage>
+											{(errors?.attributes?.[nestIndex]?.items?.[k]?.value as any) &&
+												errors?.attributes?.[nestIndex]?.items?.[k]?.value?.message}
+										</FormErrorMessage>
+									</FormControl>
+								</Flex>
 							</Flex>
 							<Flex
 								display="flex"

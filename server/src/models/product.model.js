@@ -13,8 +13,16 @@ const optionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Product'
   },
+  label: {
+    type: String,
+  },
   name: {
-    type: String
+    type: String,
+    slug: "label",
+    unique: false,
+    index: true,
+    sparse: true,
+    slugOn: { save: true, update: true, updateOne: true, updateMany: true, findOneAndUpdate: true },
   },
   position: {
     type: Number
@@ -315,6 +323,10 @@ const productSchema = new Schema(
 // plugins
 plugins.forEach((item) =>
   productSchema.plugin(item, { overrideMethods: true })
+);
+
+[slug].forEach((item) =>
+  optionSchema.plugin(item, { overrideMethods: true })
 );
 
 pluginsFilter.forEach((item) =>

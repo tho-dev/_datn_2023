@@ -11,33 +11,32 @@ import {
 	GridItem,
 	Heading,
 	Input,
-	Radio,
-	RadioGroup,
-	Stack,
 	Text,
 	useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { TagsInput } from "react-tag-input-component";
 import QuillThinkPro from "~/components/QuillThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import { useGetAllBrandsQuery } from "~/redux/api/brand";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useGetAllDemandQuery } from "~/redux/api/demand";
+import { useCreateProductMutation, useSaveVariantsMutation } from "~/redux/api/product";
 import Attributes from "./components/Attributes";
 import CommonBox from "./components/CommonBox";
 import Media from "./components/Media";
 import Options from "./components/Options";
 import SEO from "./components/SEO";
 import Variants from "./components/Variants";
-import { useCreateProductMutation, useSaveVariantsMutation } from "~/redux/api/product";
-import { useNavigate } from "react-router";
 
 type Props = {};
 
 const AddProductMangerView = (props: Props) => {
 	const toast = useToast();
 	const navigate = useNavigate();
+
 	// xử lý value quill và react-hook-form
 	const {
 		control,
@@ -49,7 +48,17 @@ const AddProductMangerView = (props: Props) => {
 		reset,
 		resetField,
 		formState: { errors, isSubmitting },
-	} = useForm();
+	} = useForm<any>();
+
+	const category = useWatch({
+		control,
+		name: "category_id",
+	});
+
+	const { fields } = useFieldArray({
+		control,
+		name: "demands",
+	});
 
 	const [brandsFilter, setBrandsFilter] = useState<any>([]);
 	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
@@ -68,6 +77,13 @@ const AddProductMangerView = (props: Props) => {
 		_order: "desc",
 		_sort: "created_at",
 		_type: "category_brand",
+	});
+
+	const { data: demands } = useGetAllDemandQuery({
+		_page: 1,
+		_limit: 20,
+		_order: "desc",
+		_sort: "created_at",
 	});
 
 	const [createProduct] = useCreateProductMutation();
@@ -91,6 +107,17 @@ const AddProductMangerView = (props: Props) => {
 	}, [brands, categories]);
 
 	useEffect(() => {
+		if (category?.label == "Laptop") {
+			const demandsFilter = demands?.data?.items?.map((demand: any) => ({
+				...demand,
+				point: 0,
+			}));
+
+			setValue("demands", demandsFilter);
+		}
+	}, [category, demands]);
+
+	useEffect(() => {
 		register("specs");
 		register("description", { required: "Không được để trống" });
 	}, [register]);
@@ -98,6 +125,7 @@ const AddProductMangerView = (props: Props) => {
 	const onEditorStateChangeSpecs = (value: any) => {
 		setValue("specs", value);
 	};
+
 	const onEditorStateChangeDescription = (value: any) => {
 		setValue("description", value);
 	};
@@ -175,14 +203,14 @@ const AddProductMangerView = (props: Props) => {
 						gap="8"
 						templateColumns="repeat(12, 1fr)"
 					>
-						<GridItem colSpan={8}>
+						<GridItem colSpan={9}>
 							{/* Thong tin chung */}
 							<Flex
 								gap="6"
 								flexDir="column"
 							>
 								{/* Thong tin chung */}
-								<CommonBox title="Thông tin chung">
+								<CommonBox title="Thông Tin Chung">
 									<Flex
 										gap="4"
 										flexDir="column"
@@ -234,15 +262,6 @@ const AddProductMangerView = (props: Props) => {
 												fontWeight="semibold"
 											>
 												Video review
-												<Text
-													as="span"
-													fontSize="sm"
-													ml="1"
-													color="#8c98a4"
-													fontWeight="medium"
-												>
-													(không bắt buộc)
-												</Text>
 											</FormLabel>
 											<Input
 												id="video_review"
@@ -261,15 +280,6 @@ const AddProductMangerView = (props: Props) => {
 												fontWeight="semibold"
 											>
 												Mô tả ngắn
-												<Text
-													as="span"
-													fontSize="sm"
-													ml="1"
-													color="#8c98a4"
-													fontWeight="medium"
-												>
-													(không bắt buộc)
-												</Text>
 											</FormLabel>
 											<QuillThinkPro
 												data={specs}
@@ -298,7 +308,7 @@ const AddProductMangerView = (props: Props) => {
 									</Flex>
 								</CommonBox>
 								{/* Upload file */}
-								<CommonBox title="Media">
+								<CommonBox title="Hình Ảnh">
 									<Media
 										register={register}
 										watch={watch}
@@ -309,7 +319,7 @@ const AddProductMangerView = (props: Props) => {
 									/>
 								</CommonBox>
 								{/* Thuộc tính của sản phẩm */}
-								<CommonBox title="Đặc điểm">
+								<CommonBox title="Đặc Điểm">
 									<Attributes
 										control={control}
 										register={register}
@@ -319,7 +329,7 @@ const AddProductMangerView = (props: Props) => {
 									/>
 								</CommonBox>
 								{/* Thuộc tính của sản phẩm */}
-								<CommonBox title="Thuộc tính">
+								<CommonBox title="Thuộc Tính">
 									<Options
 										register={register}
 										control={control}
@@ -331,11 +341,11 @@ const AddProductMangerView = (props: Props) => {
 									/>
 								</CommonBox>
 								{/* Biến thể của sản phẩm */}
-								<CommonBox title="Biến thể">
+								<CommonBox title="Biến Thể">
 									<Variants watch={watch} />
 								</CommonBox>
 								{/* SEO */}
-								<CommonBox title="SEO meta tags">
+								<CommonBox title="Tối Ưu SEO">
 									<SEO
 										register={register}
 										errors={errors}
@@ -343,7 +353,7 @@ const AddProductMangerView = (props: Props) => {
 								</CommonBox>
 							</Flex>
 						</GridItem>
-						<GridItem colSpan={4}>
+						<GridItem colSpan={3}>
 							<Flex
 								gap="6"
 								flexDir="column"
@@ -360,7 +370,7 @@ const AddProductMangerView = (props: Props) => {
 												fontSize="sm"
 												fontWeight="semibold"
 											>
-												Giá gốc
+												Giá khuyến mãi
 											</FormLabel>
 											<Flex
 												alignItems="center"
@@ -401,7 +411,7 @@ const AddProductMangerView = (props: Props) => {
 												fontSize="sm"
 												fontWeight="semibold"
 											>
-												Giá khuyến mãi
+												Giá gốc
 											</FormLabel>
 											<Flex
 												alignItems="center"
@@ -439,6 +449,7 @@ const AddProductMangerView = (props: Props) => {
 										</FormControl>
 									</Flex>
 								</CommonBox>
+
 								{/* Khac lien quan */}
 								<CommonBox title="Khác">
 									<Flex
@@ -571,38 +582,7 @@ const AddProductMangerView = (props: Props) => {
 										/>
 									</Flex>
 								</CommonBox>
-								{/* Thông tin về hàng tồn kho */}
-								{/* <CommonBox title="Hàng tồn kho">
-									<Flex
-										flexDir="column"
-										gap="4"
-									>
-										<FormControl isInvalid={errors?.stock as any}>
-											<FormLabel
-												htmlFor="stock"
-												fontSize="sm"
-												fontWeight="semibold"
-											>
-												Số lượng
-											</FormLabel>
-											<Input
-												id="stock"
-												{...register("stock", {
-													required: "Không được để trống",
-													pattern: {
-														value: /^\d+$/,
-														message: "Vui lòng nhập số",
-													},
-												})}
-												placeholder="99"
-												borderColor={errors?.stock && "border.error"}
-											/>
-											<FormErrorMessage>
-												{(errors?.stock as any) && errors?.stock?.message}
-											</FormErrorMessage>
-										</FormControl>
-									</Flex>
-								</CommonBox> */}
+
 								{/* Tùy chọn */}
 								<CommonBox title="Tùy chọn">
 									<Flex
@@ -668,6 +648,57 @@ const AddProductMangerView = (props: Props) => {
 										/>
 									</Flex>
 								</CommonBox>
+
+								{/* Nhu cầu */}
+								{category?.label == "Laptop" && (
+									<CommonBox title="Nhu cầu">
+										<Flex
+											gap="4"
+											flexWrap="wrap"
+										>
+											{fields?.map((field: any, index: any) => {
+												const docs: any = errors?.demands as any;
+
+												return (
+													<FormControl
+														key={field.id}
+														w="calc(50% - 8px)"
+														isInvalid={docs?.[index]?.point}
+													>
+														<FormLabel
+															fontSize="sm"
+															fontWeight="semibold"
+														>
+															{field?.name}
+														</FormLabel>
+														<Input
+															{...register(`demands.[${index}].point`, {
+																required: "Không được để trống",
+																min: {
+																	value: 0,
+																	message: "Điểm tối thiểu là 0",
+																},
+																max: {
+																	value: 10,
+																	message: "Điểm tối đa là 10",
+																},
+																pattern: {
+																	value: /^\d+$/,
+																	message: "Vui lòng nhập số",
+																},
+															})}
+															placeholder="10"
+															borderColor={docs?.[index]?.point && "border.error"}
+														/>
+														<FormErrorMessage>
+															{docs?.[index]?.point?.message}
+														</FormErrorMessage>
+													</FormControl>
+												);
+											})}
+										</Flex>
+									</CommonBox>
+								)}
 							</Flex>
 						</GridItem>
 					</Grid>

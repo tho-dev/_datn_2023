@@ -11,7 +11,7 @@ type TQuery = {
 
 const productApi = createApi({
 	reducerPath: "product",
-	tagTypes: ["ProductTag"],
+	tagTypes: ["ProductTag", "ProductSingleTag", "ProductVariantTag", "VariantSingleTag"],
 	baseQuery: fetchBaseQuery({
 		baseUrl: process.env.VITE_API_URL + "/product",
 		// xét token vào headers
@@ -36,6 +36,7 @@ const productApi = createApi({
 				url: `/${id}/variants`,
 				method: "GET",
 			}),
+			providesTags: ["ProductVariantTag"],
 		}),
 		getAllProduct: builder.query({
 			query: (query: TQuery) => `/manager?${objectToUrlParams(query)}`,
@@ -45,6 +46,14 @@ const productApi = createApi({
 				url: `/manager/${id}`,
 				method: "GET",
 			}),
+			providesTags: ["ProductSingleTag"],
+		}),
+		getSku: builder.query({
+			query: ({ product_id, sku_id }: any) => ({
+				url: `/${product_id}/variants/${sku_id}`,
+				method: "GET",
+			}),
+			providesTags: ["VariantSingleTag"],
 		}),
 		createProduct: builder.mutation({
 			query: (body) => ({
@@ -53,12 +62,38 @@ const productApi = createApi({
 				body,
 			}),
 		}),
+		updateProduct: builder.mutation({
+			query: ({ _id, ...body }) => ({
+				url: `/${_id}`,
+				method: "PUT",
+				body: body,
+			}),
+			invalidatesTags: ["ProductSingleTag"],
+		}),
+		updateVariant: builder.mutation({
+			query: ({ _id, product_id, ...body }) => ({
+				url: `/${product_id}/variants/${_id}`,
+				method: "PUT",
+				body: {
+					...body,
+					product_id: product_id,
+				},
+			}),
+			invalidatesTags: ["ProductVariantTag", "VariantSingleTag"],
+		}),
+		deleteOptionProduct: builder.mutation<any, number>({
+			query: ({ product_id, option_id }: any) => ({
+				url: `/${product_id}/options/${option_id}`,
+				method: "DELETE",
+			}),
+		}),
 		saveVariants: builder.mutation({
 			query: ({ product_id }) => ({
 				url: `/${product_id}/variants`,
 				method: "POST",
 				body: {},
 			}),
+			invalidatesTags: ["ProductVariantTag"],
 		}),
 	}),
 });
@@ -70,6 +105,10 @@ export const {
 	useSaveVariantsMutation,
 	useGetProductByIdQuery,
 	useGetAllVariantQuery,
+	useDeleteOptionProductMutation,
+	useUpdateProductMutation,
+	useGetSkuQuery,
+	useUpdateVariantMutation,
 } = productApi;
 export const productReducer = productApi.reducer;
 export default productApi;

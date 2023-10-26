@@ -1914,3 +1914,52 @@ export const UploadImageIcon = ({ size = 100, strokeWidth = 0.5, color = "#00000
 		<path d="M12 19v-6.77" />
 	</Icon>
 );
+
+export const TrashIcon = ({ size = 40, strokeWidth = 1, color = "#000000", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill={color}
+		viewBox="0 0 24 24"
+		{...props}
+	>
+		<path d="M15.36 4.2v1.2h4.2a.6.6 0 0 1 0 1.2h-.645L17.89 19.392a2.4 2.4 0 0 1-2.393 2.208H8.022a2.4 2.4 0 0 1-2.392-2.208L4.606 6.6H3.96a.6.6 0 0 1 0-1.2h4.2V4.2a1.8 1.8 0 0 1 1.8-1.8h3.6a1.8 1.8 0 0 1 1.8 1.8Zm-6 0v1.2h4.8V4.2a.6.6 0 0 0-.6-.6h-3.6a.6.6 0 0 0-.6.6Zm-1.8 4.235.6 10.2a.6.6 0 1 0 1.198-.072l-.6-10.2a.6.6 0 1 0-1.198.072Zm7.836-.633a.6.6 0 0 0-.633.564l-.6 10.2a.6.6 0 0 0 1.197.07l.6-10.2a.6.6 0 0 0-.564-.634ZM11.76 7.8a.6.6 0 0 0-.6.6v10.2a.6.6 0 1 0 1.2 0V8.4a.6.6 0 0 0-.6-.6Z" />
+	</Icon>
+);
+
+export const AppOptionIcon = ({ size = 40, color = "#000000", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill={color}
+		viewBox="0 0 24 24"
+		{...props}
+	>
+		<path d="M5 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M12 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M19 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M5 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M19 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M5 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M12 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+		<path d="M19 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+	</Icon>
+);
+
+export const ArrowReturnIcon = ({ size = 46, color = "currentColor", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill={color}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			fillRule="evenodd"
+			d="M19.32 4.68a.6.6 0 0 1 .6.6v5.76a3 3 0 0 1-3 3H5.17l4.016 4.015a.6.6 0 1 1-.85.85l-5.04-5.04a.6.6 0 0 1 0-.85l4.8-4.8a.6.6 0 1 1 .85.85L5.169 12.84H16.92a1.8 1.8 0 0 0 1.8-1.8V5.28a.6.6 0 0 1 .6-.6Z"
+			clipRule="evenodd"
+		/>
+	</Icon>
+);

@@ -29,7 +29,7 @@ const Variants = ({ watch, variants }: Props) => {
 						<Flex
 							key={index}
 							as={ReactRouterLink}
-							to={`/admin/san-pham/${variant?.product_id}/bien-the`}
+							to={`/admin/san-pham/${variant?.product_id}/bien-the/${variant?._id}`}
 							w="full"
 							gap="4"
 							alignItems="center"
@@ -67,29 +67,18 @@ const Variants = ({ watch, variants }: Props) => {
 								>
 									{items?.map((i: any, k: number, o: any) => {
 										return (
-											<>
-												<Text
-													key={k}
-													fontSize="13px"
-													rounded="4px"
-													fontWeight="medium"
-													px="2"
-													py="1"
-													borderWidth="1px"
-													borderColor="border.primary"
-												>
-													{i?.label}
-												</Text>
-
-												{/* {k < o?.length - 1 && (
-													<Text
-														fontSize="13px"
-														fontWeight="bold"
-													>
-														/
-													</Text>
-												)} */}
-											</>
+											<Text
+												key={k}
+												fontSize="13px"
+												rounded="4px"
+												fontWeight="medium"
+												px="2"
+												py="1"
+												borderWidth="1px"
+												borderColor="border.primary"
+											>
+												{i?.label}
+											</Text>
 										);
 									})}
 								</Flex>

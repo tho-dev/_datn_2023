@@ -15,14 +15,19 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useParams, useNavigate } from "react-router";
 import { TagsInput } from "react-tag-input-component";
 import QuillThinkPro from "~/components/QuillThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import { useGetAllBrandsQuery } from "~/redux/api/brand";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
-import { useGetAllVariantQuery, useGetProductByIdQuery } from "~/redux/api/product";
+import {
+	useGetAllVariantQuery,
+	useGetProductByIdQuery,
+	useUpdateProductMutation,
+	useSaveVariantsMutation,
+} from "~/redux/api/product";
 import Attributes from "./components/Attributes";
 import CommonBox from "./components/CommonBox";
 import Media from "./components/Media";
@@ -40,6 +45,9 @@ const UpdateProductMangerView = (props: Props) => {
 	const [brandsFilter, setBrandsFilter] = useState<any>([]);
 	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
 	const [defaultData, setDefaultData] = useState<any>({});
+	const [variants, setVariants] = useState<any>([]);
+	const [isValueChanged, setIsValueChanged] = useState(false);
+	const [initialChange, setInitialChange] = useState(false);
 
 	const {
 		control,
@@ -53,6 +61,21 @@ const UpdateProductMangerView = (props: Props) => {
 		formState: { errors, isSubmitting },
 	} = useForm({
 		defaultValues: defaultData,
+	});
+
+	const category = useWatch({
+		control,
+		name: "category_id",
+	});
+
+	const callApiVariant = useWatch({
+		control,
+		name: "variants",
+	});
+
+	const { fields } = useFieldArray({
+		control,
+		name: "demands",
 	});
 
 	// xử lý call api
@@ -80,7 +103,7 @@ const UpdateProductMangerView = (props: Props) => {
 		}
 	);
 
-	const { data: variants } = useGetAllVariantQuery(
+	const { data: variantsDB } = useGetAllVariantQuery(
 		{
 			id: id as string,
 		},
@@ -89,29 +112,22 @@ const UpdateProductMangerView = (props: Props) => {
 		}
 	);
 
+	const [updateProduct] = useUpdateProductMutation();
+	const [saveVariants] = useSaveVariantsMutation();
+
 	useEffect(() => {
-		if (product) {
+		if (product && brands && categories) {
 			const data = {
 				...product?.data,
-				brand: undefined,
-				category: undefined,
 				brand_id: {
-					label: product?.data.category.name,
-					value: product?.data.category._id,
+					label: product?.data?.brand?.name,
+					value: product?.data?.brand?._id,
 				},
 				category_id: {
-					label: product?.data.brand.name,
-					value: product?.data.brand._id,
+					label: product?.data?.category?.name,
+					value: product?.data?.category?._id,
 				},
 			};
-
-			setDefaultData(data);
-			reset(data);
-		}
-	}, [product]);
-
-	useEffect(() => {
-		if (brands && categories) {
 			const selectBrands = brands?.data?.items?.map((brand: any) => ({
 				label: brand?.name,
 				value: brand?._id,
@@ -122,10 +138,26 @@ const UpdateProductMangerView = (props: Props) => {
 				value: category?._id,
 			}));
 
+			setDefaultData(data);
 			setBrandsFilter(selectBrands);
 			setCategoriesFilter(selectCategories);
+			reset(data);
 		}
-	}, [brands, categories]);
+	}, [product, categories, brands]);
+
+	useEffect(() => {
+		if (variantsDB) {
+			setVariants(variantsDB?.data);
+		}
+	}, [variantsDB]);
+
+	useEffect(() => {
+		if (!initialChange) {
+			setInitialChange(true);
+		} else {
+			setIsValueChanged(true);
+		}
+	}, [callApiVariant]);
 
 	useEffect(() => {
 		register("specs");
@@ -144,33 +176,33 @@ const UpdateProductMangerView = (props: Props) => {
 
 	// call api
 	const onSubmit = async (data: any) => {
-		console.log("data", data);
+		const { brand, category, shared_url, slug, price_discount_percent, ...ass } = data;
 
 		const dataForm = {
-			...data,
+			...ass,
 			has_gift: data?.has_gift ? Boolean(data?.has_gift) : false,
 			is_avaiable: data?.is_avaiable ? Boolean(data?.is_avaiable) : false,
 			status: data?.status ? Boolean(data?.status) : false,
 			price: Number(data?.price),
 			price_before_discount: Number(data?.price_before_discount),
-			gift_amount: data?.gift_amount ? Number(data?.gift_amount) : 0,
 			brand_id: data?.brand_id?.value,
 			category_id: data?.category_id?.value,
 		};
 
 		try {
-			// const res = await createProduct(dataForm).unwrap();
-			// // gọi api tự động đăng ký biến thế sản phẩm
-			// await saveVariants({
-			// 	product_id: res?.data?.product?._id,
-			// });
+			await updateProduct(dataForm).unwrap();
+
+			// gọi api tự động đăng ký biến thế sản phẩm
+			await saveVariants({
+				product_id: id,
+			}).unwrap();
 
 			toast({
 				title: "Thành công",
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Tạo sản phẩm thành công",
+				description: "Cập nhật sản phẩm thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -244,26 +276,6 @@ const UpdateProductMangerView = (props: Props) => {
 												{(errors?.name as any) && errors?.name?.message}
 											</FormErrorMessage>
 										</FormControl>
-										{/* <FormControl isInvalid={errors?.SKU as any}>
-											<FormLabel
-												htmlFor="SKU"
-												fontSize="sm"
-												fontWeight="semibold"
-											>
-												SKU
-											</FormLabel>
-											<Input
-												id="SKU"
-												{...register("SKU", {
-													required: "Không được để trống",
-												})}
-												placeholder="Inspiron351103NU, ..."
-												borderColor={errors?.SKU && "border.error"}
-											/>
-											<FormErrorMessage>
-												{(errors?.SKU as any) && errors?.SKU?.message}
-											</FormErrorMessage>
-										</FormControl> */}
 										<FormControl isInvalid={errors?.video_review as any}>
 											<FormLabel
 												htmlFor="video_review"
@@ -371,7 +383,7 @@ const UpdateProductMangerView = (props: Props) => {
 								<CommonBox title="Biến Thể">
 									<Variants
 										watch={watch}
-										variants={variants?.data}
+										variants={variants}
 									/>
 								</CommonBox>
 								{/* SEO */}
@@ -389,7 +401,7 @@ const UpdateProductMangerView = (props: Props) => {
 								flexDir="column"
 							>
 								{/* Thong tin ve gia */}
-								{/* <CommonBox title="Thông tin giá">
+								<CommonBox title="Thông tin giá">
 									<Flex
 										flexDir="column"
 										gap="4"
@@ -478,7 +490,7 @@ const UpdateProductMangerView = (props: Props) => {
 											</FormErrorMessage>
 										</FormControl>
 									</Flex>
-								</CommonBox> */}
+								</CommonBox>
 								{/* Khac lien quan */}
 								<CommonBox title="Khác">
 									<Flex
@@ -611,38 +623,6 @@ const UpdateProductMangerView = (props: Props) => {
 										/>
 									</Flex>
 								</CommonBox>
-								{/* Thông tin về hàng tồn kho */}
-								{/* <CommonBox title="Hàng Tồn Kho">
-									<Flex
-										flexDir="column"
-										gap="4"
-									>
-										<FormControl isInvalid={errors?.stock as any}>
-											<FormLabel
-												htmlFor="stock"
-												fontSize="sm"
-												fontWeight="semibold"
-											>
-												Số lượng
-											</FormLabel>
-											<Input
-												id="stock"
-												{...register("stock", {
-													required: "Không được để trống",
-													pattern: {
-														value: /^\d+$/,
-														message: "Vui lòng nhập số",
-													},
-												})}
-												placeholder="99"
-												borderColor={errors?.stock && "border.error"}
-											/>
-											<FormErrorMessage>
-												{(errors?.stock as any) && errors?.stock?.message}
-											</FormErrorMessage>
-										</FormControl>
-									</Flex>
-								</CommonBox> */}
 								{/* Tùy chọn */}
 								<CommonBox title="Tùy Chọn">
 									<Flex
@@ -708,12 +688,64 @@ const UpdateProductMangerView = (props: Props) => {
 										/>
 									</Flex>
 								</CommonBox>
+
+								{/* Nhu cầu */}
+								{category?.label == "Laptop" && (
+									<CommonBox title="Nhu cầu">
+										<Flex
+											gap="4"
+											flexWrap="wrap"
+										>
+											{fields?.map((field: any, index: any) => {
+												const docs: any = errors?.demands as any;
+
+												return (
+													<FormControl
+														key={field.id}
+														w="calc(50% - 8px)"
+														isInvalid={docs?.[index]?.point}
+													>
+														<FormLabel
+															fontSize="sm"
+															fontWeight="semibold"
+														>
+															{field?.name}
+														</FormLabel>
+														<Input
+															{...register(`demands.[${index}].point`, {
+																required: "Không được để trống",
+																min: {
+																	value: 0,
+																	message: "Điểm tối thiểu là 0",
+																},
+																max: {
+																	value: 10,
+																	message: "Điểm tối đa là 10",
+																},
+																pattern: {
+																	value: /^\d+$/,
+																	message: "Vui lòng nhập số",
+																},
+															})}
+															placeholder="10"
+															borderColor={docs?.[index]?.point && "border.error"}
+														/>
+														<FormErrorMessage>
+															{docs?.[index]?.point?.message}
+														</FormErrorMessage>
+													</FormControl>
+												);
+											})}
+										</Flex>
+									</CommonBox>
+								)}
 							</Flex>
 						</GridItem>
 					</Grid>
 				</Box>
 				<Flex
 					position="fixed"
+					zIndex="999"
 					bottom="2"
 					left="50%"
 					transform="translateX(calc(50% - 260px))"

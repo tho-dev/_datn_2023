@@ -5,7 +5,7 @@ import { CopyIcon, MinusIcon, PlusIcon, WarningIcon } from "~/components/common/
 import Gift from "./Gift";
 import Buy from "./Buy";
 import CustomRadio from "./CustomRadio";
-import { sortJSON } from "~/utils/fc";
+import { formatNumber, sortJSON } from "~/utils/fc";
 import { useNavigate } from "react-router";
 import { useToast } from "@chakra-ui/react";
 type Props = {
@@ -33,7 +33,7 @@ const Sku = ({
 	const toast = useToast();
 	const navigate = useNavigate();
 
-	const new_variants = sortJSON(product.variants);
+	const new_variants = sortJSON(product?.variants);
 
 	const handeChangeSku = (value: any, index: any) => {
 		const new_option_valued = JSON.parse(JSON.stringify(new_option_value));
@@ -58,6 +58,8 @@ const Sku = ({
 		}
 	};
 
+	console.log("new_variants", new_variants);
+
 	return (
 		<>
 			<Box
@@ -72,7 +74,7 @@ const Sku = ({
 					color="text.black"
 					fontWeight="medium"
 				>
-					SKU: {product.SKU}
+					SKU: {product?.SKU}
 					<CopyIcon
 						size={4}
 						ml="2"
@@ -93,7 +95,7 @@ const Sku = ({
 					flexDirection="column"
 					gap="3"
 				>
-					{new_variants.map((item: any, index: number) => {
+					{new_variants?.map((item: any, index: number) => {
 						return (
 							<>
 								<Text
@@ -101,16 +103,14 @@ const Sku = ({
 									fontWeight="semibold"
 									color={"#6B7075"}
 								>
-									{item.name == "specs" && "Phiên Bản"}
-									{item.name == "color" && "Màu"}
-									{item.name == "type" && "Loại hàng"}
+									{item?.label}
 								</Text>
 								<Flex
 									gap="1"
 									flexWrap="wrap"
 								>
 									<CustomRadio
-										arrayRadio={item.options}
+										arrayRadio={item?.options}
 										defaultRadio={new_option_value}
 										handeChangeSku={handeChangeSku}
 										index={index}
@@ -178,7 +178,7 @@ const Sku = ({
 								fontWeight={600}
 								color={"#FE3464"}
 							>
-								{product?.price.toLocaleString()}
+								{formatNumber(`${product?.price}`)}
 							</Text>
 							<Flex
 								pt={"1"}
@@ -191,7 +191,7 @@ const Sku = ({
 									lineHeight={"18px"}
 									pl={"1"}
 								>
-									{product?.price_before_discount.toLocaleString()}
+									{formatNumber(`${product?.price_before_discount}`)}
 								</Text>
 								<Text
 									as={"p"}

@@ -15,7 +15,7 @@ const CustomRadio = (props: Props) => {
 	};
 
 	const new_default_value = props.defaultRadio.find((item) => {
-		return props.arrayRadio.some((value) => value.label == item);
+		return props?.arrayRadio?.some((value) => value?.label == item);
 	});
 
 	const { value, getRadioProps, getRootProps } = useRadioGroup({
@@ -63,7 +63,7 @@ const CustomRadio = (props: Props) => {
 					gap="3"
 					flexWrap="wrap"
 				>
-					{props.arrayRadio.map((variant) => {
+					{props?.arrayRadio?.map((variant) => {
 						return (
 							<CustomRadioButton
 								key={variant.label}

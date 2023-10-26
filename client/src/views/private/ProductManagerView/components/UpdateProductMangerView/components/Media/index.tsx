@@ -53,7 +53,7 @@ const Media = ({ register, watch, errors, setValue, getValues, control }: Props)
 					{fields.slice(1).map((item, index) => {
 						return (
 							<Box
-								key={index}
+								key={item.id}
 								pb="100%"
 								position="relative"
 							>

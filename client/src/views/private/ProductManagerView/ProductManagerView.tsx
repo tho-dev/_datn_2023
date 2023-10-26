@@ -105,7 +105,7 @@ const ProductManagerView = (props: Props) => {
 					fontSize="13px"
 					fontWeight="medium"
 				>
-					{formatNumber(`${getValue()}VND`)}
+					{formatNumber(`${getValue()}`)}
 				</Text>
 			),
 			header: "Giá gốc",

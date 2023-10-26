@@ -380,7 +380,7 @@ export async function collectionProducts(req, res, next) {
 			});
 
 			// lấy ra option màu
-			const option = options?.find((option) => option.name == "color");
+			const option = options?.find((option) => option.name == "color" || option.name == "mau");
 			const colors = await OptionValue.find({
 				option_id: option?._id,
 			}).select("-_id value label");
@@ -396,7 +396,8 @@ export async function collectionProducts(req, res, next) {
 
 		if (category) {
 			const { docs, ...paginate } = await Product.paginate({
-				category_id: category?._id
+				category_id: category?._id,
+				status: true
 			}, options);
 
 			const data = await Promise.all(
@@ -423,7 +424,8 @@ export async function collectionProducts(req, res, next) {
 
 			// lấy ra tất cả sản thuộc thương hiệu
 			const { docs, ...paginate } = await Product.paginate({
-				brand_id: { $in: ids }
+				brand_id: { $in: ids },
+				status: true
 			}, options);
 
 			const data = await Promise.all(
