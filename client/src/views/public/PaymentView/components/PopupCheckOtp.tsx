@@ -76,7 +76,6 @@ const PopupCheckOtp = ({
     })
       .unwrap()
       .then(() => {
-        dispatch(resetOtp(false));
         create(dataOrder)
           .unwrap()
           .then((data) => {
@@ -98,7 +97,6 @@ const PopupCheckOtp = ({
               })
                 .unwrap()
                 .then((data) => {
-                  console.log(data);
                   window.location.assign(`${data.data.url}`);
                 });
             } else {
@@ -117,6 +115,7 @@ const PopupCheckOtp = ({
           })
           .finally(() => {
             onCloseOtp();
+            dispatch(resetOtp(false));
           });
       })
       .catch((err) => {

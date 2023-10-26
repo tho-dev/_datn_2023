@@ -81,12 +81,16 @@ const OrderManagementView = (props: Props) => {
       },
     }),
     columnHelper.accessor("created_at", {
-      cell: (info) => moment(info.getValue()).format("YYYY-MM-DD"),
+      cell: (info) => moment(info.getValue()).format("YYYY-MM-DD hh:mm"),
       header: "Ngày đặt",
     }),
     columnHelper.accessor("phone_number", {
       cell: (info) => `+${info.getValue()}`,
       header: "Số điện thoại",
+    }),
+    columnHelper.accessor("status", {
+      cell: (info) => `${info.getValue()}`,
+      header: "Trạng thái đơn hàng",
     }),
     columnHelper.accessor("payment_method", {
       cell: (info) => (

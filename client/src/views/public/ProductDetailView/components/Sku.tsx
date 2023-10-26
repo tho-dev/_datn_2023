@@ -198,7 +198,7 @@ const Sku = ({
         </Box>
       </Box>
       {/* Quà Tặng kèm */}
-      <Gift />
+      {/* <Gift /> */}
       {/* Mua thêm được giảm */}
       {/* <Buy /> */}
     </>
