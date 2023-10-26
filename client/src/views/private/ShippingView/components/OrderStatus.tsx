@@ -26,6 +26,7 @@ const OrderStatus = ({ data }: Props) => {
     { title: "Third", description: "cancelled", tran: "Đã huỷ đơn" },
     { title: "Third", description: "delivering", tran: "Đang vận chuyển" },
     { title: "Third", description: "delivered", tran: "Đã vận chuyển" },
+    { title: "Third", description: "returned", tran: "Đã hoàn hàng" },
   ];
   const findIndex = steps.findIndex((item) => item.description === data);
   const { activeStep } = useSteps({

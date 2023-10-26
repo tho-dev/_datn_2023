@@ -17,6 +17,8 @@ import {
   getAllShipping,
   getAllOrder,
   getOrderByUserId,
+  returnedOrder,
+  confirm_returnedOrder,
 } from "../controllers/order.controller";
 
 const router = express.Router();
@@ -28,6 +30,8 @@ router.post("/calculateFee", serviceFree);
 router.post("/orderByPhoneNumber", getOrderByPhoneNumber);
 router.get("/orderByUserId/:id", getOrderByUserId);
 router.post("/getTokenPrintBill", getTokenPrintBills);
+router.post("/return", returnedOrder);
+router.put("/return/:id", confirm_returnedOrder);
 
 router.post("/", createOrder);
 router.get("/", getAll);

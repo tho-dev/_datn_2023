@@ -33,7 +33,8 @@ const Sku = ({
 	const toast = useToast();
 	const navigate = useNavigate();
 
-	const new_variants = sortJSON(product?.variants);
+	// const new_variants = sortJSON(product?.variants);
+	const new_variants = product?.variants;
 
 	const handeChangeSku = (value: any, index: any) => {
 		const new_option_valued = JSON.parse(JSON.stringify(new_option_value));
@@ -57,8 +58,6 @@ const Sku = ({
 			navigate(`/${new_data[0].shared_url}`);
 		}
 	};
-
-	console.log("new_variants", new_variants);
 
 	return (
 		<>
@@ -103,7 +102,9 @@ const Sku = ({
 									fontWeight="semibold"
 									color={"#6B7075"}
 								>
-									{item?.label}
+									{item?.name == "phien-ban" && "Phiên bản"}
+									{item?.name == "mau" && "Màu sắc"}
+									{item?.name == "loai-hang" && "Loại hàng"}
 								</Text>
 								<Flex
 									gap="1"
@@ -231,7 +232,7 @@ const Sku = ({
 				</Flex>
 			</Box>
 			{/* Quà Tặng kèm */}
-			<Gift />
+			{/* <Gift /> */}
 			{/* Mua thêm được giảm */}
 			{/* <Buy /> */}
 		</>

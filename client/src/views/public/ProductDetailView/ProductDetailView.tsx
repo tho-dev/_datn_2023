@@ -5,7 +5,6 @@ import Evaluate from "./components/Evaluate";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Text, Button } from "@chakra-ui/react";
 import Introduce from "./components/Introduce";
 import Branch from "./components/Branch";
-import Transport from "./components/Transport";
 import Warranty from "./components/Warranty";
 import Configuration from "./components/Configuration";
 import Describe from "./components/Describe";
@@ -19,7 +18,6 @@ import { useGetBySlugQuery } from "~/redux/api/product";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { v4 as uuidv4 } from "uuid";
 import { useAddToCartMutation, useByNowMutation } from "~/redux/api/cart";
-import { addCart } from "~/redux/slices/cartSlice";
 import { useToast } from "@chakra-ui/react";
 import ListThinkPro from "~/components/ListThinkPro";
 
