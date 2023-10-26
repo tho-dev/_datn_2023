@@ -2,6 +2,7 @@ import createError from "http-errors";
 import { Order, Shipping, Order_Detail } from "../models/order.model";
 import { Cart } from "../models/cart.model";
 import { Sku } from "../models/product.model";
+import Returned from "../models/return.model";
 import Axios from "axios";
 import {
   calculate_fee,
@@ -355,9 +356,17 @@ export const cancelOrder = async (req, res, next) => {
     const check_sku_stock = async (product) => {
       try {
         const sku = await Sku.findById(product.sku_id);
-        sku.stock += product.quantity;
-        await sku.save();
-        return sku;
+        const new_stock = sku.stock + product.quantity;
+        const skued = await Sku.findByIdAndUpdate(
+          product.sku_id,
+          {
+            $set: {
+              stock: new_stock,
+            },
+          },
+          { new: true }
+        );
+        return skued;
       } catch (error) {
         console.log(error);
       }
@@ -976,6 +985,89 @@ export const getAllOrder = async (req, res, next) => {
         total_order_product,
         new_docs,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const returnedOrder = async (req, res, next) => {
+  try {
+    const { order_id, reason, customer_name, phone_number } = req.body;
+    const order = await Order.findById(order_id);
+    if (order.status === "returned" || order.status !== "delivered") {
+      throw createError.BadRequest("Trạng thái đơn hàng không thể hoàn");
+    }
+    const returned = await Returned.create({
+      order_id,
+      reason,
+      customer_name,
+      phone_number,
+    });
+    if (!returned) throw createError.BadRequest("Hoàn hàng không thành công");
+    return res.json({
+      status: 200,
+      message: "Tạo yêu cầu hoàn hàng thành công",
+      data: returned,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const confirm_returnedOrder = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    // update return
+    const returned = await Returned.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          is_confirm: true,
+        },
+      },
+      { new: true }
+    );
+    if (!returned) throw createError.BadRequest("Không tìm thấy đơn hàng");
+    // update order
+    const order = await Order.findByIdAndUpdate(
+      returned.order_id,
+      {
+        $set: { status: "returned" },
+        $push: {
+          status_detail: {
+            status: "returned",
+          },
+        },
+      },
+      { new: true }
+    );
+    const check_sku_stock = async (product) => {
+      try {
+        const sku = await Sku.findById(product.sku_id);
+        const new_stock = sku.stock + product.quantity;
+        await Sku.findByIdAndUpdate(product.sku_id, {
+          $set: {
+            stock: new_stock,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    // update number skuid
+    const order_items = await Order_Detail.find({
+      order_id: returned.order_id,
+    }).select("sku_id quantity");
+
+    await Promise.all(
+      order_items.map((item) => {
+        return check_sku_stock(item);
+      })
+    );
+
+    return res.json({
+      status: 200,
+      message: "Hoàn hàng thành công",
     });
   } catch (error) {
     next(error);

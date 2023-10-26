@@ -121,6 +121,14 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    returnOrder: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/order/return`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Order'],
+    }),
   }),
 });
 export const {
@@ -137,7 +145,8 @@ export const {
   useCancelOrderMutation,
   useTokenPrintOrderMutation,
   useUpdateStatusOrderMutation,
-  useGetOrderByUserIdQuery
+  useGetOrderByUserIdQuery,
+  useReturnOrderMutation
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

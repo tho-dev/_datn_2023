@@ -25,6 +25,12 @@ export function chuyenDoiSoDienThoai(soDienThoai: any) {
 		return false;
 	}
 }
+export function formatPhoneNumber(phoneNumber: string) {
+	if (phoneNumber.startsWith("84") && phoneNumber.length === 11) {
+		return "0" + phoneNumber.substring(2);
+	}
+	return phoneNumber;
+}
 export const objectToUrlParams = (obj: { [key: string]: any }) => {
 	const params = [];
 

@@ -10,6 +10,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  Tag,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -89,7 +90,7 @@ const OrderManagementView = (props: Props) => {
       header: "Số điện thoại",
     }),
     columnHelper.accessor("status", {
-      cell: (info) => `${info.getValue()}`,
+      cell: (info) => <Tag>{info.getValue()}</Tag>,
       header: "Trạng thái đơn hàng",
     }),
     columnHelper.accessor("payment_method", {

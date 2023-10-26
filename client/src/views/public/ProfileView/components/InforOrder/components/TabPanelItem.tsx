@@ -20,6 +20,7 @@ import ItemCart from "./ItemCart";
 import {
   useCancelOrderMutation,
   useGetOrderByUserIdQuery,
+  useReturnOrderMutation,
 } from "~/redux/api/order";
 import { useAppSelector } from "~/redux/hook/hook";
 import DialogThinkPro from "~/components/DialogThinkPro";
@@ -31,6 +32,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import Transport from "~/views/public/PaymentView/components/Transport";
 import axios, { Axios } from "axios";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import { chuyenDoiSoDienThoai } from "~/utils/fc";
 
 type Props = {
   status: string;
@@ -44,11 +46,17 @@ const TabPanelItem = ({ status }: Props) => {
     onClose: onCloseCancel,
   } = useDisclosure();
   const {
+    isOpen: isOpenReturn,
+    onOpen: onOpenReturn,
+    onClose: onCloseReturn,
+  } = useDisclosure();
+  const {
     isOpen: isOpenTransport,
     onOpen: onOpenTransport,
     onClose: onCloseTransport,
   } = useDisclosure();
   const [address, setAddress] = React.useState("");
+  const [id, setId] = React.useState("");
   const [transportFee, setTransportFee] = useState(0);
 
   const [orderDetail, setOrderDetail] = useState({} as any);
@@ -56,6 +64,7 @@ const TabPanelItem = ({ status }: Props) => {
   const { data, isLoading, isFetching } = useGetOrderByUserIdQuery(user._id);
   const toast = useToast();
   const [cancelOrder] = useCancelOrderMutation();
+  const [returnOrder] = useReturnOrderMutation();
   const {
     register,
     handleSubmit,
@@ -120,6 +129,7 @@ const TabPanelItem = ({ status }: Props) => {
       header: "Thành tiền",
     }),
   ];
+
   const handleChooseAdress = (data: any) => {
     const checkData = data.every((select: any) => select !== undefined);
     if (checkData) {
@@ -135,8 +145,36 @@ const TabPanelItem = ({ status }: Props) => {
       setAddress("");
     }
   };
+
   const onSubmitForm = (data: any) => {
     console.log(data);
+  };
+  const onSubmitFormReturn = (data: any) => {
+    const { address, content, shipping_address, phone_number, ...rest } = data;
+    const new_phone_number = chuyenDoiSoDienThoai(phone_number);
+    const new_data = {
+      ...rest,
+      phone_number: new_phone_number,
+      order_id: id,
+    };
+    returnOrder(new_data)
+      .unwrap()
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        toast({
+          title: "Hệ thống",
+          description: err.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      })
+      .finally(() => {
+        onCloseReturn();
+      });
   };
   const handleCancel = () => {
     if (orderDetail?.status !== "processing") {
@@ -175,6 +213,10 @@ const TabPanelItem = ({ status }: Props) => {
         onCloseCancel();
       });
   };
+  const handleOpenModelReturn = (order: any) => {
+    onOpenReturn();
+    setId(order._id);
+  };
   return (
     <>
       <TabPanel>
@@ -186,8 +228,6 @@ const TabPanelItem = ({ status }: Props) => {
                 my={4}
                 rounded="md"
                 backgroundColor="bg.gray"
-                onClick={() => handleOrderDetail(order)}
-                cursor="pointer"
               >
                 <Flex justifyContent="space-between">
                   <Text fontSize="14px" fontWeight={"bold"}>
@@ -210,7 +250,34 @@ const TabPanelItem = ({ status }: Props) => {
                   <ItemCart product={order?.new_order_details[0]} />
                 </Box>
                 <Divider />
-                <Flex justifyContent="end">
+                <Flex justifyContent="space-between" alignItems="center" mt={2}>
+                  <Flex gap={4}>
+                    {order.status == "processing" && (
+                      <Button
+                        fontWeight={"600 "}
+                        _hover={{ bgColor: "red" }}
+                        type="button"
+                        onClick={onOpenCancel}
+                      >
+                        Huỷ đơn
+                      </Button>
+                    )}
+                    {order.status == "processing" && (
+                      <Button
+                        fontWeight={"600 "}
+                        bg={"bg.green"}
+                        _hover={{ bgColor: "green" }}
+                        onClick={() => handleOrderDetail(order)}
+                      >
+                        Cập nhật
+                      </Button>
+                    )}
+                    {order.status == "delivered" && (
+                      <Button onClick={() => handleOpenModelReturn(order)}>
+                        Hoàn hàng
+                      </Button>
+                    )}
+                  </Flex>
                   <Text fontSize="14px" fontWeight="bold">
                     Thành tiền:{order.total_amount.toLocaleString()}đ
                   </Text>
@@ -224,8 +291,6 @@ const TabPanelItem = ({ status }: Props) => {
                 my={4}
                 rounded="md"
                 backgroundColor="bg.gray"
-                cursor="pointer"
-                onClick={() => handleOrderDetail(order)}
               >
                 <Flex justifyContent="space-between">
                   <Text fontSize="14px" fontWeight={"bold"}>
@@ -248,7 +313,34 @@ const TabPanelItem = ({ status }: Props) => {
                   <ItemCart product={order?.new_order_details[0]} />
                 </Box>
                 <Divider />
-                <Flex justifyContent="end">
+                <Flex justifyContent="space-between" alignItems="center" mt={2}>
+                  <Flex gap={4}>
+                    {order.status == "processing" && (
+                      <Button
+                        fontWeight={"600 "}
+                        _hover={{ bgColor: "red" }}
+                        type="button"
+                        onClick={onOpenCancel}
+                      >
+                        Huỷ đơn
+                      </Button>
+                    )}
+                    {order.status == "processing" && (
+                      <Button
+                        fontWeight={"600 "}
+                        bg={"bg.green"}
+                        _hover={{ bgColor: "green" }}
+                        onClick={() => handleOrderDetail(order)}
+                      >
+                        Cập nhật
+                      </Button>
+                    )}
+                    {order.status == "delivered" && (
+                      <Button onClick={() => handleOpenModelReturn(order)}>
+                        Hoàn hàng
+                      </Button>
+                    )}
+                  </Flex>
                   <Text fontSize="14px" fontWeight="bold">
                     Thành tiền:{order.total_amount.toLocaleString()}đ
                   </Text>
@@ -459,19 +551,9 @@ const TabPanelItem = ({ status }: Props) => {
               w={"15%"}
               fontSize={"16px"}
               fontWeight={"600 "}
-              _hover={{ bgColor: "red" }}
-              type="button"
-              onClick={onOpenCancel}
-            >
-              Huỷ đơn
-            </Button>
-            <Button
-              w={"15%"}
-              fontSize={"16px"}
-              fontWeight={"600 "}
               bg={"bg.green"}
-              type="submit"
               _hover={{ bgColor: "green" }}
+              type="submit"
             >
               Cập nhật
             </Button>
@@ -483,13 +565,97 @@ const TabPanelItem = ({ status }: Props) => {
           onClose={onCloseTransport}
           handleChooseAdress={handleChooseAdress}
         />
-        <ConfirmThinkPro
-          isOpen={isOpenCancel}
-          handleClick={handleCancel}
-          onClose={onCloseCancel}
-          content="Bạn có chắc muốn huỷ đơn hàng này?"
-        />
       </DialogThinkPro>
+      <DialogThinkPro
+        isOpen={isOpenReturn}
+        onClose={onCloseReturn}
+        isCentered
+        size="4xl"
+        title={<Heading fontSize="xl">Trả lại đơn hàng</Heading>}
+      >
+        <form onSubmit={handleSubmit(onSubmitFormReturn)}>
+          <Box
+            backgroundColor={"white"}
+            borderRadius={"md"}
+            w={{ md: "100%", base: "full" }}
+          >
+            {/* tên người nhận và số điện thoại */}
+            <Flex gap={"16px"}>
+              <FormControl isInvalid={errors.customer_name as any}>
+                <FormLabel>Tên khách hàng</FormLabel>
+                <Input
+                  type="text"
+                  border={"none"}
+                  p={"8px 12px"}
+                  placeholder="Nhập họ và tên"
+                  bg={"#F6F9FC"}
+                  borderRadius={"6px"}
+                  fontSize={"14px"}
+                  defaultValue={orderDetail?.customer_name}
+                  {...register("customer_name", {
+                    required: "Trường bắt buộc nhập",
+                  })}
+                />
+                <FormErrorMessage>
+                  {(errors.customer_name as any) &&
+                    (errors?.customer_name?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.phone_number as any}>
+                <FormLabel>Số điện thoại</FormLabel>
+                <Input
+                  type="number"
+                  border={"none"}
+                  p={"8px 12px"}
+                  placeholder="Nhập số điện thoại"
+                  bg={"#F6F9FC"}
+                  borderRadius={"6px"}
+                  fontSize={"14px"}
+                  defaultValue={orderDetail?.phone_number}
+                  {...register("phone_number", {
+                    required: "Trường bắt buộc nhập",
+                  })}
+                />
+                <FormErrorMessage>
+                  {(errors.phone_number as any) &&
+                    (errors?.phone_number?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+            </Flex>
+            <Flex mt={"16px"}>
+              <FormControl isInvalid={errors?.reason as any}>
+                <FormLabel>Lý do</FormLabel>
+                <Textarea
+                  placeholder="Nhập Lý do hoàn hàng"
+                  bg={"#F6F9FC"}
+                  borderRadius={"6px"}
+                  fontSize={"14px"}
+                  {...register("reason")}
+                  border={"none"}
+                />
+              </FormControl>
+            </Flex>
+          </Box>
+          <Flex py={"5"} px={"5"} justifyContent="flex-end" gap={6}>
+            <Button
+              w={"15%"}
+              fontSize={"16px"}
+              fontWeight={"600 "}
+              bg={"bg.green"}
+              _hover={{ bgColor: "green" }}
+              type="submit"
+            >
+              Hoàn hàng
+            </Button>
+          </Flex>
+        </form>
+      </DialogThinkPro>
+      <ConfirmThinkPro
+        isOpen={isOpenCancel}
+        handleClick={handleCancel}
+        onClose={onCloseCancel}
+        content="Bạn có chắc muốn huỷ đơn hàng này?"
+      />
     </>
   );
 };
