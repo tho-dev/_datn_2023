@@ -20,7 +20,7 @@ const storage = new CloudinaryStorage({
     if (file.fieldname == "assets") {
       width = 1000;
       height = 1000;
-      url = 'https://res.cloudinary.com/dctvtsnuk/image/upload/v1696929234/kbgvy5dqhbmjbghoba01.svg'
+      url = 'https://res.cloudinary.com/do7pjthoe/image/upload/v1698289774/xa7n8cd4nnjqiiqtsg8k.svg'
     } else if (file.fieldname == "brand") {
       width = 120;
       height = 120;
@@ -32,7 +32,7 @@ const storage = new CloudinaryStorage({
     } else if (file.fieldname == "thumbnail") {
       width = 460;
       height = 460;
-      url = 'https://res.cloudinary.com/dctvtsnuk/image/upload/v1696929020/dlery9gg8ccqftph9hpn.svg'
+      url = 'https://res.cloudinary.com/do7pjthoe/image/upload/v1698289774/xa7n8cd4nnjqiiqtsg8k.svg'
       opacity = 70
     }
     // #27bece

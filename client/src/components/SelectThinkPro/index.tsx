@@ -16,11 +16,8 @@ type Props = {
 	name: any;
 	title: string;
 	placeholder: string;
-	data: Array<TOptions> | any;
-	defaultValue?: Array<{
-		label: any;
-		value: any;
-	}>;
+	data?: Array<TOptions> | any;
+	defaultValue?: any;
 	rules?: any;
 };
 
@@ -57,9 +54,11 @@ const SelectThinkPro = ({ control, name, data, placeholder, title = "Select", de
 			rules={rules}
 			render={({ field: { onChange, onBlur, value, name, ref }, fieldState: { error } }) => {
 				return (
-					<FormControl isInvalid={!!error}>
+					<FormControl
+						isInvalid={!!error}
+						h="max-content"
+					>
 						<FormLabel
-							htmlFor="price"
 							fontSize="sm"
 							fontWeight="semibold"
 						>
@@ -77,7 +76,7 @@ const SelectThinkPro = ({ control, name, data, placeholder, title = "Select", de
 							placeholder={
 								<Text
 									as="span"
-									fontSize="sm"
+									fontSize="13px"
 								>
 									{placeholder}
 								</Text>

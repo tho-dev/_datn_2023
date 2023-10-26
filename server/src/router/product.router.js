@@ -3,7 +3,9 @@ import {
 	getAllProduct,
 	getAllProductManager,
 	getSingleProduct,
+	getProductById,
 	createProduct,
+	updateProduct,
 	getAllOptionValues,
 	createOptionValues,
 	getSingleOptionValue,
@@ -16,22 +18,27 @@ import {
 	deleteOption,
 	getAllVariant,
 	saveVariant,
-	deteleVariant
+	deteleVariant,
+	getSingleVariant,
+	updateVariant
 } from "../controllers/product.controller";
 
 const router = express.Router();
 
 // api product 
 router.get('/manager', getAllProductManager)
+router.get('/manager/:id', getProductById)
 router.get('/:slug', getSingleProduct)
 router.get('/', getAllProduct)
 router.post("/", createProduct)
-
+router.put("/:id", updateProduct)
 
 // api variant
+router.get("/:product_id/variants/:sku_id", getSingleVariant)
 router.get("/:product_id/variants", getAllVariant)
 router.post("/:product_id/variants", saveVariant)
 router.delete("/:product_id/variants/:sku_id", deteleVariant)
+router.put("/:product_id/variants/:sku_id", updateVariant)
 
 // api option
 router.get("/:product_id/options", getAllOption)

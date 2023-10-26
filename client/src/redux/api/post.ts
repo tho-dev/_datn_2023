@@ -6,10 +6,9 @@ type TQuery = {
 	_order?: string;
 	_sort?: string;
 	_page?: number;
-	_limit?: number; 
-	_type: string
+	_limit?: number;
+	_type: string;
 };
-
 
 const postApi = createApi({
 	reducerPath: "post",

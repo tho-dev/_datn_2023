@@ -48,3 +48,38 @@ export const formatNumber = (str: string) => {
 			return (index % 3 ? next : next + ".") + prev;
 		});
 };
+
+export const generateVariant = (input: any) => {
+	if (input.length === 0) return [];
+
+	let result = [[]] as any;
+
+	for (const option of input) {
+		const name = option.name.value;
+		const optionValues = option.options;
+
+		if (optionValues.length === 0) continue;
+
+		const append = [];
+
+		for (const valueObj of optionValues) {
+			const label = valueObj.label;
+			const value = valueObj.value;
+			for (const data of result) {
+				const newVariant = [
+					...data,
+					{
+						name: name,
+						label: label,
+						value: value,
+					},
+				];
+				append.push(newVariant);
+			}
+		}
+
+		result = append;
+	}
+
+	return result;
+};

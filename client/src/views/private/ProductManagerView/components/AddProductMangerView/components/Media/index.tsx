@@ -1,8 +1,7 @@
 import { Box, Center, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
-import { Image, useMenu } from "@chakra-ui/react";
-import React, { useEffect, useMemo, useState } from "react";
+import { useFieldArray } from "react-hook-form";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
-import { CloseSmallIcon, PhoneIcon } from "~/components/common/Icons";
+import { CloseSmallIcon, PlusIcon } from "~/components/common/Icons";
 
 type Props = {
 	register?: any;
@@ -10,244 +9,118 @@ type Props = {
 	getValues?: any;
 	setValue?: any;
 	errors: any;
+	control: any;
 };
 
-const Media = ({ register, watch, errors, setValue, getValues }: Props) => {
-	const assets = watch("assets");
-	const image = watch("image");
-	const [file, setFile] = useState(image);
-	const [files, setFiles] = useState(() => {
-		return assets?.length > 0 ? assets : [];
+const Media = ({ register, watch, errors, setValue, getValues, control }: Props) => {
+	const { fields, remove, append } = useFieldArray({
+		control,
+		name: `images`,
 	});
-
-	useEffect(() => {
-		if (image?.length > 0) {
-			setFile([image?.[0]]);
-		}
-
-		// return () => {
-		// 	return URL.revokeObjectURL(URL.createObjectURL(image?.[0]));
-		// };
-	}, [image]);
-
-	useEffect(() => {
-		if (assets?.length > 0) {
-			setFiles((prev: any) => {
-				const checkLength = prev?.length == assets?.length;
-				return checkLength ? prev : [...prev, ...assets];
-			});
-		}
-
-		// return () => {
-		// 	return URL.revokeObjectURL(files?.map((file: any) => URL.createObjectURL(file)));
-		// };
-	}, [assets]);
-
-	const filePath = useMemo(() => {
-		if (file?.length > 0) {
-			return URL.createObjectURL(file?.[0]);
-		}
-
-		return undefined;
-	}, [file]);
-
-	const filePaths = useMemo(() => {
-		if (files?.length > 0) {
-			const urls = files?.map((item: any) => URL.createObjectURL(item));
-			return urls;
-		}
-
-		return undefined;
-	}, [files]);
-
-	// xóa ảnh
-	const handleDeleteFile = () => {
-		setFile([]);
-		// đẩy lại lên react-hook-form
-		setValue("image", []);
-	};
-
-	const handleDeleteFiles = (id: any) => {
-		const newFiles = files?.filter((item: any, index: any) => index != id);
-		setFiles(newFiles);
-		// đẩy lại lên react-hook-form
-		setValue("assets", newFiles);
-	};
-
-	// console.log("files", files);
-	// console.log("assets", assets);
 
 	return (
 		<Grid
 			gap="4"
-			templateColumns="repeat(5, 1fr)"
+			pt="8"
+			minH="280px"
+			templateColumns="repeat(12, 1fr)"
 		>
-			<GridItem colSpan={2}>
-				<Center
-					h="200px"
-					maxH="full"
-					bgColor="bg.admin1"
+			<GridItem colSpan={4}>
+				<Flex
 					rounded="lg"
-					borderWidth="2px"
-					borderColor="bg.admin2"
-					borderStyle="dashed"
+					w="full"
+					h="full"
 				>
-					<Flex
-						w="12"
-						h="12"
-						alignItems="center"
-						justifyContent="center"
-						rounded="full"
-						bgColor="bg.admin2"
-						cursor="pointer"
-					>
-						<Center>
-							<FileUploadThinkPro
-								accept={"image/*"}
-								register={register("image")}
-							>
-								<PhoneIcon
-									size={6}
-									color="text.white"
-								/>
-							</FileUploadThinkPro>
-						</Center>
-					</Flex>
-				</Center>
-
-				{/* Preview Image */}
-				{filePath && (
-					<Flex mt="4">
-						<Box
-							w="160px"
-							h="160px"
-							maxW="full"
-							maxH="full"
-							rounded="lg"
-							borderWidth="1px"
-							borderColor="border.primary"
-							overflow="hidden"
-							position="relative"
-						>
-							<Image
-								w="full"
-								h="full"
-								objectFit="cover"
-								src={filePath}
-							/>
-							<Flex
-								w="4"
-								h="4"
-								position="absolute"
-								top="1"
-								right="1"
-								bgColor="bg.admin1"
-								alignItems="center"
-								justifyContent="center"
-								rounded="full"
-								cursor="pointer"
-								onClick={handleDeleteFile}
-							>
-								<CloseSmallIcon
-									size={4}
-									color="text.black"
-								/>
-							</Flex>
-						</Box>
-					</Flex>
-				)}
+					<FileUploadThinkPro
+						getDataFn={(data) => setValue(`images.${0}`, data)}
+						fileName="thumbnail"
+						setData={watch(`images.${0}.url`)}
+					/>
+				</Flex>
 			</GridItem>
-			<GridItem colSpan={3}>
-				<Center
-					h="200px"
-					maxH="full"
-					bgColor="bg.admin1"
+			<GridItem colSpan={8}>
+				<Grid
 					rounded="lg"
-					borderWidth="2px"
-					borderColor="bg.admin2"
-					borderStyle="dashed"
+					w="full"
+					h="full"
+					gap="4"
+					rowGap="10"
+					templateColumns="repeat(5, 1fr)"
+					templateRows="max-content"
 				>
-					<Flex
-						w="12"
-						h="12"
-						alignItems="center"
-						justifyContent="center"
-						rounded="full"
-						bgColor="bg.admin2"
-						cursor="pointer"
-					>
-						<Center>
-							<FileUploadThinkPro
-								accept={"image/*"}
-								multiple
-								register={register("assets")}
+					{fields?.map((item, index) => {
+						return (
+							<Box
+								key={index}
+								pb="100%"
+								position="relative"
 							>
-								{/* <PicIcon
-									size={6}
-									color="text.white"
-								/> */}
-							</FileUploadThinkPro>
-						</Center>
-					</Flex>
-				</Center>
-				{/* Preview assets */}
-				{filePaths && (
-					<Grid
-						mt="4"
-						gap="3"
-						templateColumns="repeat(5, 1fr)"
+								<Box
+									w="full"
+									h="full"
+									position="absolute"
+									top="0"
+									left="0"
+								>
+									<FileUploadThinkPro
+										getDataFn={(data) => setValue(`images.${index + 1}`, data)}
+										fileName="assets"
+										setData={watch(`images.${index + 1}.url`)}
+									/>
+								</Box>
+								<Flex
+									w="4"
+									h="4"
+									rounded="full"
+									position="absolute"
+									top="-1"
+									right="-1"
+									zIndex="10"
+									alignItems="center"
+									justifyContent="center"
+									bgColor="bg.bgDelete"
+									cursor="pointer"
+									onClick={() => remove(index)}
+								>
+									<CloseSmallIcon
+										size={3}
+										color="text.textDelete"
+									/>
+								</Flex>
+							</Box>
+						);
+					})}
+					<Flex
+						pb="100%"
+						position="relative"
 					>
-						{filePaths.map((item: any, index: number) => {
-							return (
-								<GridItem key={index}>
-									<Box
-										w="full"
-										h="full"
-										maxW="full"
-										maxH="full"
-										rounded="lg"
-										borderWidth="1px"
-										borderColor="border.primary"
-										overflow="hidden"
-										position="relative"
-										pb="calc(100% - 2px)"
-									>
-										<Box
-											w="full"
-											h="full"
-											position="absolute"
-										>
-											<Image
-												w="full"
-												h="full"
-												objectFit="cover"
-												src={item}
-											/>
-										</Box>
-										<Flex
-											w="4"
-											h="4"
-											position="absolute"
-											top="1"
-											right="1"
-											bgColor="bg.admin1"
-											alignItems="center"
-											justifyContent="center"
-											rounded="full"
-											cursor="pointer"
-											onClick={() => handleDeleteFiles(index)}
-										>
-											<CloseSmallIcon
-												size={3}
-												color="text.black"
-											/>
-										</Flex>
-									</Box>
-								</GridItem>
-							);
-						})}
-					</Grid>
-				)}
+						<Flex
+							w="full"
+							h="full"
+							position="absolute"
+							rounded="lg"
+							bgColor="bg.admin1"
+							alignItems="center"
+							justifyContent="center"
+							cursor="pointer"
+							onClick={() => {
+								setValue("images", [
+									...(getValues().images || []),
+									{
+										url: "",
+										id: "",
+									},
+								]);
+							}}
+						>
+							<PlusIcon
+								size={8}
+								strokeWidth={0.5}
+								color="bg.black"
+							/>
+						</Flex>
+					</Flex>
+				</Grid>
 			</GridItem>
 		</Grid>
 	);

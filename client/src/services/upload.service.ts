@@ -11,6 +11,6 @@ export const uploadImage = async (file?: any): Promise<AxiosResponse> => {
 };
 
 export const removeFile = async (filename: any) => {
-	const response = await http.deleteTypeRequest(`/image/?filename=${filename}`);
+	const response = await http.deleteTypeRequest(`/image?filename=${filename}`);
 	return response?.data;
 };
