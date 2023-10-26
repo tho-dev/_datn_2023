@@ -148,7 +148,12 @@ export async function insertProduct(req, res, next) {
 						meta_description: seo?.description,
 						tags: seo?.tags
 					},
-					images: skusPolytech?.[0]?.assets?.length > 0 ? skusPolytech?.[0]?.assets : Array(6).fill({
+					images: skusPolytech?.[0]?.assets?.length > 0 ? skusPolytech?.[0]?.assets?.map((asset) => (
+						{
+							id: asset?.filename,
+							url: asset?.path,
+						}
+					)) : Array(6).fill({
 						"id": "thinkpro/products/bnqdc0obrf6vxtldbzrg",
 						"url": "https://res.cloudinary.com/dctvtsnuk/image/upload/v1698172337/thinkpro/products/bnqdc0obrf6vxtldbzrg.jpg"
 					}),
