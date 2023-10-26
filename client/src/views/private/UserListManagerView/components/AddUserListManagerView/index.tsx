@@ -1,1 +1,1 @@
-export { default as AddUserListManagerView } from "./AddUserListManagerView"
+export { default as AddUserListManagerView } from "./AddUserListManagerView";

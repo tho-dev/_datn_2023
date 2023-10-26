@@ -9,6 +9,7 @@ const Warranty = (props: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [scrollBehavior, setScrollBehavior] = useState<any>("inside");
 	const btnRef = useRef(null);
+
 	return (
 		<Box>
 			<Flex justifyContent={"space-between"}>
@@ -78,21 +79,21 @@ const Warranty = (props: Props) => {
 					</Button>
 				}
 			>
-				<Text>Bảo hành 12 tháng tại ThinkPro với linh kiện phần cứng (Đối với Pin và Màn hình 06 tháng)</Text>
+				<Text>Bảo hành 12 tháng tại PolyTech với linh kiện phần cứng (Đối với Pin và Màn hình 06 tháng)</Text>
 				<Text py={"2"}>
-					Chính sách đổi trả tại ThinkPro: 1. Lỗi do nhà sản xuất: Trong 15 ngày đầu 1 đổi 1 sản phẩm nếu xảy
-					ra lỗi của nhà sản xuất, quý khách có thể đổi tại toàn bộ các chi nhánh thuộc hệ thống của ThinkPro.
-					Trong trường hợp ThinkPro hết hàng để đổi, cửa hàng sẽ hoàn 100% giá trị trên hóa đơn mua hàng của
+					Chính sách đổi trả tại PolyTech: 1. Lỗi do nhà sản xuất: Trong 15 ngày đầu 1 đổi 1 sản phẩm nếu xảy
+					ra lỗi của nhà sản xuất, quý khách có thể đổi tại toàn bộ các chi nhánh thuộc hệ thống của PolyTech.
+					Trong trường hợp PolyTech hết hàng để đổi, cửa hàng sẽ hoàn 100% giá trị trên hóa đơn mua hàng của
 					Quý khách.
 					<br /> 2. Sản phẩm không lỗi: Đối với sản phẩm mới: Trong 15 ngày đầu tiên, nếu sản phẩm không lỗi
-					Quý khách muốn đổi sản phẩm khác ThinkPro sẽ tính phí đổi sản phẩm là 15%, trong trường hợp Quý
-					khách muốn trả lại sản phẩm ThinkPro sẽ tính phí 25% giá trị sản phẩm. Đối với sản phẩm qua sử dụng:
-					Trong 15 ngày đầu tiên, ThinkPro cung cấp dịch vụ dùng thử miễn phí, Quý khách có thể đổi sản phẩm
+					Quý khách muốn đổi sản phẩm khác PolyTech sẽ tính phí đổi sản phẩm là 15%, trong trường hợp Quý
+					khách muốn trả lại sản phẩm PolyTech sẽ tính phí 25% giá trị sản phẩm. Đối với sản phẩm qua sử dụng:
+					Trong 15 ngày đầu tiên, PolyTech cung cấp dịch vụ dùng thử miễn phí, Quý khách có thể đổi sản phẩm
 					khác nếu thấy sản phẩm mình đang sử dụng chưa phù hợp với nhu cầu. Trong trường hợp Quý khách muốn
-					trả lại sản phẩm ThinkPro sẽ tính phí 15% giá trị sản phẩm. 3. Sản phẩm lỗi do người sử dụng Trong
-					trường hợp sản phẩm xảy ra lỗi do người sử dụng, vi phạm các chính sách bảo hành tại ThinkPro (Quý
-					khách có thể tham khảo chi tiết tại Chính sách bảo hành), ThinkPro không hỗ trợ đổi/trả sản phẩm.
-					ThinkPro sẽ hỗ trợ Quý khách sửa chữa dịch vụ đối với sản phẩm này.
+					trả lại sản phẩm PolyTech sẽ tính phí 15% giá trị sản phẩm. 3. Sản phẩm lỗi do người sử dụng Trong
+					trường hợp sản phẩm xảy ra lỗi do người sử dụng, vi phạm các chính sách bảo hành tại PolyTech (Quý
+					khách có thể tham khảo chi tiết tại Chính sách bảo hành), PolyTech không hỗ trợ đổi/trả sản phẩm.
+					PolyTech sẽ hỗ trợ Quý khách sửa chữa dịch vụ đối với sản phẩm này.
 				</Text>
 			</DialogThinkPro>
 		</Box>

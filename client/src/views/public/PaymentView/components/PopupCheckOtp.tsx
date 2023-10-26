@@ -32,15 +32,22 @@ import { useCreateCartMutation, useDeleteCartMutation } from "~/redux/api/cart";
 import { v4 as uuidv4 } from "uuid";
 import { addCart } from "~/redux/slices/cartSlice";
 type Props = {
-  open: any;
+  isOpenOtp: any;
+  onOpenOtp: () => void;
+  onCloseOtp: () => void;
   dataOrder: any;
 };
 
-const PopupCheckOtp = ({ open, dataOrder }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const PopupCheckOtp = ({
+  onOpenOtp,
+  isOpenOtp,
+  onCloseOtp,
+  dataOrder,
+}: Props) => {
   const [value, setValue] = React.useState("");
 
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
   const [paymentMomo] = usePaymentMomoMutation();
@@ -56,72 +63,78 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
 
   const toast = useToast();
 
-  useEffect(() => {
-    open && onOpen();
-  }, [open]);
-
   const navigate = useNavigate();
 
-  const submitForm = async (e: any) => {
+  const submitForm = (e: any) => {
     e.preventDefault();
     setLoading(true);
     if (value.length < 6) return;
     const { payment_method, ...rest } = dataOrder;
-
-    const checkOTP: any = await checkOtp({
+    checkOtp({
       phone_number: dataOrder?.phone_number,
       code: value,
-    });
-    if (checkOTP.data.status !== 200) {
-      return toast({
-        title: "OTP",
-        description: "Mã OTP của bạn chưa đúng hoặc nó đã hết hạn",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
+    })
+      .unwrap()
+      .then(() => {
+        dispatch(resetOtp(false));
+        create(dataOrder)
+          .unwrap()
+          .then((data) => {
+            // onCloseOtp();
+            deleteCart(cart_id)
+              .unwrap()
+              .then((data) => {
+                const data1 = {
+                  cart_id: uuidv4(),
+                  product: {},
+                };
+                createCart(data1);
+                dispatch(addCart(data.cart_id));
+              });
+            if (payment_method == "online") {
+              paymentMomo({
+                bill: dataOrder.total_amount,
+                orderId: data.data._id,
+              })
+                .unwrap()
+                .then((data) => {
+                  console.log(data);
+                  window.location.assign(`${data.data.url}`);
+                });
+            } else {
+              navigate("/thanks");
+            }
+          })
+          .catch((err) => {
+            toast({
+              title: "Đơn hàng",
+              description: err.data.errors.message,
+              status: "error",
+              duration: 2000,
+              isClosable: true,
+              position: "top-right",
+            });
+          })
+          .finally(() => {
+            onCloseOtp();
+          });
+      })
+      .catch((err) => {
+        toast({
+          title: "OTP",
+          description: err.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    }
-
-    const createdOrder: any = await create(dataOrder);
-    if (createdOrder.data.status !== 200) {
-      onClose();
-      return toast({
-        title: "Đơn hàng",
-        description: "Đơn hàng của bạn đã tạo thất bại",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom-right",
-      });
-    }
-    const res: any = await deleteCart(cart_id);
-    if (res.data.status === 200) {
-      const data = {
-        cart_id: uuidv4(),
-        product: {},
-      };
-      const created = await createCart(data);
-      dispatch(addCart(data.cart_id));
-    }
-    dispatch(resetOtp(false));
-    setLoading(false);
-    onClose();
-    if (payment_method == "online") {
-      const payment_momo: any = await paymentMomo({
-        bill: dataOrder.total_amount,
-        orderId: createdOrder.data.data._id,
-      });
-      if (payment_momo.data.message === "successfully") {
-        window.location.assign(`${payment_momo.data.data.url}`);
-      }
-    } else {
-      navigate("/thanks");
-    }
   };
-
   useEffect(() => {
-    if (time == 0 && !isCheckOtp && open) {
+    if (time == 0 && !isCheckOtp && isOpenOtp) {
       dispatch(setCheckOtp(60));
       sendOtp({ phone_number: dataOrder.phone_number })
         .then((data) => {
@@ -145,7 +158,7 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
           });
         });
     }
-  }, [open]);
+  }, [isOpenOtp]);
 
   const handleSendOtp = () => {
     sendOtp({ phone_number: dataOrder.phone_number })
@@ -173,10 +186,10 @@ const PopupCheckOtp = ({ open, dataOrder }: Props) => {
   };
   const handleClose = () => {
     if (loading) return;
-    onClose();
+    onCloseOtp();
   };
   return (
-    <DialogThinkPro isOpen={isOpen} onClose={handleClose} isCentered>
+    <DialogThinkPro isOpen={isOpenOtp} onClose={handleClose} isCentered>
       <form onSubmit={submitForm}>
         <Flex my={"5"} w={"full"} justifyContent="center" alignItems="center">
           <Flex

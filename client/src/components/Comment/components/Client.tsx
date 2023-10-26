@@ -55,7 +55,6 @@ const Client = (props: Props) => {
               </Text>
             </Box>
           </Flex>
-          <Divider mt={2} />
         </GridItem>
         <GridItem colSpan={3}>
           <Text color={"black"} fontSize={"13px"}>
@@ -63,50 +62,12 @@ const Client = (props: Props) => {
             phím khác. 10 chế độ LED chủ yếu là chế độ chuyển động. Kết nối USB
             type A to C nên tiện tháo rời và di chuyển.
           </Text>
-          <Grid
-            pt={2}
-            gap={{
-              sm: "2",
-              md: "2",
-              xl: "2",
-            }}
-            templateColumns={{
-              sm: "repeat(2, 1fr)",
-              md: "repeat(2, 1fr)",
-              xl: "repeat(4, 1fr)",
-            }}
-          >
-            <GridItem colSpan={1}>
-              {" "}
-              <Image
-                color={"1"}
-                src="https://gamek.mediacdn.vn/thumb_w/640/133514250583805952/2021/10/23/1-1634994418951166060599.png"
-              />
-            </GridItem>
-            <GridItem colSpan={1}>
-              {" "}
-              <Image
-                color={"1"}
-                src="https://gamek.mediacdn.vn/thumb_w/640/133514250583805952/2021/10/23/1-1634994418951166060599.png"
-              />
-            </GridItem>
-            <GridItem colSpan={1}>
-              {" "}
-              <Image
-                color={"1"}
-                src="https://gamek.mediacdn.vn/thumb_w/640/133514250583805952/2021/10/23/1-1634994418951166060599.png"
-              />
-            </GridItem>
-          </Grid>
           <Flex
             mt={"5px"}
             justifyContent="space-between"
             alignItems="center"
             width="100%"
           >
-            <Text fontSize={15} ml={3} color={"gray"}>
-              Bình luận
-            </Text>
             <Text color={"gray"} fontSize={"12px"}>
               Đánh giá vào 10 tháng trước
             </Text>

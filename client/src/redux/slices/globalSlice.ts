@@ -33,7 +33,12 @@ const globalSlice = createSlice({
       state.accessToken = "";
     },
     addViewedItem: (state, action: PayloadAction<any>) => {
-      state.viewedItems = [action.payload, ...state.viewedItems];
+      const findEx = state.viewedItems.find((item: any) => item._id == action.payload._id)
+      if (findEx) {
+        return;
+      } else {
+        state.viewedItems.push(action.payload);
+      }
     },
     setTime: (state, action: PayloadAction<any>) => {
       state.time = action.payload

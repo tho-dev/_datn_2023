@@ -17,6 +17,7 @@ import {
   ChevronDownIcon,
   UserIcon,
   LogoutIcon,
+  CartIcon,
 } from "~/components/common/Icons";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { useLogoutUserMutation } from "~/redux/api/user";
@@ -247,6 +248,23 @@ const TopBar = (props: Props) => {
                 leftIcon={<UserIcon size={4} />}
               >
                 Trang cá nhân
+              </Button>
+              <Button
+                as={ReactRouterLink}
+                to="/"
+                fontSize="sm"
+                fontWeight="semibold"
+                display="flex"
+                p="2"
+                w="full"
+                bg="none"
+                color="black"
+                _hover={{
+                  bg: "bg.gray",
+                }}
+                leftIcon={<CartIcon size={4} />}
+              >
+                Trang người dùng
               </Button>
               <Button
                 bg="none"
