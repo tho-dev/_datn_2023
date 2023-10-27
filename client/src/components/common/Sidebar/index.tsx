@@ -76,16 +76,15 @@ const MENU = [
     to: "/admin/tai-khoan",
     icon: ProfileIcon,
   },
-  {
-    title: "Shipping",
-    to: "/admin/shipping",
-    icon: InboxIcon,
-    children: [
-      { title: "Shipping List", to: "/admin/shipping" },
-      { title: "Shipments", to: "/admin/shipping/shipments" },
-    ],
-  },
-
+  // {
+  //   title: "Shipping",
+  //   to: "/admin/shipping",
+  //   icon: InboxIcon,
+  //   children: [
+  //     { title: "Shipping List", to: "/admin/shipping" },
+  //     { title: "Shipments", to: "/admin/shipping/shipments" },
+  //   ],
+  // },
   {
     title: "Settings",
     to: "/admin/cau-hinh",
