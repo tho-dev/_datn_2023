@@ -17,6 +17,7 @@ import categoryApi from "../redux/api/category";
 import demandApi from "../redux/api/demand";
 import collectionApi from "../redux/api/collection";
 import postApi from './api/post';
+import notificationApi from './api/notification';
 
 const persistConfig = {
 	key: 'root',
@@ -41,6 +42,7 @@ const middleware = [
 	demandApi.middleware,
 	collectionApi.middleware,
 	postApi.middleware,
+	notificationApi.middleware,
 ];
 
 const store = configureStore({
@@ -55,6 +57,7 @@ const store = configureStore({
 		[demandApi.reducerPath]: demandApi.reducer,
 		[collectionApi.reducerPath]: collectionApi.reducer,
 		[postApi.reducerPath]: postApi.reducer,
+		[notificationApi.reducerPath]: notificationApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
 })
