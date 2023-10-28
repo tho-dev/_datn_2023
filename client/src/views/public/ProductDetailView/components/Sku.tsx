@@ -29,7 +29,7 @@ const Sku = ({
 	isLoading,
 	loading,
 }: Props) => {
-	const new_option_value = product.option_value.map((item: any) => item.label);
+	const new_option_value = product?.option_value?.map((item: any) => item?.label);
 	const toast = useToast();
 	const navigate = useNavigate();
 
@@ -58,6 +58,8 @@ const Sku = ({
 			navigate(`/${new_data[0].shared_url}`);
 		}
 	};
+
+	console.log("new_variants", new_variants);
 
 	return (
 		<>
@@ -125,14 +127,10 @@ const Sku = ({
 						fontSize={"14px"}
 						fontWeight={"semibold"}
 						color={"#6B7075"}
-						mt="2"
 					>
 						Số lượng
 					</Text>
-					<Flex
-						mt="2"
-						h="38px"
-					>
+					<Flex h="38px">
 						<Button
 							border={"1px solid #ccc"}
 							w={"20px"}

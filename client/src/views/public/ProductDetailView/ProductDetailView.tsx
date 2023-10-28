@@ -1,25 +1,22 @@
-import React, { useEffect, useState } from "react";
-import Gallery from "./components/Swiper";
-import { Box, Divider, Flex, HStack, Heading } from "@chakra-ui/layout";
-import Evaluate from "./components/Evaluate";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Text, Button } from "@chakra-ui/react";
-import Introduce from "./components/Introduce";
-import Branch from "./components/Branch";
-import Warranty from "./components/Warranty";
-import Configuration from "./components/Configuration";
-import Describe from "./components/Describe";
-import { TagIcon } from "~/components/common/Icons";
-import Sku from "./components/Sku";
-import Subcate from "./components/Subcate";
-import { CommentView } from "~/components/Comment";
-import ViewedProduct from "~/components/ViewedThinkPro/ViewedProduct";
+import { Box, Divider, Flex, Heading } from "@chakra-ui/layout";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Text, useToast } from "@chakra-ui/react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import ListThinkPro from "~/components/ListThinkPro";
+import LoadingPolytech from "~/components/LoadingPolytech";
+import { TagIcon } from "~/components/common/Icons";
+import { useAddToCartMutation, useByNowMutation } from "~/redux/api/cart";
 import { useGetBySlugQuery } from "~/redux/api/product";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { v4 as uuidv4 } from "uuid";
-import { useAddToCartMutation, useByNowMutation } from "~/redux/api/cart";
-import { useToast } from "@chakra-ui/react";
-import ListThinkPro from "~/components/ListThinkPro";
+import Branch from "./components/Branch";
+import Configuration from "./components/Configuration";
+import Describe from "./components/Describe";
+import Evaluate from "./components/Evaluate";
+import Introduce from "./components/Introduce";
+import Sku from "./components/Sku";
+import Subcate from "./components/Subcate";
+import Gallery from "./components/Swiper";
+import Warranty from "./components/Warranty";
 
 type Props = {};
 
@@ -28,21 +25,15 @@ const ProductDetailView = (props: Props) => {
 	const [quantity, setQuantity] = useState<number>(1);
 	const toast = useToast();
 	const isLogin = useAppSelector((state) => state.persistedReducer.global.isLogin);
+	const productViewed = useAppSelector((state) => state.persistedReducer.global.viewedItems);
 	const navigate = useNavigate();
 	const user = useAppSelector((state) => state.persistedReducer.global.user);
 	const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+
 	const dispatch = useAppDispatch();
 	const [addToCart, { isLoading }] = useAddToCartMutation();
 	const [byNow, { isLoading: loading }] = useByNowMutation();
 	const { data: product, isError, isFetching } = useGetBySlugQuery(slug as string);
-
-	if (isFetching) {
-		return <Box>isFetching...</Box>;
-	}
-
-	if (isError) {
-		return <Box>error...</Box>;
-	}
 
 	const handleAddToCart = async () => {
 		const data = {
@@ -101,6 +92,7 @@ const ProductDetailView = (props: Props) => {
 				});
 			});
 	};
+
 	const handleByNow = async () => {
 		const data = {
 			cart_id: cart_id,
@@ -158,7 +150,6 @@ const ProductDetailView = (props: Props) => {
 				});
 		}
 	};
-
 	const handleDercement = () => {
 		if (quantity == 1) return;
 		setQuantity(quantity - 1);
@@ -167,6 +158,15 @@ const ProductDetailView = (props: Props) => {
 		if (quantity == product.stock) return;
 		setQuantity(quantity + 1);
 	};
+
+	if (isFetching) {
+		return <LoadingPolytech />;
+	}
+
+	if (isError) {
+		navigate("/404");
+	}
+
 	return (
 		<Box h={"full"}>
 			<Breadcrumb mt={"5"}>
@@ -291,7 +291,7 @@ const ProductDetailView = (props: Props) => {
 					</Box>
 					{/* Số lượng phiên bản giá */}
 					<Sku
-						product={product.data}
+						product={product?.data}
 						handleDercement={handleDercement}
 						handleIncement={handleIncement}
 						handleAddToCart={handleAddToCart}
@@ -301,28 +301,42 @@ const ProductDetailView = (props: Props) => {
 						loading={loading}
 					/>
 					{/* Danh mục con */}
-					<Subcate />
+					<Subcate
+						brand={product?.data?.brand}
+						category={product?.data?.category}
+					/>
 				</Box>
 			</Flex>
 
 			{/* Đánh giá của khách hàng */}
 			{/* <CommentView /> */}
 
-			{/* Sản phẩm đã xem */}
-			{/* <Box pb={10}>
-				<ViewedProduct title={""} />
-			</Box> */}
-
 			{/* Sản phẩm liên quan */}
 			<Box my="6">
 				<Heading
-					fontSize="xl"
+					fontSize="18px"
 					fontWeight="bold"
 				>
-					Sản Phẩm Liên Quan
+					Sản phẩm liên quan
 				</Heading>
 				<ListThinkPro data={product?.data?.related_products} />
 			</Box>
+
+			{/* Sản phẩm đã xem */}
+			{/* <Box pb={10}>
+				<Text
+					fontSize={"18px"}
+					fontWeight={"bold"}
+					my={4}
+				>
+					Sản phẩm đã xem
+				</Text>
+				{productViewed.length >= 5 ? (
+					<ViewedProduct products={productViewed} />
+				) : (
+					<ListThinkPro data={productViewed} />
+				)}
+			</Box> */}
 		</Box>
 	);
 };

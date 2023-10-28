@@ -44,7 +44,7 @@ import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordVie
 import { ThankView } from "~/views/public/ThankView";
 import PostCategoryView from "~/views/private/PostCategoryView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
-import { protectedRouter } from "./protected";
+import { SettingView } from "~/views/private/SettingView";
 
 const routes: RouteObject[] = [
 	{
@@ -186,6 +186,10 @@ const routes: RouteObject[] = [
 						element: <AddUserListManagerView />,
 					},
 					{
+						path: "cau-hinh",
+						element: <SettingView />,
+					},
+					{
 						path: "profile",
 						element: <ProfileManagerView />,
 					},
@@ -212,6 +216,14 @@ const routes: RouteObject[] = [
 						],
 					},
 				],
+			},
+			{
+				path: "404",
+				element: <NotFoundView />,
+			},
+			{
+				path: "*",
+				element: <NotFoundView />,
 			},
 		],
 	},

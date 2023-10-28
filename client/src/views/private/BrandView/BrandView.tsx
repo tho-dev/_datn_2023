@@ -355,14 +355,6 @@ const BrandView = (props: Props) => {
 						_type: "category_brand",
 					}}
 				/>
-
-				{/* Cofirm */}
-				<ConfirmThinkPro
-					isOpen={isOpenComfirm}
-					onClose={onCloseComfirm}
-					content="Bạn có muốn xóa bỏ thương hiệu này không?"
-					handleClick={handleDeleteBrand}
-				/>
 			</Box>
 			{/* Form */}
 			<DialogThinkPro
@@ -390,6 +382,14 @@ const BrandView = (props: Props) => {
 					categories={categoriesBrand}
 				/>
 			</DialogThinkPro>
+
+			{/* Cofirm */}
+			<ConfirmThinkPro
+				isOpen={isOpenComfirm}
+				onClose={onCloseComfirm}
+				content="Bạn có muốn xóa bỏ thương hiệu này không?"
+				handleClick={handleDeleteBrand}
+			/>
 		</>
 	);
 };
