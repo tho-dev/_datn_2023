@@ -9,8 +9,18 @@ type Props = {
 
 const Title = ({ filters }: Props) => {
 	return (
-		<Box w="100%" p="6" bg="white" my={6} borderRadius={12}>
-			<Flex my={1} gap="6" alignItems="center">
+		<Box
+			w="100%"
+			p="6"
+			bg="white"
+			my={6}
+			borderRadius={12}
+		>
+			<Flex
+				my={1}
+				gap="6"
+				alignItems="center"
+			>
 				{filters?.type == "category_brand" && (
 					<Box
 						w="84px"
@@ -30,7 +40,10 @@ const Title = ({ filters }: Props) => {
 				)}
 
 				<Box flex="1">
-					<Text fontSize="2xl" fontWeight="bold">
+					<Text
+						fontSize="2xl"
+						fontWeight="bold"
+					>
 						{filters?.detail?.name}
 					</Text>
 					<Text
@@ -45,11 +58,21 @@ const Title = ({ filters }: Props) => {
 					</Text>
 					{filters?.detail?.brands?.length > 0 && (
 						<>
-							<Box w="100%" h="1px" bgColor="bg.gray" my="4"></Box>
-							<Flex gap="4" mt="4" flexWrap="wrap">
-								{filters?.detail?.brands.map((item: any) => {
+							<Box
+								w="100%"
+								h="1px"
+								bgColor="bg.gray"
+								my="4"
+							></Box>
+							<Flex
+								gap="4"
+								mt="4"
+								flexWrap="wrap"
+							>
+								{filters?.detail?.brands.map((item: any, index: number) => {
 									return (
 										<Link
+											key={index}
 											to={`/${item?.shared_url}`}
 											as={ReactRouterLink}
 											_hover={{

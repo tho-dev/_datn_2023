@@ -9,113 +9,91 @@ import {
 	Radio,
 	Checkbox,
 	PopoverArrow,
+	CheckboxGroup,
 } from "@chakra-ui/react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { ArrowUpIcon } from "~/components/common/Icons";
 
 type Props = {
 	title: string;
 	data: any;
+	name: string;
+	control: any;
+	watch: any;
+	nested: number;
+	register: any;
 };
 
-const FilterProduct = ({ title, data }: Props) => {
-	return (
-		<Popover isLazy>
-			<PopoverTrigger>
-				<Button
-					bgColor="bg.white"
-					color="black"
-					fontSize="xs"
-					fontWeight="semibold"
-					rightIcon={<ArrowUpIcon size={4} />}
-					padding="3"
-					rounded="lg"
-				>
-					{title}
-				</Button>
-			</PopoverTrigger>
-			<PopoverContent>
-				<PopoverHeader fontWeight="medium">
-					<Radio value="1">
-						<Text fontSize="sm">Tất cả</Text>
-					</Radio>
-					<Box
-						py={3}
-						maxHeight="400px"
-					>
-						<Grid
-							gridTemplateColumns="repeat(3, minmax(0px, 1fr))"
-							columnGap="2rem"
-							rowGap="0.25rem"
-						>
-							{data?.map((option: any, index: number) => {
-								return (
-									<GridItem>
-										<Checkbox value={option?.value}
-											key={index}
-										>
-											<Text fontSize="14px">{option?.label}</Text>
-										</Checkbox>
-									</GridItem>
-								)
-							})}
+const FilterProduct = ({ nested, title, data, name, control, watch, register }: Props) => {
+	const { fields } = useFieldArray({
+		control,
+		name: `filters.${nested}.options`,
+	});
 
-							{/* <GridItem>
-								<Checkbox
-									value="Asus"
-									fontSize="sm"
-								>
-									<Text fontSize="14px">Asus</Text>
-								</Checkbox>
-							</GridItem>
-							<GridItem>
-								<Checkbox
-									value="Asus"
-									fontSize="sm"
-								>
-									<Text fontSize="14px">Asus</Text>
-								</Checkbox>
-							</GridItem>
-							<GridItem>
-								<Checkbox
-									value="Asus"
-									fontSize="sm"
-								>
-									<Text fontSize="14px">Asus</Text>
-								</Checkbox>
-							</GridItem>
-							<GridItem>
-								<Checkbox
-									value="Asus"
-									fontSize="sm"
-								>
-									<Text fontSize="14px">Asus</Text>
-								</Checkbox>
-							</GridItem>
-							<GridItem>
-								<Checkbox
-									value="Asus"
-									fontSize="sm"
-								>
-									<Text fontSize="14px">Asus</Text>
-								</Checkbox>
-							</GridItem>
-							<GridItem>
-								<Checkbox
-									value="Asus"
-									fontSize="sm"
-								>
-									<Text fontSize="14px">Asus</Text>
-								</Checkbox>
-							</GridItem> */}
-						</Grid>
-					</Box>
-				</PopoverHeader>
-				<PopoverBody>
-					<Text fontSize="xs">Xem thêm</Text>
-				</PopoverBody>
-				<PopoverArrow />
-			</PopoverContent>
-		</Popover>
+	return (
+		data?.length > 0 && (
+			<Popover>
+				<PopoverTrigger>
+					<Button
+						bgColor="bg.white"
+						color="black"
+						fontSize="xs"
+						fontWeight="semibold"
+						rightIcon={<ArrowUpIcon size={4} />}
+						padding="3"
+						rounded="lg"
+					>
+						{title}
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent w="auto">
+					<PopoverHeader fontWeight="medium">
+						<Radio defaultChecked>
+							<Text fontSize="sm">Tất cả</Text>
+						</Radio>
+						<Box
+							py={3}
+							maxHeight="400px"
+						>
+							<Grid
+								gap="3"
+								gridTemplateColumns="repeat(3, minmax(0px, 1fr))"
+							>
+								{fields?.map((option: any, index: number) => {
+									return (
+										<GridItem key={option.id}>
+											<Controller
+												control={control}
+												name={`filters.${nested}.options.[${index}].checked`}
+												render={({ field: { onChange, onBlur, value, name, ref } }) => (
+													<CheckboxGroup
+														onChange={onChange}
+														value={[value]}
+													>
+														<Checkbox
+															onChange={onChange}
+															defaultValue={option?.value}
+															name={name}
+															ref={ref}
+														>
+															<Text fontSize="14px">{option?.label}</Text>
+														</Checkbox>
+													</CheckboxGroup>
+												)}
+											/>
+										</GridItem>
+									);
+								})}
+							</Grid>
+						</Box>
+					</PopoverHeader>
+					<PopoverBody>
+						<Text fontSize="xs">Xem thêm</Text>
+					</PopoverBody>
+					<PopoverArrow />
+				</PopoverContent>
+			</Popover>
+		)
 	);
 };
 
