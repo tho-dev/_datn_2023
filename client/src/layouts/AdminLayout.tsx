@@ -12,6 +12,38 @@ import { useToast } from "@chakra-ui/react";
 type Props = {};
 
 const AdminLayout = (props: Props) => {
+	const [status, setStatus] = useState(null);
+	const user = useAppSelector((state) => state.persistedReducer.global.user);
+	const { data, isLoading, isFetching } = useGetAllQuery({ status: status });
+	const [dataNotification, setDataNotification] = useState<any>([]);
+
+	useEffect(() => {
+		if (data) {
+			setDataNotification(data.data);
+		}
+	}, [data]);
+
+	useEffect(() => {
+		socket.emit("joinRoom", "don-hang", user._id, user.role);
+	}, []);
+
+	useEffect(() => {
+		if (data) {
+			socket.on("notification", (notification: any) => {
+				const { roomName, ...rest } = notification;
+				setDataNotification([...data.data, rest]);
+			});
+		}
+	}, [socket, data]);
+	const handleChangeStatusNoti = (status: any) => {
+		setStatus(status);
+	};
+	if (isLoading) {
+		return <Box>Loading...</Box>;
+	}
+	if (isFetching) {
+		return <Box>isFetching...</Box>;
+	}
 	return (
 		<HelmetProvider>
 			<Helmet>
@@ -43,7 +75,10 @@ const AdminLayout = (props: Props) => {
 					flexDir="column"
 				>
 					{/* Top bar */}
-					<TopBar />
+					<TopBar
+						data_notification={dataNotification}
+						handleChangeStatusNoti={handleChangeStatusNoti}
+					/>
 					<Box
 						w="full"
 						minH="100vh"
@@ -51,7 +86,6 @@ const AdminLayout = (props: Props) => {
 						pr="8"
 						pt="6"
 						bgColor="bg.admin1"
-						// bgGradient="linear-gradient(to top, rgb(11 203 224), #fff)"
 					>
 						<PrivateRoute component={AdminLayout} />
 					</Box>
