@@ -4,7 +4,9 @@ import { Image, Divider, Button } from "@chakra-ui/react";
 import { PlusIcon } from "../common/Icons";
 import { addViewedItem } from "~/redux/slices/globalSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
 import { formatNumber } from "~/utils/fc";
+import defaultImage from "~/assets/images/logo-thinkpro.svg";
 
 type Props = {
 	product?: IProduct;
@@ -84,17 +86,14 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
 					>
 						{formatNumber(`${product?.price_before_discount}`)}
 					</Text>
-
-					{product?.price_discount_percent != 0 && (
-						<Text
-							p="2px"
-							fontSize="10px"
-							color="text.red"
-							backgroundColor="#fff5f7"
-						>
-							{`${product?.price_discount_percent}%`}
-						</Text>
-					)}
+					<Text
+						p="2px"
+						fontSize="10px"
+						color="text.red"
+						backgroundColor="#fff5f7"
+					>
+						{`${product?.price_discount_percent}%`}
+					</Text>
 				</Flex>
 				<Flex
 					gap="1"
