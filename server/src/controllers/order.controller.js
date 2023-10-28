@@ -1073,3 +1073,16 @@ export const confirm_returnedOrder = async (req, res, next) => {
     next(error);
   }
 };
+export const delete_all_order = async (req, res, next) => {
+  try {
+    const orders = await Order.deleteMany();
+    const order_detail = await Order_Detail.deleteMany();
+    const shipping = await Shipping.deleteMany();
+    return res.json({
+      status: 200,
+      message: "thành công",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

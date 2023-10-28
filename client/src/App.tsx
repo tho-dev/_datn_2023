@@ -5,11 +5,15 @@ import { v4 as uuidv4 } from "uuid";
 import { useCreateCartMutation } from "./redux/api/cart";
 import { addCart } from "./redux/slices/cartSlice";
 import { useEffect } from "react";
+import { io } from "socket.io-client";
+
+export const socket = io("http://localhost:8080" || "");
 
 function App() {
   const [createCart] = useCreateCartMutation();
   const dispatch = useAppDispatch();
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+
   useEffect(() => {
     if (!cart_id) {
       const data = {
@@ -26,6 +30,7 @@ function App() {
         });
     }
   }, [cart_id]);
+
   const router = createBrowserRouter(routes);
   return <RouterProvider router={router} />;
 }

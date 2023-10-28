@@ -11,6 +11,7 @@ import order from "./order.router";
 import insert from "./insert.router";
 import collection from "./collection.router";
 import general from "./general.router"
+import notification from "./notification.router";
 
 const routes = (app) => {
   app.use("/api", general)
@@ -26,6 +27,7 @@ const routes = (app) => {
   app.use("/api/order", order);
   app.use("/api/insert", insert);
   app.use("/api/collection", collection);
+  app.use("/api/notification", notification);
 };
 
 export default routes;

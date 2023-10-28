@@ -31,6 +31,8 @@ import { resetOtp, setCheckOtp } from "~/redux/slices/globalSlice";
 import { useCreateCartMutation, useDeleteCartMutation } from "~/redux/api/cart";
 import { v4 as uuidv4 } from "uuid";
 import { addCart } from "~/redux/slices/cartSlice";
+import { socket } from "~/App";
+import { useAddNotiMutation } from "~/redux/api/notification";
 type Props = {
   isOpenOtp: any;
   onOpenOtp: () => void;
@@ -60,7 +62,7 @@ const PopupCheckOtp = ({
   const [loading, setLoading] = useState(false);
   const [sendOtp] = useSendOtpMutation();
   const dispatch = useAppDispatch();
-
+  const [addNoti] = useAddNotiMutation();
   const toast = useToast();
 
   const navigate = useNavigate();
@@ -80,6 +82,19 @@ const PopupCheckOtp = ({
           .unwrap()
           .then((data) => {
             // onCloseOtp();
+            addNoti({
+              sender_id: null,
+              receivers_id: null,
+              status: false,
+              message: "Một đơn hàng đã được đặt",
+              link: "don-hang",
+            })
+              .unwrap()
+              .then((data) => {
+                const new_data = { ...data?.data, roomName: "don-hang" };
+                socket.emit("sendNotification", new_data);
+              });
+
             deleteCart(cart_id)
               .unwrap()
               .then((data) => {

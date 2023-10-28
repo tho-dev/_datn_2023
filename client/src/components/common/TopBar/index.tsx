@@ -15,8 +15,23 @@ import {
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { useLogoutUserMutation } from "~/redux/api/user";
 import { logout } from "~/redux/slices/globalSlice";
+import {
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+	PopoverHeader,
+	PopoverBody,
+	PopoverFooter,
+	PopoverArrow,
+	PopoverCloseButton,
+	PopoverAnchor,
+} from "@chakra-ui/react";
+import { useUpdateNotiMutation } from "~/redux/api/notification";
 
-type Props = {};
+type Props = {
+	data_notification: any;
+	handleChangeStatusNoti: (status: any) => void;
+};
 
 const TopBar = (props: Props) => {
 	const { isOpen, onToggle } = useDisclosure();
@@ -78,7 +93,6 @@ const TopBar = (props: Props) => {
 			zIndex="100"
 			alignItems="center"
 			justifyContent="space-between"
-			// bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
 		>
 			<Flex
 				as="span"
