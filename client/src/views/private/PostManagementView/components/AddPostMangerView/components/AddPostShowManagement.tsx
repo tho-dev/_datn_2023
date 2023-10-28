@@ -1,19 +1,13 @@
-import {
-	useDisclosure,
-} from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
-import { AddPostMangerView } from '..';
- 
+import { AddPostMangerView } from "..";
 
 type Props = {};
 
 const AddPostShowManagement = (props: Props) => {
 	const [parents, setParents] = useState<any>([]);
-	const {
-		 
-		onClose: onCloseActionCreatePost,
-	} = useDisclosure();  
+	const { onClose: onCloseActionCreatePost } = useDisclosure();
 
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
 		_limit: 20,
@@ -37,18 +31,14 @@ const AddPostShowManagement = (props: Props) => {
 		}
 	}, [categories, isLoading]);
 
-	 
-	
 	return (
-		<> 
-				<AddPostMangerView
-					onClose={onCloseActionCreatePost}
-					parents={parents}  />
-			 
+		<>
+			<AddPostMangerView
+				onClose={onCloseActionCreatePost}
+				parents={parents}
+			/>
 		</>
 	);
 };
 
 export default AddPostShowManagement;
-
-
