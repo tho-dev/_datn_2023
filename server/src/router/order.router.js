@@ -17,6 +17,9 @@ import {
   getAllShipping,
   getAllOrder,
   getOrderByUserId,
+  returnedOrder,
+  confirm_returnedOrder,
+  delete_all_order,
 } from "../controllers/order.controller";
 
 const router = express.Router();
@@ -28,6 +31,8 @@ router.post("/calculateFee", serviceFree);
 router.post("/orderByPhoneNumber", getOrderByPhoneNumber);
 router.get("/orderByUserId/:id", getOrderByUserId);
 router.post("/getTokenPrintBill", getTokenPrintBills);
+router.post("/return", returnedOrder);
+router.put("/return/:id", confirm_returnedOrder);
 
 router.post("/", createOrder);
 router.get("/", getAll);
@@ -35,6 +40,7 @@ router.get("/statistical", getAllOrder);
 router.get("/shipping", getAllShipping);
 router.get("/:id", getOne);
 router.delete("/cancel/:id", cancelOrder);
+router.delete("/", delete_all_order);
 router.put("/updateStatus/:id", updateStatus);
 router.put("/updateInfoCustomer/:id", update_info_customer);
 router.post("/pay-momo", payMomo);

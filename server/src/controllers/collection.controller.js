@@ -1,60 +1,8 @@
 import Category from "../models/category.model"
 import Brand from "../models/brand.model"
 import { Product, Option, OptionValue, Sku, Variant } from "../models/product.model"
-import { Demand } from "../models/demand.model"
+import { Demand, DemandValue } from "../models/demand.model"
 import createError from "http-errors"
-
-// Hàm đệ quy để xây dựng danh sách thương hiệu con (sub_brands)
-// function nestedBrands(input, parentId) {
-// 	const output = [];
-// 	let brands = null;
-
-// 	if (parentId) {
-// 		brands = input.filter((brand) => String(brand.parent_id) == String(parentId));
-// 	} else {
-// 		brands = input.filter((brand) => !brand.parent_id);
-// 	}
-
-// 	for (let brand of brands) {
-// 		output.push({
-// 			_id: brand?._id,
-// 			parent_id: parentId,
-// 			name: brand?.name,
-// 			slug: brand?.slug,
-// 			shared_url: brand?.shared_url,
-// 			thumbnail: brand?.thumbnail.url,
-// 			description: brand?.description,
-// 			children: nestedBrands(input, brand?._id).length == 0 ? undefined : nestedBrands(input, brand?._id),
-// 		});
-// 	}
-
-// 	return output;
-// }
-
-// function nestedCategories(input, parent_id) {
-// 	const output = [];
-// 	let brands = null;
-
-// 	if (parent_id) {
-// 		brands = input.filter((brand) => String(brand.parent_id) == String(parent_id));
-// 	} else {
-// 		brands = input.filter((brand) => brand.parent_id == parent_id);
-// 	}
-
-// 	for (let brand of brands) {
-// 		output.push({
-// 			_id: brand?._id,
-// 			parent_id: parent_id,
-// 			name: brand?.name,
-// 			slug: brand?.slug,
-// 			thumbnail: brand?.thumbnail?.url,
-// 			description: brand?.description,
-// 			children: nestedCategories(input, brand?._id).length == 0 ? undefined : nestedCategories(input, brand._id)
-// 		});
-// 	}
-
-// 	return output;
-// }
 
 export async function filterBrandAndCategory(req, res, next) {
 	try {
@@ -82,8 +30,8 @@ export async function filterBrandAndCategory(req, res, next) {
 					return 1000000;
 				} else if (maxPrice <= 15000000) {
 					return 2000000;
-				} else if (maxPrice <= 70000000) {
-					return 10000000;
+				} else if (maxPrice <= 100000000) {
+					return 5000000;
 				} else {
 					return 5000000;
 				}
@@ -98,7 +46,7 @@ export async function filterBrandAndCategory(req, res, next) {
 				value: `duoi-${minPrice}`
 			});
 
-			const numOptions = Math.min(7, 6 + Math.ceil((maxPrice - minPrice) / stepSize));
+			const numOptions = Math.min(6, 6 + Math.ceil((maxPrice - minPrice) / stepSize));
 
 			for (let i = 0; i < numOptions - 1; i++) {
 				const startPrice = minPrice + i * stepSize;
@@ -110,7 +58,7 @@ export async function filterBrandAndCategory(req, res, next) {
 			}
 
 			// Tùy chọn cuối cùng là "Trên" giá của lần cộng cuối cùng
-			const lastStartPrice = minPrice + (numOptions - 2) * stepSize;
+			const lastStartPrice = minPrice + (numOptions - 1) * stepSize;
 			const lastOptionLabel = `Trên ${lastStartPrice / 1000000} triệu`;
 			const lastOptionValue = `tren-${lastStartPrice}`;
 			priceOptions.push({
@@ -138,10 +86,8 @@ export async function filterBrandAndCategory(req, res, next) {
 
 			// lấy sản phẩm theo danh mục 
 			const products = await Product?.find({
-				$and: [
-					{ category_id: category?._id },
-					{ price_before_discount: { $exists: true } } // Chỉ lấy các sản phẩm có giá trước khi giảm giá
-				]
+				category_id: category?._id,
+				price_before_discount: { $exists: true }
 			}).sort({
 				price: 1
 			}).select('name price price_before_discount');
@@ -150,7 +96,7 @@ export async function filterBrandAndCategory(req, res, next) {
 			const maxPrice = products[products?.length - 1]?.price
 			let optionFilterPrice = generateDynamicPriceOptions(minPrice, maxPrice)
 			optionFilterPrice = {
-				name: 'gia',
+				name: 'price',
 				type: 'checkbox',
 				label: 'Khoảng giá',
 				options: optionFilterPrice
@@ -158,20 +104,20 @@ export async function filterBrandAndCategory(req, res, next) {
 
 			// bộ lọc khuyến mãi
 			const promotionFilter = {
-				name: "khuyen-mai",
+				name: "promotion",
 				type: "switch",
 				label: "Có khuyến mại",
 				options: [
 					{
 						"label": "Có",
-						"value": "co"
+						"value": ""
 					}
 				]
 			}
 
 			// bộ lọc thương hiệu
 			const brandFilter = {
-				name: "thuong-hieu",
+				name: "brand",
 				type: "checkbox",
 				label: "Thương hiệu",
 				options: doc?.map((item) => ({
@@ -186,7 +132,7 @@ export async function filterBrandAndCategory(req, res, next) {
 				const demands = await Demand.find({})
 
 				demandFilter = {
-					name: "nhu-cau",
+					name: "demand",
 					type: "checkbox",
 					label: "Nhu cầu",
 					options: demands?.map((item) => ({
@@ -195,9 +141,6 @@ export async function filterBrandAndCategory(req, res, next) {
 					}))
 				}
 			}
-
-
-
 
 			data = {
 				detail: {
@@ -228,12 +171,12 @@ export async function filterBrandAndCategory(req, res, next) {
 				parent_id: brand?._id
 			}).select("-deleted -deleted_at -created_at -updated_at")
 
+			const ids = [...children?.map((i) => i?._id), brand?._id]
+
 			// lấy sản phẩm theo thương hiệu
 			const products = await Product?.find({
-				$and: [
-					{ brand_id: brand?._id },
-					{ price_before_discount: { $exists: true } } // Chỉ lấy các sản phẩm có giá trước khi giảm giá
-				]
+				brand_id: { $in: ids },
+				price_before_discount: { $exists: true }
 			}).sort({
 				price: 1
 			}).select('name price price_before_discount');
@@ -242,7 +185,7 @@ export async function filterBrandAndCategory(req, res, next) {
 			const maxPrice = products[products?.length - 1]?.price
 			let optionFilterPrice = generateDynamicPriceOptions(minPrice, maxPrice)
 			optionFilterPrice = {
-				name: 'gia',
+				name: 'price',
 				type: 'checkbox',
 				label: 'Khoảng giá',
 				options: optionFilterPrice
@@ -250,26 +193,42 @@ export async function filterBrandAndCategory(req, res, next) {
 
 			// bộ lọc khuyến mãi
 			const promotionFilter = {
-				name: "khuyen-mai",
+				name: "promotion",
 				type: "switch",
 				label: "Có khuyến mại",
 				options: [
 					{
 						"label": "Có",
-						"value": "co"
+						"value": ""
 					}
 				]
 			}
 
 			// bộ lọc thương hiệu
 			const brandFilter = {
-				name: "thuong-hieu",
+				name: "brand",
 				type: "checkbox",
 				label: "Thương hiệu con",
 				options: children?.map((item) => ({
 					label: item?.name,
 					value: item?.slug
 				}))
+			}
+
+			// bộ lọc nhu cầu chỉ danh cho laptop
+			let demandFilter = undefined
+			if (categoryFind?.slug == 'laptop') {
+				const demands = await Demand.find({})
+
+				demandFilter = {
+					name: "demand",
+					type: "checkbox",
+					label: "Nhu cầu",
+					options: demands?.map((item) => ({
+						label: item?.name,
+						value: item?.slug
+					}))
+				}
 			}
 
 			data = {
@@ -296,8 +255,9 @@ export async function filterBrandAndCategory(req, res, next) {
 				})),
 				filters: [
 					brandFilter,
+					demandFilter,
 					optionFilterPrice,
-					promotionFilter
+					promotionFilter,
 				],
 				seo_data: {}
 			}
@@ -315,14 +275,45 @@ export async function filterBrandAndCategory(req, res, next) {
 }
 
 export async function collectionProducts(req, res, next) {
+	const handlePrice = (price) => {
+		if (price?.includes('duoi')) {
+			return {
+				from: 0,
+				to: Number(price?.split('-')?.[1])
+			}
+		} else if (price?.includes('tu') && price?.includes('den')) {
+			return {
+				from: Number(price?.split('-')?.[1]),
+				to: Number(price?.split('-')?.[3])
+			}
+		} else if (price?.includes('tren')) {
+			return {
+				from: Number(price?.split('-')?.[1]),
+				to: null
+			}
+		}
+	}
+
 	try {
 		const {
 			_page = 1,
 			_sort = "created_at",
 			_order = "desc",
 			_limit = 10,
-			_category = null
+			_category = null,
+			_brand = null,
+			_demand = null,
+			_price = null,
+			_promotion = true
 		} = req.query;
+
+
+		const filters = {
+			brand: _brand ? _brand?.split(',') : [],
+			demand: _demand ? _demand?.split(',') : [],
+			price: _price ? _price?.split(",")?.map((item) => handlePrice(item)) : [],
+			promotion: JSON.parse(`${_promotion}`)
+		}
 
 		const options = {
 			page: _page,
@@ -331,7 +322,8 @@ export async function collectionProducts(req, res, next) {
 				[_sort]: _order == "desc" ? -1 : 1,
 			},
 			select: [
-				"-assets",
+				"-seo",
+				"-images",
 				"-attributes",
 				"-description",
 				"-category_id",
@@ -380,7 +372,7 @@ export async function collectionProducts(req, res, next) {
 			});
 
 			// lấy ra option màu
-			const option = options?.find((option) => option.name == "color");
+			const option = options?.find((option) => option.name == "color" || option.name == "mau");
 			const colors = await OptionValue.find({
 				option_id: option?._id,
 			}).select("-_id value label");
@@ -395,9 +387,48 @@ export async function collectionProducts(req, res, next) {
 		};
 
 		if (category) {
-			const { docs, ...paginate } = await Product.paginate({
-				category_id: category?._id
-			}, options);
+			// lọc theo nhu cầu
+			const demand = await Demand.findOne({
+				slug: filters?.demand?.[0]
+			})
+
+			const demandValues = await DemandValue.find({
+				point: { $gte: 9 },
+				demand_id: demand?._id,
+			})
+
+			// lọc theo thương hiệu
+			const brands = await Brand.find({
+				category_id: category?._id,
+				shared_url: {
+					$in: filters.brand.map(slug => new RegExp(slug, 'i'))
+				}
+			});
+
+			// câu truy vấn
+			const query = {
+				status: true,
+				category_id: category?._id,
+			};
+
+			// khoảng giá
+			if (filters.price.length > 0) {
+				query.$or = filters.price.map(range => ({
+					price: range.to === null ? { $gte: range.from } : { $gte: range.from, $lte: range.to }
+				}))
+			}
+
+			// nhu cầu
+			if (demandValues.length > 0) {
+				query._id = { $in: demandValues.map(i => i.product_id) };
+			}
+
+			// thương hiệu
+			if (brands.length > 0) {
+				query.brand_id = { $in: brands.map(i => i?._id) };
+			}
+
+			const { docs, ...paginate } = await Product.paginate(query, options);
 
 			const data = await Promise.all(
 				docs?.map((item) => getSku(item, item?._id))
@@ -414,17 +445,49 @@ export async function collectionProducts(req, res, next) {
 		}
 
 		if (brand) {
+			// lọc theo nhu cầu
+			const demand = await Demand.findOne({
+				slug: filters?.demand?.[0]
+			})
+
+			const demandValues = await DemandValue.find({
+				point: { $gte: 9 },
+				demand_id: demand?._id,
+			})
+
+			// lọc theo thương hiệu
+			filters.brand.push(brand?.slug)
 			const brands = await Brand.find({
 				category_id: brand?.category_id,
-				shared_url: { $regex: brand?.slug, $options: 'i' }
+				shared_url: {
+					$in: filters.brand.length > 1 ? filters.brand.filter((i) => i != brand?.slug).map(slug => new RegExp(slug, 'i')) : filters.brand.map(slug => new RegExp(slug, 'i'))
+				}
 			});
 
-			const ids = brands?.map((brand) => brand?._id)
+			// câu truy vấn
+			const query = {
+				status: true,
+			};
 
-			// lấy ra tất cả sản thuộc thương hiệu
-			const { docs, ...paginate } = await Product.paginate({
-				brand_id: { $in: ids }
-			}, options);
+			// khoảng giá
+			if (filters.price.length > 0) {
+				query.$or = filters.price.map(range => ({
+					price: range.to === null ? { $gte: range.from } : { $gte: range.from, $lte: range.to }
+				}))
+			}
+
+			// nhu cầu
+			if (demandValues.length > 0) {
+				query._id = { $in: demandValues.map(i => i.product_id) };
+			}
+
+			// thương hiệu
+			if (brands.length > 0) {
+				query.brand_id = { $in: brands.map(i => i?._id) };
+			}
+
+			// lấy ra tất cả sản phẩm thuộc thương hiệu
+			const { docs, ...paginate } = await Product.paginate(query, options);
 
 			const data = await Promise.all(
 				docs?.map((item) => getSku(item, item?._id))

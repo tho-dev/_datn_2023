@@ -80,8 +80,8 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 						mt="8"
 					>
 						<Box
-							w="120px"
-							h="120px"
+							w="250px"
+							h="200px"
 						>
 							<FileUploadThinkPro
 								fileName="category"

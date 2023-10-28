@@ -44,15 +44,23 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
   const [conscious, setConscious] = useState([]);
   const [districted, setDistricted] = useState([]);
   useEffect(() => {
+    if (
+      !selectedWard.value ||
+      !selectedDistrict.value ||
+      (!selectedProvince.value && !isOpen)
+    ) {
+      console.log("abcd");
+      return;
+    }
     handleChooseAdress([
       selectedWard.value,
       selectedDistrict.value,
       selectedProvince.value,
     ]);
-  }, [selectedWard, selectedDistrict, selectedProvince]);
+  }, [selectedWard.value, selectedDistrict.value, selectedProvince.value]);
 
   useEffect(() => {
-    if (district.length == 0 || provider.length == 0) {
+    if (!selectedProvince.value) {
       axios.get("https://provinces.open-api.vn/api/").then(({ data }) => {
         setConscious(data);
         setSelectedProvince({ ...selectedProvince, label: "Tỉnh | Thành Phố" });
@@ -61,6 +69,8 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
   }, []);
 
   const districtConsious = async (item: any) => {
+    setSelectedDistrict({ ...selectedDistrict, value: undefined });
+    setSelectedWard({ ...selectedWard, value: undefined });
     return await axios
       .get(`https://provinces.open-api.vn/api/p/${item.code}?depth=3`)
       .then(({ data }) => {
@@ -79,9 +89,6 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
   };
   const getProvider = (item: any) => {
     setSelectedWard({ ...selectedWard, value: item.name });
-    setTimeout(() => {
-      onClose();
-    }, 1000);
   };
   const handleChooseConsious = () => {
     axios.get("https://provinces.open-api.vn/api/").then(({ data }) => {
@@ -90,6 +97,7 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
     });
   };
   const handleChooseDistrict = () => {
+    setSelectedWard({ ...selectedWard, value: undefined });
     setConscious([]);
     setDistrict(districted);
   };

@@ -2,18 +2,18 @@ import Axios from "axios";
 // Lấy mã địa chỉ
 export const getLocation = async (location) => {
   try {
-    let ward_code;
-    let district_id;
+    let ward_code = "1A0506";
+    let district_id = 1492;
 
     const provinces = await Axios.get(
       "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
       {
         headers: {
           token: process.env.GHN_SHOP_TOKEN,
+          "Content-Type": "application/json",
         },
       }
     );
-
     const provinces_id = provinces.data.data.filter((item) => {
       return item.NameExtension.every(
         (item) => item === location.split(",")[2].trim()
@@ -27,6 +27,7 @@ export const getLocation = async (location) => {
       {
         headers: {
           token: process.env.GHN_SHOP_TOKEN,
+          "Content-Type": "application/json",
         },
       }
     );
@@ -42,6 +43,7 @@ export const getLocation = async (location) => {
       {
         headers: {
           token: process.env.GHN_SHOP_TOKEN,
+          "Content-Type": "application/json",
         },
       }
     );
@@ -49,6 +51,7 @@ export const getLocation = async (location) => {
       (item) => item.WardName == location.split(",")[0].trim()
     );
     ward_code = ward.WardCode;
+
     return {
       ward_code,
       district_id,

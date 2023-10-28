@@ -99,7 +99,7 @@ const Gallery = ({ assets, name }: Props) => {
                 >
                   <Box
                     w="full"
-                    h="full"
+                    h="100px"
                     bgColor="bg.gray"
                     rounded="md"
                     cursor="pointer"
@@ -137,7 +137,7 @@ const Gallery = ({ assets, name }: Props) => {
               {assets.map((item: any, index: number) => {
                 return (
                   <SwiperSlide key={index}>
-                    <Box w="full" h="full" bgColor="bg.gray" rounded="6px">
+                    <Box w="full" minH="548px" bgColor="bg.gray" rounded="6px">
                       <Img
                         src={item.url}
                         w="full"

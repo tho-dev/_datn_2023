@@ -172,7 +172,7 @@ export default function TableThinkPro<Data extends object>({
 										<Td
 											key={cell.id}
 											isNumeric={meta?.isNumeric}
-											fontSize="sm"
+											fontSize="13px"
 											py="3"
 											px="3"
 											textAlign="start"
@@ -189,7 +189,8 @@ export default function TableThinkPro<Data extends object>({
 												paddingRight: 5,
 											}}
 											w="inherit"
-											maxW="360px"
+											maxW="320px"
+											fontWeight="medium"
 										>
 											<motion.div
 												layout

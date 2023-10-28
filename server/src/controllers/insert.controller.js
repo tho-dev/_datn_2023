@@ -17,6 +17,8 @@ export async function insertData(req, res, next) {
 				headers: { 'Content-Type': 'application/json' }
 			})
 			const res1 = await res.json()
+
+			console.log('res1', res1)
 			return res1?.data
 		}
 
@@ -126,7 +128,7 @@ export async function insertProduct(req, res, next) {
 			const category_id = categoryFind?._id
 
 			const insertProduct = async (doc) => {
-				const { name, price = 100000, price_before_discount = 10000, specs = "test", has_gift = false, gift_amount = 20000, status = true, attributes = [], video_review, description = "test", skus: skusPolytech, variations, brand, demands: demandsPolytech } = doc
+				const { name, SKU, price = 100000, price_before_discount = 10000, seo, specs = "test", has_gift = false, gift_amount = 20000, status = true, attributes = [], video_review, description = "test", skus: skusPolytech, variations, brand, demands: demandsPolytech } = doc
 
 				const brandFind = await Brand.findOne({
 					shared_url: brand?.slug
@@ -140,11 +142,20 @@ export async function insertProduct(req, res, next) {
 				const brand_id = brandFind?._id || brandFull?._id
 				const productFind = await Product.create({
 					name,
-					price,
-					price_before_discount,
+					SKU: SKU || 'Polytech@2023',
+					seo: {
+						meta_title: seo?.title,
+						meta_description: seo?.description,
+						tags: seo?.tags
+					},
+					images: skusPolytech?.[0]?.assets?.length > 0 ? skusPolytech?.[0]?.assets : Array(6).fill({
+						"id": "thinkpro/products/bnqdc0obrf6vxtldbzrg",
+						"url": "https://res.cloudinary.com/dctvtsnuk/image/upload/v1698172337/thinkpro/products/bnqdc0obrf6vxtldbzrg.jpg"
+					}),
+					price: price || 1000000,
+					price_before_discount: price_before_discount || 1000000,
 					specs,
 					has_gift,
-					gift_amount,
 					status: true,
 					attributes: attributes.map((attribute) => ({
 						group_name: attribute?.group_name,
@@ -161,13 +172,12 @@ export async function insertProduct(req, res, next) {
 
 				const product_id = productFind?._id
 
-
 				const demands = await Demand.find({})
+
 				// Check điểm 
 				if (Array.isArray(demandsPolytech) && demandsPolytech?.length > 0) {
 					await Promise.all(demandsPolytech?.map(async (demand) => {
 						const demandFind = demands?.find((i) => i?.slug == demand?.slug)
-
 						await DemandValue.create({
 							product_id: product_id,
 							demand_id: demandFind?._id,
@@ -177,7 +187,7 @@ export async function insertProduct(req, res, next) {
 				}
 
 				// random màu
-				const colors = ['#495057', '#f03e3e', '#faa2c1', '#845ef7', '#364fc7', '#0c8599', '#087f5b', '#2f9e44', '#e67700', '#ffd43b', '#d9480f']
+				const colors = ['#212529', '#868e96', '#343a40', '#ffa8a8', '#212529']
 
 				const getRandomColor = (colors) => {
 					const randomIndex = Math.floor(Math.random() * colors.length);
@@ -186,7 +196,7 @@ export async function insertProduct(req, res, next) {
 
 				const variationsFilter = variations?.filter((a) => a?.options?.length > 0)
 				const optionsP = variationsFilter?.map((variant) => ({
-					name: variant?.name,
+					label: variant?.label,
 					option_values: variant?.options?.map((i) => {
 						return {
 							label: i?.name,
@@ -196,10 +206,11 @@ export async function insertProduct(req, res, next) {
 				}))
 
 				// insert vào bảng options và option values
-				const res = await Promise.all(optionsP?.map(async (option) => {
+				const res = await Promise.all(optionsP?.map(async (option, index) => {
 					const optionFind = await Option.create({
 						product_id: product_id,
-						name: option?.name
+						label: option?.label,
+						position: index
 					})
 
 					const optionValues = await Promise.all(option?.option_values?.map(async (optionValue) => {
@@ -292,7 +303,7 @@ export async function insertProduct(req, res, next) {
 				const arraySkus = Array(variants?.length).fill({
 					...product.toObject(),
 					product_id: product_id,
-					stock: 100,
+					stock: 0,
 					is_avaiable: true,
 					assets: [],
 					image: {},
@@ -301,15 +312,18 @@ export async function insertProduct(req, res, next) {
 				const arraySkusFilter = arraySkus?.map((test, index) => {
 					return {
 						...test,
-						SKU: skusPolytech?.[index]?.SKU || skusPolytech?.[0]?.SKU || 'Sku123456789',
-						image: skusPolytech?.[index]?.image || skusPolytech?.[0]?.image || {},
-						assets: skusPolytech?.[index]?.assets?.map((as) => ({
+						SKU: skusPolytech?.[index]?.SKU || 'Polytech@2023',
+						image: skusPolytech?.[index]?.image?.url ? skusPolytech?.[index]?.image : {
+							"url": "https://res.cloudinary.com/dctvtsnuk/image/upload/v1698172409/thinkpro/products/nsg9m61d8alhqnmzq83e.jpg",
+							"id": "thinkpro/products/nsg9m61d8alhqnmzq83e"
+						},
+						assets: skusPolytech?.[index]?.assets?.length > 0 ? skusPolytech?.[index]?.assets?.map((as) => ({
 							id: as?.filename,
 							url: as?.path
-						})) || skusPolytech?.[0]?.assets?.map((as) => ({
-							id: as?.filename,
-							url: as?.path
-						})) || []
+						})) : Array(6).fill({
+							"id": "thinkpro/products/bnqdc0obrf6vxtldbzrg",
+							"url": "https://res.cloudinary.com/dctvtsnuk/image/upload/v1698172337/thinkpro/products/bnqdc0obrf6vxtldbzrg.jpg"
+						})
 					}
 				})
 

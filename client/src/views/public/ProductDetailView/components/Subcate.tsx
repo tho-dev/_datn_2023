@@ -2,12 +2,15 @@ import React, { useState, useRef } from "react";
 import { useDisclosure, Text, Flex, Box, Image } from "@chakra-ui/react";
 import { NavArrowRightIcon } from "~/components/common/Icons";
 import { GiftIcon } from "~/components/common/Icons";
+import { Link as ReactRouterLink } from "react-router-dom";
+import logo from "~/assets/images/logo-thinkpro.svg";
 
-type Props = {};
+type Props = {
+	brand: any;
+	category: any;
+};
 
-const Subcate = (props: Props) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
-
+const Subcate = ({ brand, category }: Props) => {
 	return (
 		<Box>
 			<Box
@@ -30,21 +33,21 @@ const Subcate = (props: Props) => {
 								w="full"
 								h="full"
 								objectFit="cover"
-								src="https://images.thinkgroup.vn/unsafe/84x84/filters:quality(100)/https://media-api-beta.thinkpro.vn/media/core/brands/2023/4/5/logo-dell-thinkpro-10.png"
+								src={brand?.thumbnail?.url}
 							/>
 						</Box>
 						<Text
-							fontSize={"16px"}
+							fontSize={"sm"}
 							fontWeight={600}
 							pl={"2"}
 						>
-							Laptop Dell Inspiron 16
+							{category?.name + " " + brand?.name}
 						</Text>
 					</Flex>
 					<Box>
 						<Flex
-							onClick={onOpen}
-							as={"button"}
+							to={`/${brand?.shared_url}`}
+							as={ReactRouterLink}
 							fontSize={"12px"}
 							bg={"white"}
 							alignItems={"center"}

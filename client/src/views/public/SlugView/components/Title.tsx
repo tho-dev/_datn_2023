@@ -9,18 +9,8 @@ type Props = {
 
 const Title = ({ filters }: Props) => {
 	return (
-		<Box
-			w="100%"
-			p="6"
-			bg="white"
-			my={6}
-			borderRadius={12}
-		>
-			<Flex
-				my={1}
-				gap="6"
-				alignItems="center"
-			>
+		<Box w="100%" p="6" bg="white" my={6} borderRadius={12}>
+			<Flex my={1} gap="6" alignItems="center">
 				{filters?.type == "category_brand" && (
 					<Box
 						w="84px"
@@ -40,10 +30,7 @@ const Title = ({ filters }: Props) => {
 				)}
 
 				<Box flex="1">
-					<Text
-						fontSize="2xl"
-						fontWeight="bold"
-					>
+					<Text fontSize="2xl" fontWeight="bold">
 						{filters?.detail?.name}
 					</Text>
 					<Text
@@ -58,17 +45,8 @@ const Title = ({ filters }: Props) => {
 					</Text>
 					{filters?.detail?.brands?.length > 0 && (
 						<>
-							<Box
-								w="100%"
-								h="1px"
-								bgColor="bg.gray"
-								my="4"
-							></Box>
-							<Flex
-								gap="4"
-								mt="4"
-								flexWrap="wrap"
-							>
+							<Box w="100%" h="1px" bgColor="bg.gray" my="4"></Box>
+							<Flex gap="4" mt="4" flexWrap="wrap">
 								{filters?.detail?.brands.map((item: any) => {
 									return (
 										<Link
@@ -80,13 +58,14 @@ const Title = ({ filters }: Props) => {
 										>
 											<Button
 												h="auto"
-												px="4"
-												py="3"
+												px="3"
+												py="2"
 												size="small"
 												lineHeight="150%"
-												rounded="lg"
+												rounded="md"
 												color="text.black"
 												backgroundColor="bg.gray"
+												_hover={{ bg: "gray.200" }}
 											>
 												{item?.name}
 											</Button>

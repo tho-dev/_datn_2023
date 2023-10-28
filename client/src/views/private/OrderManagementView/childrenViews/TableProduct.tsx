@@ -36,7 +36,7 @@ export default function TableProduct<Data extends object>({
   });
 
   return (
-    <Box px="6" py="8" borderWidth="1px" borderColor="border.gray" rounded="lg">
+    <Box px="4" py="6" borderWidth="1px" borderColor="border.gray" rounded="lg">
       <Table>
         <Thead rounded="md" overflow="hidden" h="48px">
           {table.getHeaderGroups().map((headerGroup) => (

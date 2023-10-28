@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
 	Box,
 	Button,
@@ -12,23 +11,32 @@ import {
 	Switch,
 	Text,
 } from "@chakra-ui/react";
-import Title from "./components/Title";
-import FilterProduct from "./components/Filter";
-import { useGetProducItemToBrandAndCategoryQuery, useGetFilterBrandAndCategoryQuery } from "~/redux/api/collection";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import ListThinkPro from "~/components/ListThinkPro";
 import { ArrowUpIcon } from "~/components/common/Icons";
-import { useParams } from "react-router";
+import { useGetFilterBrandAndCategoryQuery, useGetProducItemToBrandAndCategoryQuery } from "~/redux/api/collection";
+import FilterProduct from "./components/Filter";
+import Title from "./components/Title";
+import LoadingPolytech from "~/components/LoadingPolytech";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 const SlugView = (props: Props) => {
 	const { slug: params } = useParams();
+	const navigate = useNavigate();
 	const [showCompare, setShowCompare] = useState<boolean>(false);
 	const [slug, setSlug] = useState<string>("");
 	const [page, setPage] = useState<any>(1);
 	const [data, setData] = useState<any>([]);
 
-	const { data: products } = useGetProducItemToBrandAndCategoryQuery(
+	const {
+		data: products,
+		isLoading,
+		isFetching,
+		isError,
+	} = useGetProducItemToBrandAndCategoryQuery(
 		{
 			_page: page,
 			_limit: 20,
@@ -65,6 +73,14 @@ const SlugView = (props: Props) => {
 	const handleCompare = () => {
 		setShowCompare(!showCompare);
 	};
+
+	if (isFetching) {
+		return <LoadingPolytech />;
+	}
+
+	if (isError) {
+		navigate("/404");
+	}
 
 	return (
 		<Box m="30px 0">
@@ -161,11 +177,11 @@ const SlugView = (props: Props) => {
 				m="10px 0"
 			>
 				<Button
-					disabled
+					isLoading={isFetching}
 					bgColor="bg.white"
 					color="bg.blue"
 					width="30%"
-					fontWeight="bold"
+					fontWeight="semibold"
 					fontSize="md"
 					size="lager"
 					onClick={() => {
@@ -173,6 +189,7 @@ const SlugView = (props: Props) => {
 							setPage(products?.data?.paginate?.nextPage);
 						}
 					}}
+					_hover={{ bg: "gray.300" }}
 				>
 					Xem thêm
 				</Button>

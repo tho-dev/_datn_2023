@@ -30,7 +30,8 @@ import {
 import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Transport from "./components/Transport";
-import { chuyenDoiSoDienThoai } from "~/utils/fc";
+import { chuyenDoiSoDienThoai, formatPhoneNumber } from "~/utils/fc";
+import { socket } from "~/App";
 type Props = {};
 
 const Payment = (props: Props) => {
@@ -40,13 +41,25 @@ const Payment = (props: Props) => {
   const [address, setAddress] = React.useState("");
   const [transportFee, setTransportFee] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const {
+    isOpen: isOpenOtp,
+    onOpen: onOpenOtp,
+    onClose: onCloseOtp,
+  } = useDisclosure();
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const { user, isLogin } = useAppSelector(
     (state) => state.persistedReducer.global
   );
   const { data, isLoading, isError } = useGetCartQuery(cart_id);
-  const [open, setOpen] = useState(false);
-
+  useEffect(() => {
+    socket.emit(
+      "joinRoom",
+      "don-hang",
+      user._id ?? "123",
+      user.role ?? "customer"
+    );
+  }, []);
   const shopAdress =
     "13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam";
   const {
@@ -70,7 +83,7 @@ const Payment = (props: Props) => {
       phone_number: compare_phone_number,
     };
     setDataOrder(new_data);
-    setOpen(!open);
+    onOpenOtp();
   };
 
   const handleChooseAdress = (data: any) => {
@@ -83,6 +96,7 @@ const Payment = (props: Props) => {
         })
         .then(({ data }) => {
           setTransportFee(data.data);
+          onClose();
         });
     } else {
       setAddress("");
@@ -100,7 +114,7 @@ const Payment = (props: Props) => {
           setTransportFee(data.data);
         });
     }
-  }, [addressWatch, methodOrder]);
+  }, [methodOrder]);
 
   if (isLoading) {
     return <Box>Loading...</Box>;
@@ -208,7 +222,11 @@ const Payment = (props: Props) => {
                       required: "Trường bắt buộc nhập",
                     })}
                     isDisabled={data.data.products.length === 0}
-                    defaultValue={(isLogin && `0${user.phone}`) || ""}
+                    defaultValue={
+                      (isLogin &&
+                        `${formatPhoneNumber(user.phone.toString())}`) ||
+                      ""
+                    }
                   />
                   <FormErrorMessage>
                     {" "}
@@ -412,7 +430,12 @@ const Payment = (props: Props) => {
           </Box>
         </Box>
       </form>
-      <PopupCheckOtp open={open} dataOrder={dataOrder} />
+      <PopupCheckOtp
+        isOpenOtp={isOpenOtp}
+        onOpenOtp={onOpenOtp}
+        onCloseOtp={onCloseOtp}
+        dataOrder={dataOrder}
+      />
       <Transport
         isOpen={isOpen}
         onOpen={onOpen}

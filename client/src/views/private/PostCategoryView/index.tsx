@@ -51,7 +51,6 @@ const PostCategoryView = (props: Props) => {
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
 		_sort: "created_at",
 		_order: "asc",
 		_type: "category_post",
@@ -93,9 +92,10 @@ const PostCategoryView = (props: Props) => {
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: (info) => {
-				const index = info.row.index;
-				return index + 1;
+			cell: ({ row, table }) => {
+				const index = row.index + 1;
+				const { pageIndex, pageSize } = table.getState().pagination;
+				return pageIndex * pageSize + index;
 			},
 			header: "#",
 		}),
@@ -316,7 +316,6 @@ const PostCategoryView = (props: Props) => {
 					query={{
 						_limit: 20,
 						_page: 1,
-						_parent: true,
 						_sort: "created_at",
 						_order: "desc",
 						_type: "category_post",

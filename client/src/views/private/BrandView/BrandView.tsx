@@ -52,7 +52,6 @@ const BrandView = (props: Props) => {
 	const { data: brands, isLoading } = useGetAllBrandsQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
 		_sort: "created_at",
 		_order: "desc",
 	});
@@ -60,7 +59,6 @@ const BrandView = (props: Props) => {
 	const { data: categories } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
 		_sort: "created_at",
 		_order: "desc",
 		_type: "category_brand",
@@ -117,9 +115,10 @@ const BrandView = (props: Props) => {
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: (info) => {
-				const index = info.row.index;
-				return index + 1;
+			cell: ({ row, table }) => {
+				const index = row.index + 1;
+				const { pageIndex, pageSize } = table.getState().pagination;
+				return pageIndex * pageSize + index;
 			},
 			header: "#",
 		}),
@@ -356,14 +355,6 @@ const BrandView = (props: Props) => {
 						_type: "category_brand",
 					}}
 				/>
-
-				{/* Cofirm */}
-				<ConfirmThinkPro
-					isOpen={isOpenComfirm}
-					onClose={onCloseComfirm}
-					content="Bạn có muốn xóa bỏ thương hiệu này không?"
-					handleClick={handleDeleteBrand}
-				/>
 			</Box>
 			{/* Form */}
 			<DialogThinkPro
@@ -391,6 +382,14 @@ const BrandView = (props: Props) => {
 					categories={categoriesBrand}
 				/>
 			</DialogThinkPro>
+
+			{/* Cofirm */}
+			<ConfirmThinkPro
+				isOpen={isOpenComfirm}
+				onClose={onCloseComfirm}
+				content="Bạn có muốn xóa bỏ thương hiệu này không?"
+				handleClick={handleDeleteBrand}
+			/>
 		</>
 	);
 };

@@ -7,6 +7,17 @@
   overflow-y: auto;
 }
 
+.ql-snow .ql-editor img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0 auto;
+  border-radius: 8px;
+  margin: 24px 0;
+  align-items: center;
+  text-align: center;
+}
+
 .ql-toolbar.ql-snow {
   border: 1px solid #ced4da;
   border-top-right-radius: 4px;
@@ -32,10 +43,10 @@
 }
 
 .rti--tag {
-  font-size: 14px !important;
+  font-size: 12px !important;
   padding-left: 6px !important;
   padding-right: 6px !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
 }
 
 .rti--tag button {
@@ -44,15 +55,16 @@
 }
 
 .rti--input {
-  font-size: 14px !important;
+  font-size: 12px !important;
   font-weight: 500;
   line-height: 1.5;
 }
 
 .rti--input::-webkit-input-placeholder {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
 }
+
 .leaflet-container {
   height: 500px !important;
 }

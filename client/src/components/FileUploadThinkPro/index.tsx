@@ -1,9 +1,9 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import DefaultAvatar from "~/assets/images/thumb.png";
 import { Input } from "@chakra-ui/input";
 import { uploadImage, removeFile } from "~/services/upload.service";
 import { Box, Flex, Image, Spinner, Text } from "@chakra-ui/react";
-import { CloseIcon, CloseSmallIcon } from "../common/Icons";
+import { CloseIcon, CloseSmallIcon, UploadImageIcon } from "../common/Icons";
 
 interface UploadImageProps {
 	getDataFn: (data: string) => void;
@@ -18,7 +18,7 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 
 	useEffect(() => {
 		setSelectedImage(setData || "");
-	}, []);
+	}, [setData]);
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSpinner(true);
@@ -55,7 +55,6 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 
 	return (
 		<Box
-			onClick={handleClickSelectFile}
 			position="relative"
 			w="full"
 			h="full"
@@ -64,47 +63,77 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 			role="group"
 			bgColor="bg.gray"
 		>
-			<Input
-				type="file"
-				ref={inputFileRef}
-				onChange={handleFileChange}
+			<Box
+				onClick={handleClickSelectFile}
+				position="relative"
 				w="full"
 				h="full"
-				visibility="hidden"
-			/>
-
-			{spinner && (
-				<Box
-					position="absolute"
-					top="50%"
-					left="50%"
-					transform="translate(-50%, -50%)"
-					zIndex="3"
-				>
-					<Spinner size="md" />
-				</Box>
-			)}
-
-			<Image
-				src={selectedImage ? selectedImage?.url : DefaultAvatar}
-				w="full"
-				h="full"
+				cursor="pointer"
 				rounded="md"
-				position="absolute"
-				top="50%"
-				left="50%"
-				transform="translate(-50%, -50%)"
-				zIndex="2"
-				objectFit="contain"
-				p="2"
-			/>
+				role="group"
+				bgColor="bg.gray"
+			>
+				<Input
+					type="file"
+					ref={inputFileRef}
+					onChange={handleFileChange}
+					w="full"
+					h="full"
+					visibility="hidden"
+				/>
 
-			{selectedImage && (
+				{spinner && (
+					<Box
+						position="absolute"
+						top="50%"
+						left="50%"
+						transform="translate(-50%, -50%)"
+						zIndex="3"
+					>
+						<Spinner
+							size="lg"
+							color="bg.blue"
+						/>
+					</Box>
+				)}
+
+				{selectedImage?.url ? (
+					<Image
+						src={selectedImage ? selectedImage?.url : DefaultAvatar}
+						w="full"
+						h="full"
+						rounded="md"
+						position="absolute"
+						top="50%"
+						left="50%"
+						transform="translate(-50%, -50%)"
+						zIndex="2"
+						objectFit="contain"
+						p="2"
+					/>
+				) : (
+					<Flex
+						w="full"
+						h="full"
+						rounded="md"
+						position="absolute"
+						top="50%"
+						left="50%"
+						transform="translate(-50%, -50%)"
+						zIndex="2"
+						justifyContent="center"
+						alignItems="center"
+					>
+						<UploadImageIcon size={10} />
+					</Flex>
+				)}
+			</Box>
+			{selectedImage?.url && (
 				<Flex
 					w="full"
 					py="1"
 					rounded="full"
-					bgColor="#f03e3e"
+					bgColor="bg.bgDelete"
 					top="-8"
 					opacity="1"
 					position="absolute"
@@ -117,14 +146,14 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 				>
 					<Text
 						fontSize="xs"
-						color="text.white"
+						color="text.textDelete"
 						fontWeight="semibold"
 					>
 						Bỏ chọn ảnh
 					</Text>
 					<CloseSmallIcon
 						size={4}
-						color="bg.white"
+						color="text.textDelete"
 					/>
 				</Flex>
 			)}
@@ -132,4 +161,4 @@ const FileUploadThinkPro = ({ getDataFn, setData, fileName }: UploadImageProps) 
 	);
 };
 
-export default FileUploadThinkPro;
+export default React.memo(FileUploadThinkPro);

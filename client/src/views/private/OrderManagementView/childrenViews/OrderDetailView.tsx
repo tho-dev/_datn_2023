@@ -25,6 +25,10 @@ import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import { useToast } from "@chakra-ui/react";
 import ModelPrint from "./ModalPrint";
 import TableProduct from "./TableProduct";
+import ExportOrderPDF from "./ExportOrderPDF";
+import { PDFViewer } from "@react-pdf/renderer";
+import DialogThinkPro from "~/components/DialogThinkPro";
+
 type Props = {};
 
 const OrderDetailView = (props: Props) => {
@@ -33,6 +37,12 @@ const OrderDetailView = (props: Props) => {
   const [openPrint, setOpenPrint] = useState(false);
   const [tokenPrint, setTokenPrint] = useState("");
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isPDFOpen,
+    onClose: onPDFClose,
+    onOpen: onPDFOpen,
+  } = useDisclosure();
+
   const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
     id,
   });
@@ -50,7 +60,6 @@ const OrderDetailView = (props: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
-  console.log(data);
 
   const columns = [
     columnHelper.accessor("#", {
@@ -63,13 +72,13 @@ const OrderDetailView = (props: Props) => {
 
     columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue()._id}</h1>;
+        return <h1>{info.getValue()?._id ?? "id"}</h1>;
       },
       header: "ID sản phẩm",
     }),
     columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue().name}</h1>;
+        return <h1>{info.getValue()?.name ?? "Sản phẩm"}</h1>;
       },
       header: "Tên sản phẩm",
     }),
@@ -166,10 +175,24 @@ const OrderDetailView = (props: Props) => {
         <Heading as="h1" fontSize="18">
           <Text>Chi tiết đơn hàng</Text>
         </Heading>
-        <Button leftIcon={<DownloadIcon size={24} />} onClick={handlePrinOrder}>
-          {" "}
-          In vận đơn
-        </Button>
+        <Flex gap={4}>
+          {data?.data.shipping_method === "at_store" ? (
+            <Button
+              leftIcon={<DownloadIcon size={24} />}
+              onClick={() => onPDFOpen()}
+            >
+              In HĐ thanh toán
+            </Button>
+          ) : (
+            <Button
+              leftIcon={<DownloadIcon size={24} />}
+              onClick={handlePrinOrder}
+            >
+              {" "}
+              In vận đơn
+            </Button>
+          )}
+        </Flex>
       </Flex>
       <Flex justifyContent="space-between" alignItems={"center"}>
         <Heading as="h1" fontSize="16">
@@ -427,6 +450,22 @@ const OrderDetailView = (props: Props) => {
         onClose={() => setOpenPrint(false)}
         handlePrint={handlePrint}
       />
+      <DialogThinkPro
+        isOpen={isPDFOpen}
+        onClose={onPDFClose}
+        title="Xuất hóa đơn"
+        isCentered={true}
+        size="3xl"
+        footer={
+          <Flex gap={4}>
+            <Button onClick={() => onPDFClose()}>Hủy</Button>
+          </Flex>
+        }
+      >
+        <PDFViewer width={"100%"} height={"800px"}>
+          <ExportOrderPDF data={data?.data} />
+        </PDFViewer>
+      </DialogThinkPro>
     </Box>
   );
 };

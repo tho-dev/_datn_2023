@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { Box, Center } from "@chakra-ui/layout";
+import { Box, Center, Flex } from "@chakra-ui/layout";
 import { TheHeader } from "~/components/common/TheHeader";
 import { TheNav } from "~/components/common/TheNav";
 import { TheFooter } from "~/components/common/TheFooter";
@@ -9,11 +9,18 @@ import CompareThinkPro from "~/components/CompareThinkPro";
 type Props = {};
 
 const MainLayout = (props: Props) => {
-	const path = useLocation();
-	const checkRouter = path?.pathname !== "/so-sanh";
+	const { pathname } = useLocation();
+	const checkRouter = pathname !== "/so-sanh";
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [pathname]);
 
 	return (
-		<Box w="full">
+		<Box
+			w="full"
+			position="relative"
+		>
 			{/* Header */}
 			<Box
 				w="full"
@@ -50,7 +57,7 @@ const MainLayout = (props: Props) => {
 				borderColor="#f0f2f4"
 				backgroundColor="bg.white"
 			>
-				<Center backgroundColor="bg.white">
+				<Center>
 					<Box
 						w="full"
 						maxW={{
@@ -110,14 +117,16 @@ const MainLayout = (props: Props) => {
 					</Box>
 				</Center>
 			</Box>
-			<Box
+			{/* <Box
 				position="fixed"
 				bottom="0"
 				width="full"
 				zIndex="90"
 			>
 				<CompareThinkPro />
-			</Box>
+			</Box> */}
+
+			{/* loading global */}
 		</Box>
 	);
 };

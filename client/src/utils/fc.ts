@@ -25,6 +25,12 @@ export function chuyenDoiSoDienThoai(soDienThoai: any) {
 		return false;
 	}
 }
+export function formatPhoneNumber(phoneNumber: string) {
+	if (phoneNumber.startsWith("84") && phoneNumber.length === 11) {
+		return "0" + phoneNumber.substring(2);
+	}
+	return phoneNumber;
+}
 export const objectToUrlParams = (obj: { [key: string]: any }) => {
 	const params = [];
 
@@ -47,4 +53,39 @@ export const formatNumber = (str: string) => {
 		.reduce((prev, next, index) => {
 			return (index % 3 ? next : next + ".") + prev;
 		});
+};
+
+export const generateVariant = (input: any) => {
+	if (input.length === 0) return [];
+
+	let result = [[]] as any;
+
+	for (const option of input) {
+		const name = option.name.value;
+		const optionValues = option.options;
+
+		if (optionValues.length === 0) continue;
+
+		const append = [];
+
+		for (const valueObj of optionValues) {
+			const label = valueObj.label;
+			const value = valueObj.value;
+			for (const data of result) {
+				const newVariant = [
+					...data,
+					{
+						name: name,
+						label: label,
+						value: value,
+					},
+				];
+				append.push(newVariant);
+			}
+		}
+
+		result = append;
+	}
+
+	return result;
 };
