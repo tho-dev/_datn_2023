@@ -4,7 +4,9 @@ import { Image, Divider, Button } from "@chakra-ui/react";
 import { PlusIcon } from "../common/Icons";
 import { addViewedItem } from "~/redux/slices/globalSlice";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
 import { formatNumber } from "~/utils/fc";
+import defaultImage from "~/assets/images/logo-thinkpro.svg";
 
 type Props = {
 	product?: IProduct;

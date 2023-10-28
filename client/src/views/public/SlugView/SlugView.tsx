@@ -1,6 +1,8 @@
+import React, { useEffect, useState, useMemo } from "react";
 import {
 	Box,
 	Button,
+	CheckboxGroup,
 	Flex,
 	FormLabel,
 	Popover,
@@ -11,87 +13,135 @@ import {
 	Switch,
 	Text,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import Title from "./components/Title";
+import FilterProduct from "./components/Filter";
+import { useGetProducItemToBrandAndCategoryQuery, useGetFilterBrandAndCategoryQuery } from "~/redux/api/collection";
 import ListThinkPro from "~/components/ListThinkPro";
 import { ArrowUpIcon } from "~/components/common/Icons";
-import { useGetFilterBrandAndCategoryQuery, useGetProducItemToBrandAndCategoryQuery } from "~/redux/api/collection";
-import FilterProduct from "./components/Filter";
-import Title from "./components/Title";
-import LoadingPolytech from "~/components/LoadingPolytech";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
 const SlugView = (props: Props) => {
 	const { slug: params } = useParams();
-	const navigate = useNavigate();
 	const [showCompare, setShowCompare] = useState<boolean>(false);
-	const [slug, setSlug] = useState<string>("");
-	const [page, setPage] = useState<any>(1);
 	const [data, setData] = useState<any>([]);
+	const [query, setQuery] = useState<any>({
+		_page: 1,
+		_limit: 45,
+		_order: "desc",
+		_sort: "created_at",
+		_category: "",
+	});
+	const debouncedQuery = useDebounce(query, 600);
+
+	const { control, register, reset, setValue, watch } = useForm<any>();
+	const { fields } = useFieldArray({
+		control,
+		name: "filters",
+	});
+
+	const wathFilters = useWatch({
+		control,
+		name: "filters",
+	});
 
 	const {
 		data: products,
 		isLoading,
 		isFetching,
 		isError,
-	} = useGetProducItemToBrandAndCategoryQuery(
-		{
-			_page: page,
-			_limit: 20,
-			_order: "desc",
-			_sort: "created_at",
-			_category: slug,
-		},
-		{
-			skip: !slug,
-		}
-	);
+	} = useGetProducItemToBrandAndCategoryQuery(debouncedQuery, {
+		skip: !debouncedQuery?._category,
+	});
 
 	const { data: filters } = useGetFilterBrandAndCategoryQuery(
 		{
-			_slug: slug,
+			_slug: debouncedQuery?._category,
 		},
-		{ skip: !slug }
+		{ skip: !debouncedQuery?._category }
 	);
 
 	useEffect(() => {
 		if (params) {
-			setSlug(params);
-			setData([]);
+			setQuery({
+				...query,
+				_category: params,
+			});
 		}
 	}, [params]);
 
 	useEffect(() => {
 		if (products) {
 			const docs = products?.data?.items as any;
-			setData([...data, ...docs]);
+			setData(docs);
 		}
 	}, [products]);
+
+	useEffect(() => {
+		if (filters) {
+			setValue("filters", filters?.data?.filters);
+		}
+	}, [filters]);
+
+	useEffect(() => {
+		if (wathFilters) {
+			// bộ lọc
+			const filterArray = watch("filters");
+			const array = filterArray.map((item: any) => {
+				const options = item?.options?.filter((option: any) => option.checked);
+				const results = options?.map((option: any) => option.value).join(",");
+
+				return {
+					key: `_${item?.name}`,
+					value: results,
+				};
+			});
+
+			const filterReduce = array
+				.filter((item: any) => item?.value)
+				.reduce((acc: any, cur: any) => {
+					const key = cur.key;
+					acc[key] = cur.value;
+					return acc;
+				}, {});
+
+			// setData([]);
+			setQuery({
+				...query,
+				...filterReduce,
+			});
+		}
+	}, [wathFilters]);
 
 	const handleCompare = () => {
 		setShowCompare(!showCompare);
 	};
 
-	if (isFetching) {
-		return <LoadingPolytech />;
-	}
+	console.log("wathFilters", wathFilters);
 
-	if (isError) {
-		navigate("/404");
-	}
+	if (isLoading) return <Box>Loading...</Box>;
+
+	if (isError) return <Box>isError...</Box>;
 
 	return (
 		<Box m="30px 0">
 			<Title filters={filters?.data} />
 
 			<Flex gap="4">
-				{filters?.data?.filters?.map((item: any) => {
+				{fields?.map((item: any, index: number) => {
 					return (
 						<FilterProduct
+							key={item.id}
 							title={item?.label}
+							name={item?.name}
 							data={item?.options}
+							control={control}
+							watch={watch}
+							nested={index}
+							register={register}
 						/>
 					);
 				})}
@@ -144,21 +194,44 @@ const SlugView = (props: Props) => {
 										flexDir="column"
 										gap="2"
 									>
-										<Box w="full">
-											<Radio value="1">
-												<Text fontSize="sm">Nổi bật nhất</Text>
-											</Radio>
-										</Box>
-										<Box w="full">
-											<Radio value="1">
-												<Text fontSize="sm">Giá thấp -&gt; cao</Text>
-											</Radio>
-										</Box>
-										<Box w="full">
-											<Radio value="1">
-												<Text fontSize="sm">Giá thấp -&gt; cao</Text>
-											</Radio>
-										</Box>
+										<CheckboxGroup value={[1, 2, 3]}>
+											<Box w="full">
+												<Radio
+													defaultChecked
+													value="1"
+												>
+													<Text fontSize="sm">Nổi bật nhất</Text>
+												</Radio>
+											</Box>
+											<Box w="full">
+												<Radio
+													value="2"
+													onClick={() =>
+														setQuery({
+															...query,
+															_order: "asc",
+															_sort: "price",
+														})
+													}
+												>
+													<Text fontSize="sm">Giá thấp -&gt; cao</Text>
+												</Radio>
+											</Box>
+											<Box w="full">
+												<Radio
+													value="3"
+													onClick={() =>
+														setQuery({
+															...query,
+															_order: "desc",
+															_sort: "price",
+														})
+													}
+												>
+													<Text fontSize="sm">Giá thấp -&gt; cao</Text>
+												</Radio>
+											</Box>
+										</CheckboxGroup>
 									</Flex>
 								</PopoverHeader>
 							</PopoverContent>
@@ -186,7 +259,10 @@ const SlugView = (props: Props) => {
 					size="lager"
 					onClick={() => {
 						if (products?.data?.paginate?.hasNextPage) {
-							setPage(products?.data?.paginate?.nextPage);
+							setQuery({
+								...query,
+								_page: products?.data?.paginate?.nextPage,
+							});
 						}
 					}}
 					_hover={{ bg: "gray.300" }}
