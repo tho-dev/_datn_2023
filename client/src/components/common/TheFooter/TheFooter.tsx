@@ -21,7 +21,7 @@ const TheFooter = (props: Props) => {
 			<Store title="Hệ thống cửa hàng" />
 
 			{/* Chính sách, social network */}
-			<Sections title="ThinkPro" />
+			<Sections title="Polytech" />
 
 			{/* Thương hiệu & bản quyền */}
 			<Box>

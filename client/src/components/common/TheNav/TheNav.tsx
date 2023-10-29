@@ -19,6 +19,7 @@ const TheNav = (props: Props) => {
 				gap="6"
 				position="relative"
 				alignItems="center"
+				// bgGradient="linear-gradient(to top, rgb(11 203 224), #fff)"
 			>
 				<Box h="full">
 					<Button
