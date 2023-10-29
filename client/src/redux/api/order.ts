@@ -59,6 +59,14 @@ const orderApi = createApi({
       }),
       providesTags: ['Order'],
     }),
+    getOrderByPhoneNumber: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/order/orderByPhoneNumber`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Order'],
+    }),
     create: builder.mutation<any, any>({
       query: (data) => ({
         url: `/order`,
@@ -137,6 +145,7 @@ export const {
   useGetAllShippingQuery,
   useGetOneShippingQuery,
   useGetAllTotalOrderQuery,
+  useGetOrderByPhoneNumberMutation,
   useCreateMutation,
   useSendOtpMutation,
   useCheckOtpMutation,
@@ -146,7 +155,7 @@ export const {
   useTokenPrintOrderMutation,
   useUpdateStatusOrderMutation,
   useGetOrderByUserIdQuery,
-  useReturnOrderMutation
+  useReturnOrderMutation,
 } = orderApi;
 
 export const productReducer = orderApi.reducer;
