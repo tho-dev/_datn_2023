@@ -22,7 +22,6 @@ import { useParams, useNavigate } from "react-router";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDebounce } from "@uidotdev/usehooks";
 import LoadingPolytech from "~/components/LoadingPolytech";
-import { isPending } from "@reduxjs/toolkit";
 
 type Props = {};
 
@@ -51,6 +50,13 @@ const SlugView = (props: Props) => {
 		name: "filters",
 	});
 
+	const { data: filters, isFetching: isFetchingFilter } = useGetFilterBrandAndCategoryQuery(
+		{
+			_slug: debouncedQuery?._category,
+		},
+		{ skip: !debouncedQuery?._category }
+	);
+
 	const {
 		data: products,
 		isLoading,
@@ -59,13 +65,6 @@ const SlugView = (props: Props) => {
 	} = useGetProducItemToBrandAndCategoryQuery(debouncedQuery, {
 		skip: !debouncedQuery?._category,
 	});
-
-	const { data: filters, isFetching: isFetchingFilter } = useGetFilterBrandAndCategoryQuery(
-		{
-			_slug: debouncedQuery?._category,
-		},
-		{ skip: !debouncedQuery?._category }
-	);
 
 	useEffect(() => {
 		if (params) {
@@ -125,7 +124,7 @@ const SlugView = (props: Props) => {
 
 	if (isFetchingFilter) return <LoadingPolytech />;
 
-	if (isError) return navigate("/404");
+	if (isError) navigate("/404");
 
 	return (
 		<Box m="30px 0">

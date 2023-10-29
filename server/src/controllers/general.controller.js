@@ -76,7 +76,11 @@ export async function updateGeneral(req, res, next) {
 export async function homeSettings(req, res, next) {
 	try {
 		const general = await General.find({}).select('-created_at -updated_at')
-		const categories = await Category.find({}).select('-deleted -deteled_at -created_at -updated_at')
+		const categories = await Category.find({}).select('-deleted -deteled_at -created_at -updated_at').sort({
+			created_at: 1
+		})
+
+		console.log('categories', categories)
 
 
 		const category = await Promise.all(categories?.map(async (item) => {
