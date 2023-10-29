@@ -2,7 +2,56 @@ import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem } from "@chakr
 import NewsCategory from "./components/NewsCategory";
 import { Divider } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
+import { useGetAllPostQuery, useGetSinglePostQuery } from "~/redux/api/post";
+import AllNewsView from "./AllNewsView";
+import { useEffect, useState } from "react";
+import PostThinkPro from "./PostThinkPro";
+import { useParams } from "react-router";
+
+
 const NewsView = () => {
+	const { slug: params } = useParams();
+	const [slug, setSlug] = useState<string>("");
+	const [showCompare, setShowCompare] = useState<boolean>(false);
+	const [data, setData] = useState<any>([]);
+
+	
+	const { data: posts } = useGetAllPostQuery({
+		_order: "asc",
+		_sort: "date",
+		_page: 1,
+		_limit: 10,
+		_type: slug
+	});
+
+	// const { data: filters } = useGetSinglePostQuery(
+	// 	{
+	// 		_slug: slug,
+	// 	},
+	// 	{ skip: !slug }
+	// );
+
+	// useEffect(() => {
+	// 	if (params) {
+	// 	  setSlug(params);
+	// 	  setData([]);
+	// 	}
+	//   }, [params]);
+
+	useEffect(() => {
+		if (posts) {
+			const docs = posts?.data?.items as any;
+			setData([...data, ...docs]);
+		}
+	}, [posts]);
+
+	const handleCompare = () => {
+		setShowCompare(!showCompare);
+	};
+
+	console.log(data);
+	
+
 	return (
 		<Box>
 			<NewsCategory />
@@ -20,116 +69,9 @@ const NewsView = () => {
 					xl: "repeat(3, 1fr)",
 				}}
 			>
-				<GridItem colSpan={2}>
-					<Box my="6">
-						<Grid
-							gap={6}
-							templateColumns={{
-								sm: "repeat(1, 1fr)",
-								md: "repeat(2, 1fr)",
-								xl: "repeat(2, 1fr)",
-							}}
-						>
-							<GridItem>
-								<Box
-									rounded="lg"
-									overflow="hidden"
-									position="relative"
-									paddingBottom="55%"
-								>
-									<Box
-										position="absolute"
-										w="full"
-										h="full"
-									>
-										<Image
-											w="full"
-											h="full"
-											objectFit="cover"
-											src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg"
-										/>
-									</Box>
-								</Box>
-							</GridItem>
-							<GridItem>
-								<Box>
-									<Text
-										fontSize="xl"
-										fontWeight="semibold"
-									>
-										Windows 11 vừa cập nhật, vá lỗi chậm SSD tới nhiều người dùng
-									</Text>
-									<Text
-										fontSize="md"
-										my="4"
-									>
-										Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng
-										Microsoft vẫn âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục.
-									</Text>
-									<Flex fontSize="sm">
-										<Text>Nguyen Cong Minh</Text>
-										<Text mx={2}>|</Text>
-										<Text>5 ngay</Text>
-									</Flex>
-								</Box>
-							</GridItem>
-						</Grid>
-					</Box>
-					<Box my="6">
-						<Grid
-							gap={6}
-							templateColumns={{
-								sm: "repeat(1, 1fr)",
-								md: "repeat(2, 1fr)",
-								xl: "repeat(2, 1fr)",
-							}}
-						>
-							<GridItem>
-								<Box
-									rounded="lg"
-									overflow="hidden"
-									position="relative"
-									paddingBottom="55%"
-								>
-									<Box
-										position="absolute"
-										w="full"
-										h="full"
-									>
-										<Image
-											w="full"
-											h="full"
-											objectFit="cover"
-											src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg"
-										/>
-									</Box>
-								</Box>1/
-							</GridItem>
-							<GridItem>
-								<Box>
-									<Text
-										fontSize="xl"
-										fontWeight="semibold"
-									>
-										Windows 11 vừa cập nhật, vá lỗi chậm SSD tới nhiều người dùng
-									</Text>
-									<Text
-										fontSize="md"
-										my="4"
-									>
-										Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng
-										Microsoft vẫn âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục.
-									</Text>
-									<Flex fontSize="sm">
-										<Text>Nguyen Cong Minh</Text>
-										<Text mx={2}>|</Text>
-										<Text>5 ngay</Text>
-									</Flex>
-								</Box>
-							</GridItem>
-						</Grid>
-					</Box>
-				</GridItem>
+
+				<PostThinkPro data={data} />
+
 				<GridItem
 					colSpan={1}
 					h="800px"
