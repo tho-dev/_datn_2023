@@ -18,14 +18,17 @@ import FilterProduct from "./components/Filter";
 import { useGetProducItemToBrandAndCategoryQuery, useGetFilterBrandAndCategoryQuery } from "~/redux/api/collection";
 import ListThinkPro from "~/components/ListThinkPro";
 import { ArrowUpIcon } from "~/components/common/Icons";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDebounce } from "@uidotdev/usehooks";
+import LoadingPolytech from "~/components/LoadingPolytech";
+import { isPending } from "@reduxjs/toolkit";
 
 type Props = {};
 
 const SlugView = (props: Props) => {
 	const { slug: params } = useParams();
+	const navigate = useNavigate();
 	const [showCompare, setShowCompare] = useState<boolean>(false);
 	const [data, setData] = useState<any>([]);
 	const [query, setQuery] = useState<any>({
@@ -57,7 +60,7 @@ const SlugView = (props: Props) => {
 		skip: !debouncedQuery?._category,
 	});
 
-	const { data: filters } = useGetFilterBrandAndCategoryQuery(
+	const { data: filters, isFetching: isFetchingFilter } = useGetFilterBrandAndCategoryQuery(
 		{
 			_slug: debouncedQuery?._category,
 		},
@@ -120,11 +123,9 @@ const SlugView = (props: Props) => {
 		setShowCompare(!showCompare);
 	};
 
-	console.log("wathFilters", wathFilters);
+	if (isFetchingFilter) return <LoadingPolytech />;
 
-	if (isLoading) return <Box>Loading...</Box>;
-
-	if (isError) return <Box>isError...</Box>;
+	if (isError) return navigate("/404");
 
 	return (
 		<Box m="30px 0">
@@ -240,7 +241,10 @@ const SlugView = (props: Props) => {
 				</Flex>
 
 				{/* danh sách sản phẩm */}
-				<ListThinkPro data={data} />
+				<ListThinkPro
+					data={data}
+					loading={isFetching}
+				/>
 			</Box>
 
 			<Box
@@ -249,26 +253,27 @@ const SlugView = (props: Props) => {
 				alignItems="center"
 				m="10px 0"
 			>
-				<Button
-					isLoading={isFetching}
-					bgColor="bg.white"
-					color="bg.blue"
-					width="30%"
-					fontWeight="semibold"
-					fontSize="md"
-					size="lager"
-					onClick={() => {
-						if (products?.data?.paginate?.hasNextPage) {
-							setQuery({
-								...query,
-								_page: products?.data?.paginate?.nextPage,
-							});
-						}
-					}}
-					_hover={{ bg: "gray.300" }}
-				>
-					Xem thêm
-				</Button>
+				{data?.length > 0 && (
+					<Button
+						bgColor="bg.white"
+						color="bg.blue"
+						width="30%"
+						fontWeight="semibold"
+						fontSize="md"
+						size="lager"
+						onClick={() => {
+							if (products?.data?.paginate?.hasNextPage) {
+								setQuery({
+									...query,
+									_page: products?.data?.paginate?.nextPage,
+								});
+							}
+						}}
+						_hover={{ bg: "gray.300" }}
+					>
+						Xem thêm
+					</Button>
+				)}
 			</Box>
 		</Box>
 	);

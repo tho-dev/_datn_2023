@@ -8,6 +8,7 @@ export interface IGlobalState {
 	time: number;
 	isCheckOtp: boolean;
 	isLoading: boolean;
+	homeSettings: any;
 }
 
 const initialState: IGlobalState = {
@@ -18,6 +19,7 @@ const initialState: IGlobalState = {
 	time: 0,
 	isCheckOtp: false,
 	isLoading: false,
+	homeSettings: {},
 };
 
 const globalSlice = createSlice({
@@ -60,9 +62,12 @@ const globalSlice = createSlice({
 			const { loading } = action.payload;
 			state.isLoading = loading;
 		},
+		setHomeSetting: (state, action: PayloadAction) => {
+			state.homeSettings = action.payload;
+		},
 	},
 });
 
-export const { login, logout, addViewedItem, setTime, setOtp, setCheckOtp, resetOtp, setIsLoading } =
+export const { login, logout, addViewedItem, setTime, setOtp, setCheckOtp, resetOtp, setIsLoading, setHomeSetting } =
 	globalSlice.actions;
 export default globalSlice.reducer;
