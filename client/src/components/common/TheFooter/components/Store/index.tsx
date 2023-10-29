@@ -6,9 +6,10 @@ import { ArrowRightUpIcon } from "~/components/common/Icons";
 
 type Props = {
 	title?: string;
+	items?: any;
 };
 
-const Store = ({ title }: Props) => {
+const Store = ({ title, items }: Props) => {
 	return (
 		<Box mt="6">
 			<Heading
@@ -28,117 +29,48 @@ const Store = ({ title }: Props) => {
 					xl: "repeat(3, 1fr)",
 				}}
 			>
-				<GridItem>
-					<Box
-						p="4"
-						rounded="md"
-						fontSize="sm"
-						color="text.black"
-						backgroundColor="bg.gray"
-					>
-						<Text fontWeight="semibold">Thành phố Hồ Chí Minh</Text>
-						<Text>Số 5 - 7 Nguyễn Huy Tưởng, F6, Q. Bình Thạnh</Text>
-						<Flex
-							mt="2"
-							alignItems="flex-end"
-							justifyContent="space-between"
-						>
-							<Box fontSize="xs">
-								<Text
-									fontWeight="semibold"
-									color="#f93920"
-								>
-									Đã đóng cửa, hẹn bạn 09:00 ngày mai
-								</Text>
-								<Text fontWeight="medium">09:00 - 21:00</Text>
-							</Box>
-							<Link
-								as={ReactRouterLink}
-								fontSize="xs"
-								color="text.blue"
-								fontWeight="bold"
-								textDecoration="none"
+				{items?.map((item: any, index: number) => {
+					return (
+						<GridItem key={index}>
+							<Box
+								p="4"
+								rounded="md"
+								fontSize="sm"
+								color="text.black"
+								backgroundColor="bg.gray"
 							>
-								Chỉ đường
-								<ArrowRightUpIcon size={4} />
-							</Link>
-						</Flex>
-					</Box>
-				</GridItem>
-				<GridItem>
-					<Box
-						p="4"
-						rounded="md"
-						fontSize="sm"
-						color="text.black"
-						backgroundColor="bg.gray"
-					>
-						<Text fontWeight="semibold">Thành phố Hồ Chí Minh</Text>
-						<Text>Số 5 - 7 Nguyễn Huy Tưởng, F6, Q. Bình Thạnh</Text>
-						<Flex
-							mt="2"
-							alignItems="flex-end"
-							justifyContent="space-between"
-						>
-							<Box fontSize="xs">
-								<Text
-									fontWeight="semibold"
-									color="#f93920"
+								<Text fontWeight="semibold">{item?.city}</Text>
+								<Text>{item?.address}</Text>
+								<Flex
+									mt="2"
+									alignItems="flex-end"
+									justifyContent="space-between"
 								>
-									Đã đóng cửa, hẹn bạn 09:00 ngày mai
-								</Text>
-								<Text fontWeight="medium">09:00 - 21:00</Text>
+									<Box fontSize="xs">
+										<Text
+											fontWeight="semibold"
+											color={item?.status ? "#5fb757" : "#f93920"}
+										>
+											{item?.status ? "Mở cửa" : "Đã đóng cửa, hẹn bạn 09:00 ngày mai"}
+										</Text>
+										<Text fontWeight="medium">{`${item?.time_open} - ${item?.time_close}`}</Text>
+									</Box>
+									<Link
+										as={ReactRouterLink}
+										to={item?.map}
+										fontSize="xs"
+										color="text.blue"
+										fontWeight="bold"
+										textDecoration="none"
+									>
+										Chỉ đường
+										<ArrowRightUpIcon size={4} />
+									</Link>
+								</Flex>
 							</Box>
-							<Link
-								as={ReactRouterLink}
-								fontSize="xs"
-								color="text.blue"
-								fontWeight="bold"
-								textDecoration="none"
-							>
-								Chỉ đường
-								<ArrowRightUpIcon size={4} />
-							</Link>
-						</Flex>
-					</Box>
-				</GridItem>
-				<GridItem>
-					<Box
-						p="4"
-						rounded="md"
-						fontSize="sm"
-						color="text.black"
-						backgroundColor="bg.gray"
-					>
-						<Text fontWeight="semibold">Thành phố Hồ Chí Minh</Text>
-						<Text>Số 5 - 7 Nguyễn Huy Tưởng, F6, Q. Bình Thạnh</Text>
-						<Flex
-							mt="2"
-							alignItems="flex-end"
-							justifyContent="space-between"
-						>
-							<Box fontSize="xs">
-								<Text
-									fontWeight="semibold"
-									color="#f93920"
-								>
-									Đã đóng cửa, hẹn bạn 09:00 ngày mai
-								</Text>
-								<Text fontWeight="medium">09:00 - 21:00</Text>
-							</Box>
-							<Link
-								as={ReactRouterLink}
-								fontSize="xs"
-								color="text.blue"
-								fontWeight="bold"
-								textDecoration="none"
-							>
-								Chỉ đường
-								<ArrowRightUpIcon size={4} />
-							</Link>
-						</Flex>
-					</Box>
-				</GridItem>
+						</GridItem>
+					);
+				})}
 			</Grid>
 		</Box>
 	);

@@ -86,14 +86,17 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
 					>
 						{formatNumber(`${product?.price_before_discount}`)}
 					</Text>
-					<Text
-						p="2px"
-						fontSize="10px"
-						color="text.red"
-						backgroundColor="#fff5f7"
-					>
-						{`${product?.price_discount_percent}%`}
-					</Text>
+
+					{product?.price_discount_percent != 0 && (
+						<Text
+							p="2px"
+							fontSize="10px"
+							color="text.red"
+							backgroundColor="#fff5f7"
+						>
+							{`${product?.price_discount_percent}%`}
+						</Text>
+					)}
 				</Flex>
 				<Flex
 					gap="1"
