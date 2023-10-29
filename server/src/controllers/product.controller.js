@@ -203,7 +203,7 @@ export async function getSingleProduct(req, res, next) {
     const product = await Product.findOne({
       _id: sku?.product_id,
     }).select(
-      "-assets -attributes._id -attributes.items._id -deleted -deleted_at"
+      "-images -attributes._id -attributes.items._id -deleted -deleted_at"
     );
 
     if (!product && !sku) {
@@ -233,7 +233,7 @@ export async function getSingleProduct(req, res, next) {
     // lấy thương hiệu sản phẩm
     const brand = await Brand.findOne({
       _id: product?.brand_id,
-    }).select("_id name slug");
+    }).select("_id name slug shared_url description thumbnail");
 
 
 
@@ -349,7 +349,7 @@ export async function getSingleProduct(req, res, next) {
       _id: { $ne: product?._id },
       category_id: category?._id,
       status: true,
-    }).limit(5).select("-images -seo -attributes -description -specs -category_id -brand_id -deleted -deleted_at -created_at -updated_at")
+    }).limit(5).select("-images -seo -attributes -description -category_id -brand_id -deleted -deleted_at -created_at -updated_at")
 
     const getSku = async (product, id) => {
       const sku = await Sku.findOne({
@@ -406,8 +406,6 @@ export async function getSingleProduct(req, res, next) {
     const products = await Promise.all(
       relateDproducts?.map((item) => getSku(item, item?._id))
     );
-
-
 
     return res.json({
       status: 200,

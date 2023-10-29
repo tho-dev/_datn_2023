@@ -31,6 +31,7 @@ import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Transport from "./components/Transport";
 import { chuyenDoiSoDienThoai, formatPhoneNumber } from "~/utils/fc";
+import { socket } from "~/App";
 type Props = {};
 
 const Payment = (props: Props) => {
@@ -40,6 +41,7 @@ const Payment = (props: Props) => {
   const [address, setAddress] = React.useState("");
   const [transportFee, setTransportFee] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const {
     isOpen: isOpenOtp,
     onOpen: onOpenOtp,
@@ -50,7 +52,14 @@ const Payment = (props: Props) => {
     (state) => state.persistedReducer.global
   );
   const { data, isLoading, isError } = useGetCartQuery(cart_id);
-
+  useEffect(() => {
+    socket.emit(
+      "joinRoom",
+      "don-hang",
+      user._id ?? "123",
+      user.role ?? "customer"
+    );
+  }, []);
   const shopAdress =
     "13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam";
   const {

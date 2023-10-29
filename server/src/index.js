@@ -14,7 +14,11 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 // connect db
 connect();
@@ -54,10 +58,25 @@ app.use((err, req, res, next) => {
     data: null,
   });
 });
-
+const userRooms = {};
 // socket
 io.on("connection", (socket) => {
-  console.log(socket);
+  socket.on("joinRoom", (roomName, userId, role) => {
+    socket.join(roomName);
+    userRooms[socket.id] = { roomName, userId, role };
+  });
+
+  socket.on("sendNotification", (data) => {
+    const { roomName, role } = userRooms[socket.id];
+    if (role === "customer") {
+      io.to(roomName).emit("notification", data);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    delete userRooms[socket.id];
+  });
 });
 
 // listen

@@ -61,7 +61,9 @@ const TabPanelItem = ({ status }: Props) => {
 
   const [orderDetail, setOrderDetail] = useState({} as any);
   const { user } = useAppSelector((state) => state.persistedReducer.global);
-  const { data, isLoading, isFetching } = useGetOrderByUserIdQuery(user._id);
+  const { data, isLoading, isFetching, isError } = useGetOrderByUserIdQuery(
+    user._id
+  );
   const toast = useToast();
   const [cancelOrder] = useCancelOrderMutation();
   const [returnOrder] = useReturnOrderMutation();
@@ -77,6 +79,9 @@ const TabPanelItem = ({ status }: Props) => {
   }
   if (isFetching) {
     return <Box>isFetching...</Box>;
+  }
+  if (isError) {
+    return <Text>Không có đơn hàng nào</Text>;
   }
   const filteredOrders = data.data.filter(
     (order: any) => order.status == status
@@ -217,6 +222,7 @@ const TabPanelItem = ({ status }: Props) => {
     onOpenReturn();
     setId(order._id);
   };
+
   return (
     <>
       <TabPanel>
