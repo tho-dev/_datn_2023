@@ -13,8 +13,6 @@ const TheMenu = ({ items = [] }: Props) => {
 		data: items[0]?.brands,
 	});
 
-	console.log("active", active);
-
 	return (
 		<Flex
 			w="full"
@@ -93,6 +91,9 @@ const TheMenu = ({ items = [] }: Props) => {
 									setActive({
 										...active,
 										check: index,
+										category: {
+											...item,
+										},
 										data: item.brands,
 									})
 								}
@@ -105,7 +106,7 @@ const TheMenu = ({ items = [] }: Props) => {
 										w="full"
 										h="full"
 										objectFit="cover"
-										src={item?.thumbnail?.path}
+										src={item?.thumbnail}
 									/>
 								</Box>
 								<Text
@@ -153,7 +154,10 @@ const TheMenu = ({ items = [] }: Props) => {
 					lg: "row",
 				}}
 			>
-				<Filter items={active?.data} />
+				<Filter
+					items={active?.data}
+					category={active?.category}
+				/>
 			</Flex>
 		</Flex>
 	);
