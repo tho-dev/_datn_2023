@@ -45,6 +45,7 @@ import { ThankView } from "~/views/public/ThankView";
 import PostCategoryView from "~/views/private/PostCategoryView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import { SettingView } from "~/views/private/SettingView";
+import { PromotionView } from "~/views/public/PromotionView";
 
 const routes: RouteObject[] = [
 	{
@@ -96,6 +97,10 @@ const routes: RouteObject[] = [
 					{
 						path: "lich-su-mua-hang",
 						element: <HistoryOrderView />,
+					},
+					{
+						path: "khuyen-mai",
+						element: <PromotionView />,
 					},
 					{
 						path: "thanks",
