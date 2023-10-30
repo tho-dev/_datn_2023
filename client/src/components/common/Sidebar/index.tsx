@@ -128,7 +128,7 @@ const Sidebar = (props: Props) => {
 					borderBottomWidth="1px"
 					borderColor="bg.admin1"
 					// backgroundColor="rgb(11 203 224)"
-					// bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
+					bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
 				>
 					<Heading
 						as="h3"
@@ -144,7 +144,7 @@ const Sidebar = (props: Props) => {
 						// color="rgb(11 203 224)"
 						fontWeight="bold"
 					>
-						ThinkPro
+						Polytech
 					</Heading>
 				</Flex>
 				<Flex
