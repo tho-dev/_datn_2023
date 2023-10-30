@@ -46,6 +46,7 @@ import PostCategoryView from "~/views/private/PostCategoryView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import { SettingView } from "~/views/private/SettingView";
 import { PromotionView } from "~/views/public/PromotionView";
+import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
 
 const routes: RouteObject[] = [
   {
@@ -189,6 +190,10 @@ const routes: RouteObject[] = [
           {
             path: "tai-khoan/add",
             element: <AddUserListManagerView />,
+          },
+          {
+            path: "tai-khoan/:id/update",
+            element: <UpdateUserListManagerView />,
           },
           {
             path: "cau-hinh",
