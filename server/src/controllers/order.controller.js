@@ -29,6 +29,7 @@ export const createOrder = async (req, res, next) => {
     const cart = await Cart.findOne({ cart_id });
     let user_id = null;
     const token = getAuthToken(req);
+
     if (token) {
       jwt.verify(token, process.env.JWT_SECRET_ACCESS_TOKEN, (err, payload) => {
         if (err) {

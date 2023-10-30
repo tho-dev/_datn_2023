@@ -82,6 +82,12 @@ const OrderDetailView = (props: Props) => {
       },
       header: "Tên sản phẩm",
     }),
+    columnHelper.accessor("sku_id", {
+      cell: (info) => {
+        return <h1>{info.getValue()?.SKU ?? "Sản phẩm"}</h1>;
+      },
+      header: "Mã sản phẩm",
+    }),
     columnHelper.accessor("price", {
       cell: (info) => info.getValue()?.toLocaleString(),
       header: "Đơn giá",
