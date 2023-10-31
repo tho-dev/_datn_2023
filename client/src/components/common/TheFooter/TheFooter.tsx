@@ -7,18 +7,25 @@ import { Box, Flex, Text, Link } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import Store from "./components/Store";
 import Sections from "./components/Sections";
+import { useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
 
 type Props = {};
 
 const TheFooter = (props: Props) => {
+	const { homeSettings } = useAppSelector((state: RootState) => state.persistedReducer.global);
+
 	return (
 		<Box
 			px="4"
 			py="6"
 		>
-			<Image src={logo} />
+			<Image src={homeSettings?.general?.logo?.url} />
 			{/* Hệ thống cửa hàng */}
-			<Store title="Hệ thống cửa hàng" />
+			<Store
+				title="Hệ thống cửa hàng"
+				items={homeSettings?.general?.branch}
+			/>
 
 			{/* Chính sách, social network */}
 			<Sections title="Polytech" />
@@ -31,7 +38,7 @@ const TheFooter = (props: Props) => {
 					}}
 				/>
 				<Box fontSize="xs">
-					<Text>© ThinkPro 2023</Text>
+					<Text>© Polytech 2023</Text>
 					<Text>
 						Công ty TNHH Công nghệ Think Việt Nam - GPĐKKD: 0107273909 do sở KH & ĐT TP Hà Nội cấp ngày
 						09/03/2020

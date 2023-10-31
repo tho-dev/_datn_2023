@@ -22,6 +22,8 @@ export default function TableProduct<Data extends object>({
   data,
   columns,
 }: TableThinkProProps<Data>) {
+  console.log(data);
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
     columns,

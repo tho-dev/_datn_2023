@@ -6,7 +6,6 @@ import storage from 'redux-persist/lib/storage';
 import globalSlice from './slices/globalSlice';
 import cartSlice from './slices/cartSlice';
 import userSlice from './slices/userSlice';
-import orderSlice from './slices/orderSlice';
 
 //api
 import authApi from '../redux/api/user';
@@ -19,6 +18,7 @@ import demandApi from '../redux/api/demand';
 import collectionApi from '../redux/api/collection';
 import postApi from './api/post';
 import notificationApi from './api/notification';
+import generalApi from './api/general';
 
 const persistConfig = {
   key: 'root',
@@ -45,6 +45,7 @@ const middleware = [
   collectionApi.middleware,
   postApi.middleware,
   notificationApi.middleware,
+  generalApi.middleware,
 ];
 
 const store = configureStore({

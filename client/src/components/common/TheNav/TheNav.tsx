@@ -5,11 +5,14 @@ import { Button, SlideFade, useDisclosure } from "@chakra-ui/react";
 import TheMenu from "./components/TheMenu";
 import Categories from "./components/Categories";
 import thinkpro from "~/data/clone-thinkpro.json";
+import { useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
 
 type Props = {};
 
 const TheNav = (props: Props) => {
 	const { isOpen, onToggle } = useDisclosure();
+	const { homeSettings } = useAppSelector((state: RootState) => state.persistedReducer.global);
 
 	return (
 		<>
@@ -62,10 +65,10 @@ const TheNav = (props: Props) => {
 						visibility: isOpen ? "visible" : "hidden",
 					}}
 				>
-					<TheMenu items={thinkpro.data} />
+					<TheMenu items={homeSettings?.category?.items} />
 				</SlideFade>
 				{/* Danh mục */}
-				<Categories items={thinkpro.data} />
+				<Categories items={homeSettings?.category?.items} />
 			</Flex>
 		</>
 	);

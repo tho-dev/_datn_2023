@@ -1,6 +1,7 @@
 import joi from "joi"
 
 export const generalSchema = joi.object({
+	_id: joi.allow(''),
 	logo: joi.object({
 		id: joi.string(),
 		url: joi.string(),
@@ -20,5 +21,5 @@ export const generalSchema = joi.object({
 	branch: joi.array().default([]),
 	usp: joi.object().default({}),
 	created_at: joi.string().default(() => new Date()),
-	update_at: joi.string().default(() => new Date()),
+	updated_at: joi.string().default(() => new Date()),
 })

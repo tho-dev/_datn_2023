@@ -56,6 +56,9 @@ const UserListManagerView = (props: Props) => {
   };
   const handleUpdateRole = (e: any, id: any) => {
     const data = { role: e.target.value };
+    if (user.role === "admin" && e.target.value === "manager") {
+      return alert("Bạn không đủ quyền");
+    }
     update({ data, id })
       .unwrap()
       .then((data) => {

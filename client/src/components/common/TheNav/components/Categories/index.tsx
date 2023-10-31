@@ -33,7 +33,7 @@ const Categories = ({ items }: Props) => {
 							key={index}
 						>
 							<Link
-								to="/slug"
+								to={`/${item?.shared_url}`}
 								as={ReactRouterLink}
 								display="inline-flex"
 								gap="3"
@@ -54,7 +54,8 @@ const Categories = ({ items }: Props) => {
 										w="full"
 										h="full"
 										objectFit="cover"
-										src={item?.thumbnail?.path}
+										src={item?.thumbnail}
+										alt={item?.name}
 									/>
 								</Box>
 								<Text

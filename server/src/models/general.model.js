@@ -37,7 +37,8 @@ const generalSchema = new Schema({
 		{
 			city: String,
 			address: String,
-			time: String,
+			time_open: String,
+			time_close: String,
 			map: String,
 			status: Boolean
 		}
