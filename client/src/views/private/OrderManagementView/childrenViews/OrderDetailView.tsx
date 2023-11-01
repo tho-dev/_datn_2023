@@ -1,5 +1,5 @@
 import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/layout";
-import { Button, Table, useDisclosure } from "@chakra-ui/react";
+import { Button, Image, Table, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
   AddressIcon,
@@ -72,41 +72,81 @@ const OrderDetailView = (props: Props) => {
 
     columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue()?._id ?? "id"}</h1>;
+        return (
+          <Text fontSize="14px" fontWeight="semibold">
+            {info.getValue()?._id ?? "id"}
+          </Text>
+        );
       },
       header: "ID sản phẩm",
     }),
     columnHelper.accessor("sku_id", {
-      cell: (info) => {
-        return <h1>{info.getValue()?.name ?? "Sản phẩm"}</h1>;
+      cell: ({ getValue }) => {
+        return (
+          <Image
+            src={getValue()?.image.url}
+            w="64px"
+            h="64px"
+            objectFit="contain"
+            bgColor="bg.gray"
+            rounded="md"
+            p="2"
+          />
+        );
       },
-      header: "Tên sản phẩm",
+      header: "Ảnh",
     }),
     columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue()?.SKU ?? "Sản phẩm"}</h1>;
+        return (
+          <Text fontSize="14px" fontWeight="semibold">
+            {info.getValue()?.name ?? "Sản phẩm"}
+          </Text>
+        );
       },
-      header: "Mã sản phẩm",
+      header: "Tên sản phẩm",
+    }),
+    columnHelper.accessor("option_value", {
+      cell: (info) => {
+        return (
+          <Text fontSize="14px" fontWeight="semibold">
+            {info.getValue()?.join(",") ?? "Sản phẩm"}
+          </Text>
+        );
+      },
+      header: "Cấu hình",
     }),
     columnHelper.accessor("price", {
-      cell: (info) => info.getValue()?.toLocaleString(),
+      cell: (info) => (
+        <Text fontSize="14px" fontWeight="semibold">
+          {info.getValue()?.toLocaleString()}đ
+        </Text>
+      ),
       header: "Đơn giá",
       meta: {
         isNumeric: true,
       },
     }),
     columnHelper.accessor("quantity", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Text fontSize="14px" fontWeight="semibold">
+          {info.getValue()}
+        </Text>
+      ),
       header: "Số lượng",
       meta: {
         isNumeric: true,
       },
     }),
     columnHelper.accessor("#", {
-      cell: (info) =>
-        (
-          info.row.original.price * info.row.original.quantity
-        )?.toLocaleString(),
+      cell: (info) => (
+        <Text fontSize="14px" fontWeight="semibold">
+          {(
+            info.row.original.price * info.row.original.quantity
+          )?.toLocaleString()}
+          đ
+        </Text>
+      ),
       header: "Thành tiền",
     }),
   ];
@@ -175,6 +215,7 @@ const OrderDetailView = (props: Props) => {
     );
     newTab?.focus();
   };
+
   return (
     <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
       <Flex justifyContent="space-between" alignItems={"center"}>
@@ -231,7 +272,11 @@ const OrderDetailView = (props: Props) => {
               ? data?.data.shop_address
               : data?.data.shipping_info.shipping_address
           }
-          phone={data?.data.shipping_method}
+          phone={
+            data?.data.shipping_method == "at_store"
+              ? "Mua tại cửa hàng"
+              : "Ship"
+          }
           icon={<LocationIcon size={24} color="blue" />}
           color="blue"
         />

@@ -1,7 +1,7 @@
 import createError from "http-errors";
 import { Order, Shipping, Order_Detail } from "../models/order.model";
 import { Cart } from "../models/cart.model";
-import { Sku } from "../models/product.model";
+import { Sku, Variant } from "../models/product.model";
 import Returned from "../models/return.model";
 import Axios from "axios";
 import {
@@ -287,6 +287,22 @@ export const getOne = async (req, res, next) => {
     const order_details = await Order_Detail.find({ order_id: id }).populate({
       path: "sku_id",
     });
+    const new_order_details = await Promise.all(
+      order_details.map(async (item) => {
+        // lấy ra biến thể của sku
+        const variant = await Variant.find({
+          sku_id: item.sku_id._id,
+        }).populate(["option_value_id"]);
+        const option_value = variant?.map(
+          (item) => item?.toObject()?.option_value_id?.label
+        );
+        const new_item = item.toObject();
+        return {
+          ...new_item,
+          option_value,
+        };
+      })
+    );
 
     if (!order) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
@@ -299,7 +315,7 @@ export const getOne = async (req, res, next) => {
         message: "Lấy đơn hàng thành công",
         data: {
           ...orderObj,
-          products: order_details,
+          products: new_order_details,
           order_info,
         },
       });
@@ -309,7 +325,7 @@ export const getOne = async (req, res, next) => {
       message: "Lấy đơn hàng thành công",
       data: {
         ...orderObj,
-        products: order_details,
+        products: new_order_details,
       },
     });
   } catch (error) {
@@ -749,11 +765,7 @@ export const serviceFree = async (req, res, next) => {
 // lấy đơn hàng theo số điện thoại
 export const getOrderByPhoneNumber = async (req, res, next) => {
   try {
-    const { phone_number, code } = req.body;
-    const result_otp = await TextFlow.verifyCode(phone_number, code);
-    if (!result_otp.valid) {
-      throw createError.BadRequest("Mã code không đúng");
-    }
+    const { phone_number } = req.body;
     const result = await Order.findOne({ phone_number: phone_number });
     if (!result) {
       throw createError.NotFound("Không tìm thấy đơn hàng");

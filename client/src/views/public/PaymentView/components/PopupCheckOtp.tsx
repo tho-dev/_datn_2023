@@ -94,7 +94,6 @@ const PopupCheckOtp = ({
                 const new_data = { ...data?.data, roomName: "don-hang" };
                 socket.emit("sendNotification", new_data);
               });
-
             deleteCart(cart_id)
               .unwrap()
               .then((data) => {
@@ -135,6 +134,7 @@ const PopupCheckOtp = ({
           });
       })
       .catch((err) => {
+        setLoading(false);
         toast({
           title: "OTP",
           description: err.data.errors.message,
