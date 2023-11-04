@@ -1,59 +1,91 @@
 import { Grid, Heading } from '@chakra-ui/layout';
-import React, { useEffect } from 'react';
-import { InforOrder } from '../../ProfileView/components/InforOrder';
-import { orders } from '~/data/clone-thinkpro.json';
-import { Box, Divider, Flex, TabPanel, Text, Tag, GridItem } from '@chakra-ui/react';
-import ItemCart from './ItemCart';
+import { Box, Divider, Flex, Text, Tag, GridItem, Image, Skeleton, IconButton, SkeletonText } from '@chakra-ui/react';
+import { NavArrowLeflIcon } from '~/components/common/Icons/index';
 import DetailOrder from './DetailOrder';
-import { useGetOrderByPhoneNumberMutation } from '~/redux/api/order';
 import { useAppDispatch, useAppSelector } from '~/redux/hook/hook';
-import { resetOtpPhone } from '~/redux/slices/orderSlice';
-
-// type Props = {};
+import { getOneOrder, reset } from '~/redux/slices/orderSlice';
 
 const ListOrder = () => {
   const dispatch = useAppDispatch();
-  const { isPhoneNumber, isOtpCode } = useAppSelector((state) => state.persistedReducer.order);
-  const payload = {
-    phone_number: isPhoneNumber,
-    code: isOtpCode,
+  const result = useAppSelector((state) => state.persistedReducer.order);
+  console.log('a', result);
+  const handleShowDetail = (id: any) => {
+    dispatch(getOneOrder(id));
   };
-  const [getOrderByPhoneNumber, { isLoading }] = useGetOrderByPhoneNumberMutation();
-  useEffect(() => {
-    getOrderByPhoneNumber(payload);
-  }, []);
-  // dispatch(resetOtpPhone());
+
+  const handleExit = () => {
+    console.log('fsdaf');
+    dispatch(reset());
+  };
   return (
     <Box p='4' rounded='md' bgColor='bg.white'>
-      <Heading p='4' color='text.black' fontSize='xl'>
-        Đơn hàng của bạn : 0978278289
-      </Heading>
+      <Flex justifyContent='space-between'>
+        <IconButton variant='outline' colorScheme='teal' w='50px' aria-label='Call Sage' fontSize='30px' icon={<NavArrowLeflIcon />} onClick={handleExit} />
+        <Heading p='4' color='text.black' fontSize='xl'>
+          Đơn hàng của bạn : {result?.isPhoneNumber}
+        </Heading>
+      </Flex>
       <Grid gridTemplateColumns='repeat(2,1fr)' gap={4}>
         <GridItem colSpan={1}>
           <Box overflow='auto' maxHeight='600px'>
-            {orders.map((order) => (
-              <Box key={order.id} p='4' my={4} rounded='md' backgroundColor='bg.gray'>
+            {result?.isLoading && (
+              <Box p='4' my={4} rounded='md' backgroundColor='bg.gray'>
+                <Flex justifyContent='space-between' alignItems='center'>
+                  <SkeletonText w='50%' h='30px' noOfLines={1} />
+                </Flex>
+                <Divider />
+                <Box>
+                  <Flex justifyContent={'space-between'} my={'4'}>
+                    <Skeleton w='50px' h='50px' />
+                    <SkeletonText w='100%' h='30px' ml='10px' noOfLines={4} />
+                  </Flex>
+                </Box>
+                <Divider />
+                <Flex justifyContent='end' display='flex' alignItems='center' pt='30px'>
+                  <SkeletonText w='100px' h='30px' ml='10px' noOfLines={1} />
+                </Flex>
+              </Box>
+            )}
+
+            {result?.orders.map((order: any) => (
+              <Box key={order?._id} p='4' my={4} rounded='md' backgroundColor='bg.gray' onClick={(e) => handleShowDetail(order?._id)}>
                 <Flex justifyContent='space-between'>
                   <Text fontSize='14px' fontWeight={'bold'}>
                     Mã đơn hàng:{' '}
                     <Text as={'span'} fontSize='14px'>
-                      {order.id}
+                      {order?._id}
                     </Text>
                   </Text>
                   <Tag fontSize='12px' fontWeight='bold' textTransform={'uppercase'} color={'text.red'}>
-                    {order.deliveryStatus}
+                    {order?.status}
                   </Tag>
                 </Flex>
                 <Divider />
                 <Box>
-                  <ItemCart />
+                  <Flex justifyContent={'space-between'} my={'4'}>
+                    <Flex gap='2' alignItems='center'>
+                      <Box w='56px' h='56px'>
+                        <Image src={order?.orders[0]?.shared_url} alt='name' w='full' h='full' objectFit='cover' />
+                      </Box>
+                      <Box ml={'5'}>
+                        <Text as={'p'} fontSize={'14px'} fontWeight={'bold'}>
+                          {order?.orders[0]?.name}
+                        </Text>
+                        <Box>
+                          <Text as={'p'} fontSize={'12px'} backgroundColor={'#F6F9FC'} my={'2'} fontWeight={'semibold'}>
+                            i5 1340P, QHD+ 16GB, 512GB, Mới, Full box, Nhập khẩu
+                          </Text>
+                        </Box>
+                      </Box>
+                    </Flex>
+                  </Flex>
                 </Box>
                 <Divider />
                 <Flex justifyContent='end'>
                   <Text fontSize='14px' fontWeight='bold'>
                     Thành tiền:{' '}
                     <Text as={'span'} fontSize='14px' fontWeight={'bold'} color={'text.red'}>
-                      {order.amount} đ
+                      {order?.total_amount} đ
                     </Text>
                   </Text>
                 </Flex>

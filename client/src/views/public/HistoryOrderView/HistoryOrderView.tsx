@@ -10,7 +10,7 @@ type Props = {};
 const HistoryOrderView = (props: Props) => {
   const phoneNumber = useAppSelector((state) => state.persistedReducer.order);
   console.log(phoneNumber.visibleListOrder);
-  return <Box m='30px 0'>{phoneNumber.visibleListOrder ? <CheckPhone /> : <ListOrder />}</Box>;
+  return <Box m='30px 0'>{phoneNumber.visibleListOrder ? <ListOrder /> : <CheckPhone />}</Box>;
 };
 
 export default HistoryOrderView;

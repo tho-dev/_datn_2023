@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/layout';
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react';
-import { FormControl, FormLabel, FormErrorMessage, FormHelperText, Input, Button, Flex } from '@chakra-ui/react';
+import { FormControl, FormLabel, FormHelperText, Button, Flex } from '@chakra-ui/react';
 import { PinInput, PinInputField, useToast } from '@chakra-ui/react';
 
 import { useCheckOtpMutation } from '~/redux/api/order';
@@ -31,6 +31,7 @@ const CheckOtp = () => {
       phone_number: phoneNumber,
       code: newPinValues.join(''),
     };
+    console.log(payload);
     const result: any = await checkOtp(payload);
     if (result.data?.status === 200) {
       toast({
@@ -53,7 +54,6 @@ const CheckOtp = () => {
     }
 
     dispatch(checkOtpPhone({ result: result, otp: payload }));
-    // dispatch(resetOtpPhone(result));
   };
 
   return (

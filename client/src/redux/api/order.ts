@@ -31,6 +31,13 @@ const orderApi = createApi({
       }),
       providesTags: ['Order'],
     }),
+    getOne: builder.query({
+      query: (id) => ({
+        url: `/order/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['Order'],
+    }),
     getAllOrder: builder.query({
       query: (query) => ({
         url: `/order?${objectToUrlParams(query)}`,
@@ -141,6 +148,7 @@ const orderApi = createApi({
 });
 export const {
   useGetAllQuery,
+  useGetOneQuery,
   useGetAllOrderQuery,
   useGetAllShippingQuery,
   useGetOneShippingQuery,

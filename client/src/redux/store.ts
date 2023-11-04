@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import globalSlice from './slices/globalSlice';
 import cartSlice from './slices/cartSlice';
 import userSlice from './slices/userSlice';
-
+import orderSlice from './slices/orderSlice';
 //api
 import authApi from '../redux/api/user';
 import productApi from './api/product';
