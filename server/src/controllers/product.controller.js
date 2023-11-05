@@ -348,7 +348,7 @@ export async function getSingleProduct(req, res, next) {
       _id: { $ne: product?._id },
       category_id: category?._id,
       status: true,
-    }).limit(5).select("-images -seo -attributes -description -category_id -brand_id -deleted -deleted_at -created_at -updated_at")
+    }).limit(20).select("-images -seo -attributes -description -category_id -brand_id -deleted -deleted_at -created_at -updated_at").sort('created_at')
 
     const getSku = async (product, id) => {
       const sku = await Sku.findOne({

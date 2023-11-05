@@ -15,7 +15,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons"; 
+import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
 import ActionUpdatePost from "./components/UpdatePostMangerView/input";
 import { useDeletePostMutation, useGetAllPostQuery } from "~/redux/api/post";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -34,12 +34,13 @@ const PostView = (props: Props) => {
 	const [id, setId] = useState(null);
 	const [post, setPost] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
+	const [categoriesPost, setCategoriesPost] = useState<any>([]);
 	const columnHelper = createColumnHelper<any>();
-	const {
-		isOpen: isOpenActionCreatePost,
-		onOpen: onOpenActionCreatePost,
-		onClose: onCloseActionCreatePost,
-	} = useDisclosure();
+	// const {
+	// 	isOpen: isOpenActionCreatePost,
+	// 	onOpen: onOpenActionCreatePost,
+	// 	onClose: onCloseActionCreatePost,
+	// } = useDisclosure();
 	const {
 		isOpen: isOpenActionUpdatePost,
 		onOpen: onOpenActionUpdatePost,
@@ -51,7 +52,7 @@ const PostView = (props: Props) => {
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
+		// _parent: true,
 		_sort: "created_at",
 		_order: "desc",
 		_type: "category_post",
@@ -59,14 +60,14 @@ const PostView = (props: Props) => {
 
 	useEffect(() => {
 		if (categories) {
-			const parentsFilter = categories?.data?.items?.map((category: any) => {
+			const categoriesFilter = categories?.data?.items?.map((post: any) => {
 				return {
-					label: category?.name,
-					value: category?._id,
+					label: post?.name,
+					value: post?._id,
 				};
 			});
 
-			setParents(parentsFilter);
+			setCategoriesPost(categoriesFilter);
 		}
 	}, [categories, isLoading]);
 
@@ -138,7 +139,7 @@ const PostView = (props: Props) => {
 			cell: ({ getValue }) => {
 				return (
 					<Image
-						src={getValue()?.url}
+						src={getValue()}
 						w="64px"
 						h="64px"
 						objectFit="contain"
@@ -171,6 +172,7 @@ const PostView = (props: Props) => {
 		}),
 		columnHelper.accessor("description", {
 			cell: (info) => {
+				const description = info.getValue();
 				return (
 					<Text
 						fontWeight="medium"
@@ -180,14 +182,17 @@ const PostView = (props: Props) => {
 							WebkitLineClamp: 2,
 							WebkitBoxOrient: "vertical",
 							overflow: "hidden",
+							'& p': {
+								display: 'inline',  
+							}
 						}}
-					>
-						{info.getValue()}
-					</Text>
+						dangerouslySetInnerHTML={{ __html: description }}  
+					/>
 				);
 			},
 			header: "Mô tả",
 		}),
+
 		columnHelper.accessor("created_at", {
 			cell: (info) => (
 				<Text
@@ -242,12 +247,16 @@ const PostView = (props: Props) => {
 								py="2"
 								icon={<EditIcon size={4} />}
 								onClick={() => {
-									const category_id = parents?.find((item: any) => item?.value == doc?.category_id);
+									const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
 									setPost({
 										_id: doc?._id,
 										title: doc?.title,
 										thumbnail: doc?.thumbnail,
-										category_id: category_id,
+										parent_id: parent_id,
+										category_id: {
+											label: doc?.category?.name,
+											value: doc?.category?.category_id,
+										},
 										description: doc?.description,
 										content: doc?.content,
 										meta_keyword: doc?.meta_keyword,
@@ -266,7 +275,7 @@ const PostView = (props: Props) => {
 			header: "Action",
 		}),
 	];
-	
+
 	return (
 		<>
 			<Box
@@ -341,7 +350,7 @@ const PostView = (props: Props) => {
 							placeholder="Bài viết..."
 						/>
 					</Flex>
-					<Button 
+					<Button
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
@@ -367,10 +376,8 @@ const PostView = (props: Props) => {
 					query={{
 						_page: 1,
 						_limit: 20,
-						_parent: true,
 						_order: "desc",
 						_sort: "created_at",
-						// _type: "category_post"
 					}}
 				/>
 
@@ -383,7 +390,7 @@ const PostView = (props: Props) => {
 				/>
 			</Box>
 			{/* Form */}
-			<PostDialogThinkPro
+			{/* <PostDialogThinkPro
 				isOpen={isOpenActionCreatePost}
 				onClose={onCloseActionCreatePost}
 				isCentered
@@ -392,8 +399,8 @@ const PostView = (props: Props) => {
 				<AddPostMangerView
 					onClose={onCloseActionCreatePost}
 					parents={parents}  />
-			</PostDialogThinkPro>
-			
+			</PostDialogThinkPro> */}
+
 			<PostDialogThinkPro
 				isOpen={isOpenActionUpdatePost}
 				onClose={onCloseActionUpdatePost}
@@ -403,7 +410,8 @@ const PostView = (props: Props) => {
 				<ActionUpdatePost
 					onClose={onCloseActionUpdatePost}
 					post={post}
-					parents={parents}
+					categories={categoriesPost}
+
 				/>
 			</PostDialogThinkPro>
 		</>
@@ -411,5 +419,3 @@ const PostView = (props: Props) => {
 };
 
 export default PostView;
-
-

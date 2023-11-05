@@ -1,9 +1,16 @@
 import { Box, Text, Flex } from "@chakra-ui/layout";
 import { Image, Img } from "@chakra-ui/react";
 import { Divider } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PostRelate from "./components/PostRelate";
 import { Grid, GridItem } from "@chakra-ui/layout";
+import { useGetAllPostQuery, useGetSinglePostQuery } from "~/redux/api/post";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { NavArrowLeflIcon, NavArrowRightIcon } from "~/components/common/Icons";
+import { useEffect, useState } from "react";
+import { Navigation } from "swiper/modules";
+import moment from "moment";
+import { useAppSelector } from "~/redux/hook/hook";
 
 type Props = {
 	mt?: any;
@@ -11,6 +18,37 @@ type Props = {
 };
 
 const ContentView = ({ columns = 4 }: Props) => {
+	const { slug } = useParams();
+	const { data: product, isError, isFetching } = useGetSinglePostQuery(slug as string);
+
+
+	// const { slug: params } = useParams();
+	const [slugs, setSlug] = useState<string>("");
+	const [showCompare, setShowCompare] = useState<boolean>(false);
+	const [data, setData] = useState<any>([]);
+
+
+	const { data: posts } = useGetAllPostQuery({
+		_order: "asc",
+		_sort: "date",
+		_page: 1,
+		_limit: 10,
+		_type: slugs || ""
+	});
+
+	useEffect(() => {
+		if (posts) {
+			const docs = posts?.data?.items as any;
+			setData([...data, ...docs]);
+		}
+	}, [posts]);
+
+	const handleCompare = () => {
+		setShowCompare(!showCompare);
+	};
+
+	const { user } = useAppSelector((state) => state.persistedReducer.global);
+
 	return (
 		<>
 			<Box my="6">
@@ -34,7 +72,7 @@ const ContentView = ({ columns = 4 }: Props) => {
 						fontWeight={"bold"}
 						py={5}
 					>
-						Windows 11 vừa cập nhật, vá lỗi chậm SSD tới nhiều người dùng
+						{product?.data.title}
 					</Text>
 					<Box py={5}>
 						<Divider />
@@ -42,14 +80,13 @@ const ContentView = ({ columns = 4 }: Props) => {
 							my={"4"}
 							fontWeight={"bold"}
 						>
-							<Text color={"black"}>Nguyễn Công Minh </Text>
-							<Text
-								color={"gray.500"}
-								mx={2}
-							>
-								*
+							<Text as="h3" fontWeight="black" lineHeight="1.3">
+								{user.first_name + " " + user.last_name}
 							</Text>
-							<Text color={"gray.500"}> 18:41, 16/03/2023</Text>
+							<Text mx={2}>|</Text>
+							<Text fontWeight="medium" fontSize="15px">
+								{moment(product?.created_at).format("DD-MM-YYYY HH:mm:ss")}
+							</Text>
 						</Flex>
 						<Divider />
 					</Box>
@@ -61,109 +98,35 @@ const ContentView = ({ columns = 4 }: Props) => {
 							>
 								//{" "}
 							</Text>
-							<Text
-								color={"black"}
-								as="cite"
-							>
-								Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng
-								Microsoft vẫn âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục.
+							<Text color={"black"} as="cite">
+								<div dangerouslySetInnerHTML={{ __html: product?.data.description }} />
 							</Text>
+
 						</Flex>
 					</Box>
-					<Text
-						py={5}
-						fontSize={"xl"}
-						fontWeight={"medium"}
-					>
-						Hồi tháng Ba vừa qua, nhiều người dùng Windows 11 đã lên tiếng về việc ổ cứng SSD NVMe của họ
-						chạy chậm hơn đáng kể so với thường lệ. Nguyên nhân khi đó được chỉ ra là do bản cập nhật Moment
-						2 của hệ điều hành (mã hiệu KB5023706), khi nó đã gây ra một lỗi khiến tốc độ SSD bị “bóp” chỉ
-						còn phân nửa so với tiêu chuẩn, nhưng vẫn được phát hành công khai tới toàn bộ người dùng.
+					<Text py={5} fontSize={"xl"} fontWeight={"medium"}>
+						<div dangerouslySetInnerHTML={{ __html: product?.data.content }} />
 					</Text>
+
 					<Box py={5}>
-						<Image src="https://images.thinkgroup.vn/unsafe/1600x900/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro.jpg" />
+						<img src={product?.data.thumbnail.url} alt="Thumbnail" width="100%" />
 					</Box>
-					<Text
-						py={5}
-						fontSize={"xl"}
-						fontWeight={"medium"}
-					>
-						Và có vẻ sau một thời gian, cuối cùng Microsoft đã có thể giải quyết dứt điểm vấn đề này. Cụ thể
-						thì sau khi cập nhật phiên bản mới nhất của Windows 11 (mã hiệu KB5029263), nhiều người dùng đã
-						thông báo rằng SSD của họ đã trở lại với tốc độ tối đa khi đọc ghi dữ liệu. Điều này cũng được
-						xác nhận bởi một số chuyên trang uy tín như WindowsLatest trong báo cáo mới nhất.
+
+					<Text py={5} fontSize={"xl"} fontWeight={"medium"}>
+						<div dangerouslySetInnerHTML={{ __html: product?.data.meta_keyword }} />
 					</Text>
-					<Text
-						py={5}
-						fontSize={"xl"}
-						fontWeight={"medium"}
-					>
-						Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng Microsoft vẫn
-						âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục. Hiện tại vẫn chưa rõ liệu bản
-						cập nhật KB5029263 sẽ có thể giải quyết hoàn toàn tình trạng này hay không, tuy nhiên bạn đọc
-						vẫn có thể thử nâng cấp để đảm bảo mọi thứ vận hành mượt mà.
+
+					<Text py={5} fontSize={"xl"} fontWeight={"medium"}>
+						<div dangerouslySetInnerHTML={{ __html: product?.data.meta_description }} />
 					</Text>
-					<Text
-						py={5}
-						fontSize={"xl"}
-						fontWeight={"medium"}
-					>
-						Về hiện tượng SSD trên Windows 11 bị chậm tốc độ, bạn đọc có thể tìm hiểu tại bài đăng cũ của
-						ThinkPro tại đây:
+
+					<Text py={5} fontSize={"xl"} fontWeight={"medium"}>
+						<div dangerouslySetInnerHTML={{ __html: product?.data.meta_title }} />
 					</Text>
-					<Link to={"/noi-dung"}>
-						<Box
-							borderRadius={"xl"}
-							bg="#f6f9fc"
-						>
-							<Flex>
-								<Image
-									w={{
-										sm: 0,
-										xl: 1 / 3,
-									}}
-									borderTopLeftRadius={"xl"}
-									borderBottomLeftRadius={"xl"}
-									src="https://media-api-beta.thinkpro.vn/media/social/articles/2023/3/16/SX8200-Pro-1TB.jpg"
-								/>
-								<Box p={5}>
-									<Text color={"gray.500"}>thinkpro.vn</Text>
-									<Text
-										py={2}
-										fontSize={"xl"}
-										fontWeight={"semibold"}
-									>
-										Windows 11 22H2 bản mới nhất đang "bóp" SSD của người dùng, ai muốn lên nên chờ
-										ít ngày nữa
-									</Text>
-									<Text
-										fontSize={"xl"}
-										fontWeight={"medium"}
-									>
-										{" "}
-										Trong khi đáng ra bản cập nhật này nên giúp người dùng tận hưởng lợi ích từ AI
-										nhiều hơn thì thay vào đó, chúng ta lại có những vấn đề về SSD.
-									</Text>
-								</Box>
-							</Flex>
-						</Box>
-					</Link>
-					<Flex py={5}>
-						<Text
-							fontSize={"xl"}
-							fontWeight={"medium"}
-						>
-							Theo
-						</Text>
-						<Text
-							fontSize={"xl"}
-							fontWeight={"bold"}
-							ml={1}
-						>
-							PCWorld
-						</Text>
-					</Flex>
+
 				</Box>
+
+
 				<Text
 					py={10}
 					fontSize={"2xl"}
@@ -171,28 +134,86 @@ const ContentView = ({ columns = 4 }: Props) => {
 				>
 					Bài viết liên quan
 				</Text>
-				<Grid
-					w="full"
-					gap="3"
-					templateColumns={{
-						sm: "repeat(1, 1fr)",
-						md: "repeat(3, 1fr)",
-						xl: `repeat(${columns}, 1fr)`,
-					}}
-				>
-					<GridItem>
-						<PostRelate />
-					</GridItem>
-					<GridItem>
-						<PostRelate />
-					</GridItem>
-					<GridItem>
-						<PostRelate />
-					</GridItem>
-					<GridItem>
-						<PostRelate />
-					</GridItem>
-				</Grid>
+				<Flex position="relative">
+					<Swiper
+						modules={[Navigation]}
+						speed={400}
+						spaceBetween={16}
+						loop={true}
+						navigation={{
+							nextEl: ".discount__btn-next",
+							prevEl: ".discount__btn-prev",
+						}}
+						breakpoints={{
+							0: {
+								slidesPerView: 1,
+							},
+							768: {
+								slidesPerView: 3,
+							},
+							1200: {
+								slidesPerView: 5,
+							},
+						}}
+					>
+						{data?.map((product: any, index: number) => {
+							return (
+								<SwiperSlide key={index}>
+									<Box
+										w="full"
+										h="full"
+										overflow="hidden"
+										rounded="lg"
+										borderWidth="1px"
+										borderColor="border.primary"
+									>
+										<PostRelate product={product} key={index} />
+									</Box>
+								</SwiperSlide>
+							);
+						})}
+					</Swiper>
+					<Flex
+						w="9"
+						h="9"
+						position="absolute"
+						left="-4"
+						top={"calc(50% - 24px)"}
+						translateY="-50%"
+						zIndex="5"
+						rounded="full"
+						cursor="pointer"
+						alignItems="center"
+						justifyContent="center"
+						backgroundColor="bg.bgEdit"
+						className="discount__btn-prev"
+					>
+						<NavArrowLeflIcon
+							size={4}
+							color="text.textEdit"
+						/>
+					</Flex>
+					<Flex
+						w="9"
+						h="9"
+						position="absolute"
+						right="-4"
+						top={"calc(50% - 24px)"}
+						translateY="-50%"
+						zIndex="5"
+						rounded="full"
+						cursor="pointer"
+						alignItems="center"
+						justifyContent="center"
+						backgroundColor="bg.bgEdit"
+						className="discount__btn-next"
+					>
+						<NavArrowRightIcon
+							size={4}
+							color="text.textEdit"
+						/>
+					</Flex>
+				</Flex>
 			</Box>
 		</>
 	);
