@@ -222,12 +222,13 @@ const UpdateProductMangerView = (props: Props) => {
 			bgColor="bg.white"
 			py="8"
 			px="6"
-			rounded="lg"
+			rounded="xl"
 		>
 			<Heading
 				fontSize="18"
 				color="text.black"
 				lineHeight="100%"
+				textTransform="uppercase"
 			>
 				Cập Nhật Sản Phẩm
 			</Heading>
@@ -418,7 +419,7 @@ const UpdateProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price && "border.error"}
 											>
@@ -459,7 +460,7 @@ const UpdateProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price_before_discount && "border.error"}
 											>

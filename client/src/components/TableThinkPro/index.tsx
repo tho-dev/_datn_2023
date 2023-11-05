@@ -69,13 +69,15 @@ export default function TableThinkPro<Data extends object>({
 		setRecordsPerPage(result?.data?.paginate?.limit);
 	}, [result, table.getState().pagination.pageIndex, table.getState().pagination.pageSize]);
 
+	console.log("data", loading);
+
 	return (
 		<Box
 			px="6"
 			py="8"
 			borderWidth="1px"
 			borderColor="border.primary"
-			rounded="lg"
+			rounded="xl"
 		>
 			<Table>
 				<Thead
