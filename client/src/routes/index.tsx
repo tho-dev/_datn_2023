@@ -175,7 +175,7 @@ const routes: RouteObject[] = [
           {
             path: "bai-viet",
             element: <PostManagementView />,
-          },
+          }, 
           {
             path: "bai-viet/add",
             element: <AddPostMangerView onClose={function (): void {

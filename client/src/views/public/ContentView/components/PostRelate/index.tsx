@@ -18,7 +18,6 @@ const PostRelate = ({ product }: Props) => {
     };
     dispatch(addViewedItem(productData));
 
-    // Thay đổi đường link cũ thành giá trị không có giá trị (null hoặc "")
     window.location.href = product?.slug;
   };
 
