@@ -21,12 +21,16 @@ import { AirplayIcon, EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/
 import { useGetAllProductQuery } from "~/redux/api/product";
 import { formatNumber } from "~/utils/fc";
 import moment from "moment/moment";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm } from "react-hook-form";
 
 type Props = {};
 
 const ProductManagerView = (props: Props) => {
 	const columnHelper = createColumnHelper<any>();
 	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
+
+	const { control } = useForm();
 
 	const columns = [
 		columnHelper.accessor("#", {
@@ -251,8 +255,10 @@ const ProductManagerView = (props: Props) => {
 				<Heading
 					as="h2"
 					fontSize="18"
+					fontWeight="semibold"
+					textTransform="uppercase"
 				>
-					Quản lý sản phẩm
+					Danh Sách Sản Phẩm
 				</Heading>
 				<Box>
 					<Breadcrumb
@@ -287,48 +293,117 @@ const ProductManagerView = (props: Props) => {
 				mb="6"
 			>
 				<Flex
-					px="4"
-					rounded="4px"
-					alignItems="center"
-					borderWidth="1px"
-					borderColor="#e9ebec"
+					gap="4"
+					w="70%"
 				>
+					<Box flex="1">
+						<SelectThinkPro
+							control={control}
+							name="category"
+							title=""
+							placeholder="-- Danh mục --"
+							data={[
+								{
+									label: "Laptop",
+									value: "1",
+								},
+								{
+									label: "Bàn phím",
+									value: "2",
+								},
+							]}
+						/>
+					</Box>
+
+					<Box flex="1">
+						<SelectThinkPro
+							control={control}
+							name="category"
+							title=""
+							placeholder="-- Thương hiệu --"
+							data={[
+								{
+									label: "Dell",
+									value: "1",
+								},
+								{
+									label: "Lenovo",
+									value: "2",
+								},
+							]}
+						/>
+					</Box>
+
+					<Box flex="1">
+						<SelectThinkPro
+							control={control}
+							name="category"
+							title=""
+							placeholder="-- Trạng thái --"
+							data={[
+								{
+									label: "Hoạt Động",
+									value: "1",
+								},
+								{
+									label: "Khóa",
+									value: "2",
+								},
+							]}
+						/>
+					</Box>
+
 					<Flex
-						as="span"
+						flex="2"
+						px="4"
+						rounded="8px"
 						alignItems="center"
-						justifyContent="center"
+						borderWidth="1px"
+						borderColor="#e9ebec"
 					>
-						<SearchIcon
-							size={5}
-							color="text.black"
-							strokeWidth={1}
+						<Flex
+							as="span"
+							alignItems="center"
+							justifyContent="center"
+						>
+							<SearchIcon
+								size={5}
+								color="text.black"
+								strokeWidth={1}
+							/>
+						</Flex>
+						<Input
+							border="none"
+							padding="0.6rem 0.9rem"
+							fontSize="15"
+							fontWeight="medium"
+							lineHeight="1.5"
+							w="260px"
+							placeholder="Tìm kiếm sản phẩm"
 						/>
 					</Flex>
-					<Input
-						border="none"
-						padding="0.6rem 0.9rem"
-						fontSize="15"
-						fontWeight="medium"
-						lineHeight="1.5"
-						w="260px"
-						placeholder="Tìm kiếm..."
-					/>
 				</Flex>
-				<Button
-					as={ReactRouterLink}
-					to="/admin/san-pham/add"
-					leftIcon={
-						<PlusCircleIcon
-							size={5}
-							color="text.white"
-						/>
-					}
-					px="4"
-					lineHeight="2"
-					bgColor="bg.green"
+				<Flex
+					w="30%"
+					justifyContent="flex-end"
 				>
-					Tạo Mới
-				</Button>
+					<Button
+						as={ReactRouterLink}
+						to="/admin/san-pham/add"
+						leftIcon={
+							<PlusCircleIcon
+								size={5}
+								color="text.textSuccess"
+							/>
+						}
+						px="4"
+						lineHeight="2"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
+					>
+						Tạo mới
+					</Button>
+				</Flex>
 			</Flex>
 
 			{/* hiểu thị dữ liệu */}

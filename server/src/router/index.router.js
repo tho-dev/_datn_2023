@@ -13,6 +13,7 @@ import collection from "./collection.router";
 import general from "./general.router";
 import notification from "./notification.router";
 import ads from "./ads.router";
+import promotion from "./promotion.router";
 
 const routes = (app) => {
   app.use("/api", general);
@@ -30,6 +31,7 @@ const routes = (app) => {
   app.use("/api/collection", collection);
   app.use("/api/notification", notification);
   app.use("/api/ads", ads);
+  app.use("/api/promotions", promotion);
 };
 
 export default routes;

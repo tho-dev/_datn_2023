@@ -1,56 +1,53 @@
-import { RouteObject, redirect } from "react-router-dom";
+import { RouteObject } from "react-router-dom";
 
 // view layout
-import MainLayout from "~/layouts/MainLayout";
+import AdminLayout from "~/layouts/AdminLayout";
 import AuthLayout from "~/layouts/AuthLayout";
 import DefaultLayout from "~/layouts/DefaultLayout";
-import AdminLayout from "~/layouts/AdminLayout";
+import MainLayout from "~/layouts/MainLayout";
 
 // view client
+import { CartView } from "~/views/public/CartView/";
+import { ContentView } from "~/views/public/ContentView";
 import { HomeView } from "~/views/public/HomeView";
+import { NewsView } from "~/views/public/NewsView";
+import { NotFoundView } from "~/views/public/NotFoundView";
+import { ProductDetailView } from "~/views/public/ProductDetailView";
+import { ProfileView } from "~/views/public/ProfileView/";
 import { SignInView } from "~/views/public/SignInView";
 import { SignUpView } from "~/views/public/SignUpView";
 import { SlugView } from "~/views/public/SlugView";
-import { CartView } from "~/views/public/CartView/";
-import { ProfileView } from "~/views/public/ProfileView/";
-import { ProductDetailView } from "~/views/public/ProductDetailView";
-import { NewsView } from "~/views/public/NewsView";
-import { ContentView } from "~/views/public/ContentView";
-import { NotFoundView } from "~/views/public/NotFoundView";
 
 // view admin
+import { BrandView } from "~/views/private/BrandView";
+import { CategoryManagerView } from "~/views/private/CategoryManagerView";
 import { DashboardView } from "~/views/private/DashboardView";
+import { DemandView } from "~/views/private/DemandView";
+import OrderManagementView from "~/views/private/OrderManagementView";
+import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
+import PostCategoryView from "~/views/private/PostCategoryView";
+import { PostManagementView } from "~/views/private/PostManagementView";
 import { ProductManagerView } from "~/views/private/ProductManagerView";
 import { AddProductManagerView } from "~/views/private/ProductManagerView/components/AddProductMangerView";
 import { UpdateProductManagerView } from "~/views/private/ProductManagerView/components/UpdateProductMangerView";
 import { VariantMangerView } from "~/views/private/ProductManagerView/components/VariantMangerView";
-import { CategoryManagerView } from "~/views/private/CategoryManagerView";
-import OrderManagementView from "~/views/private/OrderManagementView";
-import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
-import { ShippingView } from "~/views/private/ShippingView";
-import ShippingList from "~/views/private/ShippingView/ShippingList";
-import Shipments from "~/views/private/ShippingView/Shipments";
-import { Payment } from "~/views/public/PaymentView";
-import { CompareView } from "~/views/public/CompareView";
-import { SearchView } from "~/views/public/SearchView";
-import { BrandView } from "~/views/private/BrandView";
-import { UserListManagerView } from "~/views/private/UserListManagerView";
-import { PostManagementView } from "~/views/private/PostManagementView";
-import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
-import { DemandView } from "~/views/private/DemandView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
-import { HistoryOrderView } from "~/views/public/HistoryOrderView";
-import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordView";
-import { ThankView } from "~/views/public/ThankView";
-import PostCategoryView from "~/views/private/PostCategoryView";
-import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import { SettingView } from "~/views/private/SettingView";
-import { PromotionView } from "~/views/public/PromotionView";
-import { PromotionViewAdmin } from "~/views/private/PromotionView";
+import { UserListManagerView } from "~/views/private/UserListManagerView";
+import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
+import { CompareView } from "~/views/public/CompareView";
+import { CreatePasswordView } from "~/views/public/CreatePasswordView";
+import { HistoryOrderView } from "~/views/public/HistoryOrderView";
+import { Payment } from "~/views/public/PaymentView";
+import { PromotionView } from "~/views/public/PromotionView";
+import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordView";
+import { SearchView } from "~/views/public/SearchView";
+import { ThankView } from "~/views/public/ThankView";
+import { PromotionView as PromotionManageView } from "~/views/private/PromotionView";
+import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
 import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
 import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
-import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
 
 const routes: RouteObject[] = [
   {
@@ -152,6 +149,18 @@ const routes: RouteObject[] = [
             element: <DashboardView />,
           },
           {
+            path: "khuyen-mai",
+            element: <PromotionManageView />,
+          },
+          {
+            path: "khuyen-mai/gmail/add",
+            element: <AddGmailView />,
+          },
+          {
+            path: "khuyen-mai/gmail",
+            element: <GmailView />,
+          },
+          {
             path: "san-pham",
             element: <ProductManagerView />,
           },
@@ -226,28 +235,6 @@ const routes: RouteObject[] = [
             path: "nhu-cau",
             element: <DemandView />,
           },
-          {
-            path: "khuyen-mai/gmail/add",
-            element: <AddGmailView />,
-          },
-          {
-            path: "khuyen-mai/gmail",
-            element: <GmailView />,
-          },
-          // {
-          // 	path: "shipping",
-          // 	element: <ShippingView />,
-          // 	children: [
-          // 		{
-          // 			index: true,
-          // 			element: <ShippingList />,
-          // 		},
-          // 		{
-          // 			path: "shipments",
-          // 			element: <Shipments />,
-          // 		},
-          // 	],
-          // },
         ],
       },
       {

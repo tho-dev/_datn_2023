@@ -34,6 +34,14 @@ const storage = new CloudinaryStorage({
       height = 460;
       url = 'https://res.cloudinary.com/do7pjthoe/image/upload/v1698289774/xa7n8cd4nnjqiiqtsg8k.svg'
       opacity = 70
+    } else if (file.fieldname == 'banner') {
+      width = 1200;
+      height = 1200;
+      folder = "banner";
+    } else if (file.fieldname == 'avatar') {
+      width = 200
+      height = 200
+      folder = 'avatar'
     }
     // #27bece
 
@@ -42,7 +50,7 @@ const storage = new CloudinaryStorage({
 
     // crop cắt theo tỉ lệ theo kích thước nó giống object-fit...
     return {
-      folder: `thinkpro/${folder}`,
+      folder: `polytech/${folder}`,
       allowedFormats: ["jpg", "png"],
       transformation: [
         { width, height, crop: "fit" },

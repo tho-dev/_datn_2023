@@ -80,7 +80,8 @@ const SettingView = (props: Props) => {
 		>
 			<Heading
 				fontSize="lg"
-				fontWeight="bold"
+				fontWeight="semibold"
+				textTransform="uppercase"
 			>
 				Cấu Hình Chung
 			</Heading>

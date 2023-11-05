@@ -7,7 +7,7 @@ export async function uploadMultipleFile(req, res, next) {
       throw createError.BadRequest("Vui lòng nhập file !!!");
     }
 
-    let images = req?.files["brand"] || req?.files["assets"] || req?.files["category"] || req?.files["thumbnail"];
+    let images = req?.files["brand"] || req?.files["assets"] || req?.files["category"] || req?.files["thumbnail"] || req?.files["banner"] || req?.files["avatar"];
 
     images = images?.map((img, index) => {
       return {

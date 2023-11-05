@@ -14,6 +14,7 @@ import {
   InfoIcon,
   OrderIcon,
 } from "~/components/common/Icons";
+import { useState } from "react";
 
 type Props = {};
 
@@ -23,73 +24,61 @@ const MENU = [
     to: "/admin",
     icon: DashboardIcon,
   },
-  // {
-  // 	title: "Cửa hàng",
-  // 	to: "/admin/cua-hang",
-  // 	icon: MarketIcon,
-  // },
-  // {
-  // 	title: "Thông tin website",
-  // 	to: "/admin/cua-hang",
-  // 	icon: InfoIcon,
-  // },
   {
-    title: "Quản lý khuyến mãi",
+    title: "Khuyến mãi",
     to: "/admin/khuyen-mai",
     icon: WalletIcon,
     children: [
-      { title: "Chương trình khuyến mãi", to: "/admin/khuyen-mai" },
+      { title: "Danh sách khuyến mãi", to: "/admin/khuyen-mai" },
       { title: "Chiến dịch quảng cáo", to: "/admin/khuyen-mai/gmail" },
     ],
   },
   {
-    title: "Quản lý đơn hàng",
+    title: "Đơn hàng",
     to: "/admin/don-hang",
     icon: OrderIcon,
-    children: [{ title: "Tất cả đơn hàng", to: "/admin/don-hang" }],
+    children: [{ title: "Danh sách đơn hàng", to: "/admin/don-hang" }],
   },
   {
-    title: "Quản lý sản phẩm",
+    title: "Sản phẩm",
     to: "/admin/san-pham",
     icon: AddIcon,
     children: [
-      { title: "Sản phẩm", to: "/admin/san-pham" },
-      { title: "Danh mục", to: "/admin/danh-muc" },
-      { title: "Thương hiệu", to: "/admin/thuong-hieu" },
-      { title: "Nhu cầu", to: "/admin/nhu-cau" },
+      { title: "Danh sách sản phẩm", to: "/admin/san-pham" },
+      { title: "Danh sách danh mục", to: "/admin/danh-muc" },
+      { title: "Danh sách thương hiệu", to: "/admin/thuong-hieu" },
+      { title: "Danh sách nhu cầu", to: "/admin/nhu-cau" },
     ],
   },
   {
-    title: "Quản lý bài viết",
+    title: "Bài viết",
     to: "/admin/bai-viet",
     icon: NewsFeedIcon,
     children: [
-      { title: "Bài viết", to: "/admin/bai-viet" },
-      { title: "Danh mục", to: "/admin/danh-muc-bai-viet" },
+      { title: "Danh sách bài viết", to: "/admin/bai-viet" },
+      { title: "Danh sách danh mục", to: "/admin/danh-muc-bai-viet" },
     ],
   },
   {
-    title: "Quản lý tài khoản",
+    title: "Tài khoản",
     to: "/admin/tai-khoan",
     icon: ProfileIcon,
+    children: [{ title: "Danh sách tài khoản", to: "/admin/tai-khoan" }],
   },
-  // {
-  // 	title: "Shipping",
-  // 	to: "/admin/shipping",
-  // 	icon: InboxIcon,
-  // 	children: [
-  // 		{ title: "Shipping List", to: "/admin/shipping" },
-  // 		{ title: "Shipments", to: "/admin/shipping/shipments" },
-  // 	],
-  // },
   {
-    title: "Cấu hình chung",
+    title: "Cấu hình",
     to: "/admin/cau-hinh",
     icon: SettingsIcon,
+    children: [
+      { title: "Chung", to: "/admin/cau-hinh" },
+      { title: "Ngôn ngữ", to: "/admin/ngon-ngu" },
+    ],
   },
 ];
 
 const Sidebar = (props: Props) => {
+  const [active, setActive] = useState(0);
+
   return (
     <Flex
       w="full"
@@ -110,7 +99,7 @@ const Sidebar = (props: Props) => {
       borderColor="bg.admin1"
       position="fixed"
       zIndex="999"
-      // bgGradient="linear-gradient(to top, rgb(11 203 224), #fff)"
+      overflow="hidden"
     >
       <Box w="full" h="full">
         <Flex
@@ -149,42 +138,16 @@ const Sidebar = (props: Props) => {
         </Flex>
         <Flex gap="1" flexDir="column" mx="4" mt="12" mb="8">
           {MENU?.map((item: any, index: number) => (
-            <NavItem item={item} key={index} />
+            <NavItem
+              item={item}
+              key={index}
+              index={index}
+              isCheck={active == index}
+              handleClick={(value: any) => setActive(value)}
+            />
           ))}
         </Flex>
       </Box>
-      {/* <Flex
-				mx="4"
-				my="6"
-				justifyContent="center"
-				alignItems="center"
-				gap="4"
-				display={{
-					sm: "none",
-					md: "none",
-					lg: "flex",
-					xl: "flex",
-					"2xl": "flex",
-				}}
-			>
-				<Flex
-					as="span"
-					w="5"
-					h="5"
-					justifyContent="center"
-					alignItems="center"
-				>
-					<LightDarkIcon size={5} />
-				</Flex>
-				<Text
-					color="text.admin2"
-					fontSize="sm"
-					fontWeight="semibold"
-				>
-					Dark mode
-				</Text>
-				<Switch size="md" />
-			</Flex> */}
     </Flex>
   );
 };

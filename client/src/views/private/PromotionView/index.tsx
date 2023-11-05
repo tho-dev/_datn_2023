@@ -1,1 +1,1 @@
-export { default as PromotionViewAdmin } from "./PromotionView";
+export { default as PromotionView } from "./PromotionView";
