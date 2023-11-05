@@ -50,6 +50,7 @@ import { PromotionViewAdmin } from "~/views/private/PromotionView";
 import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
 import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
 import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
+import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
 
 const routes: RouteObject[] = [
   {
@@ -87,7 +88,7 @@ const routes: RouteObject[] = [
             element: <NewsView />,
           },
           {
-            path: "noi-dung",
+            path: "tin-tuc/:slug",
             element: <ContentView />,
           },
           {
@@ -177,6 +178,17 @@ const routes: RouteObject[] = [
           {
             path: "bai-viet",
             element: <PostManagementView />,
+          },
+          {
+            path: "bai-viet/add",
+            element: (
+              <AddPostMangerView
+                onClose={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+                parents={undefined}
+              />
+            ),
           },
           {
             path: "don-hang",

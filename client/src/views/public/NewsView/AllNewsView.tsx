@@ -1,19 +1,12 @@
-import {
-  Box,
-  Grid,
-  GridItem,
-  Text,
-  Flex,
-  Heading,
-  Wrap,
-  WrapItem,
-  Link,
-} from "@chakra-ui/layout";
+import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem, Link } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import { IPost } from "~/interface/post";
-import { useAppDispatch } from "~/redux/hook/hook";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { addViewedItem } from "~/redux/slices/globalSlice";
 import { Link as ReactRouterLink } from "react-router-dom";
+import moment from "moment";
+import { info } from "console";
+
 
 type Props = {
   product?: IPost;
@@ -29,7 +22,8 @@ const AllNewsView = ({ product }: Props) => {
     };
     dispatch(addViewedItem(productData));
   };
-  console.log(product);
+
+  const { user } = useAppSelector((state) => state.persistedReducer.global);
 
   return (
     <Link
@@ -62,28 +56,42 @@ const AllNewsView = ({ product }: Props) => {
                 position="relative"
                 paddingBottom="55%"
               >
-                <Box position="absolute" w="full" h="full">
+                <Box
+                  position="absolute"
+                  w="full"
+                  h="full"
+                >
                   <Image
                     w="full"
                     h="full"
                     objectFit="cover"
-                    src={product?.thumbnail?.url}
+                    src={product?.thumbnail}
                   />
                 </Box>
               </Box>
             </GridItem>
             <GridItem>
               <Box>
-                <Text fontSize="xl" fontWeight="semibold">
+                <Text
+                  fontSize="xl"
+                  fontWeight="semibold"
+                >
                   {product?.title}
                 </Text>
-                <Text fontSize="md" my="4">
-                  {product?.description}
+                <Text
+                  fontSize="md"
+                  my="4"
+                >
+                  {product?.slug}
                 </Text>
                 <Flex fontSize="sm">
-                  <Text>Nguyen Cong Minh</Text>
+                  <Text as="h3" fontWeight="black" lineHeight="1.3">
+                    {user.first_name + " " + user.last_name}
+                  </Text>
                   <Text mx={2}>|</Text>
-                  <Text>5 ngày</Text>
+                  <Text fontWeight="medium" fontSize="13px">
+                    {moment(product?.created_at).format("DD-MM-YYYY HH:mm:ss")}
+                  </Text>
                 </Flex>
               </Box>
             </GridItem>
@@ -91,7 +99,10 @@ const AllNewsView = ({ product }: Props) => {
         </Box>
       </GridItem>
     </Link>
-  );
-};
 
-export default AllNewsView;
+  );
+}
+
+
+
+export default AllNewsView
