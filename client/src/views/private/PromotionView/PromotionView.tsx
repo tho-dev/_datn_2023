@@ -1,4 +1,3 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -14,72 +13,50 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
-import DialogThinkPro from "~/components/DialogThinkPro";
-import ActionCreateCategory from "./components/ActionCreateCategory";
-import ActionUpdateCategory from "./components/ActionUpdateCategory";
-import { useDeleteCategoryMutation, useGetAllCategoryQuery } from "~/redux/api/category";
 import { createColumnHelper } from "@tanstack/react-table";
-import TableThinkPro from "~/components/TableThinkPro";
-import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
-import SelectThinkPro from "~/components/SelectThinkPro";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link as ReactRouterLink } from "react-router-dom";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import DialogThinkPro from "~/components/DialogThinkPro";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import TableThinkPro from "~/components/TableThinkPro";
+import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import ActionCreatePromotion from "./components/ActionCreatePromotion";
+import ActionUpdateBrand from "./components/ActionUpdateBrand";
+import { useGetAllPromotionQuery } from "~/redux/api/promotion";
 
 type Props = {};
 
-const PostCategoryView = (props: Props) => {
+const PromotionView = (props: Props) => {
 	const toast = useToast();
 	// thương hiệu cha
 	const [id, setId] = useState(null);
-	const [category, setCategory] = useState<any>(null);
-	const [parents, setParents] = useState<any>([]);
 	const columnHelper = createColumnHelper<any>();
 	const {
-		isOpen: isOpenActionCreateCategory,
-		onOpen: onOpenActionCreateCategory,
-		onClose: onCloseActionCreateCategory,
+		isOpen: isOpenActionCreateBrand,
+		onOpen: onOpenActionCreateBrand,
+		onClose: onCloseActionCreateBrand,
 	} = useDisclosure();
 	const {
-		isOpen: isOpenActionUpdateCategory,
-		onOpen: onOpenActionUpdateCategory,
-		onClose: onCloseActionUpdateCategory,
+		isOpen: isOpenActionUpdateBrand,
+		onOpen: onOpenActionUpdateBrand,
+		onClose: onCloseActionUpdateBrand,
 	} = useDisclosure();
-
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
 	const { control } = useForm();
 
-	const [deleteCategory] = useDeleteCategoryMutation();
-	const { data: categories, isLoading } = useGetAllCategoryQuery({
-		_limit: 20,
-		_page: 1,
-		_sort: "created_at",
-		_order: "asc",
-		_type: "category_post",
-	});
-
-	useEffect(() => {
-		if (categories) {
-			const parentsFilter = categories?.data?.items?.map((category: any) => ({
-				label: category?.name,
-				value: category?._id,
-			}));
-
-			setParents(parentsFilter);
-		}
-	}, [categories, isLoading]);
-
-	const handleDeleteCategory = async () => {
+	const handleDeleteBrand = async () => {
 		try {
-			await deleteCategory(id).unwrap();
+			await deleteBrand(id as any).unwrap();
 			toast({
 				title: "Thành công",
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Xóa danh mục bài viết thành công",
+				description: "Xóa danh mục thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -107,11 +84,11 @@ const PostCategoryView = (props: Props) => {
 			cell: (info) => {
 				return <Text fontSize="sm">{info.getValue()}</Text>;
 			},
-			header: "Danh mục",
+			header: "Khuyến mãi",
 		}),
 		columnHelper.accessor("slug", {
 			cell: (info) => `/${info.getValue()}`,
-			header: "Đường dẫn",
+			header: "Slug",
 		}),
 		columnHelper.accessor("thumbnail", {
 			cell: ({ getValue }) => {
@@ -127,27 +104,28 @@ const PostCategoryView = (props: Props) => {
 					/>
 				);
 			},
-			header: "Ảnh",
+			header: "Banner",
 		}),
-		columnHelper.accessor("description", {
+		columnHelper.accessor("status", {
 			cell: (info) => {
 				return (
 					<Text
-						fontSize="sm"
-						css={{
-							display: "-webkit-box",
-							WebkitLineClamp: 2,
-							WebkitBoxOrient: "vertical",
-							overflow: "hidden",
-						}}
+						display="inline-flex"
+						fontSize="13px"
+						px="4"
+						py="1"
+						rounded="md"
+						fontWeight="semibold"
+						color={info.getValue() ? "text.textSuccess" : "text.textDelete"}
+						bgColor={info.getValue() ? "bg.bgSuccess" : "bg.bgDelete"}
 					>
-						{info.getValue()}
+						{info.getValue() ? "Đang khuyến mãi" : "Ngừng khuyến mãi"}
 					</Text>
 				);
 			},
-			header: "Mô tả",
+			header: "Trạng thái",
 		}),
-		columnHelper.accessor("created_at", {
+		columnHelper.accessor("start_time", {
 			cell: (info) => (
 				<Text
 					fontWeight="medium"
@@ -156,18 +134,18 @@ const PostCategoryView = (props: Props) => {
 					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
 				</Text>
 			),
-			header: "Ngày tạo",
+			header: "Ngày bắt đầu",
 		}),
-		columnHelper.accessor("updated_at", {
+		columnHelper.accessor("expired_time", {
 			cell: (info) => (
 				<Text
 					fontWeight="medium"
 					fontSize="13px"
 				>
-					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+					{info.getValue() ? moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS") : "Đang cập nhật"}
 				</Text>
 			),
-			header: "Ngày cập nhật",
+			header: "Ngày kết thúc",
 		}),
 		columnHelper.accessor("action", {
 			cell: ({ row }) => {
@@ -200,15 +178,19 @@ const PostCategoryView = (props: Props) => {
 								py="2"
 								icon={<EditIcon size={4} />}
 								onClick={() => {
-									const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
-									setCategory({
-										_id: doc?._id,
-										name: doc?.name,
-										thumbnail: doc?.thumbnail,
-										parent_id: parent_id,
-										description: doc?.description,
-									});
-									onOpenActionUpdateCategory();
+									// const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
+									// setBrand({
+									// 	_id: doc?._id,
+									// 	name: doc?.name,
+									// 	thumbnail: doc?.thumbnail,
+									// 	parent_id: parent_id,
+									// 	category_id: {
+									// 		label: doc?.category?.name,
+									// 		value: doc?.category?.category_id,
+									// 	},
+									// 	description: doc?.description,
+									// });
+									// onOpenActionUpdateBrand();
 								}}
 							>
 								Cập Nhật
@@ -228,7 +210,7 @@ const PostCategoryView = (props: Props) => {
 				px="6"
 				py="8"
 				mb="8"
-				rounded="xl"
+				rounded="lg"
 			>
 				<Flex
 					alignItems="center"
@@ -237,11 +219,11 @@ const PostCategoryView = (props: Props) => {
 				>
 					<Heading
 						as="h2"
-						fontSize="18px"
+						fontSize="18"
 						fontWeight="semibold"
 						textTransform="uppercase"
 					>
-						Danh Sách Danh mục bài viết
+						Danh Sách Khuyến Mãi
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -259,7 +241,7 @@ const PostCategoryView = (props: Props) => {
 							</BreadcrumbItem>
 
 							<BreadcrumbItem isCurrentPage>
-								<BreadcrumbLink href="/admin/danh-muc-bai-viet">Danh mục bài viết</BreadcrumbLink>
+								<BreadcrumbLink href="khuyen-mai">Khuyến mãi</BreadcrumbLink>
 							</BreadcrumbItem>
 						</Breadcrumb>
 					</Box>
@@ -270,8 +252,8 @@ const PostCategoryView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						w="50%"
 						gap="4"
+						w="50%"
 					>
 						<Box>
 							<SelectThinkPro
@@ -281,11 +263,11 @@ const PostCategoryView = (props: Props) => {
 								placeholder="-- Trạng thái --"
 								data={[
 									{
-										label: "Hoạt Động",
+										label: "Đang khuyến mãi",
 										value: "1",
 									},
 									{
-										label: "Khóa",
+										label: "Ngừng khuyến mãi",
 										value: "2",
 									},
 								]}
@@ -318,90 +300,86 @@ const PostCategoryView = (props: Props) => {
 								fontWeight="medium"
 								lineHeight="1.5"
 								w="260px"
-								placeholder="Tìm kiếm danh mục bài viết"
+								placeholder="Tìm kiếm khuyến mãi"
 							/>
 						</Flex>
 					</Flex>
-
-					<Button
-						leftIcon={
-							<PlusCircleIcon
-								size={5}
-								color="text.textSuccess"
-							/>
-						}
-						px="4"
-						lineHeight="2"
-						color="text.textSuccess"
-						bgColor="bg.bgSuccess"
-						onClick={onOpenActionCreateCategory}
+					<Flex
+						flex="1"
+						justifyContent="flex-end"
 					>
-						Tạo Mới
-					</Button>
+						<Button
+							// flex="1"
+							leftIcon={
+								<PlusCircleIcon
+									size={5}
+									color="text.textSuccess"
+								/>
+							}
+							px="4"
+							lineHeight="2"
+							color="text.textSuccess"
+							bgColor="bg.bgSuccess"
+							onClick={onOpenActionCreateBrand}
+						>
+							Tạo Mới
+						</Button>
+					</Flex>
 				</Flex>
 
 				{/* Danh sách */}
 				<TableThinkPro
 					columns={columns}
-					useData={useGetAllCategoryQuery}
-					defaultPageSize={20}
+					useData={useGetAllPromotionQuery}
+					defaultPageSize={10}
 					query={{
-						_limit: 20,
+						_limit: 10,
 						_page: 1,
-						_sort: "created_at",
-						_order: "desc",
-						_type: "category_post",
 					}}
-				/>
-
-				{/* Cofirm */}
-				<ConfirmThinkPro
-					isOpen={isOpenComfirm}
-					onClose={onCloseComfirm}
-					content="Bạn có muốn xóa bỏ danh mục này không?"
-					handleClick={handleDeleteCategory}
 				/>
 			</Box>
 			{/* Form */}
 			<DialogThinkPro
-				isOpen={isOpenActionCreateCategory}
-				onClose={onCloseActionCreateCategory}
+				size="6xl"
+				isOpen={isOpenActionCreateBrand}
+				onClose={onCloseActionCreateBrand}
 				isCentered
 				title={
 					<Heading
 						fontSize="16"
 						textTransform="uppercase"
 					>
-						Tạo mới danh mục bài viết
+						Tạo mới khuyến mãi
 					</Heading>
 				}
 			>
-				<ActionCreateCategory
-					onClose={onCloseActionCreateCategory}
-					parents={parents}
-				/>
+				<ActionCreatePromotion onClose={onCloseActionCreateBrand} />
 			</DialogThinkPro>
 			<DialogThinkPro
-				isOpen={isOpenActionUpdateCategory}
-				onClose={onCloseActionUpdateCategory}
+				isOpen={isOpenActionUpdateBrand}
+				onClose={onCloseActionUpdateBrand}
 				isCentered
 				title={
 					<Heading
 						fontSize="16"
 						textTransform="uppercase"
 					>
-						Cập nhật danh mục bài viết
+						Cập nhật thương hiệu
 					</Heading>
 				}
 			>
-				<ActionUpdateCategory
-					onClose={onCloseActionUpdateCategory}
-					category={category}
-					parents={parents}
-				/>
+				{/* <ActionUpdateBrand onClose={onCloseActionUpdateBrand} /> */}
 			</DialogThinkPro>
+
+			{/* Cofirm */}
+			<ConfirmThinkPro
+				isOpen={isOpenComfirm}
+				onClose={onCloseComfirm}
+				content="Bạn có muốn xóa bỏ thương hiệu này không?"
+				handleClick={handleDeleteBrand}
+			/>
 		</>
 	);
 };
 
-export default PostCategoryView;
+export default PromotionView;

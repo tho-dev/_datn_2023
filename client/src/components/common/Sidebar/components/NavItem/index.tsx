@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink as ReactRouterLink, useLocation } from "react-router-dom";
 import { Link, Image, Collapse, useDisclosure } from "@chakra-ui/react";
 import { Flex, Box, Text } from "@chakra-ui/layout";
@@ -6,9 +6,12 @@ import { ChevronDownIcon } from "~/components/common/Icons";
 
 type Props = {
 	item?: any;
+	index?: number;
+	isCheck?: boolean;
+	handleClick?: any;
 };
 
-const NavItem = ({ item }: Props) => {
+const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
 	const location = useLocation();
 	const { isOpen, onToggle } = useDisclosure();
 	const Icon = item?.icon;
@@ -34,11 +37,13 @@ const NavItem = ({ item }: Props) => {
 					xl: "space-between",
 					"2xl": "space-between",
 				}}
+				bgColor={isCheck ? "#12AFF033" : "transparent"}
 				_hover={{
 					textDecor: "none",
 					backgroundColor: "#12AFF033",
 				}}
 				onClick={() => {
+					handleClick(index as any);
 					item?.children?.length > 0 && onToggle();
 				}}
 			>
@@ -111,10 +116,9 @@ const NavItem = ({ item }: Props) => {
 							as={ReactRouterLink}
 							to={item?.to}
 							key={index}
-							gap="2"
+							gap="3"
 							py="3"
-							px="5"
-							pl="12"
+							px="6"
 							w="full"
 							display="flex"
 							alignItems="center"
@@ -126,7 +130,13 @@ const NavItem = ({ item }: Props) => {
 								textDecor: "none",
 							}}
 						>
-							{item?.title}
+							<Box
+								w="1"
+								h="1"
+								rounded="full"
+								bgColor="bg.admin2"
+							/>
+							<Text flex="1">{item?.title}</Text>
 						</Link>
 					))}
 				</Flex>

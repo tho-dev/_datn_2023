@@ -25,6 +25,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm } from "react-hook-form";
 
 type Props = {};
 
@@ -47,6 +49,8 @@ const BrandView = (props: Props) => {
 		onClose: onCloseActionUpdateBrand,
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+
+	const { control } = useForm();
 
 	const [deleteBrand] = useDeleteBrandMutation();
 	const { data: brands, isLoading } = useGetAllBrandsQuery({
@@ -268,8 +272,10 @@ const BrandView = (props: Props) => {
 					<Heading
 						as="h2"
 						fontSize="18"
+						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Thương Hiệu
+						Danh Sách Thương Hiệu
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -298,47 +304,98 @@ const BrandView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						gap="4"
+						w="60%"
 					>
+						<Box flex="1">
+							<SelectThinkPro
+								control={control}
+								name="category"
+								title=""
+								placeholder="-- Trạng thái --"
+								data={[
+									{
+										label: "Hoạt Động",
+										value: "1",
+									},
+									{
+										label: "Khóa",
+										value: "2",
+									},
+								]}
+							/>
+						</Box>
+
+						<Box flex="1">
+							<SelectThinkPro
+								control={control}
+								name="category"
+								title=""
+								placeholder="-- Danh mục --"
+								data={[
+									{
+										label: "Laptop",
+										value: "1",
+									},
+									{
+										label: "Bàn phím",
+										value: "2",
+									},
+								]}
+							/>
+						</Box>
+
 						<Flex
-							as="span"
+							flex="2"
+							px="4"
+							rounded="8px"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm thương hiệu"
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Thương hiệu..."
-						/>
 					</Flex>
-					<Button
-						leftIcon={
-							<PlusCircleIcon
-								size={5}
-								color="text.white"
-							/>
-						}
-						px="4"
-						lineHeight="2"
-						bgColor="bg.green"
-						onClick={onOpenActionCreateBrand}
+					<Flex
+						w="40%"
+						justifyContent="flex-end"
 					>
-						Tạo Mới
-					</Button>
+						<Button
+							// flex="1"
+							leftIcon={
+								<PlusCircleIcon
+									size={5}
+									color="text.textSuccess"
+								/>
+							}
+							px="4"
+							lineHeight="2"
+							color="text.textSuccess"
+							bgColor="bg.bgSuccess"
+							onClick={onOpenActionCreateBrand}
+						>
+							Tạo Mới
+						</Button>
+					</Flex>
 				</Flex>
 
 				{/* Danh sách */}
@@ -361,7 +418,14 @@ const BrandView = (props: Props) => {
 				isOpen={isOpenActionCreateBrand}
 				onClose={onCloseActionCreateBrand}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới thương hiệu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Tạo mới thương hiệu
+					</Heading>
+				}
 			>
 				<ActionCreateBrand
 					onClose={onCloseActionCreateBrand}
@@ -373,7 +437,14 @@ const BrandView = (props: Props) => {
 				isOpen={isOpenActionUpdateBrand}
 				onClose={onCloseActionUpdateBrand}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật thương hiệu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật thương hiệu
+					</Heading>
+				}
 			>
 				<ActionUpdateBrand
 					onClose={onCloseActionUpdateBrand}

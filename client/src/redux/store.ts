@@ -19,6 +19,7 @@ import collectionApi from "../redux/api/collection";
 import postApi from "./api/post";
 import notificationApi from "./api/notification";
 import generalApi from "./api/general";
+import promotionApi from "./api/promotion";
 
 const persistConfig = {
 	key: "root",
@@ -44,6 +45,7 @@ const middleware = [
 	collectionApi.middleware,
 	postApi.middleware,
 	notificationApi.middleware,
+	promotionApi.middleware,
 	generalApi.middleware,
 ];
 
@@ -61,6 +63,7 @@ const store = configureStore({
 		[postApi.reducerPath]: postApi.reducer,
 		[notificationApi.reducerPath]: notificationApi.reducer,
 		[generalApi.reducerPath]: generalApi.reducer,
+		[promotionApi.reducerPath]: promotionApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
 });
