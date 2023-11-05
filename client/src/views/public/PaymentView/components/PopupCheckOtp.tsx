@@ -82,6 +82,7 @@ const PopupCheckOtp = ({
           .unwrap()
           .then((data) => {
             // onCloseOtp();
+            dispatch(resetOtp(false));
             addNoti({
               sender_id: null,
               receivers_id: null,
@@ -118,6 +119,7 @@ const PopupCheckOtp = ({
             }
           })
           .catch((err) => {
+            dispatch(resetOtp(false));
             toast({
               title: "Đơn hàng",
               description: err.data.errors.message,

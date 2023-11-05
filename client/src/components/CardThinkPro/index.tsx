@@ -71,7 +71,13 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
           <Flex gap="1">
             {product?.colors?.map((color: any, index: number) => {
               return (
-                <Box w="3" h="3" rounded="sm" backgroundColor={color?.value} />
+                <Box
+                  w="3"
+                  h="3"
+                  rounded="sm"
+                  backgroundColor={color?.value}
+                  key={index}
+                />
               );
             })}
           </Flex>

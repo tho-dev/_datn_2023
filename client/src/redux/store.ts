@@ -19,6 +19,7 @@ import collectionApi from "../redux/api/collection";
 import postApi from "./api/post";
 import notificationApi from "./api/notification";
 import generalApi from "./api/general";
+import adsApi from "./api/ads";
 
 const persistConfig = {
 	key: "root",
@@ -45,6 +46,7 @@ const middleware = [
 	postApi.middleware,
 	notificationApi.middleware,
 	generalApi.middleware,
+	adsApi.middleware,
 ];
 
 const store = configureStore({
@@ -61,8 +63,11 @@ const store = configureStore({
 		[postApi.reducerPath]: postApi.reducer,
 		[notificationApi.reducerPath]: notificationApi.reducer,
 		[generalApi.reducerPath]: generalApi.reducer,
+		[adsApi.reducerPath]: adsApi.reducer,
 	},
-	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+		serializableCheck: false,
+	}).concat(...middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

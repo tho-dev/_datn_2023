@@ -10,11 +10,12 @@ import post from "./post.router";
 import order from "./order.router";
 import insert from "./insert.router";
 import collection from "./collection.router";
-import general from "./general.router"
+import general from "./general.router";
 import notification from "./notification.router";
+import ads from "./ads.router";
 
 const routes = (app) => {
-  app.use("/api", general)
+  app.use("/api", general);
   app.use("/api/example", example);
   app.use("/api/product", product);
   app.use("/api/category", category);
@@ -28,6 +29,7 @@ const routes = (app) => {
   app.use("/api/insert", insert);
   app.use("/api/collection", collection);
   app.use("/api/notification", notification);
+  app.use("/api/ads", ads);
 };
 
 export default routes;

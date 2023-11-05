@@ -46,6 +46,7 @@ import PostCategoryView from "~/views/private/PostCategoryView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import { SettingView } from "~/views/private/SettingView";
 import { PromotionView } from "~/views/public/PromotionView";
+import { PromotionViewAdmin } from "~/views/private/PromotionView";
 import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
 
 const routes: RouteObject[] = [
@@ -210,6 +211,10 @@ const routes: RouteObject[] = [
           {
             path: "nhu-cau",
             element: <DemandView />,
+          },
+          {
+            path: "khuyen-mai",
+            element: <PromotionViewAdmin />,
           },
           // {
           // 	path: "shipping",
