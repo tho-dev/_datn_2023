@@ -95,7 +95,7 @@ export const createOrder = async (req, res, next) => {
         quantity: product.quantity,
         price_before_discount: product.price_before_discount,
         price_discount_percent: product.price_discount_percent,
-        total_money: product.total_money,
+        total_money: product.quantity * product.price,
       });
       return new_item;
     };

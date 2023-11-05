@@ -48,6 +48,8 @@ import { SettingView } from "~/views/private/SettingView";
 import { PromotionView } from "~/views/public/PromotionView";
 import { PromotionViewAdmin } from "~/views/private/PromotionView";
 import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
+import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
+import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
 
 const routes: RouteObject[] = [
   {
@@ -213,8 +215,12 @@ const routes: RouteObject[] = [
             element: <DemandView />,
           },
           {
-            path: "khuyen-mai",
-            element: <PromotionViewAdmin />,
+            path: "khuyen-mai/gmail/add",
+            element: <AddGmailView />,
+          },
+          {
+            path: "khuyen-mai/gmail",
+            element: <GmailView />,
           },
           // {
           // 	path: "shipping",

@@ -15,7 +15,7 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/react";
-import { Link, Link as ReactRouterLink } from "react-router-dom";
+import { Link, Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import QuillThinkPro from "~/components/QuillThinkPro";
 import { v4 as uuidv4 } from "uuid";
@@ -23,8 +23,9 @@ import { useAddMutation } from "~/redux/api/ads";
 
 type Props = {};
 
-const PromotionView = (props: Props) => {
+const AddGmailView = (props: Props) => {
   const [add, { isLoading }] = useAddMutation();
+  const navigate = useNavigate();
   const toast = useToast();
   const {
     handleSubmit,
@@ -54,6 +55,7 @@ const PromotionView = (props: Props) => {
           description: data.message,
         });
         reset();
+        navigate("/admin/khuyen-mai/gmail");
       })
       .catch((error) => {
         console.log(error);
@@ -252,4 +254,4 @@ const PromotionView = (props: Props) => {
   );
 };
 
-export default PromotionView;
+export default AddGmailView;

@@ -90,14 +90,36 @@ export const deleteAds = async (req, res, next) => {
 
 export const getAllAds = async (req, res, next) => {
   try {
-    const ads = await Ads.find();
-    if (!ads) {
+    const {
+      _page = 1,
+      _sort = "created_at",
+      _order = "asc",
+      _limit = 10,
+      search,
+    } = req.query;
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        [_sort]: _order === "desc" ? -1 : 1,
+      },
+      select: ["-deleted", "-deleted_at"],
+    };
+    let query = {};
+    if (search) {
+      query.title = { $regex: new RegExp(search, "i") };
+    }
+    const { docs, ...paginate } = await Ads.paginate(query, options);
+    if (!docs) {
       throw createError.NotFound("không tìm thấy sự kiện");
     }
     return res.json({
       message: "Lấy tất cả chiến dịch thành công",
       status: 200,
-      data: ads,
+      data: {
+        items: docs,
+        paginate,
+      },
     });
   } catch (error) {
     next(error);
