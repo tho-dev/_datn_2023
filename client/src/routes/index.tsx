@@ -45,6 +45,7 @@ import ResetPasswordView from "~/views/public/ResetPasswordView/ResetPasswordVie
 import { SearchView } from "~/views/public/SearchView";
 import { ThankView } from "~/views/public/ThankView";
 import { PromotionView as PromotionManageView } from "~/views/private/PromotionView";
+import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
 
 const routes: RouteObject[] = [
 	{
@@ -82,7 +83,7 @@ const routes: RouteObject[] = [
 						element: <NewsView />,
 					},
 					{
-						path: "noi-dung",
+						path: "tin-tuc/:slug",
 						element: <ContentView />,
 					},
 					{
@@ -176,6 +177,17 @@ const routes: RouteObject[] = [
 					{
 						path: "bai-viet",
 						element: <PostManagementView />,
+					},
+					{
+						path: "bai-viet/add",
+						element: (
+							<AddPostMangerView
+								onClose={function (): void {
+									throw new Error("Function not implemented.");
+								}}
+								parents={undefined}
+							/>
+						),
 					},
 					{
 						path: "don-hang",

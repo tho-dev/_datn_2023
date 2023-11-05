@@ -4,8 +4,7 @@ import { Divider } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import { useGetAllPostQuery, useGetSinglePostQuery } from "~/redux/api/post";
 import AllNewsView from "./AllNewsView";
-import { useEffect, useState } from "react";
-import PostThinkPro from "./PostThinkPro";
+import { useEffect, useState } from "react"; 
 import { useParams } from "react-router";
 
 
@@ -15,7 +14,7 @@ const NewsView = () => {
 	const [showCompare, setShowCompare] = useState<boolean>(false);
 	const [data, setData] = useState<any>([]);
 
-	
+
 	const { data: posts } = useGetAllPostQuery({
 		_order: "asc",
 		_sort: "date",
@@ -23,20 +22,6 @@ const NewsView = () => {
 		_limit: 10,
 		_type: slug
 	});
-
-	// const { data: filters } = useGetSinglePostQuery(
-	// 	{
-	// 		_slug: slug,
-	// 	},
-	// 	{ skip: !slug }
-	// );
-
-	// useEffect(() => {
-	// 	if (params) {
-	// 	  setSlug(params);
-	// 	  setData([]);
-	// 	}
-	//   }, [params]);
 
 	useEffect(() => {
 		if (posts) {
@@ -50,7 +35,7 @@ const NewsView = () => {
 	};
 
 	console.log(data);
-	
+
 
 	return (
 		<Box>
@@ -70,7 +55,13 @@ const NewsView = () => {
 				}}
 			>
 
-				<PostThinkPro data={data} />
+				<GridItem colSpan={2}>
+					{data?.map((product: any, index: number) => {
+						return (
+							<AllNewsView product={product} key={index} />
+						);
+					})}
+				</GridItem>
 
 				<GridItem
 					colSpan={1}

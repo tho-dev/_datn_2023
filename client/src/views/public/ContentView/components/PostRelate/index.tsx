@@ -1,16 +1,29 @@
 import { Image } from "@chakra-ui/react";
 import { Box, Text, Flex, Link, Heading } from "@chakra-ui/layout";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { Clock } from "~/components/common/Icons";
+import { useAppDispatch } from "~/redux/hook/hook";
+import { addViewedItem } from "~/redux/slices/globalSlice";
 
 type Props = {
 	product?: any;
 };
 
 const PostRelate = ({ product }: Props) => {
+	const dispatch = useAppDispatch();
+
+	const handleViewProduct = () => {
+		const productData = {
+			// productName: "LG Gram 14 2022",
+			// price: "19.999.000",
+		};
+		dispatch(addViewedItem(productData));
+
+		window.location.href = product?.slug;
+	};
+
 	return (
 		<Link
-			to={"/"}
+			to={product?.slug}
 			as={ReactRouterLink}
 			w="full"
 			rounded="xl"
@@ -20,6 +33,7 @@ const PostRelate = ({ product }: Props) => {
 			_hover={{
 				textDecoration: "none",
 			}}
+			onClick={handleViewProduct}
 		>
 			<Box
 				position="relative"
@@ -36,7 +50,7 @@ const PostRelate = ({ product }: Props) => {
 						w="full"
 						h="full"
 						objectFit="cover"
-						src="https://images.thinkgroup.vn/unsafe/660x370/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/07a7041-thinkpro-jOd.jpg"
+						src={product?.thumbnail}
 					/>
 				</Box>
 			</Box>
@@ -45,7 +59,7 @@ const PostRelate = ({ product }: Props) => {
 				fontSize={16}
 				fontWeight={"semibold"}
 			>
-				Apple nộp bằng sáng chế mới, MacBook sẽ sớm có FaceID?
+				{product?.title}
 			</Text>
 		</Link>
 	);
