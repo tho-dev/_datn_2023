@@ -61,7 +61,7 @@ const AllNewsView = ({ product }: Props) => {
                                         w="full"
                                         h="full"
                                         objectFit="cover"
-                                        src={product?.thumbnail?.url}
+                                        src={product?.thumbnail}
                                     />
                                 </Box>
                             </Box>

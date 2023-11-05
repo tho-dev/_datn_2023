@@ -23,9 +23,9 @@ export async function getAllPost(req, res, next) {
       select: [
         "-deleted",
         "-deleted_at",
-        "-category_id"
       ],
     };
+
 
     const category = await Category.findOne({
       slug: _type,
@@ -35,11 +35,24 @@ export async function getAllPost(req, res, next) {
     const query = _type ? { category_id: category?._id } : {}
     const { docs, ...paginate } = await Post.paginate(query, options);
 
+    const results = await Promise.all((docs?.map(async (doc) => {
+      const category = await Category.findOne({
+        _id: doc?.category_id
+      }).select('name slug ')
+
+      return {
+        ...doc?.toObject(),
+        category_id: undefined,
+        thumbnail: doc?.thumbnail?.url,
+        category: category?.name
+      }
+    })))
+
     return res.json({
       status: 200,
       message: "Thành công",
       data: {
-        items: docs,
+        items: results,
         paginate,
       },
     });

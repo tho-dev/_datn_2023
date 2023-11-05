@@ -21,8 +21,12 @@ const postApi = createApi({
 			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
 			providesTags: ["PostTag"],
 		}),
-		getSinglePost: build.query({
-			query: (id) => `/${id}`,
+		getSinglePost: build.query<any, string>({
+			query: (slug) => ({
+				url: `/${slug}`,
+				method: "GET",
+			}),
+			providesTags: (result, error, slug) => [{ type: "PostTag", slug }],
 		}),
 		createPost: build.mutation<any, IPost>({
 			query: (body) => ({

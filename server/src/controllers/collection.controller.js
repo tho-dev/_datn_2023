@@ -472,7 +472,7 @@ export async function collectionProducts(req, res, next) {
 			// khoảng giá
 			if (filters.price.length > 0) {
 				query.$or = filters.price.map(range => ({
-					price: range.to === null ? { $gte: range.from } : { $gte: range.from, $lte: range.to }
+					price: range.to === null ? { $lte: range.from } : { $gte: range.from, $lte: range.to }
 				}))
 			}
 
