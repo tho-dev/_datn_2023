@@ -720,7 +720,9 @@ export const sendOtpCode = async (req, res, next) => {
 export const verifyOtpCode = async (req, res, next) => {
   try {
     const { phone_number, code } = req.body;
+    console.log(phone_number, code);
     const result = await TextFlow.verifyCode(phone_number, code);
+    console.log(result);
     if (!result.valid) {
       throw createError.BadRequest("Mã code không đúng");
     }
@@ -766,34 +768,45 @@ export const serviceFree = async (req, res, next) => {
 export const getOrderByPhoneNumber = async (req, res, next) => {
   try {
     const { phone_number } = req.body;
-    const result = await Order.findOne({ phone_number: phone_number });
-    if (!result) {
+    console.log(phone_number);
+    // const { phone_number, code } = req.body;
+    // const result_otp = await TextFlow.verifyCode(phone_number, code);
+    // if (!result_otp.valid) {
+    //   throw createError.BadRequest("Mã code không đúng");
+    // }
+
+    const results = await Order.find({ phone_number: phone_number });
+
+    if (!results || results.length === 0) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
-    const new_result = result.toObject();
-    const order_details = await Order_Detail.find({ order_id: result._id });
 
-    const new_order_details = await Promise.all(
-      order_details.map(async (item) => {
-        const sku = await Sku.findOne({ _id: item.sku_id }).select(
-          "name shared_url"
-        );
-        const new_item = item.toObject();
-        const new_sku = sku.toObject();
-        return {
-          ...new_item,
-          ...new_sku,
-        };
-      })
-    );
+    const orderDetailsPromises = results.map(async (result) => {
+      const orderDetails = await Order_Detail.find({ order_id: result._id });
+      const newOrder = await Promise.all(
+        orderDetails.map(async (item) => {
+          const sku = await Sku.findOne({ _id: item.sku_id }).select(
+            "name shared_url"
+          );
+          const newSku = sku.toObject();
+          return {
+            ...item.toObject(),
+            ...newSku,
+          };
+        })
+      );
+      return {
+        ...result.toObject(),
+        orders: newOrder,
+      };
+    });
+
+    const ordersWithDetails = await Promise.all(orderDetailsPromises);
 
     return res.json({
       status: 200,
       message: "Tìm thấy đơn hàng thành công",
-      data: {
-        ...new_result,
-        new_order_details,
-      },
+      data: ordersWithDetails,
     });
   } catch (error) {
     next(error);

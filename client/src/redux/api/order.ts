@@ -31,6 +31,13 @@ const orderApi = createApi({
       }),
       providesTags: ['Order'],
     }),
+    getOne: builder.query({
+      query: (id) => ({
+        url: `/order/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['Order'],
+    }),
     getAllOrder: builder.query({
       query: (query) => ({
         url: `/order?${objectToUrlParams(query)}`,
@@ -58,6 +65,14 @@ const orderApi = createApi({
         method: 'GET',
       }),
       providesTags: ['Order'],
+    }),
+    getOrderByPhoneNumber: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/order/orderByPhoneNumber`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Order'],
     }),
     create: builder.mutation<any, any>({
       query: (data) => ({
@@ -133,10 +148,12 @@ const orderApi = createApi({
 });
 export const {
   useGetAllQuery,
+  useGetOneQuery,
   useGetAllOrderQuery,
   useGetAllShippingQuery,
   useGetOneShippingQuery,
   useGetAllTotalOrderQuery,
+  useGetOrderByPhoneNumberMutation,
   useCreateMutation,
   useSendOtpMutation,
   useCheckOtpMutation,
@@ -146,7 +163,7 @@ export const {
   useTokenPrintOrderMutation,
   useUpdateStatusOrderMutation,
   useGetOrderByUserIdQuery,
-  useReturnOrderMutation
+  useReturnOrderMutation,
 } = orderApi;
 
 export const productReducer = orderApi.reducer;
