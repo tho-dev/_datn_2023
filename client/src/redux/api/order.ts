@@ -121,6 +121,14 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    updateinfoCustomer: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/order/updateInfoCustomer/${data.id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['Order'],
+    }),
     returnOrder: builder.mutation<any, any>({
       query: (data) => ({
         url: `/order/return`,
@@ -146,7 +154,8 @@ export const {
   useTokenPrintOrderMutation,
   useUpdateStatusOrderMutation,
   useGetOrderByUserIdQuery,
-  useReturnOrderMutation
+  useReturnOrderMutation,
+  useUpdateinfoCustomerMutation,
 } = orderApi;
 
 export const productReducer = orderApi.reducer;
