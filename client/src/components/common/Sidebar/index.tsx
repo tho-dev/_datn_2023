@@ -96,6 +96,7 @@ const Sidebar = (props: Props) => {
 			borderColor="bg.admin1"
 			position="fixed"
 			zIndex="999"
+			overflow="hidden"
 		>
 			<Box
 				w="full"

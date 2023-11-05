@@ -50,7 +50,7 @@ const PromotionView = (props: Props) => {
 
 	const handleDeleteBrand = async () => {
 		try {
-			await deleteBrand(id as any).unwrap();
+			// await deleteBrand(id as any).unwrap();
 			toast({
 				title: "Thành công",
 				duration: 1600,

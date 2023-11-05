@@ -21,7 +21,11 @@ import { useDisclosure } from "@chakra-ui/react";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useGetAllProductQuery } from "~/redux/api/product";
+import moment from "moment";
+import { formatNumber } from "~/utils/fc";
+import { useGetProducItemToBrandAndCategoryQuery } from "~/redux/api/collection";
+import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useEffect, useState } from "react";
 
 type Props = {
 	onClose: () => void;
@@ -31,6 +35,7 @@ const ActionPromotion = ({ onClose }: Props) => {
 	const toast = useToast();
 	const columnHelper = createColumnHelper<any>();
 	const { isOpen: isOpenProduct, onClose: onCloseProduct, onOpen: onOpenProduct } = useDisclosure();
+	const [categories, setCategories] = useState<any>([]);
 
 	const {
 		control,
@@ -43,6 +48,26 @@ const ActionPromotion = ({ onClose }: Props) => {
 	} = useForm();
 
 	const [createBrand, { isLoading }] = useCreateBrandMutation();
+
+	const { data } = useGetAllCategoryQuery({
+		_page: 1,
+		_limit: 50,
+		_order: "asc",
+		_sort: "created_at",
+	});
+
+	useEffect(() => {
+		if (data) {
+			const categoryFilter = data?.data?.items?.map((item: any) => {
+				return {
+					label: item?.name,
+					value: item?.slug,
+				};
+			});
+
+			setCategories(categoryFilter);
+		}
+	}, [data]);
 
 	const onSubmit = async (data: any) => {
 		data = {
@@ -76,19 +101,149 @@ const ActionPromotion = ({ onClose }: Props) => {
 
 	const columns = [
 		columnHelper.accessor("#", {
-			cell: ({ row, table }) => {
+			cell: ({ table, row }) => {
 				const index = row.index + 1;
 				const { pageIndex, pageSize } = table.getState().pagination;
-				return pageIndex * pageSize + index;
+
+				return (
+					<Text
+						fontSize="13px"
+						fontWeight="medium"
+					>
+						{pageIndex * pageSize + index}
+					</Text>
+				);
 			},
 			header: "#",
 		}),
 		columnHelper.accessor("name", {
-			cell: (info) => {
-				return <Text fontSize="sm">{info.getValue()}</Text>;
+			cell: ({ getValue }) => {
+				return (
+					<Text
+						fontSize="13px"
+						fontWeight="medium"
+						display="inline-block"
+					>
+						{getValue()}
+					</Text>
+				);
 			},
-			header: "Khuyến mãi",
+			header: "Sản phẩm",
 		}),
+		columnHelper.accessor("option_value", {
+			cell: ({ getValue }) => {
+				const values = getValue();
+				return (
+					<Flex gap="1">
+						{values?.map((value: any) => {
+							return (
+								<Text
+									fontSize="13px"
+									fontWeight="medium"
+									px="4"
+									py="1"
+									display="inline-flex"
+									borderWidth="1px"
+									borderColor="border.primary"
+									rounded="md"
+								>
+									{value}
+								</Text>
+							);
+						})}
+					</Flex>
+				);
+			},
+			header: "Biến thể",
+		}),
+		columnHelper.accessor("price_before_discount", {
+			cell: ({ getValue }) => (
+				<Text
+					fontSize="13px"
+					fontWeight="medium"
+				>
+					{formatNumber(`${getValue()}`)}
+				</Text>
+			),
+			header: "Giá gốc",
+		}),
+		columnHelper.accessor("colors", {
+			cell: ({ getValue }) => {
+				const colors = getValue();
+				return (
+					<Flex gap="2">
+						{colors?.map((color: any, index: number) => {
+							return (
+								<Box
+									key={index}
+									w="14px"
+									h="14px"
+									bgColor={color.value}
+									rounded="2px"
+								/>
+							);
+						})}
+					</Flex>
+				);
+			},
+			header: "Màu sắc",
+		}),
+		// columnHelper.accessor("status", {
+		// 	cell: ({ getValue }) => (
+		// 		<Text>
+		// 			{getValue() ? (
+		// 				<Box
+		// 					display="inline-block"
+		// 					px="2"
+		// 					py="1"
+		// 					fontSize="xs"
+		// 					fontWeight="semibold"
+		// 					bgColor="bg.bgSuccess"
+		// 					color="text.textSuccess"
+		// 					rounded="4px"
+		// 				>
+		// 					Đang Bán
+		// 				</Box>
+		// 			) : (
+		// 				<Box
+		// 					display="inline-block"
+		// 					px="2"
+		// 					py="1"
+		// 					fontSize="xs"
+		// 					fontWeight="semibold"
+		// 					bgColor="bg.bgDelete"
+		// 					color="text.textDelete"
+		// 					rounded="md"
+		// 				>
+		// 					Ngừng Bán
+		// 				</Box>
+		// 			)}
+		// 		</Text>
+		// 	),
+		// 	header: "Trạng thái",
+		// }),
+		// columnHelper.accessor("created_at", {
+		// 	cell: (info) => (
+		// 		<Text
+		// 			fontWeight="medium"
+		// 			fontSize="13px"
+		// 		>
+		// 			{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+		// 		</Text>
+		// 	),
+		// 	header: "Ngày tạo",
+		// }),
+		// columnHelper.accessor("updated_at", {
+		// 	cell: (info) => (
+		// 		<Text
+		// 			fontWeight="medium"
+		// 			fontSize="13px"
+		// 		>
+		// 			{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+		// 		</Text>
+		// 	),
+		// 	header: "Ngày cập nhật",
+		// }),
 	];
 
 	return (
@@ -372,27 +527,19 @@ const ActionPromotion = ({ onClose }: Props) => {
 								name="category"
 								title="Danh mục"
 								placeholder="-- Danh mục --"
-								data={[
-									{
-										label: "Đang khuyến mãi",
-										value: true,
-									},
-									{
-										label: "Ngừng khuyến mãi",
-										value: false,
-									},
-								]}
+								data={categories}
 							/>
 						</Box>
 					</Box>
 					<TableThinkPro
 						columns={columns}
-						useData={useGetAllProductQuery}
+						useData={useGetProducItemToBrandAndCategoryQuery}
 						query={{
 							_page: 1,
 							_limit: 10,
 							_order: "asc",
 							_sort: "created_at",
+							_category: categories[0]?.value,
 						}}
 					/>
 				</Box>
