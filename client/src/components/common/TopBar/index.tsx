@@ -1,45 +1,46 @@
 import { Box, Divider, Flex, Text } from "@chakra-ui/layout";
-import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
-import { Avatar, Collapse, Input, useDisclosure, Link, Button, useToast } from "@chakra-ui/react";
 import {
-	DownArrowIcon,
-	SearchAdminIcon,
+	Avatar,
+	Button,
+	Collapse,
+	Popover,
+	PopoverArrow,
+	PopoverBody,
+	PopoverCloseButton,
+	PopoverContent,
+	PopoverHeader,
+	PopoverTrigger,
+	useDisclosure,
+	useToast,
+} from "@chakra-ui/react";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import {
 	BellIcon,
 	CheveronUpIcon,
 	ChevronDownIcon,
-	UserIcon,
+	DownArrowIcon,
 	LogoutIcon,
-	CartIcon,
 	ShoppingCartIcon,
+	UserIcon,
 } from "~/components/common/Icons";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { useLogoutUserMutation } from "~/redux/api/user";
-import { logout } from "~/redux/slices/globalSlice";
-import {
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-	PopoverHeader,
-	PopoverBody,
-	PopoverFooter,
-	PopoverArrow,
-	PopoverCloseButton,
-	PopoverAnchor,
-} from "@chakra-ui/react";
 import { useUpdateNotiMutation } from "~/redux/api/notification";
+import { useLogoutUserMutation } from "~/redux/api/user";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { logout } from "~/redux/slices/globalSlice";
 
 type Props = {
 	data_notification: any;
 	handleChangeStatusNoti: (status: any) => void;
 };
 
-const TopBar = (props: Props) => {
+const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 	const { isOpen, onToggle } = useDisclosure();
 	const { user } = useAppSelector((state) => state.persistedReducer.global);
 	const toast = useToast();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const [logoutUser] = useLogoutUserMutation();
+	const [updateNoti] = useUpdateNotiMutation();
 
 	const handleLogoutUser = () => {
 		logoutUser("")
@@ -64,6 +65,13 @@ const TopBar = (props: Props) => {
 					description: err.data.errors.message,
 				})
 			);
+	};
+	const handleUpdateStatusNoti = (id: any) => {
+		updateNoti(id)
+			.unwrap()
+			.then((data) => {
+				console.log(data);
+			});
 	};
 	return (
 		<Flex
@@ -107,11 +115,11 @@ const TopBar = (props: Props) => {
 					"2xl": "flex",
 				}}
 			>
-				<DownArrowIcon
+				{/* <DownArrowIcon
 					size={8}
 					strokeWidth={1}
 					color="#809FB8"
-				/>
+				/> */}
 			</Flex>
 			{/* <Flex
         w="full"
@@ -153,35 +161,140 @@ const TopBar = (props: Props) => {
 				alignItems="center"
 				justifyContent="center"
 			>
-				<Flex
-					as="span"
-					alignItems="center"
-					justifyContent="center"
-					position="relative"
-					_after={{
-						content: "'1'",
-						position: "absolute",
-						top: "-6px",
-						right: "-4px",
-						w: "14px",
-						h: "14px",
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						rounded: "full",
-						color: "text.white",
-						fontSize: "9px",
-						fontWeight: "600",
-						backgroundColor: "#F47690",
-						border: "2px solid #fff",
-					}}
-					shadow="sm"
-				>
-					<BellIcon
-						size={6}
-						color="text.admin2"
-					/>
-				</Flex>
+				<Popover>
+					<PopoverTrigger>
+						<Flex
+							as="span"
+							alignItems="center"
+							justifyContent="center"
+							position="relative"
+							cursor="pointer"
+							_after={{
+								content: `"${data_notification?.filter((item: any) => !item.status).length || 0}"`,
+								position: "absolute",
+								top: "-6px",
+								right: "-4px",
+								w: "14px",
+								h: "14px",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								rounded: "full",
+								color: "text.white",
+								fontSize: "9px",
+								fontWeight: "600",
+								backgroundColor: "#F47690",
+								border: "2px solid #fff",
+							}}
+							shadow="sm"
+						>
+							<BellIcon
+								size={6}
+								color="text.admin2"
+							/>
+						</Flex>
+					</PopoverTrigger>
+					<PopoverContent>
+						<PopoverArrow />
+						<PopoverCloseButton />
+						<PopoverHeader>
+							<Text
+								fontSize="14px"
+								fontWeight="bold"
+							>
+								Thông báo
+							</Text>
+							<Flex
+								gap={4}
+								my={2}
+							>
+								<Button
+									rounded={"md"}
+									fontSize="12px"
+									px={2}
+									py={0}
+									h="30px"
+									bg={"bg.gray"}
+									color={"black"}
+									fontWeight="semibold"
+									_active={{ bg: "gray.300" }}
+									onClick={() => {
+										handleChangeStatusNoti(null);
+									}}
+								>
+									Tất cả
+								</Button>
+								<Button
+									rounded={"md"}
+									fontSize="12px"
+									px={2}
+									py={0}
+									h="30px"
+									bg={"bg.gray"}
+									color={"black"}
+									fontWeight="semibold"
+									_active={{ bg: "gray.300" }}
+									onClick={() => {
+										handleChangeStatusNoti(false);
+									}}
+								>
+									Chưa đọc
+								</Button>
+							</Flex>
+						</PopoverHeader>
+						<PopoverBody>
+							<Box
+								maxH={"300px"}
+								overflow="auto"
+							>
+								{data_notification.length > 0 ? (
+									data_notification.map((item: any, index: number) => {
+										return (
+											<Flex
+												to={`${item?.link}`}
+												as={ReactRouterLink}
+												key={index}
+												rounded={"md"}
+												gap={4}
+												alignItems="center"
+												padding="2px"
+												my={1}
+												transition="all .8s ease"
+												bgColor={item.status ? "bg.white" : "bg.gray"}
+												onClick={() => handleUpdateStatusNoti(item._id)}
+												_hover={{
+													transform: "translateY(-5px)",
+													bgColor: "gray.200",
+												}}
+											>
+												<Avatar
+													src="https://bit.ly/dan-abramov"
+													size={"sm"}
+												/>
+												<Flex flexDirection={"column"}>
+													<Text
+														fontSize={"14px"}
+														fontWeight="semibold"
+													>
+														Hệ thống
+													</Text>
+													<Text
+														fontSize={"12px"}
+														fontWeight="semibold"
+													>
+														{item.message}
+													</Text>
+												</Flex>
+											</Flex>
+										);
+									})
+								) : (
+									<Text>Bạn chưa có thông báo nào</Text>
+								)}
+							</Box>
+						</PopoverBody>
+					</PopoverContent>
+				</Popover>
 				<Box h="8">
 					<Divider orientation="vertical" />
 				</Box>

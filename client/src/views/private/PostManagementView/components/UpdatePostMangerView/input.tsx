@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import {
 	FormErrorMessage,
 	FormLabel,
@@ -13,16 +13,22 @@ import {
 import { CloseSmallIcon } from "~/components/common/Icons";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
-import { useUpdatePostMutation } from "~/redux/api/post";
+import { useGetAllPostQuery, useUpdatePostMutation } from "~/redux/api/post";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useGetAllDemandQuery } from "~/redux/api/demand";
+import QuillThinkPro from "~/components/QuillThinkPro";
 
 type Props = {
 	onClose: () => void;
 	post: any;
-	parents: any;  
+	// parents: any;  
+	categories: any;
 
 };
 
-const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
+const ActionUpdatePost = ({ onClose, post }: Props) => {
 	const toast = useToast();
 	const {
 		control,
@@ -36,12 +42,61 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 		defaultValues: post,
 	});
 
+	const category = useWatch({
+		control,
+		name: "category_id",
+	});
+
+	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
+
+	const { data: categories } = useGetAllCategoryQuery({
+		_page: 1,
+		_limit: 50,
+		_order: "desc",
+		_sort: "created_at",
+		_type: "category_brand",
+	});
+
+	const { data: demands } = useGetAllPostQuery({
+		_page: 1,
+		_limit: 20,
+		_order: "desc",
+		_sort: "created_at",
+		_type: "category_brand",
+	});
+ 
+
+	useEffect(() => {
+		if (categories) {
+
+			const selectCategories = categories?.data?.items?.map((category: any) => ({
+				label: category?.name,
+				value: category?._id,
+			}));
+
+			setCategoriesFilter(selectCategories);
+		}
+	}, [categories]);
+
+	useEffect(() => {
+		if (category?.label == "Laptop") {
+			const demandsFilter = demands?.data?.items?.map((demand: any) => ({
+				...demand,
+				point: 0,
+			}));
+
+			setValue("demands", demandsFilter);
+		}
+	}, [category, demands]);
+
+
 	const [updatePost, { isLoading }] = useUpdatePostMutation();
+	const navigate = useNavigate();
 
 	const onSubmit = async (data: any) => {
 		data = {
 			...data,
-			parent_id: data?.parent_id?.value,
+			// parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
 		};
 
@@ -52,8 +107,10 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Tạo danh mục thành công",
+				description: "Cập nhật danh mục thành công",
 			});
+			reset();
+			navigate("/admin/bai-viet");
 		} catch (error: any) {
 			toast({
 				title: "Có lỗi",
@@ -68,6 +125,44 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 		onClose();
 	};
 
+	const thumbnail = watch("thumbnail");
+	const title = watch("title");
+	const category_id = watch("category_id")
+	const description = watch("description");
+	const content = watch("content");
+	const meta_keyword = watch("meta_keyword");
+	const meta_description = watch("meta_description");
+	const meta_title = watch("meta_title");
+
+	useEffect(() => { 
+		register("description", { required: "Không được để trống" });
+		register("content", { required: "Không được để trống" });
+		register("meta_keyword", { required: "Không được để trống" });
+		register("meta_description", { required: "Không được để trống" });
+		register("meta_title", { required: "Không được để trống" });
+	}, [register]);
+
+	const onEditorStateChangeDescription = (value: any) => {
+		setValue("description", value);
+	};
+
+	const onEditorStateChangeContent = (value: any) => {
+		setValue("content", value);
+	};
+
+	const onEditorStateChangeMetaKeyword = (value: any) => {
+		setValue("meta_keyword", value);
+	};
+
+	const onEditorStateChangeMetaDescription = (value: any) => {
+		setValue("meta_description", value);
+	};
+
+	const onEditorStateChangeMetaTitle = (value: any) => {
+		setValue("meta_title", value);
+	};
+
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<Flex
@@ -80,7 +175,7 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 						mt="8"
 					>
 						<Box
-							w="250px"
+							w="200px"
 							h="200px"
 						>
 							<FileUploadThinkPro
@@ -110,16 +205,18 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 					/>
 					<FormErrorMessage>{(errors.title as any) && errors?.title?.message}</FormErrorMessage>
 				</FormControl>
-				
+
 				{/* Bài viết */}
 				<SelectThinkPro
-					control={control}
-					name="category_id"
 					title="Danh mục"
+					control={control}
+					data={categoriesFilter}
+					name="category_id"
 					placeholder="-- Danh mục --"
-					data={parents}
 					rules={{ required: "Không được để trống" }}
 				/>
+
+				{/* Description */}
 				<FormControl isInvalid={errors.description as any}>
 					<FormLabel
 						fontSize="15"
@@ -128,19 +225,11 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 					>
 						Description
 					</FormLabel>
-					<Textarea
-						id="description"
-						size="lager"
-						p="4"
-						rounded="4px"
-						fontSize="sm"
-						boxShadow="none"
-						placeholder="VD: thuong hieu..."
-						{...register("description", {
-							required: "Không được để trống !!!",
-						})}
+					<QuillThinkPro
+						data={description}
+						onEditorStateChange={onEditorStateChangeDescription as any}
 					/>
-					<FormErrorMessage>{(errors.content as any) && errors?.content?.message}</FormErrorMessage>
+					<FormErrorMessage>{(errors.description as any) && errors?.description?.message}</FormErrorMessage>
 				</FormControl>
 
 				{/* content */}
@@ -152,17 +241,9 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 					>
 						Content
 					</FormLabel>
-					<Textarea
-						id="content"
-						size="lager"
-						p="4"
-						rounded="4px"
-						fontSize="sm"
-						boxShadow="none"
-						placeholder="VD: thuong hieu..."
-						{...register("content", {
-							required: "Không được để trống !!!",
-						})}
+					<QuillThinkPro
+						data={content}
+						onEditorStateChange={onEditorStateChangeContent as any}
 					/>
 					<FormErrorMessage>{(errors.content as any) && errors?.content?.message}</FormErrorMessage>
 				</FormControl>
@@ -176,17 +257,9 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 					>
 						Meta keyword
 					</FormLabel>
-					<Textarea
-						id="meta_keyword"
-						size="lager"
-						p="4"
-						rounded="4px"
-						fontSize="sm"
-						boxShadow="none"
-						placeholder="VD: thuong hieu..."
-						{...register("meta_keyword", {
-							required: "Không được để trống !!!",
-						})}
+					<QuillThinkPro
+						data={meta_keyword}
+						onEditorStateChange={onEditorStateChangeMetaKeyword as any}
 					/>
 					<FormErrorMessage>{(errors.meta_keyword as any) && errors?.meta_keyword?.message}</FormErrorMessage>
 				</FormControl>
@@ -200,17 +273,9 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 					>
 						Meta description
 					</FormLabel>
-					<Textarea
-						id="meta_description"
-						size="lager"
-						p="4"
-						rounded="4px"
-						fontSize="sm"
-						boxShadow="none"
-						placeholder="VD: thuong hieu..."
-						{...register("meta_description", {
-							required: "Không được để trống !!!",
-						})}
+					<QuillThinkPro
+						data={meta_description}
+						onEditorStateChange={onEditorStateChangeMetaDescription as any}
 					/>
 					<FormErrorMessage>{(errors.meta_description as any) && errors?.meta_description?.message}</FormErrorMessage>
 				</FormControl>
@@ -225,17 +290,9 @@ const ActionUpdatePost = ({ onClose, parents, post }: Props) => {
 					>
 						Meta title
 					</FormLabel>
-					<Textarea
-						id="meta_title"
-						size="lager"
-						p="4"
-						rounded="4px"
-						fontSize="sm"
-						boxShadow="none"
-						placeholder="VD: thuong hieu..."
-						{...register("meta_title", {
-							required: "Không được để trống !!!",
-						})}
+					<QuillThinkPro
+						data={meta_title}
+						onEditorStateChange={onEditorStateChangeMetaTitle as any}
 					/>
 					<FormErrorMessage>{(errors.meta_title as any) && errors?.meta_title?.message}</FormErrorMessage>
 				</FormControl>

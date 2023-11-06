@@ -3,13 +3,12 @@ import { createMultiStyleConfigHelpers, defineStyle, defineStyleConfig } from "@
 
 const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(inputAnatomy.keys);
 
-const baseStyle = definePartsStyle({
-	field: {},
-});
+const baseStyle = definePartsStyle({});
 
 const small = defineStyle({
+	w: "full",
 	px: "4",
-	h: "40px",
+	h: "48px",
 	fontSize: "sm",
 	_placeholder: {
 		fontSize: "13px",
@@ -17,15 +16,23 @@ const small = defineStyle({
 });
 
 const medium = defineStyle({
+	w: "full",
 	px: "4",
-	h: "42px",
+	h: "48px",
 	fontSize: "sm",
+	_placeholder: {
+		fontSize: "13px",
+	},
 });
 
 const lager = defineStyle({
+	w: "full",
 	px: "4",
-	h: "46px",
+	h: "48px",
 	fontSize: "sm",
+	_placeholder: {
+		fontSize: "13px",
+	},
 });
 
 const sizes = {
@@ -39,7 +46,7 @@ const primary = definePartsStyle({
 		color: "text.black",
 		fontWeight: "500",
 		lineHeight: 1.5,
-		borderRadius: "4px",
+		borderRadius: "8px",
 		border: "1px solid",
 		borderColor: "border.primary",
 		_focusVisible: {

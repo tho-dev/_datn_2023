@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import {
 	FormErrorMessage,
 	FormLabel,
@@ -14,12 +14,12 @@ import {
 import { CloseSmallIcon } from "~/components/common/Icons";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
-import { useCreatePostMutation } from "~/redux/api/post";
+import { useCreatePostMutation, useGetAllPostQuery } from "~/redux/api/post";
 import ReviewAddPostManger from "./components/ReviewAddPostManger";
 import QuillThinkPro from "~/components/QuillThinkPro";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link as ReactRouterLink } from "react-router-dom";
-
+import { useGetAllCategoryQuery } from "~/redux/api/category"; 
 type Props = {
 	onClose: () => void;
 	parents: any;
@@ -37,17 +37,48 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 		reset,
 	} = useForm();
 
+	const category = useWatch({
+		control,
+		name: "category_id",
+	});
+
+	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
+
+	const { data: categories } = useGetAllCategoryQuery({
+		_page: 1,
+		_limit: 50,
+		_order: "desc",
+		_sort: "created_at",
+		_type: "category_brand",
+	});
+
+
+	const [createProduct] = useCreatePostMutation();
+
+	useEffect(() => {
+		if (categories) {
+
+			const selectCategories = categories?.data?.items?.map((category: any) => ({
+				label: category?.name,
+				value: category?._id,
+			}));
+
+			setCategoriesFilter(selectCategories);
+		}
+	}, [categories]);
+
 	const [createPost, { isLoading }] = useCreatePostMutation();
 	const navigate = useNavigate();
-
 	const onSubmit = async (data: any) => {
 		data = {
 			...data,
-			parent_id: data?.parent_id?.value,
+			// parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
 		};
 
 		try {
+			// const res = await createProduct(dataForm).unwrap();
+			// const productID = res?.data?.post?._id;
 			await createPost(data).unwrap();
 			toast({
 				title: "Thành công",
@@ -68,9 +99,8 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 				description: JSON.stringify(error?.data?.errors),
 			});
 		}
-
 		reset();
-		onClose();
+		// onClose();
 	};
 	const thumbnail = watch("thumbnail");
 	const title = watch("title");
@@ -171,13 +201,15 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 
 						{/* Bài viết */}
 						<SelectThinkPro
-							control={control}
-							name="category_id"
 							title="Danh mục"
+							control={control}
+							data={categoriesFilter}
+							name="category_id"
 							placeholder="-- Danh mục --"
-							data={parents}
 							rules={{ required: "Không được để trống" }}
 						/>
+
+						{/* description */}
 						<FormControl isInvalid={errors.description as any}>
 							<FormLabel
 								fontSize="15"
@@ -278,12 +310,11 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 							Đóng
 						</Button>
 						<Button
-							type="submit"
-							bgColor="text.textSuccess"
-							textColor="text.white"
-							fontWeight="bold"
-							px="4"
+							w={"40"}
 							isLoading={isLoading}
+							type="submit"
+							bgColor="bg.bgSuccess"
+							color="text.textSuccess"
 						>
 							Tạo mới
 						</Button>

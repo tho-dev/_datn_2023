@@ -131,6 +131,7 @@ const PopupCheckOtp = ({
           .finally(() => {
             onCloseOtp();
             dispatch(resetOtp(false));
+            setLoading(false);
           });
       })
       .catch((err) => {
@@ -142,9 +143,6 @@ const PopupCheckOtp = ({
           isClosable: true,
           position: "top-right",
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
   useEffect(() => {
