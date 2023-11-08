@@ -192,7 +192,7 @@ const ProductDetailView = (props: Props) => {
   if (isError) {
     navigate("/404");
   }
-
+  const month = new Date().getMonth() + 1;
   return (
     <Box h={"full"}>
       <Breadcrumb mt={"5"}>
@@ -281,7 +281,7 @@ const ProductDetailView = (props: Props) => {
                 fontWeight={600}
                 ml={"6px"}
               >
-                HOT DEAL LAPTOP THÁNG 9
+                HOT DEAL LAPTOP THÁNG {month}
               </Text>
             </Flex>
           </Box>

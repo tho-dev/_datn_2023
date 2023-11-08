@@ -24,7 +24,13 @@ TextFlow.useKey(process.env.SMS_API);
 
 export const createOrder = async (req, res, next) => {
   try {
-    const { shipping_address, shipping_method, cart_id, address } = req.body;
+    const {
+      shipping_address,
+      shipping_method,
+      cart_id,
+      address,
+      transportation_fee = 0,
+    } = req.body;
 
     const cart = await Cart.findOne({ cart_id });
     let user_id = null;
@@ -127,67 +133,17 @@ export const createOrder = async (req, res, next) => {
         };
       })
     );
-    const order_created = new_order.toObject();
+    // Nếu đơn hàng có vận chuyển
     if (shipping_method === "shipped") {
       const detail_address = address + "," + shipping_address;
-
       const shipping_infor = await Shipping.create({
         shipping_address: detail_address,
+        transportation_fee: transportation_fee,
       });
       new_order.shipping_info = shipping_infor._id;
       await new_order.save();
-      // lấy mã vùng
-      const code_ward_district = await getLocation(shipping_address);
-      console.log(code_ward_district);
-      // tạo hoá đơn
-      const data_shipping = {
-        to_name: req.body.customer_name,
-        to_phone: req.body.phone_number.toString(),
-        to_address: shipping_address,
-        to_ward_code: code_ward_district.ward_code,
-        to_district_id: code_ward_district.district_id,
-        content: req.body.content,
-        weight: 1000,
-        length: 15,
-        width: 15,
-        height: 15,
-        service_type_id: 2,
-        service_id: 53319,
-        payment_type_id: 1,
-        required_note: "CHOXEMHANGKHONGTHU",
-        Items: new_order_details,
-        name: "Đồ điện tử",
-        quantity: new_order_details.length,
-        weight: 15,
-      };
-
-      const orderCode = await Axios.post(
-        "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create",
-        {
-          ...data_shipping,
-        },
-        {
-          headers: {
-            Token: process.env.GHN_SHOP_TOKEN,
-            ShopId: process.env.GHN_SHOP_ID,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      //   cập nhật lại shipping
-      if (orderCode.data.code === 200) {
-        await Shipping.findByIdAndUpdate(
-          { _id: shipping_infor._id },
-          {
-            $set: {
-              order_code: orderCode.data.data.order_code,
-              estimated_delivery_date:
-                orderCode.data.data.expected_delivery_time,
-            },
-          }
-        );
-      }
     }
+    const order_created = new_order.toObject();
     return res.json({
       status: 200,
       message: "Đặt hàng thành công",
@@ -213,6 +169,7 @@ export const getAll = async (req, res, next) => {
       status,
       date,
       payment_method,
+      payment_status,
     } = req.query;
     const conditions = {};
 
@@ -222,6 +179,9 @@ export const getAll = async (req, res, next) => {
 
     if (status) {
       conditions.status = status;
+    }
+    if (payment_status) {
+      conditions.payment_status = payment_status;
     }
 
     if (date) {
@@ -416,6 +376,14 @@ export const updateStatus = async (req, res, next) => {
       throw createError.BadRequest("Trạng thái không hợp lệ");
     }
     const ordered = await Order.findById(id);
+
+    const order_details = await Order_Detail.find({ _id: id });
+
+    const get_sku = async (sku_id) => {
+      const new_item = await Sku.findById(sku_id);
+      return new_item;
+    };
+
     const check_status = ordered.status_detail.find((item) => {
       return item.status === status;
     });
@@ -435,7 +403,77 @@ export const updateStatus = async (req, res, next) => {
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
+    if (status === "confirmed" && ordered.shipping_method === "shipped") {
+      const shipping = await Shipping.findOne({ _id: ordered.shipping_info });
 
+      const new_order_details = await Promise.all(
+        order_details.map(async (item) => {
+          const data_sku = await get_sku(item.sku_id);
+          return {
+            _id: item._id,
+            sku_id: data_sku._id,
+            name: data_sku.name,
+            price: data_sku.price,
+            price_before_discount: data_sku.price_before_discount,
+            price_discount_percent: data_sku.price_discount_percent,
+            image: data_sku.image,
+            quantity: item.quantity,
+            total_money: item.total_money,
+          };
+        })
+      );
+      const address_detail = shipping.shipping_address.split(",");
+      const address = address_detail.shift();
+      // lấy mã vùng
+      const code_ward_district = await getLocation(address_detail.join(","));
+      const data_shipping = {
+        to_name: ordered.customer_name,
+        to_phone: ordered.phone_number.toString(),
+        to_address: shipping.shipping_address,
+        to_ward_code: code_ward_district.ward_code,
+        to_district_id: code_ward_district.district_id,
+        content: ordered.content,
+        weight: 1000,
+        length: 15,
+        width: 15,
+        height: 15,
+        service_type_id: 2,
+        service_id: 53319,
+        payment_type_id: 1,
+        required_note: "CHOXEMHANGKHONGTHU",
+        Items: new_order_details,
+        name: "Đồ điện tử",
+        quantity: new_order_details.length,
+        weight: 15,
+      };
+
+      const orderCode = await Axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create",
+        {
+          ...data_shipping,
+        },
+        {
+          headers: {
+            Token: process.env.GHN_SHOP_TOKEN,
+            ShopId: process.env.GHN_SHOP_ID,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (orderCode.data.code === 200) {
+        await Shipping.findByIdAndUpdate(
+          { _id: ordered.shipping_info },
+          {
+            $set: {
+              order_code: orderCode.data.data.order_code,
+              estimated_delivery_date:
+                orderCode.data.data.expected_delivery_time,
+            },
+          }
+        );
+      }
+    }
     const order = await Order.findByIdAndUpdate(
       id,
       {
@@ -465,7 +503,13 @@ export const updateStatus = async (req, res, next) => {
 export const update_info_customer = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const { customer_name, phone_number, content, shippingAddress } = req.body;
+    const {
+      customer_name,
+      phone_number,
+      content,
+      shippingAddress,
+      transportation_fee,
+    } = req.body;
     const order = await Order.findById(id).populate({
       path: "shipping_info",
     });
@@ -479,7 +523,7 @@ export const update_info_customer = async (req, res, next) => {
     ) {
       throw createError.BadRequest("Không thể sửa đơn hàng");
     }
-    if (order.shipping_method === "shipped") {
+    if (order.shipping_method === "shipped" && order.status === "confirmed") {
       const new_location_code = await getLocation(shippingAddress);
       const info = {
         to_name: customer_name,
@@ -538,7 +582,18 @@ export const update_info_customer = async (req, res, next) => {
         data: updated_order,
       });
     }
-
+    if (order.shipping_method === "shipped") {
+      await Shipping.findByIdAndUpdate(
+        { _id: order.shipping_info._id },
+        {
+          $set: {
+            shipping_address: shippingAddress,
+            transportation_fee,
+          },
+        },
+        { new: true }
+      );
+    }
     const updated_order = await Order.findByIdAndUpdate(
       id,
       {
@@ -786,7 +841,7 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
       const newOrder = await Promise.all(
         orderDetails.map(async (item) => {
           const sku = await Sku.findOne({ _id: item.sku_id }).select(
-            "name shared_url"
+            "name shared_url image"
           );
           const newSku = sku.toObject();
           return {
@@ -865,8 +920,85 @@ export const getTokenPrintBills = async (req, res, next) => {
     if (order.shipping_method === "at_store") {
       throw createError.BadRequest("Đơn hàng này mua tại cửa hàng");
     }
-    const order_codes = order.shipping_info?.order_code;
-    const token_bill = await getTokenPrintBill(order_codes);
+    // Nếu đơn hàng chưa được thay đổi trạng thái thì sẽ thay đổi trạng thái và cập nhật vào giao hàng nhanh để in vận đơn
+    if (order.status === "processing" && order.shipping_method === "shipped") {
+      const shipping = await Shipping.findOne({ _id: order.shipping_info._id });
+      const order_details = await Order_Detail.find({ _id: order_id });
+      const get_sku = async (sku_id) => {
+        const new_item = await Sku.findById(sku_id);
+        return new_item;
+      };
+      const new_order_details = await Promise.all(
+        order_details.map(async (item) => {
+          const data_sku = await get_sku(item.sku_id);
+          return {
+            _id: item._id,
+            sku_id: data_sku._id,
+            name: data_sku.name,
+            price: data_sku.price,
+            price_before_discount: data_sku.price_before_discount,
+            price_discount_percent: data_sku.price_discount_percent,
+            image: data_sku.image,
+            quantity: item.quantity,
+            total_money: item.total_money,
+          };
+        })
+      );
+      const address_detail = shipping.shipping_address.split(",");
+      const address = address_detail.shift();
+      // lấy mã vùng
+      const code_ward_district = await getLocation(address_detail.join(","));
+      const data_shipping = {
+        to_name: order.customer_name,
+        to_phone: order.phone_number.toString(),
+        to_address: shipping.shipping_address,
+        to_ward_code: code_ward_district.ward_code,
+        to_district_id: code_ward_district.district_id,
+        content: order.content,
+        weight: 1000,
+        length: 15,
+        width: 15,
+        height: 15,
+        service_type_id: 2,
+        service_id: 53319,
+        payment_type_id: 1,
+        required_note: "CHOXEMHANGKHONGTHU",
+        Items: new_order_details,
+        name: "Đồ điện tử",
+        quantity: new_order_details.length,
+        weight: 15,
+      };
+
+      const orderCode = await Axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create",
+        {
+          ...data_shipping,
+        },
+        {
+          headers: {
+            Token: process.env.GHN_SHOP_TOKEN,
+            ShopId: process.env.GHN_SHOP_ID,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (orderCode.data.code === 200) {
+        await Shipping.findByIdAndUpdate(
+          { _id: order.shipping_info._id },
+          {
+            $set: {
+              order_code: orderCode.data.data.order_code,
+              estimated_delivery_date:
+                orderCode.data.data.expected_delivery_time,
+            },
+          }
+        );
+      }
+    }
+
+    const shipping = await Shipping.findOne({ _id: order.shipping_info._id });
+    const token_bill = await getTokenPrintBill(shipping?.order_code);
     if (token_bill.code !== 200) {
       throw createError.BadRequest("Không tìm thấy token hoá đơn");
     }
@@ -1040,6 +1172,63 @@ export const returnedOrder = async (req, res, next) => {
     next(error);
   }
 };
+export const getReturnedOrder = async (req, res, next) => {
+  try {
+    const {
+      _page = 1,
+      _sort = "created_at",
+      _order = "desc",
+      _limit = 10,
+      search,
+      is_confirm,
+      date,
+    } = req.query;
+    const conditions = {};
+
+    if (search) {
+      conditions.customer_name = { $regex: new RegExp(search, "i") };
+    }
+
+    if (is_confirm) {
+      conditions.is_confirm = is_confirm;
+    }
+
+    if (date) {
+      const targetMoment = moment(date);
+      const yearToSearch = targetMoment.year();
+      const monthToSearch = targetMoment.month();
+      const dayToSearch = targetMoment.date();
+
+      conditions.created_at = {
+        $gte: new Date(yearToSearch, monthToSearch, dayToSearch),
+        $lt: new Date(yearToSearch, monthToSearch, dayToSearch + 1),
+      };
+    }
+
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        [_sort]: _order == "desc" ? -1 : 1,
+      },
+      select: ["-deleted", "-deleted_at"],
+    };
+
+    const { docs, ...paginate } = await Returned.paginate(conditions, options);
+
+    return res.json({
+      status: 200,
+      message: "Thành công",
+      data: {
+        items: docs,
+        paginate,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const confirm_returnedOrder = async (req, res, next) => {
   try {
     const { id } = req.params;

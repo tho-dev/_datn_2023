@@ -37,7 +37,10 @@ const MENU = [
     title: "Đơn hàng",
     to: "/admin/don-hang",
     icon: OrderIcon,
-    children: [{ title: "Danh sách đơn hàng", to: "/admin/don-hang" }],
+    children: [
+      { title: "Danh sách đơn hàng", to: "/admin/don-hang" },
+      { title: "Hàng hoàn", to: "/admin/don-hang/hang-hoan" },
+    ],
   },
   {
     title: "Sản phẩm",

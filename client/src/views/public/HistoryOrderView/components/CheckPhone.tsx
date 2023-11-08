@@ -15,77 +15,68 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
-import { checkPhoneSchema } from "~/validate/order";
-import { useAppDispatch } from "~/redux/hook/hook";
-import { sendOtpPhone } from "~/redux/slices/orderSlice";
-import {
-  useGetOrderByPhoneNumberMutation,
-  useSendOtpMutation,
-} from "~/redux/api/order";
-import {
-  getAllOrderStart,
-  getAllOrderSuccess,
-  getAllOrderFailure,
-} from "~/redux/slices/orderSlice";
+import { useGetOrderByPhoneNumberMutation } from "~/redux/api/order";
+import { chuyenDoiSoDienThoai } from "~/utils/fc";
 
-const CheckPhone = () => {
+type Props = {
+  setCheckPhone: any;
+  handleGetPhoneNumber: (phoneNumber: any) => void;
+  setDataOrder: any;
+};
+
+const CheckPhone = ({
+  setCheckPhone,
+  handleGetPhoneNumber,
+  setDataOrder,
+}: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<any>({
-    resolver: joiResolver(checkPhoneSchema),
-  });
+  } = useForm<any>();
   const toast = useToast();
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const [isPhone, setIphone] = useState<boolean>(false);
-  const [sendOtp, { isLoading }] = useSendOtpMutation();
-  const [getOrderByPhoneNumber] = useGetOrderByPhoneNumberMutation();
+  const [getOrderByPhoneNumber, { isLoading }] =
+    useGetOrderByPhoneNumberMutation();
 
   const onSubmit = async (data: any) => {
-    const payload = {
-      phone_number: data.phone_number.replace(/^0/, "+84"),
-    };
-
-    const result: any = await sendOtp(payload);
-    console.log(result);
-
-    if (result.data?.status === 200) {
-      toast({
-        title: "Tra cứu thành công",
-        description: result.data?.message,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      dispatch(getAllOrderStart());
-
-      try {
-        const resultOrder: any = await getOrderByPhoneNumber(payload);
-        if (resultOrder) {
-          console.log(resultOrder);
-          dispatch(getAllOrderSuccess(resultOrder));
-        }
-      } catch (error) {
-        dispatch(getAllOrderFailure());
-      }
-
-      setIphone(true);
-    } else {
-      toast({
-        title: "Tra cứu thất bại",
-        description: result.data.message,
+    const phone_number = chuyenDoiSoDienThoai(data.phone_number);
+    if (!phone_number) {
+      return toast({
+        title: "Hệ thống",
+        description: "Sai định dạng số điện thoại",
         status: "error",
-        duration: 5000,
+        duration: 2000,
         isClosable: true,
-        position: "top",
+        position: "top-right",
       });
     }
-    dispatch(sendOtpPhone({ data: data, result: result }));
-    // dispatch(resetOtpPhone(result));
+    getOrderByPhoneNumber({ phone_number: phone_number })
+      .unwrap()
+      .then(({ data }) => {
+        toast({
+          title: "Hệ thống",
+          description: "Tìm thấy đơn hàng thành công",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+        setDataOrder(data);
+        setCheckPhone(false);
+        handleGetPhoneNumber(phone_number);
+      })
+      .catch((error) => {
+        toast({
+          title: "Hệ thống",
+          description: error.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
   };
+
   return (
     <Box>
       <Grid gridTemplateColumns="repeat(2,1fr)">
@@ -132,7 +123,7 @@ const CheckPhone = () => {
                   {...register("phone_number")}
                   type="number"
                   placeholder="Nhập số điện thoại mua hàng"
-                  px="0"
+                  px="2"
                 />
                 <FormHelperText></FormHelperText>
                 <FormErrorMessage>
@@ -144,11 +135,13 @@ const CheckPhone = () => {
                 mt={4}
                 type="submit"
                 bgColor="bg.blue"
+                _hover={{ bgColor: "blue" }}
                 w="70%"
+                loadingText="Đang tìm kiếm đơn hàng..."
                 isLoading={isLoading}
-                loadingText={isLoading ? "Đang tra cứu" : ""}
+                fontSize={"16px"}
               >
-                Tra cứu
+                Tra cứu thông tin
               </Button>
             </Flex>
           </form>

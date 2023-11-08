@@ -36,7 +36,13 @@ const OrderDetailView = (props: Props) => {
   const toast = useToast();
   const [openPrint, setOpenPrint] = useState(false);
   const [tokenPrint, setTokenPrint] = useState("");
+  const [orderStatus, setOrderStatus] = useState("");
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isOpenOrder,
+    onClose: onCloseOrder,
+    onOpen: onOpenOrder,
+  } = useDisclosure();
   const {
     isOpen: isPDFOpen,
     onClose: onPDFClose,
@@ -47,7 +53,8 @@ const OrderDetailView = (props: Props) => {
     id,
   });
   const [cancelOrder] = useCancelOrderMutation();
-  const [tokenPrintOrder] = useTokenPrintOrderMutation();
+  const [tokenPrintOrder, { isLoading: isLoadingPrint }] =
+    useTokenPrintOrderMutation();
   const [updateStatusOrder] = useUpdateStatusOrderMutation();
   const columnHelper = createColumnHelper<any>();
 
@@ -163,7 +170,6 @@ const OrderDetailView = (props: Props) => {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Hệ thống thông báo",
           description: `${error.data.errors.message}`,
@@ -175,7 +181,6 @@ const OrderDetailView = (props: Props) => {
     onClose();
   };
   const handlePrinOrder = async () => {
-    console.log(data?.data.status);
     if (
       data?.data.status == ("processing" as any) ||
       data?.data.status == ("confirmed" as any)
@@ -193,29 +198,45 @@ const OrderDetailView = (props: Props) => {
       isClosable: true,
     });
   };
+
   const handlePrint = async (value: string) => {
-    const data_update = {
-      id: id,
-      status: "confirmed",
-    };
-    const update_status: any = await updateStatusOrder(data_update);
-    if (update_status.data.status !== 200) {
-      toast({
-        title: "Hệ thống thông báo",
-        description: `Không thể in vận đơn`,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
     const newTab = window.open(
       `https://dev-online-gateway.ghn.vn/a5/public-api/${value}?token=${tokenPrint}`,
       "_blank"
     );
+    setOpenPrint(false);
     newTab?.focus();
   };
-
+  const handleOpenModelStatus = (status: string) => {
+    setOrderStatus(status);
+    onOpenOrder();
+  };
+  const handleChangeStatusOrder = () => {
+    updateStatusOrder({ status: orderStatus, id: id })
+      .unwrap()
+      .then((data) => {
+        console.log(data);
+        toast({
+          title: "Hệ thống thông báo",
+          description: `${data.message}`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Hệ thống thông báo",
+          description: `${err.data.errors.message}`,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        onCloseOrder();
+      });
+  };
   return (
     <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
       <Flex justifyContent="space-between" alignItems={"center"}>
@@ -223,6 +244,22 @@ const OrderDetailView = (props: Props) => {
           <Text>Chi tiết đơn hàng</Text>
         </Heading>
         <Flex gap={4}>
+          {data?.data.status === "processing" && (
+            <Button onClick={() => handleOpenModelStatus("confirmed")}>
+              Xác nhận đơn
+            </Button>
+          )}
+          {data?.data.status === "confirmed" && (
+            <Button onClick={() => handleOpenModelStatus("delivering")}>
+              Vận chuyển đơn
+            </Button>
+          )}
+          {data?.data.status === "delivering" && (
+            <Button onClick={() => handleOpenModelStatus("delivered")}>
+              Hoàn thành đơn
+            </Button>
+          )}
+
           {data?.data.shipping_method === "at_store" ? (
             <Button
               leftIcon={<DownloadIcon size={24} />}
@@ -234,6 +271,8 @@ const OrderDetailView = (props: Props) => {
             <Button
               leftIcon={<DownloadIcon size={24} />}
               onClick={handlePrinOrder}
+              loadingText="Đang tải..."
+              isLoading={isLoadingPrint}
             >
               {" "}
               In vận đơn
@@ -325,9 +364,17 @@ const OrderDetailView = (props: Props) => {
                 borderBottom="1px solid #ccc"
               >
                 <Text fontSize={16} fontWeight="semibold">
-                  Tổng Tiền:{" "}
+                  Tổng Tiền sản phẩm:{" "}
                 </Text>
-                <Text>{data?.data.total_amount.toLocaleString()}</Text>
+                <Text>
+                  {data.data.products
+                    .reduce(
+                      (acc: any, product: any) =>
+                        acc + product.quantity * product.price,
+                      0
+                    )
+                    .toLocaleString()}
+                </Text>
               </Flex>
               <Flex
                 my={1}
@@ -339,6 +386,20 @@ const OrderDetailView = (props: Props) => {
                   Giảm Giá:{" "}
                 </Text>
                 <Text>0</Text>
+              </Flex>
+              <Flex
+                my={1}
+                justifyContent="space-between"
+                p={2}
+                borderBottom="1px solid #ccc"
+              >
+                <Text fontSize={16} fontWeight="semibold">
+                  Tiền vận chuyển:{" "}
+                </Text>
+                <Text>
+                  {data.data.shipping_info?.transportation_fee.toLocaleString() ||
+                    0}
+                </Text>
               </Flex>
               <Flex
                 my={1}
@@ -369,7 +430,7 @@ const OrderDetailView = (props: Props) => {
               Vận chuyển:{" "}
               {data?.data.shipping_method === "at_store"
                 ? "Mua trực tiếp"
-                : "shipping"}
+                : "Giao tận nơi"}
             </Heading>
             <Flex justifyContent="center" alignItems="center" fontSize={15}>
               <Flex
@@ -394,7 +455,7 @@ const OrderDetailView = (props: Props) => {
                   Phương thức Giao hàng:{" "}
                   {data?.data.shipping_method == "at_store"
                     ? "Tại cửa hàng"
-                    : "Shipping"}
+                    : "Giao tận nơi"}
                 </Text>
               </Flex>
             </Flex>
@@ -494,7 +555,13 @@ const OrderDetailView = (props: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         handleClick={() => handleCancelOrder(data?.data._id)}
-        content="Bạn có muốn xoá đơn hàng này"
+        content="Bạn có muốn xoá đơn hàng này?"
+      />
+      <ConfirmThinkPro
+        isOpen={isOpenOrder}
+        onClose={onCloseOrder}
+        handleClick={handleChangeStatusOrder}
+        content="Bạn có muốn thay đổi trạng thái của đơn hàng?"
       />
       <ModelPrint
         isOpen={openPrint}

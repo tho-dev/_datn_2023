@@ -107,6 +107,7 @@ const GmailView = (props: Props) => {
       ),
       header: "Ngày kết thúc",
     }),
+
     columnHelper.accessor("sendTime", {
       cell: (info) => {
         return (
@@ -124,6 +125,17 @@ const GmailView = (props: Props) => {
         );
       },
       header: "Thời gian diễn ra",
+    }),
+    columnHelper.accessor("endDate", {
+      cell: (info) => (
+        <Text fontSize="sm">
+          {moment(info.getValue()).format("DD-MM-YYYY") >
+          moment().format("YYYY-MM-DD")
+            ? "Đã kết thúc"
+            : "Đang diễn ra"}
+        </Text>
+      ),
+      header: "Trạng thái",
     }),
     columnHelper.accessor("action", {
       cell: ({ row }) => {
