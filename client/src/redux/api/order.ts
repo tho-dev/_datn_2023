@@ -144,6 +144,13 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    getReturnOrder: builder.query({
+      query: (query) => ({
+        url: `/order/return?${objectToUrlParams(query)}`,
+        method: 'GET',
+      }),
+      providesTags: ['Order'],
+    }),
   }),
 });
 export const {
@@ -154,6 +161,7 @@ export const {
   useGetOneShippingQuery,
   useGetAllTotalOrderQuery,
   useGetOrderByPhoneNumberMutation,
+  useGetReturnOrderQuery,
   useCreateMutation,
   useSendOtpMutation,
   useCheckOtpMutation,

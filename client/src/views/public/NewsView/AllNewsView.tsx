@@ -1,12 +1,20 @@
-import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem, Link } from "@chakra-ui/layout";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Text,
+  Flex,
+  Heading,
+  Wrap,
+  WrapItem,
+  Link,
+} from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import { IPost } from "~/interface/post";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { addViewedItem } from "~/redux/slices/globalSlice";
 import { Link as ReactRouterLink } from "react-router-dom";
 import moment from "moment";
-import { info } from "console";
-
 
 type Props = {
   product?: IPost;
@@ -24,6 +32,7 @@ const AllNewsView = ({ product }: Props) => {
   };
 
   const { user } = useAppSelector((state) => state.persistedReducer.global);
+  console.log(product);
 
   return (
     <Link
@@ -33,7 +42,6 @@ const AllNewsView = ({ product }: Props) => {
       overflow="hidden"
       rounded="md"
       display="inline-block"
-      backgroundColor="bg.white"
       _hover={{
         textDecoration: "none",
       }}
@@ -56,11 +64,7 @@ const AllNewsView = ({ product }: Props) => {
                 position="relative"
                 paddingBottom="55%"
               >
-                <Box
-                  position="absolute"
-                  w="full"
-                  h="full"
-                >
+                <Box position="absolute" w="full" h="full">
                   <Image
                     w="full"
                     h="full"
@@ -72,16 +76,10 @@ const AllNewsView = ({ product }: Props) => {
             </GridItem>
             <GridItem>
               <Box>
-                <Text
-                  fontSize="xl"
-                  fontWeight="semibold"
-                >
+                <Text fontSize="xl" fontWeight="semibold">
                   {product?.title}
                 </Text>
-                <Text
-                  fontSize="md"
-                  my="4"
-                >
+                <Text fontSize="md" my="4">
                   {product?.slug}
                 </Text>
                 <Flex fontSize="sm">
@@ -99,10 +97,7 @@ const AllNewsView = ({ product }: Props) => {
         </Box>
       </GridItem>
     </Link>
-
   );
-}
+};
 
-
-
-export default AllNewsView
+export default AllNewsView;

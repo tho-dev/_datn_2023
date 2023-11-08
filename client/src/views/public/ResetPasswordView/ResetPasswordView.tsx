@@ -30,6 +30,7 @@ type State = {};
 const ResetPasswordView = (props: Props) => {
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<any>({
@@ -38,6 +39,7 @@ const ResetPasswordView = (props: Props) => {
   const dispatch = useAppDispatch();
   const [resetPassWord, { isLoading }] = useResetPasswordMutation();
   const toast = useToast();
+  const navigate = useNavigate();
   const { isEmail } = useAppSelector(
     (state: any) => state.persistedReducer?.user
   );
@@ -53,6 +55,8 @@ const ResetPasswordView = (props: Props) => {
         isClosable: true,
         position: "top",
       });
+      navigate("/dang-nhap");
+      reset();
     } else {
       toast({
         title: "Thiết lập mật khẩu thất bại",

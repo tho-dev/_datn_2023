@@ -14,6 +14,7 @@ import {
   useRemoveMutation,
 } from "~/redux/api/cart";
 import { Skeleton, SkeletonCircle, SkeletonText, FLex } from "@chakra-ui/react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 type Props = {};
 
@@ -23,12 +24,15 @@ const CartView = (props: Props) => {
   const [decrement, { isLoading: loadingDecrement }] = useDecrementMutation();
   const [increment, { isLoading: loadingIncrement }] = useIncrementMutation();
   const [remove, { isLoading: loadingRemove }] = useRemoveMutation();
+  const [checkCaptch, setCheckCaptch] = useState(false);
   const navigate = useNavigate();
   const handlePayment = () => {
-    if (data?.data?.products?.length <= 0) return;
+    if (data?.data?.products?.length <= 0 || !checkCaptch) return;
     navigate("/thanh-toan");
   };
-
+  const onChange = (value: any) => {
+    setCheckCaptch(true);
+  };
   const handleDercement = (product: any) => {
     const data = {
       sku_id: product.sku_id,
@@ -174,6 +178,12 @@ const CartView = (props: Props) => {
             h={"full"}
           >
             <OrderSummary handlePayment={handlePayment} data={data.data} />
+            <Box my={4}>
+              <ReCAPTCHA
+                sitekey="6LeWzOIoAAAAALbs9isOwZpU9o7yFULgPxLtoluK"
+                onChange={onChange}
+              />
+            </Box>
           </Box>
         </Box>
       )}
