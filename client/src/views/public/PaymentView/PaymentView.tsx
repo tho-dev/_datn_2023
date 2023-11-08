@@ -81,6 +81,7 @@ const Payment = (props: Props) => {
       cart_id: cart_id,
       total_amount: data.data.total_money + transportFee,
       phone_number: compare_phone_number,
+      transportation_fee: transportFee,
     };
     setDataOrder(new_data);
     onOpenOtp();

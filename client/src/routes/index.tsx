@@ -47,6 +47,9 @@ import { ThankView } from "~/views/public/ThankView";
 import { PromotionView as PromotionManageView } from "~/views/private/PromotionView";
 import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
 import UpdateOrder from "~/views/private/OrderManagementView/updateOrder/UpdateOrder";
+import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
+import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
+import ReturedOrder from "~/views/private/OrderManagementView/childrenViews/ReturedOrder";
 
 const routes: RouteObject[] = [
   {
@@ -152,6 +155,14 @@ const routes: RouteObject[] = [
             element: <PromotionManageView />,
           },
           {
+            path: "khuyen-mai/gmail/add",
+            element: <AddGmailView />,
+          },
+          {
+            path: "khuyen-mai/gmail",
+            element: <GmailView />,
+          },
+          {
             path: "san-pham",
             element: <ProductManagerView />,
           },
@@ -205,6 +216,10 @@ const routes: RouteObject[] = [
           {
             path: "tai-khoan",
             element: <UserListManagerView />,
+          },
+          {
+            path: "don-hang/hang-hoan",
+            element: <ReturedOrder />,
           },
           {
             path: "tai-khoan/add",

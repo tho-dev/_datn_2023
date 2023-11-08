@@ -70,6 +70,10 @@ const shippingInfoSchema = new Schema(
       type: String,
       default: "Giao hàng nhanh",
     },
+    transportation_fee: {
+      type: Number,
+      default: 0,
+    },
     order_code: {
       type: String,
     },
