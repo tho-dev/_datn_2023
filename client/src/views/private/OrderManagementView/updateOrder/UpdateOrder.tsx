@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { NavArrowRightIcon } from "~/components/common/Icons";
 import {
   useGetOneShippingQuery,
@@ -53,13 +53,13 @@ const UpdateOrder = (props: Props) => {
       header: "#",
     }),
 
-    columnHelper.accessor("sku_id", {
+    columnHelper.accessor("order_id", {
       cell: (info) => {
         return <h1>{info.getValue()?._id ?? "id"}</h1>;
       },
       header: "ID sản phẩm",
     }),
-    columnHelper.accessor("sku_id", {
+    columnHelper.accessor("nameProduct", {
       cell: (info) => {
         return <h1>{info.getValue()?.name ?? "Sản phẩm"}</h1>;
       },
@@ -79,7 +79,7 @@ const UpdateOrder = (props: Props) => {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor("#", {
+    columnHelper.accessor("tongtien", {
       cell: (info) =>
         (
           info.row.original.price * info.row.original.quantity
@@ -87,14 +87,17 @@ const UpdateOrder = (props: Props) => {
       header: "Thành tiền",
     }),
   ];
-  const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
-    id,
-  });
-  console.log(data?.data);
+
   const [dataOrder, setDataOrder] = React.useState({} as any);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [address, setAddress] = React.useState("");
+  const navigate = useNavigate();
   const [transportFee, setTransportFee] = React.useState(0);
+  const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
+    id,
+  });
+
+  console.log(data?.data);
   const handleChooseAdress = (data: any) => {
     const checkData = data.every((select: any) => select !== undefined);
     if (checkData) {
@@ -112,6 +115,7 @@ const UpdateOrder = (props: Props) => {
     }
   };
   const addressWatch = watch("shipping_address");
+  console.log(addressWatch);
 
   useEffect(() => {
     if (addressWatch && data?.data.shipping_method == "shipped") {
@@ -130,50 +134,51 @@ const UpdateOrder = (props: Props) => {
   //   return total_money = data?.data.total_amount
   // };
   const submitForm = (order_infor: any) => {
+    console.log(order_infor.shipping_address);
+
     const new_data = {
-      ...order_infor,
       id: data?.data._id,
-      // payment_method: data?.data.payment_method,
-      // total_amount: data?.data.total_amount,
-      // payment_status: data?.data.payment_status,
-      // shop_address: data?.data.shop_address,
-      // products: data?.data.products,
-      status: listOrderStatus[Number(order_infor.status)],
-      // total_amount: data.data.total_money + transportFee,
-    };
-    const new_status = {
-      // ...order_infor,
-      id: data?.data._id,
-      // payment_method: data?.data.payment_method,
-      // total_amount: data?.data.total_amount,
-      // payment_status: data?.data.payment_status,
-      // shop_address: data?.data.shop_address,
-      // products: data?.data.products,
-      status: listOrderStatus[Number(order_infor.status)],
-      // total_amount: data.data.total_money + transportFee,
+      customer_name:
+        order_infor.customer_name == ""
+          ? data?.data.customer_name
+          : order_infor.customer_name,
+      phone_number: data?.data.phone_number,
+      content:
+        order_infor.content == "" ? data?.data.content : order_infor.content,
+      shippingAddress:
+        order_infor.shipping_address == ""
+          ? data?.data.shipping_info.ship_address
+          : order_infor.shipping_address,
+      transportation_fee:
+        transportFee == 0
+          ? data?.data.ship_info.transportation_fee
+          : transportFee,
     };
     console.log(new_data);
-    setDataOrder(new_data);
-    UpdateStatus(new_status).unwrap()
-      .then((data) => console.log(data))
-      .catch((errors) =>
-        toast({
-          title: "Thất bại",
-          duration: 1600,
-          position: "top-right",
-          status: "error",
-          description: errors.error.message,
-        })
-      );
-    UpdateOrder(new_data).then((data) =>
-      toast({
-        title: "Thành công",
-        duration: 1600,
-        position: "top-right",
-        status: "success",
-        description: "Cập nhật đơn hàng thành công!",
-      })
-    );
+
+    // if (data?.data.status == "processing") {
+    //   return UpdateOrder(new_data)
+    //     .unwrap()
+    //     .then((data) => {
+    //       toast({
+    //         title: "Thành công",
+    //         duration: 1600,
+    //         position: "top-right",
+    //         status: "success",
+    //         description: "Cập nhật thành công",
+    //       });
+    //       navigate('/admin/don-hang')
+    //     })
+    //     .catch((err) =>
+    //       toast({
+    //         title: "Thất bại",
+    //         duration: 1600,
+    //         position: "top-right",
+    //         status: "error",
+    //         description: err.data.errors.message,
+    //       })
+    //     );
+    // }
   };
 
   return (
@@ -227,32 +232,7 @@ const UpdateOrder = (props: Props) => {
                 </FormErrorMessage> */}
               </FormControl>
             </Flex>
-            <Flex gap={"16px"}>
-              <FormControl>
-                <FormLabel>Trạng thái đơn hàng</FormLabel>
-                {data?.data.status && (
-                  <Select
-                    border={"none"}
-                    bg={"#F6F9FC"}
-                    borderRadius={"6px"}
-                    fontSize={"14px"}
-                    placeholder="Trạng thái đơn hàng"
-                    {...register("status")}
-                    defaultValue={listOrderStatus.findIndex(
-                      (item: any) => item == data?.data?.status
-                    )}
-                  >
-                    {listOrderStatus.map((item: any, index) => {
-                      return (
-                        <option key={index} value={index}>
-                          {item}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                )}
-              </FormControl>
-            </Flex>
+
             {data?.data.shipping_method == "shipped" && (
               <Flex gap={"16px"} mt={"16px"}>
                 <FormControl>
@@ -281,9 +261,12 @@ const UpdateOrder = (props: Props) => {
                       {...register("shipping_address", {
                         required: "Trường bắt buộc nhập",
                       })}
-                      value={address}
+                      value={
+                        address == undefined
+                          ? data?.data.shipping_info.shipping_address
+                          : address
+                      }
                       onClick={handleChooseAdress}
-                      defaultValue={data?.data.shipping_info.shipping_address}
                     />
                     <NavArrowRightIcon
                       size={4}
@@ -291,10 +274,6 @@ const UpdateOrder = (props: Props) => {
                       color="text.black"
                     />
                   </Box>
-                  {/* <FormErrorMessage>
-                    {(errors?.shipping_address as any) &&
-                      (errors?.shipping_address?.message as any)}
-                  </FormErrorMessage> */}
                 </FormControl>
                 <FormControl>
                   <FormLabel>Địa chỉ nhận hàng</FormLabel>
@@ -311,10 +290,7 @@ const UpdateOrder = (props: Props) => {
                     })}
                     defaultValue={data?.data.shipping_info.shipping_address}
                   />
-                  {/* <FormErrorMessage>
-                    {(errors?.address as any) &&
-                      (errors?.address?.message as any)}
-                  </FormErrorMessage> */}
+
                   <FormHelperText fontSize="12px" fontWeight="semibold">
                     Có thể là số nhà, tên đường, tòa nhà. VD: Số 53 Thái Hà
                   </FormHelperText>
@@ -404,12 +380,6 @@ const UpdateOrder = (props: Props) => {
         </Box>
       </form>
 
-      {/* <PopupCheckOtp
-        isOpenOtp={isOpenOtp}
-        onOpenOtp={onOpenOtp}
-        onCloseOtp={onCloseOtp}
-        dataOrder={dataOrder}
-      /> */}
       <Transport
         isOpen={isOpen}
         onOpen={onOpen}
