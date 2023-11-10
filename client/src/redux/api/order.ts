@@ -151,6 +151,13 @@ const orderApi = createApi({
       }),
       providesTags: ['Order'],
     }),
+    confirmReturnOrder: builder.mutation<any, any>({
+      query: (_id) => ({
+        url: `/order/return/${_id}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Order'],
+    }),
   }),
 });
 export const {
@@ -172,6 +179,7 @@ export const {
   useUpdateStatusOrderMutation,
   useGetOrderByUserIdQuery,
   useReturnOrderMutation,
+  useConfirmReturnOrderMutation
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

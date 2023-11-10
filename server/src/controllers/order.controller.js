@@ -144,6 +144,7 @@ export const createOrder = async (req, res, next) => {
       await new_order.save();
     }
     const order_created = new_order.toObject();
+    await cart.deleteOne({ cart_id });
     return res.json({
       status: 200,
       message: "Đặt hàng thành công",
@@ -303,6 +304,9 @@ export const cancelOrder = async (req, res, next) => {
     if (ordered.status === "delivering") {
       throw createError.BadRequest("Không thể huỷ đơn hàng đang giao");
     }
+    if (ordered.status === "returned") {
+      throw createError.BadRequest("Không thể huỷ đơn hàng đang hoàn");
+    }
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
@@ -371,6 +375,7 @@ export const updateStatus = async (req, res, next) => {
       "delivering",
       "cancelled",
       "delivered",
+      "returned",
     ];
     if (!array_status.includes(status)) {
       throw createError.BadRequest("Trạng thái không hợp lệ");
@@ -400,12 +405,22 @@ export const updateStatus = async (req, res, next) => {
     if (ordered.status === status) {
       throw createError.BadRequest("Trạng thái không thay đổi");
     }
+
+    if (status === "returned") {
+      throw createError.BadRequest("Không thể huỷ đơn hàng đã hoàn");
+    }
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
+    if (status == "delivered") {
+      await Order.findByIdAndUpdate(id, {
+        $set: {
+          payment_status: "paid",
+        },
+      });
+    }
     if (status === "confirmed" && ordered.shipping_method === "shipped") {
       const shipping = await Shipping.findOne({ _id: ordered.shipping_info });
-
       const new_order_details = await Promise.all(
         order_details.map(async (item) => {
           const data_sku = await get_sku(item.sku_id);
@@ -910,6 +925,7 @@ export const getOrderByUserId = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getTokenPrintBills = async (req, res, next) => {
   try {
     const { order_id } = req.body;
@@ -1152,6 +1168,10 @@ export const getAllOrder = async (req, res, next) => {
 export const returnedOrder = async (req, res, next) => {
   try {
     const { order_id, reason, customer_name, phone_number } = req.body;
+    const return_order = await Returned.findOne({ order_id });
+    if (return_order) {
+      throw createError.BadRequest("Đơn hàng đã được yêu cầu hoàn hàng");
+    }
     const order = await Order.findById(order_id);
     if (order.status === "returned" || order.status !== "delivered") {
       throw createError.BadRequest("Trạng thái đơn hàng không thể hoàn");

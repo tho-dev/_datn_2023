@@ -129,7 +129,7 @@ const GmailView = (props: Props) => {
     columnHelper.accessor("endDate", {
       cell: (info) => (
         <Text fontSize="sm">
-          {moment(info.getValue()).format("DD-MM-YYYY") >
+          {moment(info.getValue()).format("DD-MM-YYYY") <
           moment().format("YYYY-MM-DD")
             ? "Đã kết thúc"
             : "Đang diễn ra"}

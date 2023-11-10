@@ -90,3 +90,10 @@ export const formatCurrency = (value: any, locale = 'vi-VN', currency = 'VND') =
   if (!value) return '';
   return value.toLocaleString(locale, { style: 'currency', currency: currency });
 };
+
+
+export const validateEmail = (value: string) => {
+  // Mẫu regex kiểm tra định dạng email
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(value);
+};

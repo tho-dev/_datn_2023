@@ -168,7 +168,14 @@ const TabPanelItem = ({ status }: Props) => {
     returnOrder(new_data)
       .unwrap()
       .then((data) => {
-        console.log(data);
+        toast({
+          title: "Hệ thống",
+          description: data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
       })
       .catch((err) => {
         toast({
