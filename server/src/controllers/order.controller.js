@@ -1248,7 +1248,6 @@ export const getReturnedOrder = async (req, res, next) => {
     next(error);
   }
 };
-
 export const confirm_returnedOrder = async (req, res, next) => {
   try {
     const { id } = req.params;

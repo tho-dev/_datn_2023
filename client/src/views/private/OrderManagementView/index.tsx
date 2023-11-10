@@ -134,7 +134,11 @@ const OrderManagementView = (props: Props) => {
                   Xem chi tiết
                 </Link>
               </MenuItem>
-              <MenuItem>Cập nhật</MenuItem>
+              <MenuItem>
+                <Link to={`/admin/don-hang/cap-nhat/${info.getValue()}`}>
+                  Cập nhật
+                </Link>
+              </MenuItem>
             </MenuList>
           </Menu>
         );

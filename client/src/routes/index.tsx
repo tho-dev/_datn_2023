@@ -46,6 +46,7 @@ import { SearchView } from "~/views/public/SearchView";
 import { ThankView } from "~/views/public/ThankView";
 import { PromotionView as PromotionManageView } from "~/views/private/PromotionView";
 import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
+import UpdateOrder from "~/views/private/OrderManagementView/updateOrder/UpdateOrder";
 import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
 import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
 import ReturedOrder from "~/views/private/OrderManagementView/childrenViews/ReturedOrder";
@@ -207,6 +208,10 @@ const routes: RouteObject[] = [
           {
             path: "don-hang/:id",
             element: <OrderDetailView />,
+          },
+          {
+            path: "don-hang/cap-nhat/:id",
+            element: <UpdateOrder />,
           },
           {
             path: "tai-khoan",
