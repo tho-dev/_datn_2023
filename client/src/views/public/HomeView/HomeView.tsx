@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Box } from "@chakra-ui/layout";
+import { Box, Input } from "@chakra-ui/react";
 import Banner from "./components/Banner";
 import Category from "./components/Category";
 import USP from "./components/USP";
@@ -24,6 +24,13 @@ const HomeView = (props: Props) => {
 			<Box py="30px">
 				{/* Banner */}
 				<Banner banner={homeSettings?.general} />
+
+				<Input
+					type="date"
+					onChange={(e: any) => {
+						console.log("abc", e.target.value);
+					}}
+				/>
 
 				{/* Danh mục */}
 				<Category

@@ -23,6 +23,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm } from "react-hook-form";
 
 type Props = {};
 
@@ -42,6 +44,8 @@ const DemandView = (props: Props) => {
 		onClose: onCloseActionUpdateDemand,
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+
+	const { control } = useForm();
 
 	const [deleteDemand] = useDeleteDemandMutation();
 
@@ -153,7 +157,7 @@ const DemandView = (props: Props) => {
 				px="6"
 				py="8"
 				mb="8"
-				rounded="lg"
+				rounded="xl"
 			>
 				<Flex
 					alignItems="center"
@@ -163,8 +167,10 @@ const DemandView = (props: Props) => {
 					<Heading
 						as="h2"
 						fontSize="18"
+						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Quản lý nhu cầu
+						Danh Sách Nhu Cầu
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -193,43 +199,68 @@ const DemandView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						w="50%"
+						gap="4"
 					>
+						<Box>
+							<SelectThinkPro
+								control={control}
+								name="category"
+								title=""
+								placeholder="-- Trạng thái --"
+								data={[
+									{
+										label: "Hoạt Động",
+										value: "1",
+									},
+									{
+										label: "Khóa",
+										value: "2",
+									},
+								]}
+							/>
+						</Box>
 						<Flex
-							as="span"
+							flex="1"
+							px="4"
+							rounded="lg"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm nhu cầu"
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Nhu cầu..."
-						/>
 					</Flex>
 					<Button
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
-								color="text.white"
+								color="text.textSuccess"
 							/>
 						}
 						px="4"
 						lineHeight="2"
-						bgColor="bg.green"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
 						onClick={onOpenActionCreateDemand}
 					>
 						Tạo Mới
@@ -262,7 +293,14 @@ const DemandView = (props: Props) => {
 				isOpen={isOpenActionCreateDemand}
 				onClose={onCloseActionCreateDemand}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới nhu cầu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Tạo mới nhu cầu
+					</Heading>
+				}
 			>
 				<ActionCreateDemand onClose={onCloseActionCreateDemand} />
 			</DialogThinkPro>
@@ -270,7 +308,14 @@ const DemandView = (props: Props) => {
 				isOpen={isOpenActionUpdateDemand}
 				onClose={onCloseActionUpdateDemand}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật nhu cầu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật nhu cầu
+					</Heading>
+				}
 			>
 				<ActionUpdateDemand
 					onClose={onCloseActionUpdateDemand}

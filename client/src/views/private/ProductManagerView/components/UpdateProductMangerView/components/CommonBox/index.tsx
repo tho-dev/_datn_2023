@@ -11,7 +11,7 @@ const CommonBox = ({ title, children }: Props) => {
 		<Box
 			py="8"
 			px="6"
-			rounded="lg"
+			rounded="xl"
 			borderWidth="1px"
 			borderColor="#eef1f6"
 			boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"

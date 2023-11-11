@@ -42,6 +42,7 @@ const DialogThinkPro = ({
 			motionPreset={motionPreset}
 			scrollBehavior={scrollBehavior}
 			leastDestructiveRef={cancelRef as any}
+			// closeOnOverlayClick={false}
 		>
 			<AlertDialogOverlay bg="#1c1f23bf" />
 			<AlertDialogContent>

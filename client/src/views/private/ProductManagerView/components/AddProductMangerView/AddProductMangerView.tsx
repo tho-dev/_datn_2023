@@ -181,12 +181,13 @@ const AddProductMangerView = (props: Props) => {
 			bgColor="bg.white"
 			py="8"
 			px="6"
-			rounded="lg"
+			rounded="xl"
 		>
 			<Heading
 				fontSize="18"
 				color="text.black"
 				lineHeight="100%"
+				textTransform="uppercase"
 			>
 				Tạo mới sản phẩm
 			</Heading>
@@ -376,7 +377,7 @@ const AddProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price && "border.error"}
 											>
@@ -417,7 +418,7 @@ const AddProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price_before_discount && "border.error"}
 											>

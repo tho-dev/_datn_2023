@@ -19,13 +19,13 @@ import ReviewAddPostManger from "./components/ReviewAddPostManger";
 import QuillThinkPro from "~/components/QuillThinkPro";
 import { useEffect, useState } from "react";
 import { useNavigate, Link as ReactRouterLink } from "react-router-dom";
-import { useGetAllCategoryQuery } from "~/redux/api/category"; 
+import { useGetAllCategoryQuery } from "~/redux/api/category";
 type Props = {
 	onClose: () => void;
 	parents: any;
 };
 
-const AddPostMangerView = ({ onClose, parents }: Props) => {
+const AddPostMangerView = ({ onClose }: Props) => {
 	const toast = useToast();
 	const {
 		control,
@@ -36,34 +36,26 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 		watch,
 		reset,
 	} = useForm();
-
-	const category = useWatch({
-		control,
-		name: "category_id",
-	});
-
-	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
+	const [createProduct] = useCreatePostMutation();
+	const [parents, setParents] = useState<any>([]); 
+ 
 
 	const { data: categories } = useGetAllCategoryQuery({
+		_limit: 20,
 		_page: 1,
-		_limit: 50,
-		_order: "desc",
 		_sort: "created_at",
-		_type: "category_brand",
+		_order: "asc",
+		_type: "category_post",
 	});
-
-
-	const [createProduct] = useCreatePostMutation();
 
 	useEffect(() => {
 		if (categories) {
-
-			const selectCategories = categories?.data?.items?.map((category: any) => ({
+			const parentsFilter = categories?.data?.items?.map((category: any) => ({
 				label: category?.name,
 				value: category?._id,
 			}));
 
-			setCategoriesFilter(selectCategories);
+			setParents(parentsFilter);
 		}
 	}, [categories]);
 
@@ -71,14 +63,12 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 	const navigate = useNavigate();
 	const onSubmit = async (data: any) => {
 		data = {
-			...data,
-			// parent_id: data?.parent_id?.value,
+			...data, 
+			parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
 		};
 
-		try {
-			// const res = await createProduct(dataForm).unwrap();
-			// const productID = res?.data?.post?._id;
+		try { 
 			await createPost(data).unwrap();
 			toast({
 				title: "Thành công",
@@ -104,7 +94,7 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 	};
 	const thumbnail = watch("thumbnail");
 	const title = watch("title");
-	const category_id = watch("category_id")
+	// const category_id = watch("category_id")
 	const description = watch("description");
 	const content = watch("content");
 	const meta_keyword = watch("meta_keyword");
@@ -172,7 +162,7 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 									h="200px"
 								>
 									<FileUploadThinkPro
-										fileName="category"
+										fileName="banner"
 										getDataFn={(data: any) => setValue("thumbnail", data)}
 										setData={watch("thumbnail")}
 									/>
@@ -203,7 +193,7 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 						<SelectThinkPro
 							title="Danh mục"
 							control={control}
-							data={categoriesFilter}
+							data={parents}
 							name="category_id"
 							placeholder="-- Danh mục --"
 							rules={{ required: "Không được để trống" }}

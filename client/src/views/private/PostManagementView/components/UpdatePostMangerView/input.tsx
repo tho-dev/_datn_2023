@@ -22,13 +22,12 @@ import QuillThinkPro from "~/components/QuillThinkPro";
 
 type Props = {
 	onClose: () => void;
-	post: any;
-	// parents: any;  
-	categories: any;
+	parents: any;
+	category: any;
 
 };
 
-const ActionUpdatePost = ({ onClose, post }: Props) => {
+const ActionUpdatePost = ({ onClose, parents, category }: Props) => {
 	const toast = useToast();
 	const {
 		control,
@@ -39,55 +38,10 @@ const ActionUpdatePost = ({ onClose, post }: Props) => {
 		watch,
 		reset,
 	} = useForm({
-		defaultValues: post,
+		defaultValues: category,
 	});
 
-	const category = useWatch({
-		control,
-		name: "category_id",
-	});
 
-	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
-
-	const { data: categories } = useGetAllCategoryQuery({
-		_page: 1,
-		_limit: 50,
-		_order: "desc",
-		_sort: "created_at",
-		_type: "category_brand",
-	});
-
-	const { data: demands } = useGetAllPostQuery({
-		_page: 1,
-		_limit: 20,
-		_order: "desc",
-		_sort: "created_at",
-		_type: "category_brand",
-	});
- 
-
-	useEffect(() => {
-		if (categories) {
-
-			const selectCategories = categories?.data?.items?.map((category: any) => ({
-				label: category?.name,
-				value: category?._id,
-			}));
-
-			setCategoriesFilter(selectCategories);
-		}
-	}, [categories]);
-
-	useEffect(() => {
-		if (category?.label == "Laptop") {
-			const demandsFilter = demands?.data?.items?.map((demand: any) => ({
-				...demand,
-				point: 0,
-			}));
-
-			setValue("demands", demandsFilter);
-		}
-	}, [category, demands]);
 
 
 	const [updatePost, { isLoading }] = useUpdatePostMutation();
@@ -96,7 +50,7 @@ const ActionUpdatePost = ({ onClose, post }: Props) => {
 	const onSubmit = async (data: any) => {
 		data = {
 			...data,
-			// parent_id: data?.parent_id?.value,
+			parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
 		};
 
@@ -179,7 +133,7 @@ const ActionUpdatePost = ({ onClose, post }: Props) => {
 							h="200px"
 						>
 							<FileUploadThinkPro
-								fileName="category"
+								fileName="banner"
 								getDataFn={(data: any) => setValue("thumbnail", data)}
 								setData={watch("thumbnail")}
 							/>
@@ -210,7 +164,7 @@ const ActionUpdatePost = ({ onClose, post }: Props) => {
 				<SelectThinkPro
 					title="Danh mục"
 					control={control}
-					data={categoriesFilter}
+					data={parents}
 					name="category_id"
 					placeholder="-- Danh mục --"
 					rules={{ required: "Không được để trống" }}

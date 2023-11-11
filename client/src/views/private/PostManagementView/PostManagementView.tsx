@@ -25,7 +25,8 @@ import moment from "moment/moment";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
 import PostDialogThinkPro from "~/components/DialogThinkPro/PostDialogThinkPro";
 import AddPostMangerView from "./components/AddPostMangerView/AddPostMangerView";
-
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm } from "react-hook-form";
 
 type Props = {};
 
@@ -34,7 +35,7 @@ const PostView = (props: Props) => {
 	const [id, setId] = useState(null);
 	const [post, setPost] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
-	const [categoriesPost, setCategoriesPost] = useState<any>([]);
+	const [category, setCategory] = useState<any>(null);
 	const columnHelper = createColumnHelper<any>();
 	// const {
 	// 	isOpen: isOpenActionCreatePost,
@@ -42,17 +43,18 @@ const PostView = (props: Props) => {
 	// 	onClose: onCloseActionCreatePost,
 	// } = useDisclosure();
 	const {
-		isOpen: isOpenActionUpdatePost,
-		onOpen: onOpenActionUpdatePost,
-		onClose: onCloseActionUpdatePost,
+		isOpen: isOpenActionUpdateCategory,
+		onOpen: onOpenActionUpdateCategory,
+		onClose: onCloseActionUpdateCategory,
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+
+	const { control } = useForm();
 
 	const [deletePost] = useDeletePostMutation();
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
-		// _parent: true,
 		_sort: "created_at",
 		_order: "desc",
 		_type: "category_post",
@@ -60,14 +62,12 @@ const PostView = (props: Props) => {
 
 	useEffect(() => {
 		if (categories) {
-			const categoriesFilter = categories?.data?.items?.map((post: any) => {
-				return {
-					label: post?.name,
-					value: post?._id,
-				};
-			});
+			const parentsFilter = categories?.data?.items?.map((category: any) => ({
+				label: category?.name,
+				value: category?._id,
+			}));
 
-			setCategoriesPost(categoriesFilter);
+			setParents(parentsFilter);
 		}
 	}, [categories, isLoading]);
 
@@ -182,11 +182,11 @@ const PostView = (props: Props) => {
 							WebkitLineClamp: 2,
 							WebkitBoxOrient: "vertical",
 							overflow: "hidden",
-							'& p': {
-								display: 'inline',  
-							}
+							"& p": {
+								display: "inline",
+							},
 						}}
-						dangerouslySetInnerHTML={{ __html: description }}  
+						dangerouslySetInnerHTML={{ __html: description }}
 					/>
 				);
 			},
@@ -248,7 +248,7 @@ const PostView = (props: Props) => {
 								icon={<EditIcon size={4} />}
 								onClick={() => {
 									const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
-									setPost({
+									setCategory({
 										_id: doc?._id,
 										title: doc?.title,
 										thumbnail: doc?.thumbnail,
@@ -263,7 +263,7 @@ const PostView = (props: Props) => {
 										meta_description: doc?.meta_description,
 										meta_title: doc?.meta_title,
 									});
-									onOpenActionUpdatePost();
+									onOpenActionUpdateCategory();
 								}}
 							>
 								Cập Nhật
@@ -283,7 +283,7 @@ const PostView = (props: Props) => {
 				px="6"
 				py="8"
 				mb="8"
-				rounded="lg"
+				rounded="xl"
 			>
 				<Flex
 					alignItems="center"
@@ -293,8 +293,10 @@ const PostView = (props: Props) => {
 					<Heading
 						as="h2"
 						fontSize="18"
+						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Quản lý bài viết
+						Danh Sách Bài Viết
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -323,43 +325,60 @@ const PostView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						w="50%"
+						gap="4"
 					>
+						<Box>
+							<SelectThinkPro
+								title=""
+								control={control}
+								data={parents}
+								name="category_id"
+								placeholder="-- Danh mục --"
+							/>
+						</Box>
+
 						<Flex
-							as="span"
+							flex="1"
+							px="4"
+							rounded="8px"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm danh mục bài viết"
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Bài viết..."
-						/>
 					</Flex>
 					<Button
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
-								color="text.white"
+								color="text.textSuccess"
 							/>
 						}
 						px="4"
 						lineHeight="2"
-						bgColor="bg.green"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
 						// onClick={onOpenActionCreatePost}
 						as={ReactRouterLink}
 						to="/admin/bai-viet/add"
@@ -377,7 +396,7 @@ const PostView = (props: Props) => {
 						_page: 1,
 						_limit: 20,
 						_order: "desc",
-						_sort: "created_at",
+						_sort: "created_at"
 					}}
 				/>
 
@@ -402,16 +421,22 @@ const PostView = (props: Props) => {
 			</PostDialogThinkPro> */}
 
 			<PostDialogThinkPro
-				isOpen={isOpenActionUpdatePost}
-				onClose={onCloseActionUpdatePost}
+				isOpen={isOpenActionUpdateCategory}
+				onClose={onCloseActionUpdateCategory}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật bài viết</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật bài viết
+					</Heading>
+				}
 			>
 				<ActionUpdatePost
-					onClose={onCloseActionUpdatePost}
-					post={post}
-					categories={categoriesPost}
-
+					onClose={onCloseActionUpdateCategory}
+					category={category}
+					parents={parents}
 				/>
 			</PostDialogThinkPro>
 		</>
