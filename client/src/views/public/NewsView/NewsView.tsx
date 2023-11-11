@@ -33,7 +33,7 @@ const NewsView = () => {
 		setShowCompare(!showCompare);
 	};
 
-	console.log("Data:", data);
+	// console.log("Data:", data);
 
 
 	return (

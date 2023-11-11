@@ -81,11 +81,7 @@ const routes: RouteObject[] = [
 					{
 						path: ":slug/:slug",
 						element: <ProductDetailView />,
-					},
-					// {
-					// 	path: "tin-tuc",
-					// 	element: <NewsView />,
-					// },
+					}, 
 					{
 						path: "tin-tuc/:slug",
 						element: <NewsView />,
