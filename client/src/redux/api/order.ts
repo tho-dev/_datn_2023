@@ -136,6 +136,14 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    updateinfoCustomer: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/order/updateInfoCustomer/${data.id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['Order'],
+    }),
     returnOrder: builder.mutation<any, any>({
       query: (data) => ({
         url: `/order/return`,
@@ -143,6 +151,13 @@ const orderApi = createApi({
         body: data,
       }),
       invalidatesTags: ['Order'],
+    }),
+    getReturnOrder: builder.query({
+      query: (query) => ({
+        url: `/order/return?${objectToUrlParams(query)}`,
+        method: 'GET',
+      }),
+      providesTags: ['Order'],
     }),
   }),
 });
@@ -154,6 +169,7 @@ export const {
   useGetOneShippingQuery,
   useGetAllTotalOrderQuery,
   useGetOrderByPhoneNumberMutation,
+  useGetReturnOrderQuery,
   useCreateMutation,
   useSendOtpMutation,
   useCheckOtpMutation,
@@ -164,6 +180,7 @@ export const {
   useUpdateStatusOrderMutation,
   useGetOrderByUserIdQuery,
   useReturnOrderMutation,
+  useUpdateinfoCustomerMutation,
 } = orderApi;
 
 export const productReducer = orderApi.reducer;

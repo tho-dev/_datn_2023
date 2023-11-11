@@ -1,16 +1,30 @@
-import { Box } from '@chakra-ui/layout';
-import React, { useState } from 'react';
-import CheckPhone from './components/CheckPhone';
-import ListOrder from './components/ListOrder';
-import { useAppSelector } from '~/redux/hook/hook';
-import CheckOtp from './components/CheckOtp';
+import { Box } from "@chakra-ui/layout";
+import React, { useState } from "react";
+import CheckPhone from "./components/CheckPhone";
+import ListOrder from "./components/ListOrder";
 
 type Props = {};
 
 const HistoryOrderView = (props: Props) => {
-  const phoneNumber = useAppSelector((state) => state.persistedReducer.order);
-  console.log(phoneNumber.visibleListOrder);
-  return <Box m='30px 0'>{phoneNumber.visibleListOrder ? <ListOrder /> : <CheckPhone />}</Box>;
+  const [checkPhone, setCheckPhone] = useState(true);
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [dataOrder, setDataOrder] = useState([] as any);
+  const handleGetPhoneNumber = (phoneNumber: any) => {
+    setPhoneNumber(phoneNumber);
+  };
+  return (
+    <Box m="30px 0">
+      {checkPhone ? (
+        <CheckPhone
+          setCheckPhone={setCheckPhone}
+          handleGetPhoneNumber={handleGetPhoneNumber}
+          setDataOrder={setDataOrder}
+        />
+      ) : (
+        <ListOrder dataOrder={dataOrder} phoneNumber={phoneNumber} />
+      )}
+    </Box>
+  );
 };
 
 export default HistoryOrderView;

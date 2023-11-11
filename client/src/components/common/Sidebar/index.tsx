@@ -2,17 +2,17 @@ import { Flex, Heading, Text, Box } from "@chakra-ui/layout";
 import { StepIcon, Switch } from "@chakra-ui/react";
 import NavItem from "./components/NavItem";
 import {
-	DashboardIcon,
-	NewsFeedIcon,
-	AddIcon,
-	WalletIcon,
-	MarketIcon,
-	InboxIcon,
-	ProfileIcon,
-	SettingsIcon,
-	LightDarkIcon,
-	InfoIcon,
-	OrderIcon,
+  DashboardIcon,
+  NewsFeedIcon,
+  AddIcon,
+  WalletIcon,
+  MarketIcon,
+  InboxIcon,
+  ProfileIcon,
+  SettingsIcon,
+  LightDarkIcon,
+  InfoIcon,
+  OrderIcon,
 } from "~/components/common/Icons";
 import { useState } from "react";
 

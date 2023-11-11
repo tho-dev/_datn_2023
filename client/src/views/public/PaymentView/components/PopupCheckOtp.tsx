@@ -82,6 +82,7 @@ const PopupCheckOtp = ({
           .unwrap()
           .then((data) => {
             // onCloseOtp();
+            dispatch(resetOtp(false));
             addNoti({
               sender_id: null,
               receivers_id: null,
@@ -94,7 +95,6 @@ const PopupCheckOtp = ({
                 const new_data = { ...data?.data, roomName: "don-hang" };
                 socket.emit("sendNotification", new_data);
               });
-
             deleteCart(cart_id)
               .unwrap()
               .then((data) => {
@@ -119,6 +119,7 @@ const PopupCheckOtp = ({
             }
           })
           .catch((err) => {
+            dispatch(resetOtp(false));
             toast({
               title: "Đơn hàng",
               description: err.data.errors.message,
@@ -135,6 +136,7 @@ const PopupCheckOtp = ({
           });
       })
       .catch((err) => {
+        setLoading(false);
         toast({
           title: "OTP",
           description: err.data.errors.message,

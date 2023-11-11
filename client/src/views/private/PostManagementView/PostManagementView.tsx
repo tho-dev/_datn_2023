@@ -330,11 +330,20 @@ const PostView = (props: Props) => {
 					>
 						<Box>
 							<SelectThinkPro
-								title=""
 								control={control}
-								data={parents}
-								name="category_id"
+								name="category"
+								title=""
 								placeholder="-- Danh mục --"
+								data={[
+									{
+										label: "Tin Hót",
+										value: "1",
+									},
+									{
+										label: "Công Nghệ",
+										value: "2",
+									},
+								]}
 							/>
 						</Box>
 

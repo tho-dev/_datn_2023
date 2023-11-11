@@ -38,7 +38,6 @@ const AllNewsView = ({ product }: Props) => {
       overflow="hidden"
       rounded="md"
       display="inline-block"
-      backgroundColor="bg.white"
       _hover={{
         textDecoration: "none",
       }}

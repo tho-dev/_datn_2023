@@ -6,7 +6,6 @@ import storage from "redux-persist/lib/storage";
 import globalSlice from "./slices/globalSlice";
 import cartSlice from "./slices/cartSlice";
 import userSlice from "./slices/userSlice";
-import orderSlice from "./slices/orderSlice";
 //api
 import authApi from "../redux/api/user";
 import productApi from "./api/product";
@@ -19,6 +18,7 @@ import collectionApi from "../redux/api/collection";
 import postApi from "./api/post";
 import notificationApi from "./api/notification";
 import generalApi from "./api/general";
+import adsApi from "./api/ads";
 import promotionApi from "./api/promotion";
 
 const persistConfig = {
@@ -31,7 +31,6 @@ const rootReducer = combineReducers({
 	global: globalSlice,
 	cart: cartSlice,
 	user: userSlice,
-	order: orderSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -48,6 +47,7 @@ const middleware = [
 	notificationApi.middleware,
 	promotionApi.middleware,
 	generalApi.middleware,
+	adsApi.middleware,
 ];
 
 const store = configureStore({
@@ -65,8 +65,11 @@ const store = configureStore({
 		[notificationApi.reducerPath]: notificationApi.reducer,
 		[generalApi.reducerPath]: generalApi.reducer,
 		[promotionApi.reducerPath]: promotionApi.reducer,
+		[adsApi.reducerPath]: adsApi.reducer,
 	},
-	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+		serializableCheck: false,
+	}).concat(...middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
