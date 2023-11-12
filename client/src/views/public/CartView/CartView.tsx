@@ -29,9 +29,9 @@ const CartView = (props: Props) => {
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const { data, isLoading, isError, isFetching } = useGetCartQuery(cart_id);
 
-  const [decrement, { isLoading: loadingDecrement }] = useDecrementMutation();
-  const [increment, { isLoading: loadingIncrement }] = useIncrementMutation();
-  const [remove, { isLoading: loadingRemove }] = useRemoveMutation();
+  const [decrement] = useDecrementMutation();
+  const [increment] = useIncrementMutation();
+  const [remove] = useRemoveMutation();
 
   const [checkCaptch, setCheckCaptch] = useState(false);
   const toast = useToast();
