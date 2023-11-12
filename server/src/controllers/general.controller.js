@@ -1,10 +1,12 @@
 import General from "../models/general.model"
 import Category from "../models/category.model"
 import Brand from "../models/brand.model"
+import { Promotion } from "../models/promotion.model"
 import { Product } from '../models/product.model'
 import { generalSchema } from "../validations/general"
 import moment from "moment/moment"
 import createError from "http-errors"
+import fetch from "node-fetch"
 
 export async function getGeneral(req, res, next) {
 	try {
@@ -76,12 +78,20 @@ export async function updateGeneral(req, res, next) {
 export async function homeSettings(req, res, next) {
 	try {
 		const general = await General.find({}).select('-created_at -updated_at')
-		const categories = await Category.find({}).select('-deleted -deteled_at -created_at -updated_at').sort({
-			created_at: 1
+		const categories = await Category.find({ type: 'category_brand' }).sort({
+			updated_at: -1
 		})
 
-		console.log('categories', categories)
+		const promotions = await Promotion.find({
+			status: true
+		})
 
+		const result = await Promise.all(promotions.map(async (item) => {
+			const res = await fetch(process.env.BE_URL + '/promotions/detail?slug=' + item?.slug)
+			const res2 = await res.json()
+
+			return res2?.data
+		}))
 
 		const category = await Promise.all(categories?.map(async (item) => {
 			const products = await Product.find({
@@ -122,6 +132,10 @@ export async function homeSettings(req, res, next) {
 				suggestion: {
 					title: "Gợi ý cho bạn",
 					tags: suggestion,
+				},
+				promotions: {
+					title: 'Chương trình khuyến mãi nổi bật',
+					items: result
 				}
 			}
 		})

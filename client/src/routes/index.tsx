@@ -71,6 +71,18 @@ const routes: RouteObject[] = [
 						element: <ProfileView />,
 					},
 					{
+						path: "khuyen-mai/:slug",
+						element: <PromotionView />,
+					},
+					{
+						path: "so-sanh/:slug",
+						element: <CompareView />,
+					},
+					{
+						path: "tim-kiem",
+						element: <SearchView />,
+					},
+					{
 						path: ":slug",
 						element: <SlugView />,
 					},
@@ -87,21 +99,10 @@ const routes: RouteObject[] = [
 						element: <ContentView />,
 					},
 					{
-						path: "so-sanh",
-						element: <CompareView />,
-					},
-					{
-						path: "tim-kiem",
-						element: <SearchView />,
-					},
-					{
 						path: "lich-su-mua-hang",
 						element: <HistoryOrderView />,
 					},
-					{
-						path: "khuyen-mai",
-						element: <PromotionView />,
-					},
+
 					{
 						path: "thanks",
 						element: <ThankView />,

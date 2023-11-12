@@ -38,10 +38,12 @@ const storage = new CloudinaryStorage({
       width = 1200;
       height = 1200;
       folder = "banner";
+      url = ""
     } else if (file.fieldname == 'avatar') {
       width = 200
       height = 200
       folder = 'avatar'
+      url = ""
     }
     // #27bece
 

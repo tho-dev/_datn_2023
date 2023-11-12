@@ -24,39 +24,54 @@ import SelectThinkPro from "~/components/SelectThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
 import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
 import ActionCreatePromotion from "./components/ActionCreatePromotion";
-import ActionUpdateBrand from "./components/ActionUpdateBrand";
-import { useGetAllPromotionQuery } from "~/redux/api/promotion";
+import ActionUpdatePromotion from "./components/ActionUpdatePromotion";
+import {
+	useDeletePromotionMutation,
+	useGetAllPromotionQuery,
+	useGetSinglePromotionQuery,
+	useUpdatePromotionMutation,
+} from "~/redux/api/promotion";
 
 type Props = {};
 
 const PromotionView = (props: Props) => {
 	const toast = useToast();
-	// thương hiệu cha
 	const [id, setId] = useState(null);
+	const [slug, setSlug] = useState(null);
 	const columnHelper = createColumnHelper<any>();
 	const {
-		isOpen: isOpenActionCreateBrand,
-		onOpen: onOpenActionCreateBrand,
-		onClose: onCloseActionCreateBrand,
+		isOpen: isOpenActionCreatePromtion,
+		onOpen: onOpenActionCreatePromtion,
+		onClose: onCloseActionCreatePromtion,
 	} = useDisclosure();
 	const {
-		isOpen: isOpenActionUpdateBrand,
-		onOpen: onOpenActionUpdateBrand,
-		onClose: onCloseActionUpdateBrand,
+		isOpen: isOpenActionUpdatePromotion,
+		onOpen: onOpenActionUpdatePromtion,
+		onClose: onCloseActionUpdatePromotion,
 	} = useDisclosure();
+
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+	const [deletedPromotion] = useDeletePromotionMutation();
+	const { data: promotion } = useGetSinglePromotionQuery(
+		{
+			slug: slug,
+		},
+		{
+			skip: !slug,
+		}
+	);
 
-	const { control } = useForm();
+	const { control, handleSubmit } = useForm();
 
-	const handleDeleteBrand = async () => {
+	const handleDeletePromotion = async () => {
 		try {
-			// await deleteBrand(id as any).unwrap();
+			await deletedPromotion(id as any).unwrap();
 			toast({
 				title: "Thành công",
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Xóa danh mục thành công",
+				description: "Xóa khuyến mãi thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -178,19 +193,8 @@ const PromotionView = (props: Props) => {
 								py="2"
 								icon={<EditIcon size={4} />}
 								onClick={() => {
-									// const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
-									// setBrand({
-									// 	_id: doc?._id,
-									// 	name: doc?.name,
-									// 	thumbnail: doc?.thumbnail,
-									// 	parent_id: parent_id,
-									// 	category_id: {
-									// 		label: doc?.category?.name,
-									// 		value: doc?.category?.category_id,
-									// 	},
-									// 	description: doc?.description,
-									// });
-									// onOpenActionUpdateBrand();
+									setSlug(doc?.slug);
+									onOpenActionUpdatePromtion();
 								}}
 							>
 								Cập Nhật
@@ -320,7 +324,7 @@ const PromotionView = (props: Props) => {
 							lineHeight="2"
 							color="text.textSuccess"
 							bgColor="bg.bgSuccess"
-							onClick={onOpenActionCreateBrand}
+							onClick={onOpenActionCreatePromtion}
 						>
 							Tạo Mới
 						</Button>
@@ -341,8 +345,8 @@ const PromotionView = (props: Props) => {
 			{/* Form */}
 			<DialogThinkPro
 				size="6xl"
-				isOpen={isOpenActionCreateBrand}
-				onClose={onCloseActionCreateBrand}
+				isOpen={isOpenActionCreatePromtion}
+				onClose={onCloseActionCreatePromtion}
 				isCentered
 				title={
 					<Heading
@@ -353,22 +357,26 @@ const PromotionView = (props: Props) => {
 					</Heading>
 				}
 			>
-				<ActionCreatePromotion onClose={onCloseActionCreateBrand} />
+				<ActionCreatePromotion onClose={onCloseActionCreatePromtion} />
 			</DialogThinkPro>
 			<DialogThinkPro
-				isOpen={isOpenActionUpdateBrand}
-				onClose={onCloseActionUpdateBrand}
+				isOpen={isOpenActionUpdatePromotion}
+				onClose={onCloseActionUpdatePromotion}
 				isCentered
+				size="6xl"
 				title={
 					<Heading
 						fontSize="16"
 						textTransform="uppercase"
 					>
-						Cập nhật thương hiệu
+						Cập nhật khuyến mãi
 					</Heading>
 				}
 			>
-				{/* <ActionUpdateBrand onClose={onCloseActionUpdateBrand} /> */}
+				<ActionUpdatePromotion
+					promotion={promotion}
+					onClose={onCloseActionUpdatePromotion}
+				/>
 			</DialogThinkPro>
 
 			{/* Cofirm */}
@@ -376,7 +384,7 @@ const PromotionView = (props: Props) => {
 				isOpen={isOpenComfirm}
 				onClose={onCloseComfirm}
 				content="Bạn có muốn xóa bỏ thương hiệu này không?"
-				handleClick={handleDeleteBrand}
+				handleClick={handleDeletePromotion}
 			/>
 		</>
 	);

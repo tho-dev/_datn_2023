@@ -5,7 +5,76 @@ import { optionSchema, optionValuesSchema, productSchema, variantSchema } from "
 import { Product, Option, OptionValue, Sku, Variant } from '../models/product.model'
 import { Demand, DemandValue } from "../models/demand.model"
 import { sortOptions } from "../utils/fc"
+import createError from "http-errors"
+import fetch from "node-fetch"
 
+
+// so sánh sản phẩm
+export async function compareProduct(req, res, next) {
+  try {
+    const payload = req.body
+
+    const data = await Promise.all(payload?.slugs?.map(async (slug) => {
+      const res = await fetch('http://localhost:8080/api' + '/product/' + slug)
+      const product = await res.json()
+      return product?.data
+    }))
+
+    const groupMap = new Map();
+
+    for (const item of data) {
+      // Duyệt qua mảng attributes trong mỗi item
+      for (const attribute of item.attributes) {
+        const groupName = attribute.group_name;
+
+        // Nếu group_name chưa tồn tại trong Map, thêm mới
+        if (!groupMap.has(groupName)) {
+          groupMap.set(groupName, []);
+        }
+
+        // Thêm items vào mảng tương ứng với group_name
+        const groupItems = groupMap.get(groupName);
+        const itemsInGroup = attribute.items.map((item) => ({ ...item })); // Clone items
+        groupItems.push(itemsInGroup);
+      }
+    }
+
+    const resultArray = Array.from(groupMap).map(([groupName, itemsArray]) => {
+      const labelMap = new Map();
+
+      // Logic lọc giống nhau và giá trị khác nhau
+      itemsArray.forEach((item) => {
+        item.forEach(({ label, value }) => {
+          if (!labelMap.has(label)) {
+            labelMap.set(label, { label, values: [] });
+          }
+
+          const labelObject = labelMap.get(label);
+          labelObject.values.push(value);
+        });
+      });
+
+      // Chuyển từ Map thành mảng các đối tượng
+      const labelsArray = Array.from(labelMap).map(([label, labelObject]) => labelObject);
+
+      return {
+        group_name: groupName,
+        items: labelsArray,
+      };
+    });
+
+    return res.json({
+      message: 'Thành công',
+      status: 200,
+      data: resultArray,
+      abc: data?.map((a) => ({
+        attributes: a.attributes
+      }))
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 
 // controller products
 export async function getAllProduct(req, res, next) {
@@ -15,6 +84,7 @@ export async function getAllProduct(req, res, next) {
       _sort = "created_at",
       _order = "desc",
       _limit = 10,
+      _keyword = "",
     } = req.query;
 
     const options = {
@@ -39,7 +109,8 @@ export async function getAllProduct(req, res, next) {
     };
 
     const { docs, ...paginate } = await Product.paginate({
-      status: true
+      status: true,
+      name: new RegExp(_keyword, 'i')
     }, options);
 
     // hàm lấy ra các 1 sku của một sản phẩm
