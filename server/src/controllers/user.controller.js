@@ -25,8 +25,9 @@ export async function getAllUser(req, res, next) {
       _order = "asc",
       _limit = 10,
       search,
+      role,
+      verified,
     } = req.query;
-
     const options = {
       page: _page,
       limit: _limit,
@@ -37,6 +38,12 @@ export async function getAllUser(req, res, next) {
     let query = {};
     if (search) {
       query.email = { $regex: new RegExp(search, "i") };
+    }
+    if (role) {
+      query.role = role;
+    }
+    if (verified) {
+      query.verified = verified;
     }
     const { docs, ...paginate } = await User.paginate(query, options);
     if (!docs) {

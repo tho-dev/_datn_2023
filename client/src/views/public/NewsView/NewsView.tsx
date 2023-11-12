@@ -2,7 +2,7 @@ import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem } from "@chakr
 import NewsCategory from "./components/NewsCategory";
 import { Divider } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
-import { useGetAllPostQuery, useGetSinglePostQuery } from "~/redux/api/post";
+import { useGetAllPostQuery } from "~/redux/api/post";
 import AllNewsView from "./AllNewsView";
 import { useEffect, useState } from "react"; 
 import { useParams } from "react-router";
@@ -10,17 +10,16 @@ import { useParams } from "react-router";
 
 const NewsView = () => {
 	const { slug: params } = useParams();
-	const [slug, setSlug] = useState<string>("");
+	// const [slug, setSlug] = useState<string>("");
 	const [showCompare, setShowCompare] = useState<boolean>(false);
 	const [data, setData] = useState<any>([]);
-
 
 	const { data: posts } = useGetAllPostQuery({
 		_order: "asc",
 		_sort: "date",
 		_page: 1,
 		_limit: 10,
-		_type: slug
+		_type: params || ""  
 	});
 
 	useEffect(() => {
@@ -34,7 +33,7 @@ const NewsView = () => {
 		setShowCompare(!showCompare);
 	};
 
-	console.log(data);
+	// console.log("Data:", data);
 
 
 	return (

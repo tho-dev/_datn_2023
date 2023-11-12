@@ -13,15 +13,16 @@ import {
 import { CloseSmallIcon } from "~/components/common/Icons";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
-import { useUpdateCategoryMutation } from "~/redux/api/category";
+import { useCreateBrandMutation, useUpdateBrandMutation } from "~/redux/api/brand";
 
 type Props = {
 	onClose: () => void;
 	parents: any;
-	category: any;
+	brand: any;
+	categories: any;
 };
 
-const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
+const ActionUpdateBrand = ({ onClose, parents, brand, categories }: Props) => {
 	const toast = useToast();
 	const {
 		control,
@@ -32,26 +33,26 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 		watch,
 		reset,
 	} = useForm({
-		defaultValues: category,
+		defaultValues: brand,
 	});
 
-	const [updateCategory, { isLoading }] = useUpdateCategoryMutation();
+	const [updateBrand, { isLoading }] = useUpdateBrandMutation();
 
 	const onSubmit = async (data: any) => {
 		data = {
 			...data,
-			type: "category_post",
 			parent_id: data?.parent_id?.value,
+			category_id: data?.category_id?.value,
 		};
 
 		try {
-			await updateCategory(data).unwrap();
+			await updateBrand(data).unwrap();
 			toast({
 				title: "Thành công",
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Cập nhật danh mục bài viết thành công",
+				description: "Cập nhật danh mục thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -83,7 +84,7 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 							h="120px"
 						>
 							<FileUploadThinkPro
-								fileName="banner"
+								fileName="brand"
 								getDataFn={(data: any) => setValue("thumbnail", data)}
 								setData={watch("thumbnail")}
 							/>
@@ -98,11 +99,11 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 						fontSize="15"
 						fontWeight="semibold"
 					>
-						Danh mục
+						Thương hiệu
 					</FormLabel>
 					<Input
 						id="name"
-						placeholder="VD: Tin tức công nghệ"
+						placeholder="VD: Dell"
 						{...register("name", {
 							required: "Không được để trống !!!",
 						})}
@@ -113,9 +114,18 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 				<SelectThinkPro
 					control={control}
 					name="parent_id"
-					title="Danh mục bài viết"
-					placeholder="-- Danh mục bài viết cha --"
+					title="Thương hiệu cha"
+					placeholder="-- Thương hiệu cha --"
 					data={parents}
+				/>
+				{/* danh muc */}
+				<SelectThinkPro
+					control={control}
+					name="category_id"
+					title="Danh mục"
+					placeholder="-- Danh mục --"
+					data={categories}
+					rules={{ required: "Không được để trống" }}
 				/>
 				<FormControl isInvalid={errors.description as any}>
 					<FormLabel
@@ -132,7 +142,7 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 						rounded="4px"
 						fontSize="sm"
 						boxShadow="none"
-						placeholder="VD: mo ta..."
+						placeholder="VD: thuong hieu..."
 						{...register("description", {
 							required: "Không được để trống !!!",
 						})}
@@ -173,4 +183,4 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 	);
 };
 
-export default ActionUpdateCategory;
+export default ActionUpdateBrand;

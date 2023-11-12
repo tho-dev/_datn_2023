@@ -10,13 +10,13 @@ import post from "./post.router";
 import order from "./order.router";
 import insert from "./insert.router";
 import collection from "./collection.router";
-import general from "./general.router"
+import general from "./general.router";
 import notification from "./notification.router";
 import promotion from "./promotion.router"
 
 
 const routes = (app) => {
-  app.use("/api", general)
+  app.use("/api", general);
   app.use("/api/example", example);
   app.use("/api/product", product);
   app.use("/api/category", category);

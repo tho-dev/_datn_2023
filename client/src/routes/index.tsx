@@ -8,9 +8,9 @@ import MainLayout from "~/layouts/MainLayout";
 
 // view client
 import { CartView } from "~/views/public/CartView/";
-import { ContentView } from "~/views/public/ContentView";
+import NewsView from "~/views/public/NewsView/NewsView";
 import { HomeView } from "~/views/public/HomeView";
-import { NewsView } from "~/views/public/NewsView";
+import { ContentView } from "~/views/public/NewsView";
 import { NotFoundView } from "~/views/public/NotFoundView";
 import { ProductDetailView } from "~/views/public/ProductDetailView";
 import { ProfileView } from "~/views/public/ProfileView/";
@@ -71,18 +71,6 @@ const routes: RouteObject[] = [
 						element: <ProfileView />,
 					},
 					{
-						path: "khuyen-mai/:slug",
-						element: <PromotionView />,
-					},
-					{
-						path: "so-sanh/:slug",
-						element: <CompareView />,
-					},
-					{
-						path: "tim-kiem",
-						element: <SearchView />,
-					},
-					{
 						path: ":slug",
 						element: <SlugView />,
 					},
@@ -91,18 +79,29 @@ const routes: RouteObject[] = [
 						element: <ProductDetailView />,
 					},
 					{
-						path: "tin-tuc",
+						path: "tin-tuc/:slug",
 						element: <NewsView />,
 					},
 					{
-						path: "tin-tuc/:slug",
+						path: "tin-tuc/:slug/:slug",
 						element: <ContentView />,
+					},
+					{
+						path: "so-sanh",
+						element: <CompareView />,
+					},
+					{
+						path: "tim-kiem",
+						element: <SearchView />,
 					},
 					{
 						path: "lich-su-mua-hang",
 						element: <HistoryOrderView />,
 					},
-
+					{
+						path: "khuyen-mai",
+						element: <PromotionView />,
+					},
 					{
 						path: "thanks",
 						element: <ThankView />,

@@ -83,9 +83,11 @@ const TabPanelItem = ({ status }: Props) => {
   if (isError) {
     return <Text>Không có đơn hàng nào</Text>;
   }
+
   const filteredOrders = data.data.filter(
     (order: any) => order.status == status
   );
+
   const handleOrderDetail = (order: any) => {
     setOrderDetail(order);
     onOpen();
@@ -154,6 +156,7 @@ const TabPanelItem = ({ status }: Props) => {
   const onSubmitForm = (data: any) => {
     console.log(data);
   };
+
   const onSubmitFormReturn = (data: any) => {
     const { address, content, shipping_address, phone_number, ...rest } = data;
     const new_phone_number = chuyenDoiSoDienThoai(phone_number);
@@ -181,7 +184,21 @@ const TabPanelItem = ({ status }: Props) => {
         onCloseReturn();
       });
   };
+
   const handleCancel = () => {
+    const currentDate = new Date();
+    const targetTime = new Date(orderDetail.created_at);
+    targetTime.setMinutes(targetTime.getMinutes() + 15);
+    if (currentDate > targetTime) {
+      return toast({
+        title: "Không thể huỷ đơn hàng",
+        description: "Liên hệ với bộ phận CSKH để được xử lý",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     if (orderDetail?.status !== "processing") {
       return toast({
         title: "Hệ thống",
@@ -218,11 +235,15 @@ const TabPanelItem = ({ status }: Props) => {
         onCloseCancel();
       });
   };
+
   const handleOpenModelReturn = (order: any) => {
     onOpenReturn();
     setId(order._id);
   };
-
+  const handleOpenModelCancel = (order: any) => {
+    onOpenCancel();
+    setOrderDetail(order);
+  };
   return (
     <>
       <TabPanel>
@@ -263,7 +284,7 @@ const TabPanelItem = ({ status }: Props) => {
                         fontWeight={"600 "}
                         _hover={{ bgColor: "red" }}
                         type="button"
-                        onClick={onOpenCancel}
+                        onClick={() => handleOpenModelCancel(order)}
                       >
                         Huỷ đơn
                       </Button>
@@ -275,7 +296,7 @@ const TabPanelItem = ({ status }: Props) => {
                         _hover={{ bgColor: "green" }}
                         onClick={() => handleOrderDetail(order)}
                       >
-                        Cập nhật
+                        Chi tiết
                       </Button>
                     )}
                     {order.status == "delivered" && (
@@ -326,7 +347,7 @@ const TabPanelItem = ({ status }: Props) => {
                         fontWeight={"600 "}
                         _hover={{ bgColor: "red" }}
                         type="button"
-                        onClick={onOpenCancel}
+                        onClick={() => handleOpenModelCancel(order)}
                       >
                         Huỷ đơn
                       </Button>
@@ -656,6 +677,7 @@ const TabPanelItem = ({ status }: Props) => {
           </Flex>
         </form>
       </DialogThinkPro>
+
       <ConfirmThinkPro
         isOpen={isOpenCancel}
         handleClick={handleCancel}

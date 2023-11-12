@@ -5,7 +5,7 @@ import { useAppDispatch } from "~/redux/hook/hook";
 import { addViewedItem } from "~/redux/slices/globalSlice";
 
 type Props = {
-	product?: any;
+  product?: any;
 };
 
 const PostRelate = ({ product }: Props) => {
@@ -20,10 +20,9 @@ const PostRelate = ({ product }: Props) => {
 
 		window.location.href = product?.slug;
 	};
-
 	return (
 		<Link
-			to={product?.slug}
+			to={"/"}
 			as={ReactRouterLink}
 			w="full"
 			rounded="xl"

@@ -20,6 +20,7 @@ import {
   returnedOrder,
   confirm_returnedOrder,
   delete_all_order,
+  getReturnedOrder,
 } from "../controllers/order.controller";
 
 const router = express.Router();
@@ -32,6 +33,7 @@ router.post("/orderByPhoneNumber", getOrderByPhoneNumber);
 router.get("/orderByUserId/:id", getOrderByUserId);
 router.post("/getTokenPrintBill", getTokenPrintBills);
 router.post("/return", returnedOrder);
+router.get("/return", getReturnedOrder);
 router.put("/return/:id", confirm_returnedOrder);
 
 router.post("/", createOrder);

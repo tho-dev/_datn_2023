@@ -31,14 +31,11 @@ const UserListManagerView = (props: Props) => {
 
 	const [search, setSearch] = useState("");
 	const [idUser, setIdUser] = useState("");
+	const [filter, setFilter] = useState({
+		role: null,
+		verified: null,
+	} as any);
 	const toast = useToast();
-	const { data, isLoading } = useGetAllQuery({
-		_limit: 10,
-		_page: 1,
-		_sort: "created_at",
-		_order: "desc",
-		search: search,
-	});
 	const [deleteUser] = useDeleteUserMutation();
 	const [update] = useUpdateMutation();
 
@@ -314,6 +311,7 @@ const UserListManagerView = (props: Props) => {
 			<UserSearch
 				search={search}
 				handleSearched={handleSearched}
+				setFilter={setFilter}
 			/>
 			<Box
 				w={{
@@ -332,6 +330,8 @@ const UserListManagerView = (props: Props) => {
 						_sort: "created_at",
 						_order: "desc",
 						search,
+						role: filter.role,
+						verified: filter.verified,
 					}}
 				/>
 			</Box>

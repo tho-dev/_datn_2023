@@ -1,17 +1,18 @@
-import { Box, Text, Flex } from "@chakra-ui/layout";
-import { Image, Img } from "@chakra-ui/react";
+import { Box, Text, Flex } from "@chakra-ui/layout"; 
 import { Divider } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import PostRelate from "./components/PostRelate";
-import { Grid, GridItem } from "@chakra-ui/layout";
 import { useGetAllPostQuery, useGetSinglePostQuery } from "~/redux/api/post";
 import { NavArrowLeflIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import AllNewsView from "../NewsView/AllNewsView";
+import AllNewsView from "./AllNewsView";
 import { useEffect, useState } from "react";
+import moment from "moment";
+import { useAppSelector } from "~/redux/hook/hook";
+
 
 type Props = {
 	mt?: any;
@@ -20,12 +21,12 @@ type Props = {
 
 const ContentView = ({ columns = 4 }: Props) => {
 	const { slug } = useParams();
-	const { data: product} = useGetSinglePostQuery(
+	const { data: product } = useGetSinglePostQuery(
 		slug as string
 	);
 
 	// const { slug: params } = useParams();
-	const [slugs, setSlug] = useState<string>(""); 
+	const [slugs, setSlug] = useState<string>("");
 	const [data, setData] = useState<any>([]);
 
 	const { data: posts } = useGetAllPostQuery({
@@ -41,8 +42,14 @@ const ContentView = ({ columns = 4 }: Props) => {
 			const docs = posts?.data?.items as any;
 			setData([...data, ...docs]);
 		}
-	}, [posts]); 
+	}, [posts]);
 
+	const { user } = useAppSelector((state) => state.persistedReducer.global);
+	const now = moment();
+	const diffInSeconds = now.diff(product?.data.created_at, "seconds");
+	const diffInMinutes = Math.ceil(diffInSeconds / 60);
+	const diffInHours = Math.ceil(diffInMinutes / 60);
+	const diffInDays = Math.ceil(diffInHours / 24);
 
 	return (
 		<>
@@ -76,14 +83,35 @@ const ContentView = ({ columns = 4 }: Props) => {
 							my={"4"}
 							fontWeight={"bold"}
 						>
-							<Text color={"black"}>Nguyễn Công Minh </Text>
-							<Text
-								color={"gray.500"}
-								mx={2}
-							>
-								*
+							<Text as="h3" fontWeight="black" lineHeight="1.3">
+								{user.first_name + " " + user.last_name}
 							</Text>
-							<Text color={"gray.500"}> 18:41, 16/03/2023</Text>
+							<Text mx={2}>|</Text>
+							<Text fontWeight="medium" fontSize="13px">
+								{
+									diffInSeconds <= 60 ? (
+										<Text fontWeight="medium" fontSize="13px">
+											{diffInSeconds} giây
+										</Text>
+									) : (
+										diffInMinutes <= 60 ? (
+											<Text fontWeight="medium" fontSize="13px">
+												{diffInMinutes} phút
+											</Text>
+										) : (
+											diffInHours <= 24 ? (
+												<Text fontWeight="medium" fontSize="13px">
+													{diffInHours} giờ
+												</Text>
+											) : (
+												<Text fontWeight="medium" fontSize="13px">
+													{diffInDays} ngày
+												</Text>
+											)
+										)
+									)
+								}
+							</Text>
 						</Flex>
 						<Divider />
 					</Box>
@@ -136,23 +164,10 @@ const ContentView = ({ columns = 4 }: Props) => {
 					>
 						<div dangerouslySetInnerHTML={{ __html: product?.data.meta_title }} />
 					</Text>
- 
-					<Flex py={5}>
-						<Text
-							fontSize={"xl"}
-							fontWeight={"medium"}
-						>
-							Theo
-						</Text>
-						<Text
-							fontSize={"xl"}
-							fontWeight={"bold"}
-							ml={1}
-						>
-							PCWorld
-						</Text>
-					</Flex>
+
 				</Box>
+
+
 				<Text
 					py={10}
 					fontSize={"2xl"}

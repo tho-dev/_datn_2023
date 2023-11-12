@@ -18,11 +18,7 @@ const CardThinkPro = ({ product, mode = "home" }: Props) => {
 	const { items, isCompare } = useAppSelector((state) => state.persistedReducer.global);
 
 	const handleViewProduct = () => {
-		const productData = {
-			productName: "LG Gram 14 2022",
-			price: "19.999.000",
-		};
-		dispatch(addViewedItem(productData));
+		dispatch(addViewedItem(product));
 	};
 
 	return (
