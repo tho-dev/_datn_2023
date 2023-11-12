@@ -67,6 +67,10 @@ const routes: RouteObject[] = [
 						element: <Payment />,
 					},
 					{
+						path: "so-sanh/:slug",
+						element: <CompareView />,
+					},
+					{
 						path: "thong-tin",
 						element: <ProfileView />,
 					},
@@ -86,10 +90,7 @@ const routes: RouteObject[] = [
 						path: "tin-tuc/:slug/:slug",
 						element: <ContentView />,
 					},
-					{
-						path: "so-sanh",
-						element: <CompareView />,
-					},
+
 					{
 						path: "tim-kiem",
 						element: <SearchView />,

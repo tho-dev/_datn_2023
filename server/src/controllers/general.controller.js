@@ -83,7 +83,9 @@ export async function homeSettings(req, res, next) {
   try {
     const general = await General.find({}).select("-created_at -updated_at");
 
-    const categories = await Category.find({})
+    const categories = await Category.find({
+      type: 'category_brand'
+    })
       .select("-deleted -deteled_at -created_at -updated_at")
       .sort({
         updated_at: -1

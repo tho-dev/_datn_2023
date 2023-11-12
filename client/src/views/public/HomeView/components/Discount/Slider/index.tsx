@@ -143,7 +143,7 @@ const Slider = ({ title }: PropTypes) => {
 											{/* Box cuối cùng */}
 											<Box pos="relative">
 												<Image
-													src={item?.items?.slice(5, 6)[0].image}
+													src={item?.items?.slice(5, 6)[0]?.image}
 													minW="66px"
 													h="66px"
 													p={2}
