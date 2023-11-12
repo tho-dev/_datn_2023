@@ -25,6 +25,17 @@ export function chuyenDoiSoDienThoai(soDienThoai: any) {
     return false;
   }
 }
+export function chuyenDoiSoDienThoaiVe0(soDienThoai: any) {
+  soDienThoai = soDienThoai.toString();
+  // Kiểm tra xem số điện thoại có đúng định dạng "849" hay không
+  if (/^849\d{8}$/.test(soDienThoai) && soDienThoai) {
+    // Loại bỏ ký tự "84" ở đầu và trả về số điện thoại đã chuyển đổi
+    return "0" + soDienThoai.slice(2);
+  } else {
+    // Nếu số điện thoại không đúng định dạng, trả về thông báo lỗi hoặc giữ nguyên số đó
+    return "Số điện thoại không hợp lệ";
+  }
+}
 export function formatPhoneNumber(phoneNumber: string) {
   if (phoneNumber.startsWith('84') && phoneNumber.length === 11) {
     return '0' + phoneNumber.substring(2);
@@ -89,4 +100,11 @@ export const generateVariant = (input: any) => {
 export const formatCurrency = (value: any, locale = 'vi-VN', currency = 'VND') => {
   if (!value) return '';
   return value.toLocaleString(locale, { style: 'currency', currency: currency });
+};
+
+
+export const validateEmail = (value: string) => {
+  // Mẫu regex kiểm tra định dạng email
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(value);
 };

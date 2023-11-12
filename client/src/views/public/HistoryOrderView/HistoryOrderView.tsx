@@ -9,17 +9,20 @@ const HistoryOrderView = (props: Props) => {
   const [checkPhone, setCheckPhone] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [dataOrder, setDataOrder] = useState([] as any);
+
   const handleGetPhoneNumber = (phoneNumber: any) => {
     setPhoneNumber(phoneNumber);
   };
   return (
     <Box m="30px 0">
       {checkPhone ? (
-        <CheckPhone
-          setCheckPhone={setCheckPhone}
-          handleGetPhoneNumber={handleGetPhoneNumber}
-          setDataOrder={setDataOrder}
-        />
+        <>
+          <CheckPhone
+            setCheckPhone={setCheckPhone}
+            handleGetPhoneNumber={handleGetPhoneNumber}
+            setDataOrder={setDataOrder}
+          />
+        </>
       ) : (
         <ListOrder dataOrder={dataOrder} phoneNumber={phoneNumber} />
       )}

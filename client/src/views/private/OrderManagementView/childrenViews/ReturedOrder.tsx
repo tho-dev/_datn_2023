@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
   Breadcrumb,
@@ -12,6 +12,7 @@ import {
   MenuList,
   Tag,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { PlusCircleIcon, SearchIcon } from "~/components/common/Icons";
@@ -20,13 +21,28 @@ import { Link, Link as ReactRouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import moment from "moment";
 import TableThinkPro from "~/components/TableThinkPro";
-import { useGetReturnOrderQuery } from "~/redux/api/order";
+import {
+  useConfirmReturnOrderMutation,
+  useGetReturnOrderQuery,
+} from "~/redux/api/order";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 
 type Props = {};
 
 const ReturedOrder = (props: Props) => {
   const { control, watch } = useForm();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const toast = useToast();
   const columnHelper = createColumnHelper<any>();
+  const [idReturned, setIdReturned] = useState("");
+  const [confirmReturnOrder] = useConfirmReturnOrderMutation();
+
+  const [filter, setFilter] = useState({
+    date: null,
+    is_confirm: null,
+    search: "",
+  } as any);
+
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -67,7 +83,7 @@ const ReturedOrder = (props: Props) => {
     }),
     columnHelper.accessor("is_confirm", {
       cell: (info) => (
-        <Tag>{info.getValue() ? "Chờ xác nhận" : "Đã xác nhận"}</Tag>
+        <Tag>{info.getValue() ? "Đã xác nhận" : "Chờ xác nhận"}</Tag>
       ),
       header: "Trạng thái đơn hàng",
     }),
@@ -107,12 +123,11 @@ const ReturedOrder = (props: Props) => {
             </MenuButton>
             <MenuList>
               <MenuItem>Xóa</MenuItem>
-              <MenuItem>
-                <Link to={`/admin/don-hang/${info.getValue()}`}>
-                  Xem chi tiết
-                </Link>
+              <MenuItem
+                onClick={() => handleOpenModelReturned(info.getValue())}
+              >
+                Xác nhận
               </MenuItem>
-              <MenuItem>Cập nhật</MenuItem>
             </MenuList>
           </Menu>
         );
@@ -120,6 +135,46 @@ const ReturedOrder = (props: Props) => {
       header: "Action",
     }),
   ];
+  const handleOpenModelReturned = (id: string) => {
+    setIdReturned(id);
+    onOpen();
+  };
+  const handleReturnedOrder = () => {
+    confirmReturnOrder(idReturned)
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Thành công",
+          duration: 1600,
+          position: "top-right",
+          status: "success",
+          description: data.message,
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Thất bại",
+          duration: 1600,
+          position: "top-right",
+          status: "error",
+          description: err.data.errors.message,
+        });
+      })
+      .finally(() => {
+        onClose();
+      });
+  };
+  const verified = watch("is_confirm") || "";
+
+  const handleDate = (data: any) => {
+    setFilter({ date: data });
+  };
+  useEffect(() => {
+    setFilter({
+      is_confirm: verified.value,
+    });
+  }, [verified]);
+
   return (
     <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
       <Flex alignItems="center" justifyContent="space-between" pb="5">
@@ -140,7 +195,7 @@ const ReturedOrder = (props: Props) => {
             </BreadcrumbItem>
 
             <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink href="hang-hoan">hàng hoàn</BreadcrumbLink>
+              <BreadcrumbLink href="hang-hoan">Hàng hoàn</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
         </Box>
@@ -152,7 +207,7 @@ const ReturedOrder = (props: Props) => {
             <Box flex="1">
               <SelectThinkPro
                 control={control}
-                name="status"
+                name="is_confirm"
                 title=""
                 placeholder="--Trạng thái đơn hàng--"
                 data={[
@@ -167,8 +222,11 @@ const ReturedOrder = (props: Props) => {
                 ]}
               />
             </Box>
-
-            <Input flex="1" type="date" />
+            <Input
+              flex="1"
+              type="date"
+              onChange={(e: any) => handleDate(e.target.value)}
+            />
           </Flex>
           <Flex
             px="4"
@@ -189,6 +247,7 @@ const ReturedOrder = (props: Props) => {
               lineHeight="1.5"
               w="260px"
               placeholder="Tìm kiếm đơn hàng..."
+              onChange={(e) => setFilter({ search: e.target.value })}
             />
           </Flex>
         </Flex>
@@ -203,9 +262,18 @@ const ReturedOrder = (props: Props) => {
             _page: 1,
             _sort: "created_at",
             _order: "desc",
+            search: filter.search,
+            is_confirm: filter.is_confirm,
+            date: filter.date,
           }}
         />
       </Box>
+      <ConfirmThinkPro
+        isOpen={isOpen}
+        onClose={onClose}
+        content="Bạn có chắc chắn muốn xác thực yêu cầu hoàn hàng này?"
+        handleClick={handleReturnedOrder}
+      />
     </Box>
   );
 };

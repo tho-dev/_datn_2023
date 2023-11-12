@@ -13,7 +13,13 @@ import {
   useIncrementMutation,
   useRemoveMutation,
 } from "~/redux/api/cart";
-import { Skeleton, SkeletonCircle, SkeletonText, FLex } from "@chakra-ui/react";
+import {
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  FLex,
+  useToast,
+} from "@chakra-ui/react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 type Props = {};
@@ -25,9 +31,18 @@ const CartView = (props: Props) => {
   const [increment, { isLoading: loadingIncrement }] = useIncrementMutation();
   const [remove, { isLoading: loadingRemove }] = useRemoveMutation();
   const [checkCaptch, setCheckCaptch] = useState(false);
+  const toast = useToast();
   const navigate = useNavigate();
   const handlePayment = () => {
-    if (data?.data?.products?.length <= 0 || !checkCaptch) return;
+    if (data?.data?.products?.length <= 0 || !checkCaptch)
+      return toast({
+        title: "Hệ thống thông báo",
+        description: "Bạn phải xác minh trước khi mua hàng",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
     navigate("/thanh-toan");
   };
   const onChange = (value: any) => {
