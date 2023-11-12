@@ -22,12 +22,13 @@ import DialogThinkPro from "~/components/DialogThinkPro";
 import DetailOrder from "./DetailOrder";
 import { useState } from "react";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import {
+import orderApi, {
   useCancelOrderMutation,
   useReturnOrderMutation,
 } from "~/redux/api/order";
 import moment from "moment";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "~/redux/hook/hook";
 
 type Props = {
   dataOrder: any[];
@@ -58,6 +59,7 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
     setOrderDetail(item);
     onOpen();
   };
+  const dispatch = useAppDispatch();
   const [cancelOrder] = useCancelOrderMutation();
   const [returnOrder] = useReturnOrderMutation();
   const handleOpenModelReturn = (order: any, e: any) => {
@@ -93,6 +95,7 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
     cancelOrder({ id: orderDetail._id })
       .unwrap()
       .then((data: any) => {
+        dispatch(orderApi.util.invalidateTags(["Order"]));
         toast({
           title: "Hệ thống",
           description: "Huỷ đơn hàng thành công",
@@ -122,6 +125,20 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
     setOrderDetail(order);
   };
   const onSubmitFormReturn = (data: any) => {
+    const currentDate = new Date();
+    const targetTime = new Date(orderDetail.updated_at);
+
+    targetTime.setDate(targetTime.getDate() + 1);
+    if (currentDate > targetTime) {
+      return toast({
+        title: "Không thể hoàn đơn hàng",
+        description: "Liên hệ với bộ phận CSKH để được xử lý",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const new_data = {
       ...data,
       order_id: orderDetail._id,

@@ -37,8 +37,8 @@ export function chuyenDoiSoDienThoaiVe0(soDienThoai: any) {
   }
 }
 export function formatPhoneNumber(phoneNumber: string) {
-  if (phoneNumber.startsWith('84') && phoneNumber.length === 11) {
-    return '0' + phoneNumber.substring(2);
+  if (phoneNumber.startsWith('+84') && phoneNumber.length === 11) {
+    return '0' + phoneNumber.substring(3);
   }
   return phoneNumber;
 }

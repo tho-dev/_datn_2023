@@ -33,7 +33,6 @@ import cartApi, {
   useDeleteCartMutation,
 } from "~/redux/api/cart";
 import { v4 as uuidv4 } from "uuid";
-import { addCart } from "~/redux/slices/cartSlice";
 import { socket } from "~/App";
 import { useAddNotiMutation } from "~/redux/api/notification";
 type Props = {
@@ -56,8 +55,6 @@ const PopupCheckOtp = ({
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
   const [paymentMomo] = usePaymentMomoMutation();
-  const [deleteCart] = useDeleteCartMutation();
-  const [createCart] = useCreateCartMutation();
 
   const { time, isCheckOtp } = useAppSelector(
     (state) => state.persistedReducer.global
