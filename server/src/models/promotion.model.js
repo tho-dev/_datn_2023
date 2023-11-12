@@ -114,6 +114,10 @@ const promotionSchema = new Schema({
 
 plugins.forEach((item) => promotionSchema.plugin(item, { overrideMethods: true }));
 
+promotionSchema.pre('find', function (next) {
+	next()
+})
+
 const Promotion = model('Promotion', promotionSchema)
 const PromotionValue = model('PromotionValue', promotionValueSchema)
 

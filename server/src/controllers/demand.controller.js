@@ -105,6 +105,6 @@ export async function removeDemand(req, res, next) {
 			data: demand,
 		})
 	} catch (error) {
-
+		next(error)
 	}
 }

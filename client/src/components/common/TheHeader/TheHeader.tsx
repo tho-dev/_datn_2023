@@ -115,7 +115,7 @@ const TheHeader = (props: Props) => {
 					</Link>
 
 					<Link
-						to="/tin-tuc"
+						to="/tin-tuc/tin-tuc"
 						as={ReactRouterLink}
 						_hover={{
 							textDecoration: "none",

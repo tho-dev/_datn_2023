@@ -20,17 +20,20 @@ import {
 	saveVariant,
 	deteleVariant,
 	getSingleVariant,
-	updateVariant
+	updateVariant,
+	compareProduct
 } from "../controllers/product.controller";
 
 const router = express.Router();
 
 // api product 
+
 router.get('/manager', getAllProductManager)
 router.get('/manager/:id', getProductById)
 router.get('/:slug', getSingleProduct)
 router.get('/', getAllProduct)
 router.post("/", createProduct)
+router.post("/compare", compareProduct)
 router.put("/:id", updateProduct)
 
 // api variant

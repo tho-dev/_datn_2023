@@ -15,7 +15,7 @@ const Banner = ({ banner }: Props) => {
 				sm: "260px",
 				md: "312px",
 			}}
-			rounded="md"
+			rounded="xl"
 			overflow="hidden"
 			color="text.white"
 			alignItems="center"

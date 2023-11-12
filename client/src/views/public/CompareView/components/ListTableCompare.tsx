@@ -1,16 +1,22 @@
 import { Box } from "@chakra-ui/layout";
-import React from "react";
 import TableCompare from "./TableCompare";
 
-type Props = {};
+type Props = {
+	products: any;
+};
 
-const ListTableCompare = (props: Props) => {
+const ListTableCompare = ({ products }: Props) => {
 	return (
 		<Box>
-			<TableCompare />
-			<TableCompare />
-			<TableCompare />
-			<TableCompare />
+			{products?.map((item: any, index: number) => {
+				return (
+					<TableCompare
+						item={item}
+						key={index}
+						index={index}
+					/>
+				);
+			})}
 		</Box>
 	);
 };

@@ -1,36 +1,64 @@
-import { Box, Flex, Text } from '@chakra-ui/layout'
-import { Image } from "@chakra-ui/react"; 
-import PromotionProduct from './PromotionProduct/PromotionProduct';
+import { Box, Grid, Text } from "@chakra-ui/layout";
+import { Image } from "@chakra-ui/react";
+import { useParams } from "react-router";
+import CardThinkPro from "~/components/CardThinkPro";
+import { useGetSinglePromotionQuery } from "~/redux/api/promotion";
 
 const PromotionView = () => {
-    return (
-        <Box my={6}>
-            <Box
-                w="100%"
-                borderRadius="xl"
-            >
-                <Image borderTopRadius={"xl"} src={"https://images.thinkgroup.vn/unsafe/2400x640/https://media-api-beta.thinkpro.vn/media/core/banners/2023/6/7/2400-x-640-thinkpro.png"} w="full" h="full" objectFit="cover" />
+	const { slug } = useParams();
 
-                <Box
-                    bg="white"
-                    p={7}
-                    fontSize={20}
-                    fontWeight={'bold'}
-                >
-                    <Text>LENOVO THINKBOOK GIẢM CỰC SÂU</Text>
-                </Box>
-            </Box>
+	const { data } = useGetSinglePromotionQuery(
+		{
+			slug: slug,
+		},
+		{
+			skip: !slug,
+		}
+	);
 
-            <Flex mt={6} gap={3}>
-                <PromotionProduct />
-                <PromotionProduct />
-                <PromotionProduct />
-                <PromotionProduct />
-                <PromotionProduct />
-            </Flex>
-        </Box>
+	return (
+		<Box my={6}>
+			<Box
+				w="100%"
+				borderRadius="xl"
+				overflow="hidden"
+			>
+				<Image
+					borderTopRadius={"xl"}
+					src={data?.thumbnail?.url}
+					w="full"
+					h="full"
+					objectFit="cover"
+				/>
 
-    )
-}
+				<Box
+					bg="white"
+					p={7}
+					fontSize={20}
+					fontWeight={"bold"}
+				>
+					<Text>{data?.name}</Text>
+				</Box>
+			</Box>
 
-export default PromotionView
+			<Grid
+				mt={6}
+				rowGap="6"
+				columnGap="4"
+				rounded="xl"
+				templateColumns="repeat(5, 1fr)"
+			>
+				{data?.items?.map((item: any, index: number) => {
+					return (
+						<CardThinkPro
+							key={index}
+							product={item}
+						/>
+					);
+				})}
+			</Grid>
+		</Box>
+	);
+};
+
+export default PromotionView;
