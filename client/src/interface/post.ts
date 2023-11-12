@@ -5,5 +5,7 @@ export interface IPost{
     meta_keyword: string,
     meta_description: string,
     slug: string, 
-    thumbnail: any
+    thumbnail: any,
+    created_at: any,
+    name: any
 }

@@ -35,7 +35,7 @@ const PostView = (props: Props) => {
 	const [id, setId] = useState(null);
 	const [post, setPost] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
-	const [categoriesPost, setCategoriesPost] = useState<any>([]);
+	const [category, setCategory] = useState<any>(null);
 	const columnHelper = createColumnHelper<any>();
 	// const {
 	// 	isOpen: isOpenActionCreatePost,
@@ -43,9 +43,9 @@ const PostView = (props: Props) => {
 	// 	onClose: onCloseActionCreatePost,
 	// } = useDisclosure();
 	const {
-		isOpen: isOpenActionUpdatePost,
-		onOpen: onOpenActionUpdatePost,
-		onClose: onCloseActionUpdatePost,
+		isOpen: isOpenActionUpdateCategory,
+		onOpen: onOpenActionUpdateCategory,
+		onClose: onCloseActionUpdateCategory,
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
@@ -62,14 +62,12 @@ const PostView = (props: Props) => {
 
 	useEffect(() => {
 		if (categories) {
-			const categoriesFilter = categories?.data?.items?.map((post: any) => {
-				return {
-					label: post?.name,
-					value: post?._id,
-				};
-			});
+			const parentsFilter = categories?.data?.items?.map((category: any) => ({
+				label: category?.name,
+				value: category?._id,
+			}));
 
-			setCategoriesPost(categoriesFilter);
+			setParents(parentsFilter);
 		}
 	}, [categories, isLoading]);
 
@@ -250,7 +248,7 @@ const PostView = (props: Props) => {
 								icon={<EditIcon size={4} />}
 								onClick={() => {
 									const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
-									setPost({
+									setCategory({
 										_id: doc?._id,
 										title: doc?.title,
 										thumbnail: doc?.thumbnail,
@@ -265,7 +263,7 @@ const PostView = (props: Props) => {
 										meta_description: doc?.meta_description,
 										meta_title: doc?.meta_title,
 									});
-									onOpenActionUpdatePost();
+									onOpenActionUpdateCategory();
 								}}
 							>
 								Cập Nhật
@@ -407,7 +405,7 @@ const PostView = (props: Props) => {
 						_page: 1,
 						_limit: 20,
 						_order: "desc",
-						_sort: "created_at",
+						_sort: "created_at"
 					}}
 				/>
 
@@ -432,15 +430,22 @@ const PostView = (props: Props) => {
 			</PostDialogThinkPro> */}
 
 			<PostDialogThinkPro
-				isOpen={isOpenActionUpdatePost}
-				onClose={onCloseActionUpdatePost}
+				isOpen={isOpenActionUpdateCategory}
+				onClose={onCloseActionUpdateCategory}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật bài viết</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật bài viết
+					</Heading>
+				}
 			>
 				<ActionUpdatePost
-					onClose={onCloseActionUpdatePost}
-					post={post}
-					categories={categoriesPost}
+					onClose={onCloseActionUpdateCategory}
+					category={category}
+					parents={parents}
 				/>
 			</PostDialogThinkPro>
 		</>
