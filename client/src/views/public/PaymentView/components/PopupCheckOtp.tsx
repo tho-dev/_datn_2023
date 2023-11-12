@@ -28,7 +28,10 @@ import { useNavigate } from "react-router";
 import Time from "./Time";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { resetOtp, setCheckOtp } from "~/redux/slices/globalSlice";
-import { useCreateCartMutation, useDeleteCartMutation } from "~/redux/api/cart";
+import cartApi, {
+  useCreateCartMutation,
+  useDeleteCartMutation,
+} from "~/redux/api/cart";
 import { v4 as uuidv4 } from "uuid";
 import { addCart } from "~/redux/slices/cartSlice";
 import { socket } from "~/App";
@@ -83,6 +86,7 @@ const PopupCheckOtp = ({
           .then((data) => {
             // onCloseOtp();
             dispatch(resetOtp(false));
+            dispatch(cartApi.util.invalidateTags(["Cart"]));
             addNoti({
               sender_id: null,
               receivers_id: null,
@@ -94,16 +98,6 @@ const PopupCheckOtp = ({
               .then((data) => {
                 const new_data = { ...data?.data, roomName: "don-hang" };
                 socket.emit("sendNotification", new_data);
-              });
-            deleteCart(cart_id)
-              .unwrap()
-              .then((data) => {
-                const data1 = {
-                  cart_id: uuidv4(),
-                  product: {},
-                };
-                createCart(data1);
-                dispatch(addCart(data.cart_id));
               });
             if (payment_method == "online") {
               paymentMomo({
