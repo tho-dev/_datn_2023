@@ -49,7 +49,6 @@ const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
       !selectedDistrict.value ||
       (!selectedProvince.value && !isOpen)
     ) {
-      console.log("abcd");
       return;
     }
     handleChooseAdress([

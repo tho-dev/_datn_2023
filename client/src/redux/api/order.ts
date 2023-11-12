@@ -166,6 +166,22 @@ const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    decrementProduct: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/order/decrement`,
+        method: 'PUT',
+        body: data
+      }),
+      invalidatesTags: ['Order'],
+    }),
+    incrementProduct: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/order/increment`,
+        method: 'PUT',
+        body: data
+      }),
+      invalidatesTags: ['Order'],
+    })
   }),
 });
 export const {
@@ -189,6 +205,8 @@ export const {
   useReturnOrderMutation,
   useConfirmReturnOrderMutation,
   useUpdateinfoCustomerMutation,
+  useDecrementProductMutation,
+  useIncrementProductMutation
 } = orderApi;
 
 export const productReducer = orderApi.reducer;
