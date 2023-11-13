@@ -13,26 +13,56 @@ import {
   useIncrementMutation,
   useRemoveMutation,
 } from "~/redux/api/cart";
-import { Skeleton, SkeletonCircle, SkeletonText, FLex } from "@chakra-ui/react";
+import {
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  FLex,
+  useToast,
+} from "@chakra-ui/react";
 import ReCAPTCHA from "react-google-recaptcha";
+import LoadingPolytech from "~/components/LoadingPolytech";
 
 type Props = {};
 
 const CartView = (props: Props) => {
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const { data, isLoading, isError, isFetching } = useGetCartQuery(cart_id);
-  const [decrement, { isLoading: loadingDecrement }] = useDecrementMutation();
-  const [increment, { isLoading: loadingIncrement }] = useIncrementMutation();
-  const [remove, { isLoading: loadingRemove }] = useRemoveMutation();
+
+  const [decrement] = useDecrementMutation();
+  const [increment] = useIncrementMutation();
+  const [remove] = useRemoveMutation();
+
   const [checkCaptch, setCheckCaptch] = useState(false);
+  const toast = useToast();
   const navigate = useNavigate();
+
   const handlePayment = () => {
-    if (data?.data?.products?.length <= 0 || !checkCaptch) return;
+    if (data?.data?.products?.length <= 0)
+      return toast({
+        title: "Hệ thống thông báo",
+        description: "Không có sản phẩm nào trong giỏ hàng",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    if (!checkCaptch)
+      return toast({
+        title: "Hệ thống thông báo",
+        description: "Bạn phải xác minh trước khi mua hàng",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
     navigate("/thanh-toan");
   };
+
   const onChange = (value: any) => {
     setCheckCaptch(true);
   };
+
   const handleDercement = (product: any) => {
     const data = {
       sku_id: product.sku_id,
@@ -47,6 +77,7 @@ const CartView = (props: Props) => {
         console.log(err);
       });
   };
+
   const handleIncement = (product: any) => {
     if (product.quantity === 1) return;
     const data = {
@@ -81,7 +112,7 @@ const CartView = (props: Props) => {
     return <Box>Error...</Box>;
   }
   if (isLoading) {
-    return <Box>isLoading...</Box>;
+    return <LoadingPolytech />;
   }
   return (
     <HelmetProvider>
@@ -163,9 +194,6 @@ const CartView = (props: Props) => {
                 handleDercement={handleDercement}
                 handleIncement={handleIncement}
                 handleRemove={handleRemove}
-                loadingDecrement={loadingDecrement}
-                loadingIncrement={loadingIncrement}
-                loadingRemove={loadingRemove}
               />
             )}
           </Box>
@@ -178,12 +206,14 @@ const CartView = (props: Props) => {
             h={"full"}
           >
             <OrderSummary handlePayment={handlePayment} data={data.data} />
-            <Box my={4}>
-              <ReCAPTCHA
-                sitekey="6LeWzOIoAAAAALbs9isOwZpU9o7yFULgPxLtoluK"
-                onChange={onChange}
-              />
-            </Box>
+            {data?.data?.products?.length > 0 && (
+              <Box my={4}>
+                <ReCAPTCHA
+                  sitekey="6LeWzOIoAAAAALbs9isOwZpU9o7yFULgPxLtoluK"
+                  onChange={onChange}
+                />
+              </Box>
+            )}
           </Box>
         </Box>
       )}

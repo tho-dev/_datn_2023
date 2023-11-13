@@ -144,6 +144,12 @@ export const createOrder = async (req, res, next) => {
       await new_order.save();
     }
     const order_created = new_order.toObject();
+    if (new_order) {
+      await Cart.findOneAndUpdate(
+        { cart_id },
+        { $set: { products: [], total_money: 0 } }
+      );
+    }
     return res.json({
       status: 200,
       message: "Đặt hàng thành công",
@@ -153,7 +159,6 @@ export const createOrder = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -267,7 +272,7 @@ export const getOne = async (req, res, next) => {
     if (!order) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
-    if (order.shipping_method == "shipped") {
+    if (order.shipping_method == "shipped" && order.status === "confirmed") {
       const order_code = orderObj.shipping_info.order_code;
       const order_info = await get_order_info(order_code);
       return res.json({
@@ -302,6 +307,9 @@ export const cancelOrder = async (req, res, next) => {
     }
     if (ordered.status === "delivering") {
       throw createError.BadRequest("Không thể huỷ đơn hàng đang giao");
+    }
+    if (ordered.status === "returned") {
+      throw createError.BadRequest("Không thể huỷ đơn hàng đang hoàn");
     }
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
@@ -371,6 +379,7 @@ export const updateStatus = async (req, res, next) => {
       "delivering",
       "cancelled",
       "delivered",
+      "returned",
     ];
     if (!array_status.includes(status)) {
       throw createError.BadRequest("Trạng thái không hợp lệ");
@@ -400,12 +409,22 @@ export const updateStatus = async (req, res, next) => {
     if (ordered.status === status) {
       throw createError.BadRequest("Trạng thái không thay đổi");
     }
+
+    if (status === "returned") {
+      throw createError.BadRequest("Không thể huỷ đơn hàng đã hoàn");
+    }
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
+    if (status == "delivered") {
+      await Order.findByIdAndUpdate(id, {
+        $set: {
+          payment_status: "paid",
+        },
+      });
+    }
     if (status === "confirmed" && ordered.shipping_method === "shipped") {
       const shipping = await Shipping.findOne({ _id: ordered.shipping_info });
-
       const new_order_details = await Promise.all(
         order_details.map(async (item) => {
           const data_sku = await get_sku(item.sku_id);
@@ -499,7 +518,7 @@ export const updateStatus = async (req, res, next) => {
     next(error);
   }
 };
-
+//cập nhật sản phẩm và thông tin khách hàng trong hoá đơn
 export const update_info_customer = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -522,65 +541,6 @@ export const update_info_customer = async (req, res, next) => {
       order.status === "delivered"
     ) {
       throw createError.BadRequest("Không thể sửa đơn hàng");
-    }
-    if (order.shipping_method === "shipped" && order.status === "confirmed") {
-      const new_location_code = await getLocation(shippingAddress);
-      const info = {
-        to_name: customer_name,
-        to_phone: phone_number,
-        to_address: shippingAddress,
-        to_ward_code: new_location_code.ward_code,
-        to_district_id: new_location_code.district_id,
-        content,
-        order_code: order.shipping_info.order_code,
-      };
-      const {
-        data: { from_ward_code, from_district_id, service_id },
-      } = await get_order_info(order.shipping_info.order_code);
-      const update_order_ghn = await update_info(info);
-
-      const new_expected_time = await calculate_time({
-        from_ward_code,
-        from_district_id,
-        service_id,
-        to_ward_code: new_location_code.ward_code,
-        to_district_id: new_location_code.district_id,
-      });
-      const time = moment
-        .unix(new_expected_time.data.leadtime)
-        .format("YYYY-MM-DD HH:mm:ss");
-      if (update_order_ghn.code !== 200) {
-        throw new createError.BadRequest("Cập nhật đơn hàng thất bại");
-      }
-      await Shipping.findByIdAndUpdate(order.shipping_info, {
-        $set: {
-          shippingAddress,
-          estimatedDeliveryDate: time,
-        },
-      });
-
-      const updated_order = await Order.findByIdAndUpdate(
-        id,
-        {
-          $set: {
-            customer_name,
-            phone_number,
-            content,
-            shippingAddress,
-          },
-        },
-        { new: true }
-      ).populate([
-        {
-          path: "shipping_info",
-        },
-      ]);
-
-      return res.json({
-        status: 200,
-        message: "Đơn hàng đã được cập nhật",
-        data: updated_order,
-      });
     }
     if (order.shipping_method === "shipped") {
       await Shipping.findByIdAndUpdate(
@@ -615,6 +575,126 @@ export const update_info_customer = async (req, res, next) => {
   }
 };
 
+export const deleteOneProduct_order = async (req, res, next) => {
+  try {
+    const { order_id, sku_id } = req.body;
+    const orderDetail = await Order_Detail.findOne({
+      $and: [{ order_id: order_id }, { sku_id: sku_id }],
+    });
+    if (!orderDetail) {
+      throw createError.NotFound("Không tìm thấy sản phẩm");
+    }
+    if (orderDetail.quantity == 1) {
+      throw createError.BadRequest("Ít nhất là 1 sản phẩm");
+    }
+    const sku = await Sku.findById(sku_id);
+    const new_stock = sku.stock + 1;
+    await Sku.findByIdAndUpdate(sku_id, {
+      $set: {
+        stock: new_stock,
+      },
+    });
+    orderDetail.quantity--;
+    orderDetail.total_money = orderDetail.quantity * orderDetail.price;
+    await orderDetail.save();
+    const orderDetails = await Order_Detail.find({ order_id });
+    const total_amount = orderDetails.reduce((total, amount) => {
+      return total + amount.total_money;
+    }, 0);
+    const new_order = await Order.findByIdAndUpdate(
+      order_id,
+      {
+        $set: {
+          total_amount: total_amount,
+        },
+      },
+      { new: true }
+    );
+    return res.json({
+      status: 200,
+      message: "Cập nhật thành công",
+      data: new_order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addOneProduct_order = async (req, res, next) => {
+  try {
+    const { order_id, sku_id } = req.body;
+    const orderDetail = await Order_Detail.findOne({
+      $and: [{ order_id: order_id }, { sku_id: sku_id }],
+    });
+    if (!orderDetail) {
+      throw createError.NotFound("Không tìm thấy sản phẩm");
+    }
+    const sku = await Sku.findById(sku_id);
+    if (sku.stock < orderDetail.quantity) {
+      throw createError.NotFound("Sản phẩm quá số lượng");
+    } else {
+      const new_stock = sku.stock - 1;
+      await Sku.findByIdAndUpdate(sku_id, {
+        $set: {
+          stock: new_stock,
+        },
+      });
+    }
+    orderDetail.quantity++;
+    orderDetail.total_money = orderDetail.quantity * orderDetail.price;
+    await orderDetail.save();
+    const orderDetails = await Order_Detail.find({ order_id });
+    const total_amount = orderDetails.reduce((total, amount) => {
+      return total + amount.total_money;
+    }, 0);
+    const new_order = await Order.findByIdAndUpdate(
+      order_id,
+      {
+        $set: {
+          total_amount: total_amount,
+        },
+      },
+      { new: true }
+    );
+    return res.json({
+      status: 200,
+      message: "Cập nhật thành công",
+      data: new_order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const deleteProduct_order = async (req, res, next) => {
+  try {
+    const { order_id, sku_id } = req.body;
+
+    const orderDetail = await Order_Detail.findOneAndDelete({
+      $and: [{ order_id: order_id }, { sku_id: sku_id }],
+    });
+    const orderDetails = await Order_Detail.find({ order_id });
+    const total_amount = orderDetails.reduce((total, amount) => {
+      return total + amount.total_money;
+    }, 0);
+    const new_order = await Order.findByIdAndUpdate(
+      order_id,
+      {
+        $set: {
+          total_amount: total_amount,
+        },
+      },
+      { new: true }
+    );
+    return res.json({
+      status: 200,
+      message: "thành công",
+      data: new_order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+///////
 export async function payMomo(req, res, next) {
   try {
     const { bill, orderId: _id } = req.body;
@@ -823,13 +903,6 @@ export const serviceFree = async (req, res, next) => {
 export const getOrderByPhoneNumber = async (req, res, next) => {
   try {
     const { phone_number } = req.body;
-    console.log(phone_number);
-    // const { phone_number, code } = req.body;
-    // const result_otp = await TextFlow.verifyCode(phone_number, code);
-    // if (!result_otp.valid) {
-    //   throw createError.BadRequest("Mã code không đúng");
-    // }
-
     const results = await Order.find({ phone_number: phone_number });
 
     if (!results || results.length === 0) {
@@ -871,7 +944,9 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
 export const getOrderByUserId = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Order.find({ user_id: id });
+    const result = await Order.find({ user_id: id }).populate([
+      "shipping_info",
+    ]);
     if (result.length <= 0) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
@@ -910,6 +985,7 @@ export const getOrderByUserId = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getTokenPrintBills = async (req, res, next) => {
   try {
     const { order_id } = req.body;
@@ -1152,6 +1228,10 @@ export const getAllOrder = async (req, res, next) => {
 export const returnedOrder = async (req, res, next) => {
   try {
     const { order_id, reason, customer_name, phone_number } = req.body;
+    const return_order = await Returned.findOne({ order_id });
+    if (return_order) {
+      throw createError.BadRequest("Đơn hàng đã được yêu cầu hoàn hàng");
+    }
     const order = await Order.findById(order_id);
     if (order.status === "returned" || order.status !== "delivered") {
       throw createError.BadRequest("Trạng thái đơn hàng không thể hoàn");

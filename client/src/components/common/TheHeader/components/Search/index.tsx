@@ -1,12 +1,39 @@
-import { Box, Fade, Flex, Heading, Input, Image, Divider, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Fade, Flex, Heading, Image, Input, Text, useDisclosure, Link } from "@chakra-ui/react";
+import { useDebounce } from "@uidotdev/usehooks";
 import { useState } from "react";
-import { CloseSmallIcon, SearchIcon } from "~/components/common/Icons";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { SearchIcon, UserIcon } from "~/components/common/Icons";
+import { useGetSearchQuery } from "~/redux/api/product";
+import { setKeywords } from "~/redux/slices/globalSlice";
+import { AppDispatch, RootState } from "~/redux/store";
+import { formatNumber } from "~/utils/fc";
 
 type Props = {};
 
 const Search = (props: Props) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
+	const [keyword, setKeyword] = useState<string>("");
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const [isFocus, setIsFocus] = useState<boolean>(false);
+	const debounceKeyword = useDebounce(keyword, 200);
+	const { keywords } = useSelector((state: RootState) => state.persistedReducer.global);
+
+	const { data } = useGetSearchQuery(
+		{
+			_page: 1,
+			_limit: 1000,
+			_keyword: debounceKeyword,
+			_sort: "created_at",
+			_order: "asc",
+		},
+		{
+			skip: !keyword,
+		}
+	);
 
 	const handleFocus = () => {
 		setIsFocus(true);
@@ -49,6 +76,13 @@ const Search = (props: Props) => {
 				placeholder="Tên sản phẩm, nhu cầu, hàng"
 				onFocus={handleFocus}
 				onBlur={handleBlur}
+				onChange={(e) => setKeyword(e?.target?.value?.trim())}
+				onKeyDown={(e: any) => {
+					if (e?.keyCode == 13) {
+						navigate(decodeURIComponent(`/tim-kiem?keyword=${keyword}`));
+						dispatch(setKeywords(keyword));
+					}
+				}}
 			/>
 			<Fade
 				in={isOpen}
@@ -76,16 +110,32 @@ const Search = (props: Props) => {
 					overflowX="hidden"
 				>
 					<Box mb="5">
-						<Heading as="h3" fontSize="md" fontWeight="semibold">
+						<Heading
+							as="h3"
+							fontSize="md"
+							fontWeight="semibold"
+						>
 							Tìm kiếm gần đây
 						</Heading>
-						<Flex mt="4" gap="1" flexDir="column">
-							<Text fontSize="sm" color="text.blue" cursor="pointer">
-								Máy tính
-							</Text>
-							<Text fontSize="sm" color="text.blue" cursor="pointer">
-								Máy tính
-							</Text>
+						<Flex
+							mt="4"
+							gap="1"
+							flexDir="column"
+						>
+							{keywords?.map((_key: any, index: number) => {
+								return (
+									<Link
+										key={index}
+										as={ReactRouterLink}
+										to={decodeURIComponent(`/tim-kiem?keyword=${_key}`)}
+										fontSize="sm"
+										color="text.blue"
+										cursor="pointer"
+									>
+										{_key}
+									</Link>
+								);
+							})}
 						</Flex>
 					</Box>
 					<Flex
@@ -106,107 +156,112 @@ const Search = (props: Props) => {
 							alignItems="center"
 							display="inline-flex"
 						>
-							<CloseSmallIcon size={3} />
+							<UserIcon size={3} />
 						</Box>
-						<Text flex="1" fontSize="xs" color="text.black" fontWeight="medium">
+						<Text
+							flex="1"
+							fontSize="13px"
+							color="text.black"
+							fontWeight="medium"
+						>
 							Tăng thời gian khách đến 24h00, trở thành chuỗi cửa hàng bán lẻ Phục vụ khách hàng lâu nhất
 						</Text>
 					</Flex>
 					{/* Sản phẩm */}
-					<Flex mt="5" flexDir="column">
-						<Heading as="h3" fontSize="sm" fontWeight="semibold">
+					<Flex
+						mt="5"
+						flexDir="column"
+					>
+						<Heading
+							as="h3"
+							fontSize="sm"
+							fontWeight="semibold"
+						>
 							Sản phẩm
 						</Heading>
-						<Flex gap="3" mt="4" flexDir="column">
-							<Flex gap="3" alignItems="center" justifyContent="space-between">
-								<Box
-									w="20"
-									h="20"
-									borderWidth="1px"
-									borderColor="border.gray"
-									rounded="6px"
-									overflow="hidden"
-								>
-									<Image
-										src="https://res.cloudinary.com/dgpzzy5sg/image/upload/v1681573395/thinkpro/products/omugsbb2a8rophjnfgru.jpg"
-										w="full"
-										h="full"
-										objectFit="contain"
-									/>
-								</Box>
-								<Flex flexDir="column" justifyContent="flex-start">
-									<Text fontSize="15px" fontWeight="semibold">
-										Lenovo ThinkPad X1 Cacbon Gen Pro
-									</Text>
-									<Flex gap="2">
-										<Text as="span" color="text.red" fontSize="sm" fontWeight="semibold">
-											20.999.999
-										</Text>
-										<Text as="span" fontSize="sm" fontWeight="semibold" textDecor="line-through">
-											20.999.999
-										</Text>
-										<Text as="span" fontSize="sm" fontWeight="medium" color="text.red">
-											-10%
-										</Text>
+						<Flex
+							gap="3"
+							mt="4"
+							flexDir="column"
+						>
+							{data?.data?.items?.map((item: any, index: number) => {
+								return (
+									<Flex
+										key={index}
+										gap="4"
+										alignItems="center"
+										justifyContent="flex-start"
+										as={ReactRouterLink}
+										to={`/${item?.shared_url}`}
+										display="inline-flex"
+										_hover={{
+											textDecor: "none",
+										}}
+									>
+										<Box
+											w="20"
+											h="20"
+											minW="20"
+											borderWidth="1px"
+											borderColor="border.gray"
+											rounded="6px"
+											overflow="hidden"
+										>
+											<Image
+												src={item?.image}
+												w="full"
+												h="full"
+												objectFit="contain"
+											/>
+										</Box>
+										<Flex
+											flexDir="column"
+											justifyContent="flex-start"
+										>
+											<Text
+												fontSize="sm"
+												fontWeight="semibold"
+												css={{
+													display: "-webkit-box",
+													WebkitLineClamp: 1,
+													WebkitBoxOrient: "vertical",
+													overflow: "hidden",
+												}}
+											>
+												{item?.name}
+											</Text>
+											<Flex gap="2">
+												<Text
+													as="span"
+													color="text.red"
+													fontSize="sm"
+													fontWeight="semibold"
+												>
+													{formatNumber(`${item?.price_before_discount}`)}
+												</Text>
+												<Text
+													as="span"
+													fontSize="xs"
+													fontWeight="semibold"
+													color="text.red"
+												>
+													{`-${item?.price_discount_percent}%`}
+												</Text>
+											</Flex>
+										</Flex>
 									</Flex>
-								</Flex>
-							</Flex>
-							<Flex gap="3" alignItems="center" justifyContent="space-between">
-								<Box
-									w="20"
-									h="20"
-									borderWidth="1px"
-									borderColor="border.gray"
-									rounded="6px"
-									overflow="hidden"
-								>
-									<Image
-										src="https://res.cloudinary.com/dgpzzy5sg/image/upload/v1681573395/thinkpro/products/omugsbb2a8rophjnfgru.jpg"
-										w="full"
-										h="full"
-										objectFit="contain"
-									/>
-								</Box>
-								<Flex flexDir="column" justifyContent="flex-start">
-									<Text fontSize="15px" fontWeight="semibold">
-										Lenovo ThinkPad X1 Cacbon Gen Pro
-									</Text>
-									<Flex gap="2">
-										<Text as="span" color="text.red" fontSize="sm" fontWeight="semibold">
-											20.999.999
-										</Text>
-										<Text as="span" fontSize="sm" fontWeight="semibold" textDecor="line-through">
-											20.999.999
-										</Text>
-										<Text as="span" fontSize="sm" fontWeight="medium" color="text.red">
-											-10%
-										</Text>
-									</Flex>
-								</Flex>
-							</Flex>
+								);
+							})}
 						</Flex>
-					</Flex>
 
-					{/* Khuyến mãi */}
-					<Flex mt="5" flexDir="column">
-						<Heading as="h3" fontSize="sm" fontWeight="semibold">
-							Khuyến mãi nổi bật
-						</Heading>
-						<Flex gap="4" mt="5" flexDir="column">
-							<Flex gap="3" alignItems="center">
-								<Box w="5" h="5" rounded="full" bgColor="bg.red"></Box>
-								<Text fontSize="sm" fontWeight="medium">
-									Đặt hàng trước Dell Inspiron 14 Plus (7420)
-								</Text>
-							</Flex>
-							<Divider bgColor="bg.gray" />
-							<Flex gap="3" alignItems="center">
-								<Box w="5" h="5" rounded="full" bgColor="bg.red"></Box>
-								<Text fontSize="sm" fontWeight="medium">
-									Đặt hàng trước Dell Inspiron 14 Plus (7420)
-								</Text>
-							</Flex>
-						</Flex>
+						{data?.data?.items?.length == 0 && (
+							<Text
+								fontSize="sm"
+								fontWeight="semibold"
+							>
+								Không có kết quả nào được tìm thấy
+							</Text>
+						)}
 					</Flex>
 				</Box>
 			</Fade>

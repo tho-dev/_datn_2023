@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useGetOrderByPhoneNumberMutation } from "~/redux/api/order";
 import { chuyenDoiSoDienThoai } from "~/utils/fc";
+import ReCAPTCHA from "react-google-recaptcha";
 
 type Props = {
   setCheckPhone: any;
@@ -37,8 +38,21 @@ const CheckPhone = ({
   const toast = useToast();
   const [getOrderByPhoneNumber, { isLoading }] =
     useGetOrderByPhoneNumberMutation();
-
+  const [checkCaptch, setCheckCaptch] = useState(false);
+  const onChange = (value: any) => {
+    setCheckCaptch(true);
+  };
   const onSubmit = async (data: any) => {
+    if (!checkCaptch) {
+      return toast({
+        title: "Hệ thống",
+        description: "Bạn chưa xác minh captch",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const phone_number = chuyenDoiSoDienThoai(data.phone_number);
     if (!phone_number) {
       return toast({
@@ -132,7 +146,7 @@ const CheckPhone = ({
                 </FormErrorMessage>
               </FormControl>
               <Button
-                mt={4}
+                my={4}
                 type="submit"
                 bgColor="bg.blue"
                 _hover={{ bgColor: "blue" }}
@@ -143,6 +157,10 @@ const CheckPhone = ({
               >
                 Tra cứu thông tin
               </Button>
+              <ReCAPTCHA
+                sitekey="6LeWzOIoAAAAALbs9isOwZpU9o7yFULgPxLtoluK"
+                onChange={onChange}
+              />
             </Flex>
           </form>
         </GridItem>

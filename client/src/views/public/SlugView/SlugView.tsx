@@ -22,13 +22,18 @@ import { useParams, useNavigate } from "react-router";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDebounce } from "@uidotdev/usehooks";
 import LoadingPolytech from "~/components/LoadingPolytech";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { setIsCompare, setItems } from "~/redux/slices/globalSlice";
+import { RootState } from "~/redux/store";
 
 type Props = {};
 
 const SlugView = (props: Props) => {
 	const { slug: params } = useParams();
 	const navigate = useNavigate();
-	const [showCompare, setShowCompare] = useState<boolean>(false);
+	const dispatch = useAppDispatch();
+	const { isCompare } = useAppSelector((state: RootState) => state.persistedReducer.global);
+
 	const [data, setData] = useState<any>([]);
 	const [query, setQuery] = useState<any>({
 		_page: 1,
@@ -59,7 +64,6 @@ const SlugView = (props: Props) => {
 
 	const {
 		data: products,
-		isLoading,
 		isFetching,
 		isError,
 	} = useGetProducItemToBrandAndCategoryQuery(debouncedQuery, {
@@ -72,6 +76,7 @@ const SlugView = (props: Props) => {
 				...query,
 				_category: params,
 			});
+			dispatch(setItems([]));
 		}
 	}, [params]);
 
@@ -118,8 +123,8 @@ const SlugView = (props: Props) => {
 		}
 	}, [wathFilters]);
 
-	const handleCompare = () => {
-		setShowCompare(!showCompare);
+	const handleCompare = (e: any) => {
+		dispatch(setIsCompare(e.target.checked as any));
 	};
 
 	if (isFetchingFilter) return <LoadingPolytech />;
@@ -159,14 +164,13 @@ const SlugView = (props: Props) => {
 					>
 						<Switch
 							size="md"
-							id="isChecked"
 							onChange={handleCompare}
-							value={showCompare as any}
 						/>
 						<FormLabel
 							htmlFor="isChecked"
 							fontSize="sm"
 							marginTop={2}
+							defaultChecked={isCompare}
 						>
 							So sánh
 						</FormLabel>

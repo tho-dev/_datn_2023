@@ -21,9 +21,16 @@ import {
   confirm_returnedOrder,
   delete_all_order,
   getReturnedOrder,
+  deleteOneProduct_order,
+  addOneProduct_order,
+  deleteProduct_order,
 } from "../controllers/order.controller";
 
 const router = express.Router();
+
+router.put("/decrement", deleteOneProduct_order);
+router.put("/increment", addOneProduct_order);
+router.put("/decrement-product-order", deleteProduct_order);
 
 router.post("/send-otp", sendOtpCode);
 router.post("/payment-status", updatePaymentStatus);

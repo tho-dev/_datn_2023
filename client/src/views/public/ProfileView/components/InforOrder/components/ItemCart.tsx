@@ -13,7 +13,7 @@ const ItemCart = ({ product }: Props) => {
         <Flex gap="2" alignItems="center">
           <Box w="56px" h="56px">
             <Image
-              src={product?.image || ""}
+              src={product?.image.url || ""}
               alt="name"
               w="full"
               h="full"

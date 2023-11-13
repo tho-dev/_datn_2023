@@ -207,7 +207,7 @@ const SettingView = (props: Props) => {
 													rounded="full"
 												>
 													<FileUploadThinkPro
-														fileName="category"
+														fileName="banner"
 														getDataFn={(data) => setValue("logo", data)}
 														setData={watch("logo")}
 													/>
@@ -237,7 +237,7 @@ const SettingView = (props: Props) => {
 													rounded="full"
 												>
 													<FileUploadThinkPro
-														fileName="assets"
+														fileName="banner"
 														getDataFn={(data) => setValue("banner_thumbnail", data)}
 														setData={watch("banner_thumbnail")}
 													/>

@@ -28,6 +28,8 @@ import TableProduct from "./TableProduct";
 import ExportOrderPDF from "./ExportOrderPDF";
 import { PDFViewer } from "@react-pdf/renderer";
 import DialogThinkPro from "~/components/DialogThinkPro";
+import { Link, Link as ReactRouterLink } from "react-router-dom";
+import { chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 
 type Props = {};
 
@@ -300,7 +302,7 @@ const OrderDetailView = (props: Props) => {
         <OrderDetailMetricItem
           heading="Thông tin KH"
           text={data?.data.customer_name}
-          phone={data?.data.phone_number}
+          phone={chuyenDoiSoDienThoaiVe0(data?.data.phone_number)}
           icon={<UserIcon size={6} color="green" />}
           color="green"
         />
@@ -347,10 +349,10 @@ const OrderDetailView = (props: Props) => {
                 p={2}
                 borderBottom="1px solid #ccc"
               >
-                <Text fontSize={16} fontWeight="semibold">
+                <Text fontSize={14} fontWeight="semibold">
                   Tổng số lượng:{" "}
                 </Text>
-                <Text>
+                <Text fontSize={14} fontWeight="semibold">
                   {data.data.products.reduce(
                     (acc: any, product: any) => acc + product.quantity,
                     0
@@ -363,10 +365,10 @@ const OrderDetailView = (props: Props) => {
                 p={2}
                 borderBottom="1px solid #ccc"
               >
-                <Text fontSize={16} fontWeight="semibold">
+                <Text fontSize={14} fontWeight="semibold">
                   Tổng Tiền sản phẩm:{" "}
                 </Text>
-                <Text>
+                <Text fontSize={14} fontWeight="semibold">
                   {data.data.products
                     .reduce(
                       (acc: any, product: any) =>
@@ -374,6 +376,7 @@ const OrderDetailView = (props: Props) => {
                       0
                     )
                     .toLocaleString()}
+                  đ
                 </Text>
               </Flex>
               <Flex
@@ -382,10 +385,12 @@ const OrderDetailView = (props: Props) => {
                 p={2}
                 borderBottom="1px solid #ccc"
               >
-                <Text fontSize={16} fontWeight="semibold">
+                <Text fontSize={14} fontWeight="semibold">
                   Giảm Giá:{" "}
                 </Text>
-                <Text>0</Text>
+                <Text fontSize={14} fontWeight="semibold">
+                  0 đ
+                </Text>
               </Flex>
               <Flex
                 my={1}
@@ -393,12 +398,13 @@ const OrderDetailView = (props: Props) => {
                 p={2}
                 borderBottom="1px solid #ccc"
               >
-                <Text fontSize={16} fontWeight="semibold">
+                <Text fontSize={14} fontWeight="semibold">
                   Tiền vận chuyển:{" "}
                 </Text>
-                <Text>
-                  {data.data.shipping_info?.transportation_fee.toLocaleString() ||
+                <Text fontSize={14} fontWeight="semibold">
+                  {data?.data.shipping_info?.transportation_fee.toLocaleString() ||
                     0}
+                  đ
                 </Text>
               </Flex>
               <Flex
@@ -410,7 +416,13 @@ const OrderDetailView = (props: Props) => {
                 <Text fontSize={16} fontWeight="bold">
                   Thành tiền:{" "}
                 </Text>
-                <Text>{data?.data.total_amount.toLocaleString()}</Text>
+                <Text fontSize={14} fontWeight="semibold">
+                  {(
+                    data?.data.total_amount +
+                    data?.data.shipping_info?.transportation_fee
+                  ).toLocaleString() || 0}
+                  đ
+                </Text>
               </Flex>
             </Box>
           </Flex>
@@ -438,6 +450,7 @@ const OrderDetailView = (props: Props) => {
                 justifyContent={"center"}
                 flexDir={"column"}
                 alignItems={"center"}
+                w={"100%"}
               >
                 <CarIcon />
                 <Text fontWeight={700}>
@@ -445,18 +458,28 @@ const OrderDetailView = (props: Props) => {
                     ? "Tại Cửa hàng"
                     : "Giao hàng nhanh"}
                 </Text>
-                <Text fontSize="12px" fontWeight="semibold">
-                  Trạng thái thanh toán:
-                  {data?.data.payment_status == "paid"
-                    ? "Đã thanh toán"
-                    : "Chưa thanh toán"}
-                </Text>
-                <Text fontSize="12px" fontWeight="semibold">
-                  Phương thức Giao hàng:{" "}
-                  {data?.data.shipping_method == "at_store"
-                    ? "Tại cửa hàng"
-                    : "Giao tận nơi"}
-                </Text>
+
+                <Flex w={"100%"}>
+                  <Text fontSize="14px" fontWeight="semibold" w={"50%"}>
+                    Thanh toán:
+                  </Text>
+                  <Text fontSize="14px" fontWeight="semibold">
+                    {data?.data.payment_status == "paid"
+                      ? "Đã thanh toán"
+                      : "Chưa thanh toán"}
+                  </Text>
+                </Flex>
+
+                <Flex w={"100%"}>
+                  <Text fontSize="14px" fontWeight="semibold" w={"50%"}>
+                    Giao hàng:{" "}
+                  </Text>
+                  <Text fontSize="14px" fontWeight="semibold">
+                    {data?.data.shipping_method == "at_store"
+                      ? "Tại cửa hàng"
+                      : "Giao tận nơi"}
+                  </Text>
+                </Flex>
               </Flex>
             </Flex>
           </Box>
@@ -475,36 +498,40 @@ const OrderDetailView = (props: Props) => {
             </Heading>
             <Flex pt={4} flexDir="column" gap={2} fontSize={15}>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Trạng thái thanh toán:
                 </Text>
-                <Text>
+                <Text fontWeight="semibold">
                   {data?.data.payment_method.message == "failed"
                     ? "Chưa thanh toán"
                     : "Đã thanh toán"}
                 </Text>
               </Flex>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Phương thức:
                 </Text>
-                <Text>{data?.data.payment_method.orderInfo}</Text>
+                <Text fontWeight="semibold">
+                  {data?.data.payment_method.orderInfo}
+                </Text>
               </Flex>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Hình thức thanh toán:
                 </Text>
-                <Text>
+                <Text fontWeight="semibold">
                   {data?.data.payment_method.orderType == "cash"
                     ? "Tiền mặt"
                     : data?.data.payment_method.orderType}
                 </Text>
               </Flex>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Mã:
                 </Text>
-                <Text>{data?.data.payment_method.partnerCode}</Text>
+                <Text fontWeight="semibold">
+                  {data?.data.payment_method.partnerCode}
+                </Text>
               </Flex>
             </Flex>
           </Box>
@@ -531,11 +558,14 @@ const OrderDetailView = (props: Props) => {
           </Heading>
           <Flex gap={4}>
             <Button
+              as={ReactRouterLink}
+              to={`/admin/don-hang/cap-nhat/${id}`}
               leftIcon={<AddressIcon size={6} />}
               bg="#FFCCFF"
               _hover={{ bg: "#CCCCFF" }}
+              fontWeight={"semibold"}
             >
-              Thay đổi địa chỉ
+              Cập nhật thông tin
             </Button>
             <Button
               leftIcon={<CloseIcon size={6} />}

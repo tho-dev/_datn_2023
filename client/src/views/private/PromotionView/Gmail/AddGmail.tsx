@@ -1,5 +1,5 @@
 import { Box, Flex, Heading } from "@chakra-ui/layout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,18 +14,24 @@ import {
   Input,
   Grid,
   GridItem,
+  FormHelperText,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from "@chakra-ui/react";
 import { Link, Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import QuillThinkPro from "~/components/QuillThinkPro";
 import { v4 as uuidv4 } from "uuid";
 import { useAddMutation } from "~/redux/api/ads";
+import { validateEmail } from "~/utils/fc";
 
 type Props = {};
 
 const AddGmailView = (props: Props) => {
   const [add, { isLoading }] = useAddMutation();
   const navigate = useNavigate();
+  const [emails, setEmails] = useState([] as any);
   const toast = useToast();
   const {
     handleSubmit,
@@ -37,32 +43,44 @@ const AddGmailView = (props: Props) => {
   } = useForm();
 
   const onSubmit = (data: any) => {
+    if (emails.length <= 0) return alert("không được bỏ trống trường email");
     const jobId = uuidv4();
-    const new_array_email = data.email.split(",");
     const new_data = {
       ...data,
-      email: new_array_email,
+      email: emails,
       jobId,
     };
-    add(new_data)
-      .unwrap()
-      .then((data) => {
-        toast({
-          title: "Hệ thống",
-          duration: 1600,
-          position: "bottom-right",
-          status: "success",
-          description: data.message,
-        });
-        reset();
-        navigate("/admin/khuyen-mai/gmail");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+    // add(new_data)
+    //   .unwrap()
+    //   .then((data) => {
+    //     toast({
+    //       title: "Hệ thống",
+    //       duration: 1600,
+    //       position: "bottom-right",
+    //       status: "success",
+    //       description: data.message,
+    //     });
+    //     reset();
+    //     navigate("/admin/khuyen-mai/gmail");
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   const content = watch("content");
+  const email = watch("email");
+  useEffect(() => {
+    if (validateEmail(email)) {
+      setEmails([...emails, email]);
+      setValue("email", "");
+    }
+  }, [email]);
+  const handleRemoveEmail = (index: number) => {
+    emails.splice(index, 1);
+    setEmails([...emails]);
+  };
 
   const onEditorStateChangeContent = (value: any) => {
     setValue("content", value);
@@ -120,12 +138,29 @@ const AddGmailView = (props: Props) => {
                   </FormLabel>
                   <Input
                     id="email"
-                    placeholder="Đến"
-                    {...register("email", {
-                      required: "Không được để trống !!!",
-                    })}
+                    placeholder="Đến email..."
+                    {...register("email")}
                     type="text"
                   />
+                  <FormHelperText>
+                    {emails.map((em: any, index: number) => {
+                      return (
+                        <Tag
+                          size="md"
+                          key={index}
+                          borderRadius="full"
+                          variant="solid"
+                          colorScheme="green"
+                          mx={1}
+                        >
+                          <TagLabel>{em}</TagLabel>
+                          <TagCloseButton
+                            onClick={() => handleRemoveEmail(index)}
+                          />
+                        </Tag>
+                      );
+                    })}
+                  </FormHelperText>
                   <FormErrorMessage>
                     {(errors.email as any) && errors?.email?.message}
                   </FormErrorMessage>
@@ -141,7 +176,7 @@ const AddGmailView = (props: Props) => {
                   </FormLabel>
                   <Input
                     id="title"
-                    placeholder="Tiêu đề"
+                    placeholder="Tên của chiến dịch"
                     {...register("title", {
                       required: "Không được để trống !!!",
                     })}

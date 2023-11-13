@@ -11,14 +11,24 @@ import {
   useDisclosure,
   Button,
   useToast,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  Textarea,
 } from "@chakra-ui/react";
 import { NavArrowLeflIcon } from "~/components/common/Icons/index";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import DetailOrder from "./DetailOrder";
 import { useState } from "react";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import { useCancelOrderMutation } from "~/redux/api/order";
+import orderApi, {
+  useCancelOrderMutation,
+  useReturnOrderMutation,
+} from "~/redux/api/order";
 import moment from "moment";
+import { useForm } from "react-hook-form";
+import { useAppDispatch } from "~/redux/hook/hook";
 
 type Props = {
   dataOrder: any[];
@@ -28,18 +38,36 @@ type Props = {
 const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
+    isOpen: isOpenReturn,
+    onOpen: onOpenReturn,
+    onClose: onCloseReturn,
+  } = useDisclosure();
+
+  const {
     isOpen: isOpenCancel,
     onOpen: onOpenCancel,
     onClose: onCloseCancel,
   } = useDisclosure();
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [orderDetail, setOrderDetail] = useState({} as any);
   const toast = useToast();
   const handleGetOrderDetail = (item: any) => {
     setOrderDetail(item);
     onOpen();
   };
+  const dispatch = useAppDispatch();
   const [cancelOrder] = useCancelOrderMutation();
+  const [returnOrder] = useReturnOrderMutation();
+  const handleOpenModelReturn = (order: any, e: any) => {
+    e.stopPropagation();
+    onOpenReturn();
+    setOrderDetail(order);
+  };
+
   const handleCancel = () => {
     const currentDate = new Date();
     const targetTime = new Date(orderDetail.created_at);
@@ -54,7 +82,6 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
         position: "top-right",
       });
     }
-
     if (orderDetail?.status !== "processing") {
       return toast({
         title: "Hệ thống",
@@ -65,36 +92,82 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
         position: "top-right",
       });
     }
-    // cancelOrder({ id: orderDetail._id })
-    //   .unwrap()
-    //   .then((data: any) => {
-    //     toast({
-    //       title: "Hệ thống",
-    //       description: "Huỷ đơn hàng thành công",
-    //       status: "success",
-    //       duration: 2000,
-    //       isClosable: true,
-    //       position: "bottom-right",
-    //     });
-    //   })
-    //   .catch((error: any) => {
-    //     toast({
-    //       title: "Hệ thống",
-    //       description: "Huỷ đơn hàng thất bại",
-    //       status: "error",
-    //       duration: 2000,
-    //       isClosable: true,
-    //       position: "bottom-right",
-    //     });
-    //   })
-    //   .finally(() => {
-    //     onCloseCancel();
-    //   });
+    cancelOrder({ id: orderDetail._id })
+      .unwrap()
+      .then((data: any) => {
+        dispatch(orderApi.util.invalidateTags(["Order"]));
+        toast({
+          title: "Hệ thống",
+          description: "Huỷ đơn hàng thành công",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      })
+      .catch((error: any) => {
+        toast({
+          title: "Hệ thống",
+          description: "Huỷ đơn hàng thất bại",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      })
+      .finally(() => {
+        onCloseCancel();
+      });
   };
   const handleOpenModelCancel = (order: any, e: any) => {
     e.stopPropagation();
     onOpenCancel();
     setOrderDetail(order);
+  };
+  const onSubmitFormReturn = (data: any) => {
+    const currentDate = new Date();
+    const targetTime = new Date(orderDetail.updated_at);
+
+    targetTime.setDate(targetTime.getDate() + 1);
+    if (currentDate > targetTime) {
+      return toast({
+        title: "Không thể hoàn đơn hàng",
+        description: "Liên hệ với bộ phận CSKH để được xử lý",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+    const new_data = {
+      ...data,
+      order_id: orderDetail._id,
+    };
+    returnOrder(new_data)
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Hệ thống",
+          description: data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Hệ thống",
+          description: err.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+      })
+      .finally(() => {
+        onCloseReturn();
+      });
   };
   return (
     <Box p="4" rounded="md">
@@ -116,6 +189,7 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
                   backgroundColor="bg.white"
                   cursor={"pointer"}
                   onClick={() => handleGetOrderDetail(item)}
+                  minH={250}
                 >
                   <Flex justifyContent="space-between">
                     <Text fontSize="14px" fontWeight={"bold"}>
@@ -135,7 +209,11 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
                   </Flex>
                   <Divider />
                   <Box>
-                    <Flex justifyContent={"space-between"} my={"4"}>
+                    <Flex
+                      justifyContent={"space-between"}
+                      my={"4"}
+                      alignItems="center"
+                    >
                       <Flex
                         alignItems="center"
                         justifyContent="space-between"
@@ -203,17 +281,18 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
                           Huỷ đơn
                         </Button>
                       )}
-                      {/* {item.status == "processing" && (
+                      {item.status == "delivered" && (
                         <Button
                           size={"sm"}
                           fontSize={"12px"}
                           fontWeight={"600 "}
                           bg={"bg.green"}
                           _hover={{ bgColor: "green" }}
+                          onClick={(e) => handleOpenModelReturn(item, e)}
                         >
-                          Cập nhật
+                          Hoàn hàng
                         </Button>
-                      )} */}
+                      )}
                     </Flex>
 
                     <Text fontSize="14px" fontWeight="bold">
@@ -251,6 +330,90 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
         onClose={onCloseCancel}
         content="Bạn có chắc muốn huỷ đơn hàng này?"
       />
+      <DialogThinkPro
+        isOpen={isOpenReturn}
+        onClose={onCloseReturn}
+        isCentered
+        size="4xl"
+        title={<Heading fontSize="xl">Trả lại đơn hàng</Heading>}
+      >
+        <form onSubmit={handleSubmit(onSubmitFormReturn)}>
+          <Box
+            backgroundColor={"white"}
+            borderRadius={"md"}
+            w={{ md: "100%", base: "full" }}
+          >
+            {/* tên người nhận và số điện thoại */}
+            <Flex gap={"16px"}>
+              <FormControl isInvalid={errors.customer_name as any}>
+                <FormLabel>Tên khách hàng</FormLabel>
+                <Input
+                  type="text"
+                  border={"none"}
+                  p={"8px 12px"}
+                  placeholder="Nhập họ và tên"
+                  bg={"#F6F9FC"}
+                  borderRadius={"6px"}
+                  fontSize={"14px"}
+                  defaultValue={orderDetail?.customer_name}
+                  {...register("customer_name", {
+                    required: "Trường bắt buộc nhập",
+                  })}
+                />
+                <FormErrorMessage>
+                  {(errors.customer_name as any) &&
+                    (errors?.customer_name?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.phone_number as any}>
+                <FormLabel>Số điện thoại</FormLabel>
+                <Input
+                  type="number"
+                  border={"none"}
+                  p={"8px 12px"}
+                  placeholder="Nhập số điện thoại"
+                  bg={"#F6F9FC"}
+                  borderRadius={"6px"}
+                  fontSize={"14px"}
+                  defaultValue={`${orderDetail?.phone_number}`}
+                  {...register("phone_number", {
+                    required: "Trường bắt buộc nhập",
+                  })}
+                />
+                <FormErrorMessage>
+                  {(errors.phone_number as any) &&
+                    (errors?.phone_number?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+            </Flex>
+            <Flex mt={"16px"}>
+              <FormControl isInvalid={errors?.reason as any}>
+                <FormLabel>Lý do</FormLabel>
+                <Textarea
+                  placeholder="Nhập Lý do hoàn hàng"
+                  bg={"#F6F9FC"}
+                  borderRadius={"6px"}
+                  fontSize={"14px"}
+                  {...register("reason")}
+                  border={"none"}
+                />
+              </FormControl>
+            </Flex>
+          </Box>
+          <Flex py={"5"} px={"5"} justifyContent="flex-end" gap={6}>
+            <Button
+              w={"15%"}
+              fontSize={"16px"}
+              fontWeight={"600 "}
+              bg={"bg.green"}
+              _hover={{ bgColor: "green" }}
+              type="submit"
+            >
+              Hoàn hàng
+            </Button>
+          </Flex>
+        </form>
+      </DialogThinkPro>
     </Box>
   );
 };
