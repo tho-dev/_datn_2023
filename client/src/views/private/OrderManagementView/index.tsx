@@ -15,7 +15,7 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { debounce } from "lodash";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -28,15 +28,15 @@ import { chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 type Props = {};
 
 const OrderManagementView = (props: Props) => {
-  const [search, setSearch] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState({
     search: "",
     date: "",
     status: "",
     payment_method: "",
-  });
+    payment_status: "",
+  } as any);
 
-  const { register, control, setValue, getValues } = useForm();
+  const { control, watch } = useForm();
 
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -148,48 +148,21 @@ const OrderManagementView = (props: Props) => {
     }),
   ];
 
-  const debouncedSearch = debounce(({ name, value }: any) => {
-    setDebouncedSearchTerm({
-      ...debouncedSearchTerm,
-      [name]: value,
-    });
-  }, 2000);
-
-  const handleSearch = (e: any) => {
-    setSearch(e.target.value);
-    debouncedSearch(e.target);
-  };
-
   const handleDate = (data: any) => {
-    const parsedDate = moment(
-      data,
-      "ddd MMM DD YYYY HH:mm:ss [GMT]Z (Giờ Đông Dương)"
-    );
-    const formattedDate = parsedDate.toISOString();
-
-    const new_data = {
-      name: "date",
-      value: formattedDate,
-    };
-    debouncedSearch(new_data);
+    setDebouncedSearchTerm({ date: data });
   };
 
-  const handleStatus = (data: any) => {
-    const new_data = {
-      name: "status",
-      value: data,
-    };
-    debouncedSearch(new_data);
-  };
+  const status = watch("status");
+  const payment_method = watch("payment_method");
+  const payment_status = watch("payment_status");
 
-  const handlePayment = (data: any) => {
-    const new_data = {
-      name: "payment_method",
-      value: data,
-    };
-    debouncedSearch(new_data);
-  };
-
+  useEffect(() => {
+    setDebouncedSearchTerm({
+      status: status?.value || "",
+      payment_method: payment_method?.value || "",
+      payment_status: payment_status?.value || "",
+    });
+  }, [status, payment_method, payment_status]);
   return (
     <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
       <Flex alignItems="center" justifyContent="space-between" pb="5">
@@ -216,14 +189,14 @@ const OrderManagementView = (props: Props) => {
         </Box>
       </Flex>
       {/* <Metrics /> */}
-      <Flex gap={4} justifyContent={"space-between"}>
-        <Flex w="90%" gap="4">
-          <Box flex="1.1">
+      <Flex gap={2} justifyContent={"space-between"}>
+        <Flex w="95%" gap="4">
+          <Box flex="1.4">
             <SelectThinkPro
               control={control}
-              name="category"
+              name="status"
               title=""
-              placeholder="-- Trạng thái --"
+              placeholder="--Trạng thái đơn hàng--"
               data={[
                 {
                   label: "Chờ xử lí",
@@ -245,26 +218,34 @@ const OrderManagementView = (props: Props) => {
                   label: "Đã huỷ",
                   value: "cancelled",
                 },
+                {
+                  label: "Hoàn hàng",
+                  value: "returned",
+                },
               ]}
             />
           </Box>
 
-          <Input flex="1" type="date" />
+          <Input
+            flex="1"
+            type="date"
+            onChange={(e: any) => handleDate(e.target.value)}
+          />
 
           <Box flex="1.5">
             <SelectThinkPro
               control={control}
-              name="category"
+              name="payment_status"
               title=""
               placeholder="-- Trạng thái thanh toán --"
               data={[
                 {
                   label: "Chưa thanh toán",
-                  value: "processing",
+                  value: "unpaid",
                 },
                 {
                   label: "Đã thanh toán",
-                  value: "processing",
+                  value: "paid",
                 },
               ]}
             />
@@ -273,24 +254,24 @@ const OrderManagementView = (props: Props) => {
           <Box flex="1.5">
             <SelectThinkPro
               control={control}
-              name="category"
+              name="payment_method"
               title=""
               placeholder="-- Phương thức thanh toán --"
               data={[
                 {
                   label: "Thanh toán bằng tiền mặt",
-                  value: "1",
+                  value: "TIENMAT",
                 },
                 {
                   label: "Thanh toán bằng MOMO",
-                  value: "2",
+                  value: "MOMO",
                 },
               ]}
             />
           </Box>
 
           <Flex
-            flex="2"
+            flex="1.7"
             px="4"
             rounded="8px"
             alignItems="center"
@@ -307,17 +288,13 @@ const OrderManagementView = (props: Props) => {
               fontWeight="medium"
               lineHeight="1.5"
               w="260px"
-              placeholder="Tìm kiếm đơn hàng"
+              placeholder="Tìm kiếm đơn hàng..."
+              onChange={(e) =>
+                setDebouncedSearchTerm({ search: e.target.value })
+              }
             />
           </Flex>
         </Flex>
-        {/* <OrderFilter
-					handleSearch={handleSearch}
-					search={search}
-					handleDate={handleDate}
-					handleStatus={handleStatus}
-					handlePayment={handlePayment}
-				/> */}
         <Flex flex="1" justifyContent="flex-end">
           <Button
             leftIcon={<PlusCircleIcon size={5} color="text.textSuccess" />}
@@ -346,6 +323,7 @@ const OrderManagementView = (props: Props) => {
             status: debouncedSearchTerm.status,
             date: debouncedSearchTerm.date,
             payment_method: debouncedSearchTerm.payment_method,
+            payment_status: debouncedSearchTerm.payment_status,
           }}
         />
       </Box>
