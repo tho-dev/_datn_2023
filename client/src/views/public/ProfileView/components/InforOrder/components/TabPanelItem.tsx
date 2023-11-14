@@ -21,18 +21,20 @@ import {
   useCancelOrderMutation,
   useGetOrderByUserIdQuery,
   useReturnOrderMutation,
+  useUpdateinfoCustomerMutation,
 } from "~/redux/api/order";
 import { useAppSelector } from "~/redux/hook/hook";
 import DialogThinkPro from "~/components/DialogThinkPro";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavArrowRightIcon } from "~/components/common/Icons";
+import { CartIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import TableProduct from "~/views/private/OrderManagementView/childrenViews/TableProduct";
 import { createColumnHelper } from "@tanstack/react-table";
 import Transport from "~/views/public/PaymentView/components/Transport";
 import axios, { Axios } from "axios";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import { chuyenDoiSoDienThoai } from "~/utils/fc";
+import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
+import { useNavigate } from "react-router";
 
 type Props = {
   status: string;
@@ -40,6 +42,12 @@ type Props = {
 
 const TabPanelItem = ({ status }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [dataUser, setDataUser] = useState({} as any);
+  const {
+    isOpen: isOpenUpdate,
+    onOpen: onOpenUpdate,
+    onClose: onCloseUpdate,
+  } = useDisclosure();
   const {
     isOpen: isOpenCancel,
     onOpen: onOpenCancel,
@@ -64,9 +72,21 @@ const TabPanelItem = ({ status }: Props) => {
   const { data, isLoading, isFetching, isError } = useGetOrderByUserIdQuery(
     user._id
   );
+  const navigate = useNavigate();
+  console.log(data?.data);
+  useEffect(() => {
+    if (orderDetail && orderDetail?.shipping_method == "shipped") {
+      const address = orderDetail?.shipping_info?.shipping_address.split(",");
+      const [address_detail, ...rest] = address;
+      setAddress(rest.join(","));
+      setTransportFee(orderDetail.shipping_info?.transportation_fee);
+    }
+    console.log("địa chỉ", address);
+  }, [orderDetail]);
   const toast = useToast();
   const [cancelOrder] = useCancelOrderMutation();
   const [returnOrder] = useReturnOrderMutation();
+  const [updateinfoCustomer] = useUpdateinfoCustomerMutation();
   const {
     register,
     handleSubmit,
@@ -91,6 +111,7 @@ const TabPanelItem = ({ status }: Props) => {
   const handleOrderDetail = (order: any) => {
     setOrderDetail(order);
     onOpen();
+    console.log("detail", orderDetail);
   };
 
   const columns = [
@@ -147,6 +168,7 @@ const TabPanelItem = ({ status }: Props) => {
         })
         .then(({ data }) => {
           setTransportFee(data.data);
+          onCloseTransport();
         });
     } else {
       setAddress("");
@@ -154,7 +176,31 @@ const TabPanelItem = ({ status }: Props) => {
   };
 
   const onSubmitForm = (data: any) => {
-    console.log(data);
+    const phone_number = chuyenDoiSoDienThoai(data.phone_number);
+    const shipping_address = data.address + "," + data.shipping_address;
+    if (!phone_number) {
+      alert("Số điện thoại không hợp lệ");
+      return;
+    }
+    const new_data = {
+      id: orderDetail._id,
+      ...data,
+      phone_number,
+      shipping_address: shipping_address,
+      transportation_fee: transportFee,
+    };
+    console.log("newwwww", new_data);
+    if (orderDetail.status !== "processing") {
+      return toast({
+        title: "Hệ thống thông báo",
+        duration: 1600,
+        position: "top-right",
+        status: "error",
+        description: `Không thể cập nhật đơn hàng đã ${orderDetail.status}`,
+      });
+    }
+    setDataUser(new_data);
+    onOpenUpdate();
   };
 
   const onSubmitFormReturn = (data: any) => {
@@ -251,6 +297,32 @@ const TabPanelItem = ({ status }: Props) => {
     onOpenCancel();
     setOrderDetail(order);
   };
+  const handleUpdateCustomer = () => {
+    updateinfoCustomer(dataUser)
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Thành công",
+          duration: 1600,
+          position: "top-right",
+          status: "success",
+          description: data.message,
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: "Thất bại",
+          duration: 1600,
+          position: "top-right",
+          status: "error",
+          description: error.data.errors.message,
+        });
+      })
+      .finally(() => {
+        onCloseUpdate();
+        navigate("/thong-tin");
+      });
+  };
   return (
     <>
       <TabPanel>
@@ -274,7 +346,9 @@ const TabPanelItem = ({ status }: Props) => {
                     fontSize="12px"
                     fontWeight="bold"
                     textTransform={"uppercase"}
-                    color={"text.red"}
+                    color={
+                      order.status == "processing" ? "green.500" : "red.500"
+                    }
                   >
                     {order.status}
                   </Tag>
@@ -337,7 +411,9 @@ const TabPanelItem = ({ status }: Props) => {
                     fontSize="12px"
                     fontWeight="bold"
                     textTransform={"uppercase"}
-                    color={"text.red"}
+                    color={
+                      order.status == "processing" ? "green.500" : "red.500"
+                    }
                   >
                     {order.status}
                   </Tag>
@@ -386,7 +462,7 @@ const TabPanelItem = ({ status }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         isCentered
-        size="4xl"
+        size="5xl"
         title={<Heading fontSize="xl">Chi tiết đơn hàng của bạn</Heading>}
       >
         <form onSubmit={handleSubmit(onSubmitForm)}>
@@ -419,19 +495,24 @@ const TabPanelItem = ({ status }: Props) => {
               </FormControl>
               <FormControl isInvalid={errors.phone_number as any}>
                 <FormLabel>Số điện thoại</FormLabel>
-                <Input
-                  type="number"
-                  border={"none"}
-                  p={"8px 12px"}
-                  placeholder="Nhập số điện thoại"
-                  bg={"#F6F9FC"}
-                  borderRadius={"6px"}
-                  fontSize={"14px"}
-                  defaultValue={orderDetail?.phone_number}
-                  {...register("phone_number", {
-                    required: "Trường bắt buộc nhập",
-                  })}
-                />
+                {orderDetail.phone_number && (
+                  <Input
+                    type="number"
+                    border={"none"}
+                    p={"8px 12px"}
+                    placeholder="Nhập số điện thoại"
+                    bg={"#F6F9FC"}
+                    borderRadius={"6px"}
+                    fontSize={"14px"}
+                    {...register("phone_number", {
+                      required: "Trường bắt buộc nhập",
+                    })}
+                    defaultValue={chuyenDoiSoDienThoaiVe0(
+                      orderDetail.phone_number
+                    )}
+                    isReadOnly
+                  />
+                )}
                 <FormErrorMessage>
                   {(errors.phone_number as any) &&
                     (errors?.phone_number?.message as any)}
@@ -499,8 +580,7 @@ const TabPanelItem = ({ status }: Props) => {
                       bg="transparent"
                       readOnly={true}
                       {...register("shipping_address")}
-                      value={address}
-                      // defaultValue={}
+                      defaultValue={address}
                     />
                     <NavArrowRightIcon
                       size={4}
@@ -524,6 +604,9 @@ const TabPanelItem = ({ status }: Props) => {
                     borderRadius={"6px"}
                     fontSize={"14px"}
                     {...register("address")}
+                    defaultValue={
+                      orderDetail?.shipping_info?.shipping_address.split(",")[0]
+                    }
                   />
                   <FormErrorMessage>
                     {(errors?.address as any) &&
@@ -575,22 +658,29 @@ const TabPanelItem = ({ status }: Props) => {
                 columns={columns}
               />
               <Text fontSize="14px" fontWeight="semibold" my={4}>
+                Tiền vận chuyển : {transportFee.toLocaleString()}đ
+              </Text>
+              <Text fontSize="14px" fontWeight="semibold" my={4}>
                 Tổng tiền :{" "}
                 {(orderDetail?.total_amount + transportFee).toLocaleString()}đ
               </Text>
             </Box>
           </Box>
           <Flex py={"5"} px={"5"} justifyContent="flex-end" gap={6}>
-            <Button
-              w={"15%"}
-              fontSize={"16px"}
-              fontWeight={"600 "}
-              bg={"bg.green"}
-              _hover={{ bgColor: "green" }}
-              type="submit"
-            >
-              Cập nhật
-            </Button>
+            {orderDetail.status == "processing" ? (
+              <Button
+                w={"15%"}
+                fontSize={"16px"}
+                fontWeight={"600 "}
+                bg={"bg.green"}
+                _hover={{ bgColor: "green" }}
+                type="submit"
+              >
+                Cập nhật
+              </Button>
+            ) : (
+              ""
+            )}
           </Flex>
         </form>
         <Transport
@@ -684,7 +774,13 @@ const TabPanelItem = ({ status }: Props) => {
           </Flex>
         </form>
       </DialogThinkPro>
-
+      <ConfirmThinkPro
+        isOpen={isOpenUpdate}
+        onClose={onCloseUpdate}
+        handleClick={handleUpdateCustomer}
+        content="Bạn có chắc chắn muốn cập nhật đơn hàng này"
+        icon={<CartIcon />}
+      />
       <ConfirmThinkPro
         isOpen={isOpenCancel}
         handleClick={handleCancel}

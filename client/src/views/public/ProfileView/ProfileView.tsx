@@ -80,7 +80,9 @@ const ProfileView = (props: Props) => {
           </TabPanels>
         </Tabs>
       </Box>
+      
     </Box>
+    
   );
 };
 

@@ -940,7 +940,9 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
 export const getOrderByUserId = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Order.find({ user_id: id });
+    const result = await Order.find({ user_id: id }).populate([
+      "shipping_info",
+    ]);
     if (result.length <= 0) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
