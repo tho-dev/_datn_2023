@@ -20,6 +20,7 @@ const OrderView = (props: Props) => {
   const deliveryStatus = [
     "all",
     "processing",
+    "confirmed",
     "delivering",
     "delivered",
     "cancelled",
@@ -38,6 +39,9 @@ const OrderView = (props: Props) => {
             </Tab>
             <Tab fontSize="sm" fontWeight="semibold">
               Chờ xác nhận
+            </Tab>
+            <Tab fontSize="sm" fontWeight="semibold">
+              Đã xác nhận
             </Tab>
             <Tab fontSize="sm" fontWeight="semibold">
               Đang giao

@@ -179,6 +179,9 @@ const UpdateOrder = (props: Props) => {
         .then(({ data }) => {
           setTransportFee(data.data);
           onClose();
+        })
+        .catch((err) => {
+          console.log(err);
         });
     } else {
       setAddress("");

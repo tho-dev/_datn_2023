@@ -30,7 +30,11 @@ import {
 import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Transport from "./components/Transport";
-import { chuyenDoiSoDienThoai, formatPhoneNumber } from "~/utils/fc";
+import {
+  chuyenDoiSoDienThoai,
+  chuyenDoiSoDienThoaiVe0,
+  formatPhoneNumber,
+} from "~/utils/fc";
 import { socket } from "~/App";
 type Props = {};
 
@@ -225,7 +229,7 @@ const Payment = (props: Props) => {
                     isDisabled={data.data.products.length === 0}
                     defaultValue={
                       (isLogin &&
-                        `${formatPhoneNumber(user.phone.toString())}`) ||
+                        `${chuyenDoiSoDienThoaiVe0(user.phone.toString())}`) ||
                       ""
                     }
                   />

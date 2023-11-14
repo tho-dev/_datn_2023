@@ -103,7 +103,6 @@ const TabPanelItem = ({ status }: Props) => {
   if (isError) {
     return <Text>Không có đơn hàng nào</Text>;
   }
-
   const filteredOrders = data.data.filter(
     (order: any) => order.status == status
   );
@@ -205,6 +204,22 @@ const TabPanelItem = ({ status }: Props) => {
 
   const onSubmitFormReturn = (data: any) => {
     const { address, content, shipping_address, phone_number, ...rest } = data;
+    // check thời gian
+    const currentDate = new Date();
+    const targetTime = new Date(orderDetail.updated_at);
+
+    targetTime.setDate(targetTime.getDate() + 1);
+    if (currentDate > targetTime) {
+      return toast({
+        title: "Không thể hoàn đơn hàng",
+        description: "Liên hệ với bộ phận CSKH để được xử lý",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+
     const new_phone_number = chuyenDoiSoDienThoai(phone_number);
     const new_data = {
       ...rest,
@@ -239,6 +254,7 @@ const TabPanelItem = ({ status }: Props) => {
   };
 
   const handleCancel = () => {
+    // check thời gian
     const currentDate = new Date();
     const targetTime = new Date(orderDetail.created_at);
     targetTime.setMinutes(targetTime.getMinutes() + 15);
@@ -292,6 +308,7 @@ const TabPanelItem = ({ status }: Props) => {
   const handleOpenModelReturn = (order: any) => {
     onOpenReturn();
     setId(order._id);
+    setOrderDetail(order);
   };
   const handleOpenModelCancel = (order: any) => {
     onOpenCancel();

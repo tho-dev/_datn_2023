@@ -24,6 +24,7 @@ import { useGetAllOrderQuery } from "~/redux/api/order";
 import OrderFilter from "./components/OrderFilter";
 import { useForm } from "react-hook-form";
 import SelectThinkPro from "~/components/SelectThinkPro";
+import { chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 type Props = {};
 
 const OrderManagementView = (props: Props) => {
@@ -78,7 +79,7 @@ const OrderManagementView = (props: Props) => {
       header: "Ngày đặt",
     }),
     columnHelper.accessor("phone_number", {
-      cell: (info) => `+${info.getValue()}`,
+      cell: (info) => chuyenDoiSoDienThoaiVe0(info.getValue()),
       header: "Số điện thoại",
     }),
     columnHelper.accessor("status", {

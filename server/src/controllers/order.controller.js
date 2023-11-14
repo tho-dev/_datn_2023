@@ -144,7 +144,12 @@ export const createOrder = async (req, res, next) => {
       await new_order.save();
     }
     const order_created = new_order.toObject();
-    await cart.deleteOne({ cart_id });
+    if (new_order) {
+      await Cart.findOneAndUpdate(
+        { cart_id },
+        { $set: { products: [], total_money: 0 } }
+      );
+    }
     return res.json({
       status: 200,
       message: "Đặt hàng thành công",
@@ -154,7 +159,6 @@ export const createOrder = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

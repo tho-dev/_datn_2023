@@ -83,7 +83,7 @@ const ActionUpdateCategory = ({ onClose, parents, category }: Props) => {
 							h="120px"
 						>
 							<FileUploadThinkPro
-								fileName="category"
+								fileName="banner"
 								getDataFn={(data: any) => setValue("thumbnail", data)}
 								setData={watch("thumbnail")}
 							/>

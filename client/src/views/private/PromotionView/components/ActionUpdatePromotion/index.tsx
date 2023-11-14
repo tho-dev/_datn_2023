@@ -25,18 +25,21 @@ import TableThinkPro from "~/components/TableThinkPro";
 import { AppIcon, CloseSmallIcon } from "~/components/common/Icons";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
 import { useGetProducItemToBrandAndCategoryQuery } from "~/redux/api/collection";
-import { useCreatePromotionMutation } from "~/redux/api/promotion";
+import { useUpdateProductMutation } from "~/redux/api/product";
+import { useCreatePromotionMutation, useUpdatePromotionMutation } from "~/redux/api/promotion";
 import { formatNumber } from "~/utils/fc";
 
 type Props = {
 	onClose: () => void;
+	promotion: any;
 };
 
-const ActionPromotion = ({ onClose }: Props) => {
+const ActionUpdatePromotion = ({ onClose, promotion }: Props) => {
 	const toast = useToast();
 	const columnHelper = createColumnHelper<any>();
 	const [category, setCategory] = useState<any>([]);
 	const [categories, setCategories] = useState<any>([]);
+	const [defaultData, setDefaultData] = useState<any>({});
 	const [query, setQuery] = useState({
 		_page: 1,
 		_limit: 10,
@@ -47,7 +50,7 @@ const ActionPromotion = ({ onClose }: Props) => {
 
 	const { isOpen: isOpenProduct, onClose: onCloseProduct, onOpen: onOpenProduct } = useDisclosure();
 
-	const [createPromotion] = useCreatePromotionMutation();
+	const [updatePromotion] = useUpdatePromotionMutation();
 
 	const {
 		control,
@@ -57,7 +60,9 @@ const ActionPromotion = ({ onClose }: Props) => {
 		formState: { errors },
 		watch,
 		reset,
-	} = useForm();
+	} = useForm({
+		defaultValues: defaultData,
+	});
 
 	const { data } = useGetAllCategoryQuery({
 		_page: 1,
@@ -96,7 +101,19 @@ const ActionPromotion = ({ onClose }: Props) => {
 		}
 	}, [watch("category")]);
 
-	const onSubmit = async ({ category, ...values }: any) => {
+	useEffect(() => {
+		if (promotion) {
+			const filterPromtion = {
+				...promotion,
+				items: promotion?.items?.map((item: any) => item._id),
+			};
+
+			setDefaultData(filterPromtion);
+			reset(filterPromtion);
+		}
+	}, [reset, promotion]);
+
+	const onSubmit = async ({ category, max_percent, slug, min_sale_price, ...values }: any) => {
 		values = {
 			...values,
 			category: undefined,
@@ -106,13 +123,13 @@ const ActionPromotion = ({ onClose }: Props) => {
 		};
 
 		try {
-			await createPromotion(values).unwrap();
+			await updatePromotion(values).unwrap();
 			toast({
 				title: "Thành công",
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Tạo khuyến mãi thành công",
+				description: "Cập nhật khuyến mãi thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -127,6 +144,7 @@ const ActionPromotion = ({ onClose }: Props) => {
 		reset();
 		onClose();
 	};
+
 	const columns = [
 		columnHelper.accessor("#", {
 			cell: ({ row, table }) => {
@@ -226,6 +244,8 @@ const ActionPromotion = ({ onClose }: Props) => {
 			header: "Màu sắc",
 		}),
 	];
+
+	console.log("w", watch("start_time"));
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -474,13 +494,13 @@ const ActionPromotion = ({ onClose }: Props) => {
 				</Button>
 				<Button
 					type="submit"
-					bgColor="bg.bgSuccess"
-					textColor="text.textSuccess"
+					bgColor="bg.bgEdit"
+					textColor="text.textEdit"
 					fontWeight="bold"
 					leftIcon={<CloseSmallIcon size={4} />}
 					px="4"
 				>
-					Tạo mới
+					Cập nhật
 				</Button>
 			</Flex>
 
@@ -535,4 +555,4 @@ const ActionPromotion = ({ onClose }: Props) => {
 	);
 };
 
-export default ActionPromotion;
+export default ActionUpdatePromotion;

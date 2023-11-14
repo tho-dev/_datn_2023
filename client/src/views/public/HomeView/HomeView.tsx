@@ -25,20 +25,13 @@ const HomeView = (props: Props) => {
 				{/* Banner */}
 				<Banner banner={homeSettings?.general} />
 
-				<Input
-					type="date"
-					onChange={(e: any) => {
-						console.log("abc", e.target.value);
-					}}
-				/>
+				<DiscountSection title="Khuyến mãi" />
 
 				{/* Danh mục */}
 				<Category
 					title={homeSettings?.category?.title}
 					items={homeSettings?.category?.items}
 				/>
-
-				{/* <DiscountSection title="Khuyến mãi" /> */}
 
 				{/* USP */}
 				<USP

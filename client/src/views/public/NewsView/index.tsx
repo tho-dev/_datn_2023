@@ -1,1 +1,1 @@
-export { default as NewsView } from "./NewsView";
+export { default as ContentView } from "../NewsView/ContentView";

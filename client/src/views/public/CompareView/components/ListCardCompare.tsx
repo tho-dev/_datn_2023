@@ -4,12 +4,13 @@ import CardCompare from "./CardCompare";
 import { PlusIcon } from "~/components/common/Icons";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import ListThinkPro from "~/components/ListThinkPro";
+import { Link } from "react-router-dom";
 
-type Props = {};
+type Props = {
+	items: any;
+};
 
-const ListCardCompare = (props: Props) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
-
+const ListCardCompare = ({ items }: Props) => {
 	return (
 		<>
 			<Flex
@@ -21,23 +22,27 @@ const ListCardCompare = (props: Props) => {
 						fontWeight="bold"
 						fontSize="24px"
 					>
-						So sánh 2 sản phẩm
+						So sánh {items?.length} sản phẩm
 					</Text>
 					<Box mt="10px">
-						<Text
-							fontSize="14px"
-							lineHeight={6}
-							fontWeight="medium"
-						>
-							Dell Inspiron 16 5630
-						</Text>
-						<Text
-							fontSize="14px"
-							lineHeight={6}
-							fontWeight="medium"
-						>
-							Dell Inspiron 16 5630
-						</Text>
+						{items?.map((item: any, index: number) => {
+							return (
+								<Text
+									key={index}
+									fontSize="13px"
+									lineHeight={6}
+									fontWeight="semibold"
+									css={{
+										display: "-webkit-box",
+										WebkitLineClamp: 1,
+										WebkitBoxOrient: "vertical",
+										overflow: "hidden",
+									}}
+								>
+									{index + 1}. {item?.name}
+								</Text>
+							);
+						})}
 					</Box>
 					<Flex
 						gap="2"
@@ -58,76 +63,47 @@ const ListCardCompare = (props: Props) => {
 					border="1px solid #ccc"
 					gridTemplateColumns="repeat(4,1fr)"
 				>
-					<GridItem>
-						<CardCompare />
-					</GridItem>
-					<GridItem borderLeft="1px solid #ccc">
-						<CardCompare />
-					</GridItem>
-					<GridItem borderLeft="1px solid #ccc">
-						<Box
-							display="flex"
-							flexDirection="column"
-							justifyContent="center"
-							alignItems="center"
-							h="full"
-						>
-							<Button
-								color="black"
-								bgColor="bg.gray"
-								leftIcon={<PlusIcon size={4} />}
-								onClick={onOpen}
+					{items?.map((item: any, index: number) => {
+						return (
+							<GridItem
+								key={index}
+								borderLeft="1px solid #ccc"
 							>
-								Thêm sản phẩm khác
-							</Button>
-						</Box>
-					</GridItem>
-					<GridItem borderLeft="1px solid #ccc">
-						<Box
-							display="flex"
-							flexDirection="column"
-							justifyContent="center"
-							alignItems="center"
-							h="full"
-							onClick={onOpen}
-						>
-							<Button
-								color="black"
-								bgColor="bg.gray"
-								leftIcon={<PlusIcon size={4} />}
-							>
-								Thêm sản phẩm khác
-							</Button>
-						</Box>
-					</GridItem>
+								<CardCompare item={item} />
+							</GridItem>
+						);
+					})}
+
+					{Array(4 - items.length)
+						.fill(0)
+						.map((item, index) => {
+							return (
+								<GridItem
+									key={index}
+									borderLeft="1px solid #ccc"
+								>
+									<Box
+										display="flex"
+										flexDirection="column"
+										justifyContent="center"
+										alignItems="center"
+										h="full"
+									>
+										<Button
+											as={Link}
+											to={`/${items?.[0]?.shared_url?.split("/")?.[0]}`}
+											color="black"
+											bgColor="bg.gray"
+											leftIcon={<PlusIcon size={4} />}
+										>
+											Thêm sản phẩm khác
+										</Button>
+									</Box>
+								</GridItem>
+							);
+						})}
 				</Grid>
 			</Flex>
-
-			{/* Thêm sản phẩm so sánh */}
-			<DialogThinkPro
-				isOpen={isOpen}
-				onClose={onClose}
-				isCentered
-				size="3xl"
-				title={
-					<Heading
-						fontSize="xl"
-						fontWeight="bold"
-					>
-						Thêm sản phẩm so sánh
-					</Heading>
-				}
-			>
-				<Box
-					bgColor="bg.gray"
-					px="4"
-					py="6"
-					w="calc(100% + 48px)"
-					mx="-6"
-				>
-					<ListThinkPro columns="3" />
-				</Box>
-			</DialogThinkPro>
 		</>
 	);
 };

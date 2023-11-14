@@ -1,19 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Box, Center, Flex } from "@chakra-ui/layout";
 import { TheHeader } from "~/components/common/TheHeader";
 import { TheNav } from "~/components/common/TheNav";
 import { TheFooter } from "~/components/common/TheFooter";
 import CompareThinkPro from "~/components/CompareThinkPro";
+import { useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
 
 type Props = {};
 
 const MainLayout = (props: Props) => {
 	const { pathname } = useLocation();
-	const checkRouter = pathname !== "/so-sanh";
+	const [checkRouter, setCheckRouter] = useState(false);
+
+	const { items } = useAppSelector((state: RootState) => state.persistedReducer.global);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
+		setCheckRouter(pathname.includes("so-sanh"));
 	}, [pathname]);
 
 	return (
@@ -79,7 +84,7 @@ const MainLayout = (props: Props) => {
 			<Box
 				w="full"
 				as="main"
-				backgroundColor={checkRouter ? "bg.gray" : "bg.white"}
+				backgroundColor={checkRouter ? "bg.white" : "bg.gray"}
 			>
 				<Center>
 					<Box
@@ -117,16 +122,18 @@ const MainLayout = (props: Props) => {
 					</Box>
 				</Center>
 			</Box>
-			{/* <Box
-				position="fixed"
-				bottom="0"
-				width="full"
-				zIndex="90"
-			>
-				<CompareThinkPro />
-			</Box> */}
 
-			{/* loading global */}
+			{/* so sanh san pham */}
+			{items?.length > 0 && (
+				<Box
+					position="fixed"
+					bottom="0"
+					width="full"
+					zIndex="90"
+				>
+					<CompareThinkPro items={items} />
+				</Box>
+			)}
 		</Box>
 	);
 };
