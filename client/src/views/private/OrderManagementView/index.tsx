@@ -222,6 +222,10 @@ const OrderManagementView = (props: Props) => {
                   label: "Hoàn hàng",
                   value: "returned",
                 },
+                {
+                  label: "Chờ hoàn thành",
+                  value: "pendingComplete",
+                },
               ]}
             />
           </Box>

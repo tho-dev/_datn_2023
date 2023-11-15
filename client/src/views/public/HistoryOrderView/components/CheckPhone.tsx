@@ -22,26 +22,30 @@ import ReCAPTCHA from "react-google-recaptcha";
 type Props = {
   setCheckPhone: any;
   handleGetPhoneNumber: (phoneNumber: any) => void;
-  setDataOrder: any;
+  setQuery: any;
+  loading: boolean;
 };
 
 const CheckPhone = ({
   setCheckPhone,
   handleGetPhoneNumber,
-  setDataOrder,
+  setQuery,
+  loading,
 }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<any>();
+
   const toast = useToast();
-  const [getOrderByPhoneNumber, { isLoading }] =
-    useGetOrderByPhoneNumberMutation();
+
   const [checkCaptch, setCheckCaptch] = useState(false);
+
   const onChange = (value: any) => {
     setCheckCaptch(true);
   };
+
   const onSubmit = async (data: any) => {
     if (!checkCaptch) {
       return toast({
@@ -64,31 +68,9 @@ const CheckPhone = ({
         position: "top-right",
       });
     }
-    getOrderByPhoneNumber({ phone_number: phone_number })
-      .unwrap()
-      .then(({ data }) => {
-        toast({
-          title: "Hệ thống",
-          description: "Tìm thấy đơn hàng thành công",
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-          position: "top-right",
-        });
-        setDataOrder(data);
-        setCheckPhone(false);
-        handleGetPhoneNumber(phone_number);
-      })
-      .catch((error) => {
-        toast({
-          title: "Hệ thống",
-          description: error.data.errors.message,
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-          position: "top-right",
-        });
-      });
+    setQuery({ phone_number: phone_number });
+    setCheckPhone(false);
+    handleGetPhoneNumber(phone_number);
   };
 
   return (
@@ -152,13 +134,13 @@ const CheckPhone = ({
                 _hover={{ bgColor: "blue" }}
                 w="70%"
                 loadingText="Đang tìm kiếm đơn hàng..."
-                isLoading={isLoading}
+                isLoading={!loading}
                 fontSize={"16px"}
               >
                 Tra cứu thông tin
               </Button>
               <ReCAPTCHA
-                sitekey="6LeWzOIoAAAAALbs9isOwZpU9o7yFULgPxLtoluK"
+                sitekey={process.env.GOOGLE_SITE_KEY as string}
                 onChange={onChange}
               />
             </Flex>

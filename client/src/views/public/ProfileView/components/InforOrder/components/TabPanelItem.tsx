@@ -15,16 +15,19 @@ import {
   Textarea,
   FormHelperText,
   useToast,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import ItemCart from "./ItemCart";
 import {
   useCancelOrderMutation,
+  useConfirmDeliveredMutation,
   useGetOrderByUserIdQuery,
   useReturnOrderMutation,
 } from "~/redux/api/order";
 import { useAppSelector } from "~/redux/hook/hook";
 import DialogThinkPro from "~/components/DialogThinkPro";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavArrowRightIcon } from "~/components/common/Icons";
 import TableProduct from "~/views/private/OrderManagementView/childrenViews/TableProduct";
@@ -67,6 +70,7 @@ const TabPanelItem = ({ status }: Props) => {
   const toast = useToast();
   const [cancelOrder] = useCancelOrderMutation();
   const [returnOrder] = useReturnOrderMutation();
+  const [confirmDelivered] = useConfirmDeliveredMutation();
   const {
     register,
     handleSubmit,
@@ -264,140 +268,193 @@ const TabPanelItem = ({ status }: Props) => {
     setId(order._id);
     setOrderDetail(order);
   };
+
   const handleOpenModelCancel = (order: any) => {
     onOpenCancel();
     setOrderDetail(order);
   };
+
+  const handleConfirmCompleted = (order: any) => {
+    confirmDelivered(order?._id)
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Hệ thống",
+          description: data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: "Hệ thống",
+          description: error.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
+  };
+
   return (
     <>
       <TabPanel>
-        {status == "all"
-          ? data?.data.map((order: any) => (
-              <Box
-                key={order._id}
-                p="6"
-                my={4}
-                rounded="md"
-                backgroundColor="bg.gray"
-              >
-                <Flex justifyContent="space-between">
-                  <Text fontSize="14px" fontWeight={"bold"}>
-                    Mã đơn hàng:{order._id}
-                    <Text as={"span"} fontSize="14px">
-                      {order.id}
+        <Grid gridTemplateColumns={"repeat(2,1fr)"} gap={4}>
+          {status == "all"
+            ? data?.data.map((order: any) => (
+                <GridItem
+                  key={order._id}
+                  p="6"
+                  my={4}
+                  rounded="md"
+                  backgroundColor="bg.gray"
+                >
+                  <Flex justifyContent="space-between">
+                    <Text fontSize="14px" fontWeight={"bold"}>
+                      Mã đơn hàng:{order._id}
+                      <Text as={"span"} fontSize="14px">
+                        {order.id}
+                      </Text>
                     </Text>
-                  </Text>
-                  <Tag
-                    fontSize="12px"
-                    fontWeight="bold"
-                    textTransform={"uppercase"}
-                    color={"text.red"}
-                  >
-                    {order.status}
-                  </Tag>
-                </Flex>
-                <Divider />
-                <Box>
-                  <ItemCart product={order?.new_order_details[0]} />
-                </Box>
-                <Divider />
-                <Flex justifyContent="space-between" alignItems="center" mt={2}>
-                  <Flex gap={4}>
-                    {order.status == "processing" && (
-                      <Button
-                        fontWeight={"600 "}
-                        _hover={{ bgColor: "red" }}
-                        type="button"
-                        onClick={() => handleOpenModelCancel(order)}
-                      >
-                        Huỷ đơn
-                      </Button>
-                    )}
-                    {order.status == "processing" && (
-                      <Button
-                        fontWeight={"600 "}
-                        bg={"bg.green"}
-                        _hover={{ bgColor: "green" }}
-                        onClick={() => handleOrderDetail(order)}
-                      >
-                        Chi tiết
-                      </Button>
-                    )}
-                    {order.status == "delivered" && (
-                      <Button onClick={() => handleOpenModelReturn(order)}>
-                        Hoàn hàng
-                      </Button>
-                    )}
+                    <Tag
+                      fontSize="12px"
+                      fontWeight="bold"
+                      textTransform={"uppercase"}
+                      color={"text.red"}
+                    >
+                      {order.status}
+                    </Tag>
                   </Flex>
-                  <Text fontSize="14px" fontWeight="bold">
-                    Thành tiền:{order.total_amount.toLocaleString()}đ
-                  </Text>
-                </Flex>
-              </Box>
-            ))
-          : filteredOrders.map((order: any) => (
-              <Box
-                key={order._id}
-                p="6"
-                my={4}
-                rounded="md"
-                backgroundColor="bg.gray"
-              >
-                <Flex justifyContent="space-between">
-                  <Text fontSize="14px" fontWeight={"bold"}>
-                    Mã đơn hàng:{" "}
-                    <Text as={"span"} fontSize="14px">
-                      {order._id}
+                  <Divider />
+                  <Box>
+                    <ItemCart product={order?.new_order_details[0]} />
+                  </Box>
+                  <Divider />
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mt={2}
+                  >
+                    <Flex gap={4}>
+                      {order.status == "processing" && (
+                        <Button
+                          fontWeight={"600 "}
+                          _hover={{ bgColor: "red" }}
+                          type="button"
+                          onClick={() => handleOpenModelCancel(order)}
+                        >
+                          Huỷ đơn
+                        </Button>
+                      )}
+                      {order.status == "processing" && (
+                        <Button
+                          fontWeight={"600 "}
+                          bg={"bg.green"}
+                          _hover={{ bgColor: "green" }}
+                          onClick={() => handleOrderDetail(order)}
+                        >
+                          Chi tiết
+                        </Button>
+                      )}
+                      {order.status == "delivered" && (
+                        <Button onClick={() => handleOpenModelReturn(order)}>
+                          Hoàn hàng
+                        </Button>
+                      )}
+                      {order.status == "pendingComplete" && (
+                        <Button
+                          onClick={() => handleConfirmCompleted(order)}
+                          bgColor="bg.green"
+                        >
+                          Đã nhận hàng
+                        </Button>
+                      )}
+                    </Flex>
+                    <Text fontSize="14px" fontWeight="bold">
+                      Thành tiền:{order.total_amount.toLocaleString()}đ
                     </Text>
-                  </Text>
-                  <Tag
-                    fontSize="12px"
-                    fontWeight="bold"
-                    textTransform={"uppercase"}
-                    color={"text.red"}
-                  >
-                    {order.status}
-                  </Tag>
-                </Flex>
-                <Divider />
-                <Box>
-                  <ItemCart product={order?.new_order_details[0]} />
-                </Box>
-                <Divider />
-                <Flex justifyContent="space-between" alignItems="center" mt={2}>
-                  <Flex gap={4}>
-                    {order.status == "processing" && (
-                      <Button
-                        fontWeight={"600 "}
-                        _hover={{ bgColor: "red" }}
-                        type="button"
-                        onClick={() => handleOpenModelCancel(order)}
-                      >
-                        Huỷ đơn
-                      </Button>
-                    )}
-                    {order.status == "processing" && (
-                      <Button
-                        fontWeight={"600 "}
-                        bg={"bg.green"}
-                        _hover={{ bgColor: "green" }}
-                        onClick={() => handleOrderDetail(order)}
-                      >
-                        Cập nhật
-                      </Button>
-                    )}
-                    {order.status == "delivered" && (
-                      <Button onClick={() => handleOpenModelReturn(order)}>
-                        Hoàn hàng
-                      </Button>
-                    )}
                   </Flex>
-                  <Text fontSize="14px" fontWeight="bold">
-                    Thành tiền:{order.total_amount.toLocaleString()}đ
-                  </Text>
-                </Flex>
-              </Box>
-            ))}
+                </GridItem>
+              ))
+            : filteredOrders.map((order: any) => (
+                <GridItem
+                  key={order._id}
+                  p="6"
+                  my={4}
+                  rounded="md"
+                  backgroundColor="bg.gray"
+                >
+                  <Flex justifyContent="space-between">
+                    <Text fontSize="14px" fontWeight={"bold"}>
+                      Mã đơn hàng:{" "}
+                      <Text as={"span"} fontSize="14px">
+                        {order._id}
+                      </Text>
+                    </Text>
+                    <Tag
+                      fontSize="12px"
+                      fontWeight="bold"
+                      textTransform={"uppercase"}
+                      color={"text.red"}
+                    >
+                      {order.status}
+                    </Tag>
+                  </Flex>
+                  <Divider />
+                  <Box>
+                    <ItemCart product={order?.new_order_details[0]} />
+                  </Box>
+                  <Divider />
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mt={2}
+                  >
+                    <Flex gap={4}>
+                      {order.status == "processing" && (
+                        <Button
+                          fontWeight={"600 "}
+                          _hover={{ bgColor: "red" }}
+                          type="button"
+                          onClick={() => handleOpenModelCancel(order)}
+                        >
+                          Huỷ đơn
+                        </Button>
+                      )}
+                      {order.status == "processing" && (
+                        <Button
+                          fontWeight={"600 "}
+                          bg={"bg.green"}
+                          _hover={{ bgColor: "green" }}
+                          onClick={() => handleOrderDetail(order)}
+                        >
+                          Chi tiết
+                        </Button>
+                      )}
+                      {order.status == "delivered" && (
+                        <Button onClick={() => handleOpenModelReturn(order)}>
+                          Hoàn hàng
+                        </Button>
+                      )}
+                      {order.status == "pendingComplete" && (
+                        <Button
+                          onClick={() => handleConfirmCompleted(order)}
+                          bgColor="bg.green"
+                        >
+                          Đã nhận hàng
+                        </Button>
+                      )}
+                    </Flex>
+                    <Text fontSize="14px" fontWeight="bold">
+                      Thành tiền:{order.total_amount.toLocaleString()}đ
+                    </Text>
+                  </Flex>
+                </GridItem>
+              ))}
+        </Grid>
       </TabPanel>
       <DialogThinkPro
         isOpen={isOpen}
@@ -424,7 +481,7 @@ const TabPanelItem = ({ status }: Props) => {
                   bg={"#F6F9FC"}
                   borderRadius={"6px"}
                   fontSize={"14px"}
-                  defaultValue={orderDetail?.customer_name}
+                  value={orderDetail?.customer_name}
                   {...register("customer_name", {
                     required: "Trường bắt buộc nhập",
                   })}
@@ -444,7 +501,8 @@ const TabPanelItem = ({ status }: Props) => {
                   bg={"#F6F9FC"}
                   borderRadius={"6px"}
                   fontSize={"14px"}
-                  defaultValue={orderDetail?.phone_number}
+                  isReadOnly
+                  value={orderDetail?.phone_number}
                   {...register("phone_number", {
                     required: "Trường bắt buộc nhập",
                   })}
@@ -455,7 +513,6 @@ const TabPanelItem = ({ status }: Props) => {
                 </FormErrorMessage>
               </FormControl>
             </Flex>
-
             <Flex gap={"16px"}>
               <Box w={"50%"}>
                 <Text>Trạng thái thanh toán</Text>

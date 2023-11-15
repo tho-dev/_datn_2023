@@ -21,10 +21,11 @@ type Props = {
 
 const OrderStatus = ({ data }: Props) => {
   const steps = [
-    { title: "First", description: "processing", tran: "chờ xác nhận" },
+    { title: "First", description: "processing", tran: "Chờ xác nhận" },
     { title: "Second", description: "confirmed", tran: "Đã xác nhận" },
     { title: "Third", description: "cancelled", tran: "Đã huỷ đơn" },
     { title: "Third", description: "delivering", tran: "Đang vận chuyển" },
+    { title: "Third", description: "pendingComplete", tran: "Chờ hoàn thành" },
     { title: "Third", description: "delivered", tran: "Đã hoàn thành" },
     { title: "Third", description: "returned", tran: "Đã hoàn hàng" },
   ];

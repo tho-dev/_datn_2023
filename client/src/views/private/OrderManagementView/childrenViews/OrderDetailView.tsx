@@ -69,7 +69,27 @@ const OrderDetailView = (props: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
-
+  const checkStatusOrder = (status: string) => {
+    if (status == "processing") {
+      return "Chờ xác nhận";
+    }
+    if (status == "confirmed") {
+      return "Đã xác nhận";
+    }
+    if (status == "delivering") {
+      return "Đang vận chuyển";
+    }
+    if (status == "cancelled") {
+      return "Đã huỷ đơn";
+    }
+    if (status == "delivered") {
+      return "Đã hoàn thành";
+    }
+    if (status == "returned") {
+      return "Đã hoàn hàng";
+    }
+    return "Chờ xác nhận";
+  };
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -257,7 +277,7 @@ const OrderDetailView = (props: Props) => {
             </Button>
           )}
           {data?.data.status === "delivering" && (
-            <Button onClick={() => handleOpenModelStatus("delivered")}>
+            <Button onClick={() => handleOpenModelStatus("pendingComplete")}>
               Hoàn thành đơn
             </Button>
           )}
@@ -366,7 +386,7 @@ const OrderDetailView = (props: Props) => {
                 borderBottom="1px solid #ccc"
               >
                 <Text fontSize={14} fontWeight="semibold">
-                  Tổng Tiền sản phẩm:{" "}
+                  Tổng tiền sản phẩm:{" "}
                 </Text>
                 <Text fontSize={14} fontWeight="semibold">
                   {data.data.products
@@ -386,10 +406,10 @@ const OrderDetailView = (props: Props) => {
                 borderBottom="1px solid #ccc"
               >
                 <Text fontSize={14} fontWeight="semibold">
-                  Giảm Giá:{" "}
+                  Giảm giá:{" "}
                 </Text>
                 <Text fontSize={14} fontWeight="semibold">
-                  0 đ
+                  0đ
                 </Text>
               </Flex>
               <Flex
@@ -419,7 +439,7 @@ const OrderDetailView = (props: Props) => {
                 <Text fontSize={14} fontWeight="semibold">
                   {(
                     data?.data.total_amount +
-                    data?.data.shipping_info?.transportation_fee
+                    (data?.data.shipping_info?.transportation_fee || 0)
                   ).toLocaleString() || 0}
                   đ
                 </Text>
@@ -554,7 +574,7 @@ const OrderDetailView = (props: Props) => {
         >
           <Heading fontSize={18}>
             {" "}
-            Trạng thái đơn hàng: {data?.data.status}
+            Trạng thái đơn hàng: {checkStatusOrder(data?.data.status)}
           </Heading>
           <Flex gap={4}>
             <Button

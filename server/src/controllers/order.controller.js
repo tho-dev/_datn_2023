@@ -377,6 +377,7 @@ export const updateStatus = async (req, res, next) => {
       "processing",
       "confirmed",
       "delivering",
+      "pendingComplete",
       "cancelled",
       "delivered",
       "returned",
@@ -416,12 +417,10 @@ export const updateStatus = async (req, res, next) => {
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
-    if (status == "delivered") {
-      await Order.findByIdAndUpdate(id, {
-        $set: {
-          payment_status: "paid",
-        },
-      });
+    if (status === "delivered") {
+      throw createError.BadRequest(
+        "Đợi xác nhận từ khách hàng để hoàn thành đơn"
+      );
     }
     if (status === "confirmed" && ordered.shipping_method === "shipped") {
       const shipping = await Shipping.findOne({ _id: ordered.shipping_info });
@@ -902,14 +901,38 @@ export const serviceFree = async (req, res, next) => {
 // lấy đơn hàng theo số điện thoại
 export const getOrderByPhoneNumber = async (req, res, next) => {
   try {
-    const { phone_number } = req.body;
-    const results = await Order.find({ phone_number: phone_number });
+    const {
+      _page = 1,
+      _sort = "created_at",
+      _order = "desc",
+      _limit = 6,
+      search,
+      phone_number,
+    } = req.query;
+    const conditions = {};
 
-    if (!results || results.length === 0) {
+    if (search) {
+      conditions.customer_name = { $regex: new RegExp(search, "i") };
+    }
+    if (phone_number) {
+      conditions.phone_number = phone_number;
+    }
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        [_sort]: _order == "desc" ? -1 : 1,
+      },
+      select: ["-deleted", "-deleted_at"],
+    };
+
+    const { docs, ...paginate } = await Order.paginate(conditions, options);
+
+    if (!docs) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
 
-    const orderDetailsPromises = results.map(async (result) => {
+    const orderDetailsPromises = docs.map(async (result) => {
       const orderDetails = await Order_Detail.find({ order_id: result._id });
       const newOrder = await Promise.all(
         orderDetails.map(async (item) => {
@@ -930,11 +953,13 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
     });
 
     const ordersWithDetails = await Promise.all(orderDetailsPromises);
-
     return res.json({
       status: 200,
-      message: "Tìm thấy đơn hàng thành công",
-      data: ordersWithDetails,
+      message: "Lấy toàn bộ sản phẩm thành công",
+      data: {
+        items: ordersWithDetails,
+        paginate,
+      },
     });
   } catch (error) {
     next(error);
@@ -1375,6 +1400,38 @@ export const delete_all_order = async (req, res, next) => {
     return res.json({
       status: 200,
       message: "thành công",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateStatusDelivered = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const ordered = await Order.findById(id);
+    if (ordered.status !== "pendingComplete") {
+      throw createError.NotFound("Trạng thái đơn hàng không hợp lệ");
+    }
+    if (!ordered) {
+      throw createError.NotFound("Không tìm thấy đơn hàng");
+    }
+    const order = await Order.findByIdAndUpdate(
+      id,
+      {
+        $set: { status: "delivered", payment_status: "paid" },
+        $push: {
+          status_detail: {
+            status: "delivered",
+          },
+        },
+      },
+      { new: true }
+    );
+    return res.json({
+      status: 200,
+      message: "Cập nhật trạng thái thành công",
+      data: order,
     });
   } catch (error) {
     next(error);
