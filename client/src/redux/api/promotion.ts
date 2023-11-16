@@ -13,14 +13,16 @@ const promotionApi = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: process.env.VITE_API_URL + "/promotions",
 	}),
-	tagTypes: ["PromotionTag"],
+	tagTypes: ["PromotionTag", "PromotionSingleTag"],
 	endpoints: (build) => ({
 		getAllPromotion: build.query({
 			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
 			providesTags: ["PromotionTag"],
 		}),
 		getSinglePromotion: build.query({
-			query: (id) => `/${id}`,
+			query: ({ slug }) => `/detail?slug=${slug}`,
+			providesTags: ["PromotionSingleTag"],
+			transformResponse: (res: any) => res?.data,
 		}),
 		createPromotion: build.mutation({
 			query: (body) => ({
@@ -36,7 +38,7 @@ const promotionApi = createApi({
 				method: "PUT",
 				body: patch,
 			}),
-			invalidatesTags: ["PromotionTag"],
+			invalidatesTags: ["PromotionTag", "PromotionSingleTag"],
 		}),
 		deletePromotion: build.mutation({
 			query: (id) => ({

@@ -3,6 +3,8 @@ import { promotionSchema, promotionValueSchema } from "../validations/promotion"
 import createError from "http-errors"
 import { Product, Sku, Variant, Option, OptionValue } from "../models/product.model"
 import { sortOptions } from "../utils/fc"
+import { Demand } from "../models/demand.model"
+import moment from "moment/moment"
 
 export async function getAllPromotion(req, res, next) {
 	try {
@@ -48,6 +50,11 @@ export async function getPromtionDetail(req, res, next) {
 		const promotionValues = await PromotionValue.find({
 			promotion_id: promotion?._id
 		})
+
+		const product = await Product.findOne({
+			_id: promotionValues?.[0]?.product_id
+		}).populate('category_id').select('category_id')
+
 
 		const getSku = async (id) => {
 			const sku = await Sku.findOne({
@@ -107,7 +114,19 @@ export async function getPromtionDetail(req, res, next) {
 			message: 'Thành công',
 			data: {
 				...promotion.toObject(),
-				product_items: productItems
+				start_time: new Date(promotion?.start_time).toISOString().slice(0, 16),
+				expired_time: new Date(promotion?.expired_time).toISOString().slice(0, 16),
+				status: {
+					label: promotion.status ? 'Đang khuyến mại' : 'Ngừng khuyến mại',
+					value: product.status
+				},
+				category: {
+					label: product.category_id.name,
+					value: product.category_id.slug
+				},
+
+
+				items: productItems
 			}
 		})
 	} catch (error) {
@@ -189,6 +208,19 @@ export async function updatePromotion(req, res, next) {
 			throw createError.BadRequest(errors)
 		}
 
+		const promotionFind = await Promotion.findOne({
+			_id: id
+		})
+
+		if (!promotionFind) {
+			throw createError.NotFound('Không tìm thấy khuyến mãi nào')
+		}
+
+		// xóa tất option_value trước đó
+		await PromotionValue.deleteMany({
+			promotion_id: id
+		})
+
 		const { items, ...body } = payload
 
 		const skus = await Sku.find({
@@ -215,27 +247,53 @@ export async function updatePromotion(req, res, next) {
 			price_discount_percent: -1
 		})
 
-		// tạo promotion
-		const promotion = await Promotion.create({
+		// cập nhật promotion
+		const doc = await Promotion.findOneAndUpdate({ _id: id }, {
 			...body,
 			max_percent: skuMaxPersent?.[0]?.price_discount_percent,
-			min_sale_price: skuMinPrice?.[0]?.price
-		})
+			min_sale_price: skuMinPrice?.[0]?.price, updated_at: moment(new Date).toISOString()
+		}, { new: true })
 
 		// // tạo promotion value 
 		await Promise.all((skus?.map(async (sku) => {
 			await PromotionValue.create({
 				sku_id: sku?._id,
-				promotion_id: promotion?._id,
+				promotion_id: id,
 				product_id: sku?.product_id,
 			})
 		})))
 
 
 		return res.json({
-			status: 201,
+			status: 200,
 			messsage: 'Thành công',
-			// data: promotion
+			data: doc
+		})
+	} catch (error) {
+		console.log('error', error)
+		next(error)
+	}
+}
+
+
+export async function removePromotion(req, res, next) {
+	try {
+		const id = req.params.id
+		const promotion = await Promotion.findOne({ _id: id })
+
+		if (!promotion) {
+			throw createError.BadRequest("Khuyến mãi của bạn không được tìm thấy")
+		}
+
+		await Promotion.deleteOne({ _id: id })
+		await PromotionValue.deleteMany({
+			promotion_id: id
+		})
+
+		return res.json({
+			status: 200,
+			message: 'Xóa thành công',
+			data: promotion,
 		})
 	} catch (error) {
 		next(error)

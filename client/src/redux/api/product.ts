@@ -7,6 +7,7 @@ type TQuery = {
 	_sort?: string;
 	_page?: number;
 	_limit?: number;
+	_keyword?: string;
 };
 
 const productApi = createApi({
@@ -24,12 +25,22 @@ const productApi = createApi({
 		},
 	}),
 	endpoints: (builder) => ({
+		getSearch: builder.query({
+			query: (query: TQuery) => `/?${objectToUrlParams(query)}`,
+		}),
 		getBySlug: builder.query<any, string>({
 			query: (slug) => ({
 				url: `/${slug}`,
 				method: "GET",
 			}),
 			providesTags: (result, error, slug) => [{ type: "ProductTag", slug }],
+		}),
+		compareProduct: builder.mutation({
+			query: (body) => ({
+				url: "/compare",
+				method: "POST",
+				body,
+			}),
 		}),
 		getAllVariant: builder.query({
 			query: ({ id }: { id: string }) => ({
@@ -109,6 +120,8 @@ export const {
 	useUpdateProductMutation,
 	useGetSkuQuery,
 	useUpdateVariantMutation,
+	useCompareProductMutation,
+	useGetSearchQuery,
 } = productApi;
 export const productReducer = productApi.reducer;
 export default productApi;

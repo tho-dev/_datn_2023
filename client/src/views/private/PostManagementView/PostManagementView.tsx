@@ -405,7 +405,7 @@ const PostView = (props: Props) => {
 						_page: 1,
 						_limit: 20,
 						_order: "desc",
-						_sort: "created_at"
+						_sort: "created_at",
 					}}
 				/>
 

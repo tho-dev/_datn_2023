@@ -46,206 +46,223 @@ import { SearchView } from "~/views/public/SearchView";
 import { ThankView } from "~/views/public/ThankView";
 import { PromotionView as PromotionManageView } from "~/views/private/PromotionView";
 import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
-import NewsCategory from "~/views/public/NewsView/components/NewsCategory";
-
-
-
+import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
+import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
+import UpdateOrder from "~/views/private/OrderManagementView/updateOrder/UpdateOrder";
+import ReturedOrder from "~/views/private/OrderManagementView/childrenViews/ReturedOrder";
 
 const routes: RouteObject[] = [
-	{
-		path: "/",
-		children: [
-			{
-				element: <MainLayout />,
-				children: [
-					{
-						index: true,
-						element: <HomeView />,
-					},
-					{
-						path: "gio-hang",
-						element: <CartView />,
-					},
-					{
-						path: "thanh-toan",
-						element: <Payment />,
-					},
-					{
-						path: "thong-tin",
-						element: <ProfileView />,
-					},
-					{
-						path: ":slug",
-						element: <SlugView />,
-					},
-					{
-						path: ":slug/:slug",
-						element: <ProductDetailView />,
-					}, 
-					{
-						path: "tin-tuc/:slug",
-						element: <NewsView />,
-					},
-					{
-						path: "tin-tuc/:slug/:slug",
-						element: <ContentView />,
-					},
-					{
-						path: "so-sanh",
-						element: <CompareView />,
-					},
-					{
-						path: "tim-kiem",
-						element: <SearchView />,
-					},
-					{
-						path: "lich-su-mua-hang",
-						element: <HistoryOrderView />,
-					},
-					{
-						path: "khuyen-mai",
-						element: <PromotionView />,
-					},
-					{
-						path: "thanks",
-						element: <ThankView />,
-					},
-				],
-			},
-			{
-				element: <DefaultLayout />,
-				children: [
-					{
-						element: <AuthLayout />,
-						children: [
-							{
-								path: "dang-nhap",
-								element: <SignInView />,
-							},
-							{
-								path: "dang-ky",
-								element: <SignUpView />,
-							},
-							{
-								path: "thiet-lap-mat-khau",
-								element: <ResetPasswordView />,
-							},
-							{
-								path: "quen-mat-khau",
-								element: <CreatePasswordView />,
-							},
-						],
-					},
-					{
-						path: "*",
-						element: <NotFoundView />,
-					},
-				],
-			},
-			{
-				path: "/admin",
-				element: <AdminLayout />,
-				children: [
-					{
-						index: true,
-						element: <DashboardView />,
-					},
-					{
-						path: "khuyen-mai",
-						element: <PromotionManageView />,
-					},
-					{
-						path: "san-pham",
-						element: <ProductManagerView />,
-					},
-					{
-						path: "san-pham/add",
-						element: <AddProductManagerView />,
-					},
-					{
-						path: "san-pham/:id/update",
-						element: <UpdateProductManagerView />,
-					},
-					{
-						path: "san-pham/:product_id/bien-the/:sku_id",
-						element: <VariantMangerView />,
-					},
-					{
-						path: "danh-muc",
-						element: <CategoryManagerView />,
-					},
-					{
-						path: "danh-muc-bai-viet",
-						element: <PostCategoryView />,
-					},
-					{
-						path: "bai-viet",
-						element: <PostManagementView />,
-					},
-					{
-						path: "bai-viet/add",
-						element: (
-							<AddPostMangerView
-								onClose={function (): void {
-									throw new Error("Function not implemented.");
-								}}
-								parents={undefined}
-							/>
-						),
-					},
-					{
-						path: "don-hang",
-						element: <OrderManagementView />,
-					},
-					{
-						path: "don-hang/:id",
-						element: <OrderDetailView />,
-					},
-					{
-						path: "tai-khoan",
-						element: <UserListManagerView />,
-					},
-					{
-						path: "tai-khoan/add",
-						element: <AddUserListManagerView />,
-					},
-					{
-						path: "tai-khoan/:id/update",
-						element: <UpdateUserListManagerView />,
-					},
-					{
-						path: "cau-hinh",
-						element: <SettingView />,
-					},
-					{
-						path: "profile",
-						element: <ProfileManagerView />,
-					},
-					{
-						path: "thuong-hieu",
-						element: <BrandView />,
-					},
-					{
-						path: "nhu-cau",
-						element: <DemandView />,
-					},
-				],
-			},
-			{
-				path: "404",
-				element: <NotFoundView />,
-			},
-			{
-				path: "*",
-				element: <NotFoundView />,
-			},
-		],
-	},
+  {
+    path: "/",
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: <HomeView />,
+          },
+          {
+            path: "gio-hang",
+            element: <CartView />,
+          },
+          {
+            path: "thanh-toan",
+            element: <Payment />,
+          },
+          {
+            path: "so-sanh/:slug",
+            element: <CompareView />,
+          },
+          {
+            path: "thong-tin",
+            element: <ProfileView />,
+          },
+          {
+            path: ":slug",
+            element: <SlugView />,
+          },
+          {
+            path: ":slug/:slug",
+            element: <ProductDetailView />,
+          },
+          {
+            path: "tin-tuc/:slug",
+            element: <NewsView />,
+          },
+          {
+            path: "tin-tuc/:slug/:slug",
+            element: <ContentView />,
+          },
+
+          {
+            path: "tim-kiem",
+            element: <SearchView />,
+          },
+          {
+            path: "lich-su-mua-hang",
+            element: <HistoryOrderView />,
+          },
+          {
+            path: "khuyen-mai",
+            element: <PromotionView />,
+          },
+          {
+            path: "thanks",
+            element: <ThankView />,
+          },
+        ],
+      },
+      {
+        element: <DefaultLayout />,
+        children: [
+          {
+            element: <AuthLayout />,
+            children: [
+              {
+                path: "dang-nhap",
+                element: <SignInView />,
+              },
+              {
+                path: "dang-ky",
+                element: <SignUpView />,
+              },
+              {
+                path: "thiet-lap-mat-khau",
+                element: <ResetPasswordView />,
+              },
+              {
+                path: "quen-mat-khau",
+                element: <CreatePasswordView />,
+              },
+            ],
+          },
+          {
+            path: "*",
+            element: <NotFoundView />,
+          },
+        ],
+      },
+      {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <DashboardView />,
+          },
+          {
+            path: "khuyen-mai",
+            element: <PromotionManageView />,
+          },
+          {
+            path: "khuyen-mai/gmail/add",
+            element: <AddGmailView />,
+          },
+          {
+            path: "khuyen-mai/gmail",
+            element: <GmailView />,
+          },
+          {
+            path: "san-pham",
+            element: <ProductManagerView />,
+          },
+          {
+            path: "san-pham/add",
+            element: <AddProductManagerView />,
+          },
+          {
+            path: "san-pham/:id/update",
+            element: <UpdateProductManagerView />,
+          },
+          {
+            path: "san-pham/:product_id/bien-the/:sku_id",
+            element: <VariantMangerView />,
+          },
+          {
+            path: "danh-muc",
+            element: <CategoryManagerView />,
+          },
+          {
+            path: "danh-muc-bai-viet",
+            element: <PostCategoryView />,
+          },
+          {
+            path: "bai-viet",
+            element: <PostManagementView />,
+          },
+          {
+            path: "bai-viet/add",
+            element: (
+              <AddPostMangerView
+                onClose={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+                parents={undefined}
+              />
+            ),
+          },
+          {
+            path: "don-hang",
+            element: <OrderManagementView />,
+          },
+          {
+            path: "don-hang/:id",
+            element: <OrderDetailView />,
+          },
+          {
+            path: "don-hang/cap-nhat/:id",
+            element: <UpdateOrder />,
+          },
+          {
+            path: "don-hang/hang-hoan",
+            element: <ReturedOrder />,
+          },
+          {
+            path: "tai-khoan",
+            element: <UserListManagerView />,
+          },
+          {
+            path: "tai-khoan/add",
+            element: <AddUserListManagerView />,
+          },
+          {
+            path: "tai-khoan/:id/update",
+            element: <UpdateUserListManagerView />,
+          },
+          {
+            path: "cau-hinh",
+            element: <SettingView />,
+          },
+          {
+            path: "profile",
+            element: <ProfileManagerView />,
+          },
+          {
+            path: "thuong-hieu",
+            element: <BrandView />,
+          },
+          {
+            path: "nhu-cau",
+            element: <DemandView />,
+          },
+        ],
+      },
+      {
+        path: "404",
+        element: <NotFoundView />,
+      },
+      {
+        path: "*",
+        element: <NotFoundView />,
+      },
+    ],
+  },
 ];
 
 routes.push({
-	path: "/admin",
-	element: <NotFoundView />,
+  path: "/admin",
+  element: <NotFoundView />,
 });
 
 export default routes;

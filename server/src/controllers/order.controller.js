@@ -144,10 +144,12 @@ export const createOrder = async (req, res, next) => {
       await new_order.save();
     }
     const order_created = new_order.toObject();
-    await Cart.findOneAndUpdate(
-      { cart_id },
-      { $set: { products: [], total_money: 0 } }
-    );
+    if (new_order) {
+      await Cart.findOneAndUpdate(
+        { cart_id },
+        { $set: { products: [], total_money: 0 } }
+      );
+    }
     return res.json({
       status: 200,
       message: "Đặt hàng thành công",
@@ -157,7 +159,6 @@ export const createOrder = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -943,7 +944,9 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
 export const getOrderByUserId = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Order.find({ user_id: id });
+    const result = await Order.find({ user_id: id }).populate([
+      "shipping_info",
+    ]);
     if (result.length <= 0) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }

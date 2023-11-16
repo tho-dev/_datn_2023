@@ -53,7 +53,16 @@ const ViewedProduct = ({ products }: PropTypes) => {
           {products?.map((item: any, index: number) => {
             return (
               <SwiperSlide key={index}>
-                <CardThinkPro product={item} />
+                <Box
+                  w="full"
+                  h="full"
+                  overflow="hidden"
+                  rounded="lg"
+                  borderWidth="1px"
+                  borderColor="border.primary"
+                >
+                  <CardThinkPro product={item} />
+                </Box>
               </SwiperSlide>
             );
           })}

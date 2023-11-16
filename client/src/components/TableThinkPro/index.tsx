@@ -94,8 +94,8 @@ export default function TableThinkPro<Data extends object>({
 								const meta: any = header.column.columnDef.meta;
 								return (
 									<Th
-										key={header.id}
-										onClick={header.column.getToggleSortingHandler()}
+										key={header?.id}
+										onClick={header?.column?.getToggleSortingHandler()}
 										isNumeric={meta?.isNumeric}
 										textTransform="none"
 										textAlign="start"
@@ -166,8 +166,8 @@ export default function TableThinkPro<Data extends object>({
 					position="relative"
 				>
 					{!loading ? (
-						table.getRowModel().rows.map((row) => (
-							<Tr key={row.id}>
+						table.getRowModel()?.rows?.map((row) => (
+							<Tr key={row?.id}>
 								{row.getVisibleCells().map((cell) => {
 									const meta: any = cell.column.columnDef.meta;
 									return (
