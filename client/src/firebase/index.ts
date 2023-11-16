@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -10,7 +9,7 @@ import { getDatabase } from "firebase/database";
 const firebaseConfig = {
     apiKey: "AIzaSyAPUFhy6XQHedGMnKaKxcZGPosYN3ZcpCw",
     authDomain: "datn-2023-c6aef.firebaseapp.com",
-    databaseURL: "https://datn-2823-caef-default-rtdb.asia-southeast1.firebasedatabase.app",
+    databaseURL: "https://datn-2023-c6aef-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "datn-2023-c6aef",
     storageBucket: "datn-2023-c6aef.appspot.com",
     messagingSenderId: "23337930854",
@@ -19,5 +18,4 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const db = getDatabase(app);
+export const app = initializeApp(firebaseConfig);

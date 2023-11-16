@@ -7,20 +7,15 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
-import { set, ref, onValue, remove, update } from "firebase/database";
-import { db } from '~/firebase';
+// import { set, ref, onValue, remove, update } from "firebase/database";
+// import { db } from '~/firebase';
+import { getDatabase, ref, set } from "firebase/database";
+import { app } from "~/firebase";
+
 
 type Props = {
   onClose: () => void;
 };
-
-interface IComment {
-  id: string;
-  userId: string;
-  content: string;
-  dateTime?: any;
-  productId: string;
-}
 
 const AddComment = ({ onClose }: Props) => {
   const {
@@ -34,20 +29,16 @@ const AddComment = ({ onClose }: Props) => {
   function onSubmit(values: any) {
 
     const uuid = uuidv4();
+    const db = getDatabase(app);
 
-    const commentToSend: IComment = {
+    set(ref(db, 'comments/' + uuid), {
       id: uuid,
       userId: 'abc',
       content: values,
       dateTime: Date.now(),
       productId: 'abc'
-    }
-    set(ref(db, `comments/${uuid}`), {
-      ...commentToSend
-    });
+    })
   }
-
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
