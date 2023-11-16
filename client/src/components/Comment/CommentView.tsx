@@ -1,9 +1,6 @@
-import { Box, Heading, Text } from "@chakra-ui/layout";
-import Assess from "./components/Assess";
-import Filter from "./components/Filter";
+import { Box } from "@chakra-ui/layout";
 import Client from "./components/Client";
-import { Button, useDisclosure } from "@chakra-ui/react";
-import DialogThinkPro from "~/components/DialogThinkPro";
+import { useDisclosure } from "@chakra-ui/react";
 import AddComment from "./components/AddComment";
 
 const CommentView = () => {

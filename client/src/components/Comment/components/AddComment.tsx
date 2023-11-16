@@ -1,21 +1,26 @@
 import { useForm } from "react-hook-form";
 import {
   FormErrorMessage,
-  FormLabel,
   FormControl,
-  Input,
   Button,
   Flex,
-  Text,
   Textarea,
-  Box,
-  Image,
 } from "@chakra-ui/react";
-import { CloseSmallIcon, PictureIcon, Star } from "~/components/common/Icons";
+import { v4 as uuidv4 } from "uuid";
+import { set, ref, onValue, remove, update } from "firebase/database";
+import { db } from '~/firebase';
 
 type Props = {
   onClose: () => void;
 };
+
+interface IComment {
+  id: string;
+  userId: string;
+  content: string;
+  dateTime?: any;
+  productId: string;
+}
 
 const AddComment = ({ onClose }: Props) => {
   const {
@@ -24,14 +29,25 @@ const AddComment = ({ onClose }: Props) => {
     formState: { errors, isSubmitting },
   } = useForm();
 
+
+
   function onSubmit(values: any) {
-    return new Promise((resolve: any) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
+
+    const uuid = uuidv4();
+
+    const commentToSend: IComment = {
+      id: uuid,
+      userId: 'abc',
+      content: values,
+      dateTime: Date.now(),
+      productId: 'abc'
+    }
+    set(ref(db, `comments/${uuid}`), {
+      ...commentToSend
     });
   }
+
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
