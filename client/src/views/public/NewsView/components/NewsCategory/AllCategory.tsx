@@ -1,10 +1,9 @@
-import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem, Link } from "@chakra-ui/layout";
+import { Box, Text, Link } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import { IPost } from "~/interface/post";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { addViewedItem } from "~/redux/slices/globalSlice";
+import { useAppDispatch } from "~/redux/hook/hook";
 import { Link as ReactRouterLink } from "react-router-dom";
-import moment from "moment";
+import { useState } from "react";
 
 
 type Props = {
@@ -13,23 +12,21 @@ type Props = {
 
 const AllCategory = ({ product }: Props) => {
     const dispatch = useAppDispatch();
+    const [clicked, setClicked] = useState(false);
 
-	const handleViewProduct = () => {
-        const productData = {
-          // productName: "LG Gram 14 2022",
-          // price: "19.999.000",
-        };
-        dispatch(addViewedItem(productData));
-      
-        if (product?.slug) {
-          window.location.href = product?.slug;
+    const handleViewProduct = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+
+        if (!clicked) {
+            setClicked(true);
+
+            window.location.href = `${product?.slug}`
         }
-      };
+    };
 
 
     return (
         <Link
-            // to={product?.slug}
             to={`tin-tuc/${product?.slug}`}
             as={ReactRouterLink}
             h="full"
@@ -44,7 +41,7 @@ const AllCategory = ({ product }: Props) => {
                 transition: "all 0.3s ease-in",
                 backgroundColor: "bg.blue",
                 "& > *": {
-                    color: "text.white",  
+                    color: "text.white",
                 },
             }}
             onClick={handleViewProduct}

@@ -115,6 +115,15 @@ const PostView = (props: Props) => {
 					<Text
 						fontWeight="medium"
 						fontSize="13px"
+						css={{
+							display: "-webkit-box",
+							WebkitLineClamp: 2,
+							WebkitBoxOrient: "vertical",
+							overflow: "hidden",
+							"& p": {
+								display: "inline",
+							},
+						}}
 					>
 						{info.getValue()}
 					</Text>

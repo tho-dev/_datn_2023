@@ -20,6 +20,7 @@ import QuillThinkPro from "~/components/QuillThinkPro";
 import { useEffect, useState } from "react";
 import { useNavigate, Link as ReactRouterLink } from "react-router-dom";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useAppSelector } from "~/redux/hook/hook";
 type Props = {
 	onClose: () => void;
 	parents: any;
@@ -37,8 +38,8 @@ const AddPostMangerView = ({ onClose }: Props) => {
 		reset,
 	} = useForm();
 	const [createProduct] = useCreatePostMutation();
-	const [parents, setParents] = useState<any>([]); 
- 
+	const [parents, setParents] = useState<any>([]);
+
 
 	const { data: categories } = useGetAllCategoryQuery({
 		_limit: 20,
@@ -61,14 +62,18 @@ const AddPostMangerView = ({ onClose }: Props) => {
 
 	const [createPost, { isLoading }] = useCreatePostMutation();
 	const navigate = useNavigate();
+	const { user } = useAppSelector((state) => state.persistedReducer.global);
+
 	const onSubmit = async (data: any) => {
 		data = {
-			...data, 
+			...data,
 			parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
+			created_by: `${user.first_name} ${user.last_name}`, // Set created_by field
 		};
+		console.log('Submitting data:', data);
 
-		try { 
+		try {
 			await createPost(data).unwrap();
 			toast({
 				title: "Thành công",
@@ -162,7 +167,7 @@ const AddPostMangerView = ({ onClose }: Props) => {
 									h="200px"
 								>
 									<FileUploadThinkPro
-										fileName="category"
+										fileName="banner"
 										getDataFn={(data: any) => setValue("thumbnail", data)}
 										setData={watch("thumbnail")}
 									/>
