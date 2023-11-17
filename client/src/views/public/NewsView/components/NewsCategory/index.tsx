@@ -31,7 +31,7 @@ const NewsCategory = () => {
 		}
 	}, [posts]);
 
-	console.log(data);
+	// console.log(data);
 
 	return (
 		<Box>

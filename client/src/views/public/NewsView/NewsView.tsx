@@ -1,7 +1,6 @@
 import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem } from "@chakra-ui/layout";
 import NewsCategory from "./components/NewsCategory";
 import { Divider, Button } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/react";
 import { useGetAllPostQuery } from "~/redux/api/post";
 import AllNewsView from "./AllNewsView";
 import { useEffect, useState } from "react";
@@ -14,7 +13,7 @@ const NewsView = () => {
 	const [data, setData] = useState<any>([]);
 	const [currentPage, setCurrentPage] = useState(1);
 
-	const { data: posts, isLoading, isFetching } = useGetAllPostQuery({
+	const { data: posts } = useGetAllPostQuery({
 		_order: "asc",
 		_sort: "date",
 		_page: currentPage,
@@ -28,10 +27,7 @@ const NewsView = () => {
 			setData([...docs]);
 		}
 	}, [posts]);
-
-	const handleCompare = () => {
-		setShowCompare(!showCompare);
-	};
+ 
 
 	const loadMore = () => {
 		if (posts?.data?.paginate?.hasNextPage) {
@@ -73,6 +69,7 @@ const NewsView = () => {
 							color="text.blue"
 							fontWeight="bold"
 							onClick={loadMore}  
+							disabled={!posts?.data?.paginate?.hasNextPage}
 							_hover={{ bg: "gray.200" }}  
 						>
 							Xem Thêm
