@@ -18,8 +18,10 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import {
+  CloseSmallIcon,
   NavArrowLeflIcon,
   NavArrowRightIcon,
+  PlusIcon,
 } from "~/components/common/Icons/index";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import DetailOrder from "./DetailOrder";
@@ -31,9 +33,12 @@ import orderApi, {
   useReturnOrderMutation,
 } from "~/redux/api/order";
 import moment from "moment";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useAppDispatch } from "~/redux/hook/hook";
 import LoadingPolytech from "~/components/LoadingPolytech";
+import { chuyenDoiSoDienThoaiVe0, formatPhoneNumberPlus } from "~/utils/fc";
+import FileUploadThinkPro from "~/components/FileUploadThinkPro";
+import Media from "~/views/private/ProductManagerView/components/AddProductMangerView/components/Media";
 
 type Props = {
   dataOrder: any[];
@@ -65,8 +70,14 @@ const ListOrder = ({
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    control,
     formState: { errors },
   } = useForm();
+  console.log(watch("images.url"));
+
   const [orderDetail, setOrderDetail] = useState({} as any);
 
   const toast = useToast();
@@ -143,6 +154,16 @@ const ListOrder = ({
     setOrderDetail(order);
   };
   const onSubmitFormReturn = (data: any) => {
+    if (data?.images.length > 3) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: "Tối đa 3 ảnh sản phẩm",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const currentDate = new Date();
     const targetTime = new Date(orderDetail.updated_at);
     targetTime.setDate(targetTime.getDate() + 1);
@@ -223,11 +244,12 @@ const ListOrder = ({
   if (loading) {
     return <LoadingPolytech />;
   }
+
   return (
     <Box p="4" rounded="md">
       <Flex justifyContent="space-between">
         <Heading py="4" color="text.black" fontSize="xl">
-          Đơn hàng của bạn : {phoneNumber}
+          Đơn hàng của bạn : {formatPhoneNumberPlus(phoneNumber)}
         </Heading>
         <Flex
           gap="2"
@@ -240,7 +262,6 @@ const ListOrder = ({
             w="9"
             h="9"
             rounded="full"
-            cursor="pointer"
             alignItems="center"
             justifyContent="center"
             backgroundColor="bg.white"
@@ -261,7 +282,6 @@ const ListOrder = ({
             w="9"
             h="9"
             rounded="full"
-            cursor="pointer"
             alignItems="center"
             justifyContent="center"
             backgroundColor="bg.white"
@@ -287,13 +307,7 @@ const ListOrder = ({
             targetTime.setMinutes(targetTime.getMinutes() + 15);
             return (
               <GridItem>
-                <Box
-                  p="4"
-                  rounded="md"
-                  backgroundColor="bg.white"
-                  cursor={"pointer"}
-                  minH={250}
-                >
+                <Box p="4" rounded="md" backgroundColor="bg.white" minH={250}>
                   <Flex justifyContent="space-between">
                     <Text fontSize="14px" fontWeight={"bold"}>
                       Mã đơn hàng:{" "}
@@ -370,7 +384,12 @@ const ListOrder = ({
                   </Box>
                   <Divider />
 
-                  <Flex justifyContent="space-between" alignItems={"center"}>
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems={"center"}
+                    w={"100%"}
+                    gap={4}
+                  >
                     <Flex gap={2} my={2}>
                       <Button
                         fontWeight={"600"}
@@ -421,25 +440,26 @@ const ListOrder = ({
                         </Button>
                       )}
                     </Flex>
-
-                    <Text fontSize="14px" fontWeight="bold">
-                      Thành tiền:{" "}
-                      <Text
-                        as={"span"}
-                        fontSize="14px"
-                        fontWeight={"bold"}
-                        color={"text.red"}
-                      >
-                        {item?.total_amount.toLocaleString()}đ
+                    <Box>
+                      <Text fontSize="14px" fontWeight="bold">
+                        Thành tiền:{" "}
+                        <Text
+                          as={"span"}
+                          fontSize="14px"
+                          fontWeight={"bold"}
+                          color={"text.red"}
+                        >
+                          {item?.total_amount.toLocaleString()}đ
+                        </Text>
                       </Text>
-                    </Text>
+                    </Box>
                   </Flex>
                 </Box>
               </GridItem>
             );
           })
         ) : (
-          <Box>không có gì</Box>
+          <Box>Không có đơn hàng nào</Box>
         )}
       </Grid>
 
@@ -507,6 +527,7 @@ const ListOrder = ({
                   {...register("phone_number", {
                     required: "Trường bắt buộc nhập",
                   })}
+                  isReadOnly
                 />
                 <FormErrorMessage>
                   {(errors.phone_number as any) &&
@@ -527,6 +548,16 @@ const ListOrder = ({
                 />
               </FormControl>
             </Flex>
+            <Box>
+              <Media
+                register={register}
+                watch={watch}
+                getValues={getValues}
+                setValue={setValue}
+                errors={errors}
+                control={control}
+              />
+            </Box>
           </Box>
           <Flex py={"5"} px={"5"} justifyContent="flex-end" gap={6}>
             <Button

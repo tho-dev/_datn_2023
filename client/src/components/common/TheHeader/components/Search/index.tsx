@@ -17,7 +17,7 @@ import { useNavigate } from "react-router";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { SearchIcon, UserIcon } from "~/components/common/Icons";
 import { useGetSearchQuery } from "~/redux/api/product";
-import { setKeywords } from "~/redux/slices/globalSlice";
+import { addViewedItem, setKeywords } from "~/redux/slices/globalSlice";
 import { AppDispatch, RootState } from "~/redux/store";
 import { formatNumber } from "~/utils/fc";
 
@@ -34,7 +34,7 @@ const Search = (props: Props) => {
     (state: RootState) => state.persistedReducer.global
   );
 
-  const { data } = useGetSearchQuery(
+  const { data, isFetching } = useGetSearchQuery(
     {
       _page: 1,
       _limit: 1000,
@@ -59,6 +59,9 @@ const Search = (props: Props) => {
     }, 200);
   };
 
+  const handleViewProduct = (product: any) => {
+    dispatch(addViewedItem(product));
+  };
   return (
     <Flex
       w="full"
@@ -87,7 +90,7 @@ const Search = (props: Props) => {
         border="none"
         lineHeight="1.6"
         backgroundColor="bg.gray"
-        placeholder="Tên sản phẩm, nhu cầu, hàng"
+        placeholder="Tên sản phẩm, mã sản phẩm..."
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={(e) => setKeyword(e?.target?.value?.trim())}
@@ -180,73 +183,80 @@ const Search = (props: Props) => {
               Sản phẩm
             </Heading>
             <Flex gap="3" mt="4" flexDir="column">
-              {data?.data?.items?.map((item: any, index: number) => {
-                return (
-                  <Flex
-                    key={index}
-                    gap="4"
-                    alignItems="center"
-                    justifyContent="flex-start"
-                    as={ReactRouterLink}
-                    to={`/${item?.shared_url}`}
-                    display="inline-flex"
-                    _hover={{
-                      textDecor: "none",
-                      bgColor: "#f1f1f1",
-                    }}
-                    rounded="6px"
-                  >
-                    <Box
-                      w="20"
-                      h="20"
-                      minW="20"
-                      borderWidth="1px"
-                      borderColor="border.gray"
+              {!isFetching ? (
+                data?.data?.items?.map((item: any, index: number) => {
+                  return (
+                    <Flex
+                      key={index}
+                      gap="4"
+                      alignItems="center"
+                      justifyContent="flex-start"
+                      as={ReactRouterLink}
+                      to={`/${item?.shared_url}`}
+                      display="inline-flex"
+                      _hover={{
+                        textDecor: "none",
+                        bgColor: "#f1f1f1",
+                      }}
                       rounded="6px"
-                      overflow="hidden"
+                      onClick={() => handleViewProduct(item)}
                     >
-                      <Image
-                        src={item?.image}
-                        w="full"
-                        h="full"
-                        objectFit="contain"
-                      />
-                    </Box>
-                    <Flex flexDir="column" justifyContent="flex-start">
-                      <Text
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        css={{
-                          display: "-webkit-box",
-                          WebkitLineClamp: 1,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                        }}
+                      <Box
+                        w="20"
+                        h="20"
+                        minW="20"
+                        borderWidth="1px"
+                        borderColor="border.gray"
+                        rounded="6px"
+                        overflow="hidden"
                       >
-                        {item?.name}
-                      </Text>
-                      <Flex gap="2">
+                        <Image
+                          src={item?.image}
+                          w="full"
+                          h="full"
+                          objectFit="contain"
+                        />
+                      </Box>
+                      <Flex flexDir="column" justifyContent="flex-start">
                         <Text
-                          as="span"
-                          color="text.red"
                           fontSize="sm"
                           fontWeight="semibold"
+                          css={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 1,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}
                         >
-                          {formatNumber(`${item?.price_before_discount}`)}
+                          {item?.name}
                         </Text>
-                        <Text
-                          as="span"
-                          fontSize="xs"
-                          fontWeight="semibold"
-                          color="text.red"
-                        >
-                          {`-${item?.price_discount_percent}%`}
-                        </Text>
+                        <Flex gap="2">
+                          <Text
+                            as="span"
+                            color="text.red"
+                            fontSize="sm"
+                            fontWeight="semibold"
+                          >
+                            {formatNumber(`${item?.price_before_discount}`)}
+                          </Text>
+                          <Text
+                            as="span"
+                            fontSize="xs"
+                            fontWeight="semibold"
+                            color="text.red"
+                          >
+                            {`-${item?.price_discount_percent}%`}
+                          </Text>
+                        </Flex>
                       </Flex>
                     </Flex>
-                  </Flex>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <Text fontSize="sm" fontWeight="semibold">
+                  Đang tìm kiếm cho {keyword} ...
+                </Text>
+              )}
             </Flex>
 
             {data?.data?.items?.length == 0 && (

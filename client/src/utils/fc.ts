@@ -42,6 +42,12 @@ export function formatPhoneNumber(phoneNumber: string) {
   }
   return phoneNumber;
 }
+export function formatPhoneNumberPlus(phoneNumber: string) {
+  if (phoneNumber.startsWith('+84') && phoneNumber.length === 12) {
+    return '0' + phoneNumber.substring(3);
+  }
+  return phoneNumber;
+}
 export const objectToUrlParams = (obj: { [key: string]: any }) => {
   const params = [];
 

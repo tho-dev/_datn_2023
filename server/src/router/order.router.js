@@ -38,7 +38,7 @@ router.post("/payment-status", updatePaymentStatus);
 router.post("/verify-otp", verifyOtpCode);
 router.post("/calculateFee", serviceFree);
 router.put("/orderByPhoneNumber", getOrderByPhoneNumber);
-router.get("/orderByUserId/:id", getOrderByUserId);
+router.get("/orderByUserId", getOrderByUserId);
 router.post("/getTokenPrintBill", getTokenPrintBills);
 router.post("/return", returnedOrder);
 router.get("/return", getReturnedOrder);

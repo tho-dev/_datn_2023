@@ -53,8 +53,8 @@ const orderApi = createApi({
       providesTags: ['Order'],
     }),
     getOrderByUserId: builder.query({
-      query: (id) => ({
-        url: `/order/orderByUserId/${id}`,
+      query: (query) => ({
+        url: `/order/orderByUserId?${objectToUrlParams(query)}`,
         method: 'GET',
       }),
       providesTags: ['Order'],

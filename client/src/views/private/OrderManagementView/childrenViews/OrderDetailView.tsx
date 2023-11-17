@@ -180,6 +180,19 @@ const OrderDetailView = (props: Props) => {
     }),
   ];
   const handleCancelOrder = (id: string) => {
+    if (
+      data?.data.status !== "processing" ||
+      data?.data.status !== "confirmed"
+    ) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Không thể huỷ đơn hàng ${data?.data.status}`,
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     cancelOrder({ id })
       .unwrap()
       .then((data: any) => {
