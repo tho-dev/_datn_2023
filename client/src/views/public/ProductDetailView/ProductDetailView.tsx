@@ -305,7 +305,7 @@ const ProductDetailView = (props: Props) => {
       </Flex>
 
       {/* Đánh giá của khách hàng */}
-      <CommentView />
+      <CommentView productId={product?.data._id} />
 
       {/* Sản phẩm liên quan */}
       <Heading fontSize="18px" fontWeight="bold" mb="4">

@@ -3,11 +3,13 @@ import Client from "./components/Client";
 import { useDisclosure } from "@chakra-ui/react";
 import AddComment from "./components/AddComment";
 
-const CommentView = () => {
+const CommentView = ({ productId }: any) => {
+  console.log(productId)
   const {
     isOpen: isOpenDialog,
     onOpen: onOpenDialog,
     onClose: onCloseDialog,
+
   } = useDisclosure();
 
   return (
@@ -30,7 +32,7 @@ const CommentView = () => {
         >
           {/* <Assess /> */}
           <Client />
-          <AddComment onClose={onCloseDialog} />
+          <AddComment productId={productId} onClose={onCloseDialog} />
         </Box>
       </Box>
     </>

@@ -9,34 +9,40 @@ import {
 import { v4 as uuidv4 } from "uuid";
 // import { set, ref, onValue, remove, update } from "firebase/database";
 // import { db } from '~/firebase';
-import { getDatabase, ref, set } from "firebase/database";
-import { app } from "~/firebase";
+import { ref, set } from "firebase/database";
+import { db } from "~/firebase";
+import { useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
 
 
 type Props = {
   onClose: () => void;
+  productId: string;
 };
 
-const AddComment = ({ onClose }: Props) => {
+const AddComment = ({ onClose, productId }: Props) => {
+  // handle form
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm();
 
-
+  // user
+  const { user } = useAppSelector((state: RootState) => state.persistedReducer.global);
+  const userFullName = user?.first_name + ' ' + user?.last_name
 
   function onSubmit(values: any) {
 
     const uuid = uuidv4();
-    const db = getDatabase(app);
 
     set(ref(db, 'comments/' + uuid), {
       id: uuid,
-      userId: 'abc',
+      userId: user?._id,
+      userName: userFullName,
       content: values,
       dateTime: Date.now(),
-      productId: 'abc'
+      productId: productId
     })
   }
 
