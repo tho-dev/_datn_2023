@@ -24,7 +24,7 @@ const Client = (props: Props) => {
     onValue(ref(db), (snapshot: any) => {
       const data = snapshot.val();
       if (data) {
-        const commentArray: any = Object.entries(data.comments).map(([_, value]) => ({ value }));
+        const commentArray: any = Object.entries(data.comments).map(([_, comment]) => ({ comment }));
 
         setComments(commentArray.filter(({ comment }: any) => {
           return comment.productId == productId
