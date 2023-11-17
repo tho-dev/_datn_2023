@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { objectToUrlParams } from "~/utils/fc";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQuery, objectToUrlParams } from "~/utils/fc";
 
 type TQuery = {
 	_order?: string;
@@ -11,19 +11,19 @@ type TQuery = {
 
 const categoryApi = createApi({
 	reducerPath: "category",
-	baseQuery: fetchBaseQuery({ baseUrl: process.env.VITE_API_URL + "/category" }),
+	baseQuery: baseQuery,
 	tagTypes: ["CategoryTag"],
 	endpoints: (build) => ({
 		getAllCategory: build.query({
-			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
+			query: (query: TQuery) => `/category?${objectToUrlParams(query)}`,
 			providesTags: ["CategoryTag"],
 		}),
 		getSingleCategory: build.query({
-			query: (id) => `/${id}`,
+			query: (id) => `/category/${id}`,
 		}),
 		createCategory: build.mutation({
 			query: (body) => ({
-				url: ``,
+				url: `/category`,
 				method: "POST",
 				body,
 			}),
@@ -31,7 +31,7 @@ const categoryApi = createApi({
 		}),
 		updateCategory: build.mutation({
 			query: ({ _id, ...patch }) => ({
-				url: `/${_id}`,
+				url: `/category/${_id}`,
 				method: "PUT",
 				body: patch,
 			}),
@@ -40,7 +40,7 @@ const categoryApi = createApi({
 		deleteCategory: build.mutation({
 			query(id) {
 				return {
-					url: `/${id}`,
+					url: `/category/${id}`,
 					method: "DELETE",
 				};
 			},

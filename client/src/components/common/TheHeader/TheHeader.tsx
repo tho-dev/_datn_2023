@@ -4,7 +4,7 @@ import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import logo from "~/assets/images/logo-thinkpro.svg";
 import Search from "./components/Search";
 import { Button, SlideFade, useDisclosure, Avatar } from "@chakra-ui/react";
-import { NewIcon, CartIcon, UserIcon, LogoutIcon, DashboardIcon } from "../Icons";
+import { NewIcon, CartIcon, UserIcon, LogoutIcon, DashboardIcon, InfoIcon } from "../Icons";
 import Cart from "./components/Cart";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { useGetCartQuery } from "~/redux/api/cart";
@@ -250,6 +250,7 @@ const TheHeader = (props: Props) => {
 											fontSize="sm"
 											fontWeight="semibold"
 											display="flex"
+											justifyContent="flex-start"
 											p="2"
 											w="full"
 											bg="none"
@@ -257,7 +258,7 @@ const TheHeader = (props: Props) => {
 											_hover={{
 												bg: "bg.gray",
 											}}
-											leftIcon={<DashboardIcon size={4} />}
+											leftIcon={<InfoIcon size={4} />}
 										>
 											Trang quản trị
 										</Button>
@@ -268,6 +269,7 @@ const TheHeader = (props: Props) => {
 										fontSize="sm"
 										fontWeight="semibold"
 										display="flex"
+										justifyContent="flex-start"
 										p="2"
 										w="full"
 										bg="none"
@@ -286,6 +288,7 @@ const TheHeader = (props: Props) => {
 										fontSize="sm"
 										fontWeight="semibold"
 										display="flex"
+										justifyContent="flex-start"
 										p="2"
 										w="full"
 										_hover={{

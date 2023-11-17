@@ -15,30 +15,28 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import moment from "moment/moment";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
 import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { useDeletePromotionMutation, useGetAllPromotionQuery, useGetSinglePromotionQuery } from "~/redux/api/promotion";
 import ActionCreatePromotion from "./components/ActionCreatePromotion";
 import ActionUpdatePromotion from "./components/ActionUpdatePromotion";
-import {
-	useDeletePromotionMutation,
-	useGetAllPromotionQuery,
-	useGetSinglePromotionQuery,
-	useUpdatePromotionMutation,
-} from "~/redux/api/promotion";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
 const PromotionView = (props: Props) => {
 	const toast = useToast();
+	const columnHelper = createColumnHelper<any>();
+
 	const [id, setId] = useState(null);
 	const [slug, setSlug] = useState(null);
-	const columnHelper = createColumnHelper<any>();
+
 	const {
 		isOpen: isOpenActionCreatePromtion,
 		onOpen: onOpenActionCreatePromtion,
@@ -49,8 +47,8 @@ const PromotionView = (props: Props) => {
 		onOpen: onOpenActionUpdatePromtion,
 		onClose: onCloseActionUpdatePromotion,
 	} = useDisclosure();
-
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+
 	const [deletedPromotion] = useDeletePromotionMutation();
 	const { data: promotion } = useGetSinglePromotionQuery(
 		{
@@ -61,7 +59,29 @@ const PromotionView = (props: Props) => {
 		}
 	);
 
-	const { control, handleSubmit } = useForm();
+	const { control, register } = useForm({
+		defaultValues: {
+			name: "",
+			status: "",
+		},
+	});
+	const statusForm: any = useWatch({
+		control,
+		name: "status",
+	});
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
+	const query = useMemo(() => {
+		return {
+			_limit: 10,
+			_page: 1,
+			_name: nameForm,
+			_status: statusForm ? JSON.parse(statusForm?.value) : "",
+		};
+	}, [statusForm, nameForm]);
+	const debounceQuery = useDebounce(query, 500);
 
 	const handleDeletePromotion = async () => {
 		try {
@@ -262,17 +282,17 @@ const PromotionView = (props: Props) => {
 						<Box>
 							<SelectThinkPro
 								control={control}
-								name="category"
+								name="status"
 								title=""
 								placeholder="-- Trạng thái --"
 								data={[
 									{
 										label: "Đang khuyến mãi",
-										value: "1",
+										value: "true",
 									},
 									{
 										label: "Ngừng khuyến mãi",
-										value: "2",
+										value: "false",
 									},
 								]}
 							/>
@@ -305,6 +325,7 @@ const PromotionView = (props: Props) => {
 								lineHeight="1.5"
 								w="260px"
 								placeholder="Tìm kiếm khuyến mãi"
+								{...register("name")}
 							/>
 						</Flex>
 					</Flex>
@@ -336,10 +357,7 @@ const PromotionView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllPromotionQuery}
 					defaultPageSize={10}
-					query={{
-						_limit: 10,
-						_page: 1,
-					}}
+					query={debounceQuery}
 				/>
 			</Box>
 			{/* Form */}
@@ -383,7 +401,7 @@ const PromotionView = (props: Props) => {
 			<ConfirmThinkPro
 				isOpen={isOpenComfirm}
 				onClose={onCloseComfirm}
-				content="Bạn có muốn xóa bỏ thương hiệu này không?"
+				content="Bạn có muốn xóa bỏ trương trình khuyến mãi này không?"
 				handleClick={handleDeletePromotion}
 			/>
 		</>

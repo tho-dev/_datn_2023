@@ -64,12 +64,18 @@ const AddProductMangerView = (props: Props) => {
 	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
 
 	// xử lý call api
-	const { data: brands } = useGetAllBrandsQuery({
-		_page: 1,
-		_limit: 200,
-		_order: "desc",
-		_sort: "created_at",
-	});
+	const { data: brands } = useGetAllBrandsQuery(
+		{
+			_page: 1,
+			_limit: 200,
+			_order: "desc",
+			_sort: "created_at",
+			_category: category?.value,
+		},
+		{
+			skip: !category?.value,
+		}
+	);
 
 	const { data: categories } = useGetAllCategoryQuery({
 		_page: 1,
@@ -90,21 +96,25 @@ const AddProductMangerView = (props: Props) => {
 	const [saveVariants] = useSaveVariantsMutation();
 
 	useEffect(() => {
-		if (brands && categories) {
+		if (brands) {
+			setValue("brand_id", "");
 			const selectBrands = brands?.data?.items?.map((brand: any) => ({
 				label: brand?.name,
 				value: brand?._id,
 			}));
+			setBrandsFilter(selectBrands);
+		}
+	}, [brands, category]);
 
+	useEffect(() => {
+		if (categories) {
 			const selectCategories = categories?.data?.items?.map((category: any) => ({
 				label: category?.name,
 				value: category?._id,
 			}));
-
-			setBrandsFilter(selectBrands);
 			setCategoriesFilter(selectCategories);
 		}
-	}, [brands, categories]);
+	}, [categories]);
 
 	useEffect(() => {
 		if (category?.label == "Laptop") {

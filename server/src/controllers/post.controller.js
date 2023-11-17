@@ -11,7 +11,8 @@ export async function getAllPost(req, res, next) {
       _sort = "created_at",
       _order = "desc",
       _limit = 10,
-      _type = ''
+      _type = '',
+      _name = ""
     } = req.query;
 
     const options = {
@@ -32,8 +33,12 @@ export async function getAllPost(req, res, next) {
       type: 'category_post'
     })
 
-    const query = _type ? { category_id: category?._id } : {}
-    const { docs, ...paginate } = await Post.paginate(query, options);
+    const { docs, ...paginate } = await Post.paginate({
+      $and: [
+        _type ? { category_id: category?._id } : {},
+        _name ? { $or: [{ name: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }] } : {}
+      ]
+    }, options);
 
     const results = await Promise.all((docs?.map(async (doc) => {
       const category = await Category.findOne({
@@ -112,7 +117,10 @@ export async function createPost(req, res, next) {
       throw createError.BadRequest(errors)
     }
 
-    const doc = await Post.create(payload)
+    const doc = await Post.create({
+      ...payload,
+      created_by: req.user._id
+    })
 
     return res.status(201).json({
       status: 201,
@@ -147,6 +155,7 @@ export async function updatePost(req, res, next) {
     // cập nhật
     post.set({
       ...payload,
+      updated_by: req.user._id,
       updated_at: moment(new Date()).toISOString()
     })
     await post.save()

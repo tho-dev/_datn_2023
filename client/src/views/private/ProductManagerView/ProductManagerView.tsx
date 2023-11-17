@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -13,7 +14,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -22,15 +23,108 @@ import { useGetAllProductQuery } from "~/redux/api/product";
 import { formatNumber } from "~/utils/fc";
 import moment from "moment/moment";
 import SelectThinkPro from "~/components/SelectThinkPro";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useGetAllBrandsQuery } from "~/redux/api/brand";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
 const ProductManagerView = (props: Props) => {
+	const [brandsFilter, setBrandsFilter] = useState<any>([]);
+	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
+
 	const columnHelper = createColumnHelper<any>();
 	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
 
-	const { control } = useForm();
+	const { control, register, setValue } = useForm({
+		defaultValues: {
+			name: "",
+			category: "",
+			brand: "",
+			status: {
+				label: "Đang bán",
+				value: "true",
+			},
+		},
+	});
+
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
+	const categoryForm: any = useWatch({
+		control,
+		name: "category",
+	});
+	const brandForm: any = useWatch({
+		control,
+		name: "brand",
+	});
+	const statusForm: any = useWatch({
+		control,
+		name: "status",
+	});
+
+	const query = useMemo(() => {
+		return {
+			_page: 1,
+			_limit: 20,
+			_order: "desc",
+			_sort: "created_at",
+			_name: nameForm,
+			_category: categoryForm?.value,
+			_brand: brandForm?.value,
+			_status: JSON.parse(statusForm?.value || ""),
+		};
+	}, [nameForm, categoryForm?.value, brandForm?.value, statusForm]);
+	const debounceQuery = useDebounce(query, 500);
+
+	const { data: brands } = useGetAllBrandsQuery(
+		{
+			_limit: 100,
+			_page: 1,
+			_sort: "created_at",
+			_order: "desc",
+			_category: categoryForm?.value as string,
+		},
+		{
+			skip: !categoryForm?.value,
+		}
+	);
+	const { data: categories } = useGetAllCategoryQuery({
+		_limit: 20,
+		_page: 1,
+		_sort: "created_at",
+		_order: "desc",
+		_type: "category_brand",
+	});
+
+	useEffect(() => {
+		if (brands) {
+			setValue("brand", "");
+			const brandsRes = brands?.data?.items?.map((brand: any) => {
+				return {
+					label: brand?.name,
+					value: brand?._id,
+				};
+			});
+			setBrandsFilter(brandsRes);
+		}
+	}, [brands, categoryForm]);
+
+	useEffect(() => {
+		if (categories) {
+			const categoriesFilter = categories?.data?.items?.map((brand: any) => {
+				return {
+					label: brand?.name,
+					value: brand?._id,
+				};
+			});
+
+			setCategoriesFilter(categoriesFilter);
+		}
+	}, [categories]);
 
 	const columns = [
 		columnHelper.accessor("#", {
@@ -193,8 +287,6 @@ const ProductManagerView = (props: Props) => {
 		}),
 		columnHelper.accessor("action", {
 			cell: ({ row }) => {
-				console.log("row", row);
-
 				return (
 					<Menu>
 						<MenuButton textAlign="center">
@@ -302,52 +394,34 @@ const ProductManagerView = (props: Props) => {
 							name="category"
 							title=""
 							placeholder="-- Danh mục --"
-							data={[
-								{
-									label: "Laptop",
-									value: "1",
-								},
-								{
-									label: "Bàn phím",
-									value: "2",
-								},
-							]}
+							data={categoriesFilter}
 						/>
 					</Box>
 
 					<Box flex="1">
 						<SelectThinkPro
 							control={control}
-							name="category"
+							name="brand"
 							title=""
 							placeholder="-- Thương hiệu --"
-							data={[
-								{
-									label: "Dell",
-									value: "1",
-								},
-								{
-									label: "Lenovo",
-									value: "2",
-								},
-							]}
+							data={brandsFilter}
 						/>
 					</Box>
 
 					<Box flex="1">
 						<SelectThinkPro
 							control={control}
-							name="category"
+							name="status"
 							title=""
 							placeholder="-- Trạng thái --"
 							data={[
 								{
-									label: "Hoạt Động",
-									value: "1",
+									label: "Đang bán",
+									value: "true",
 								},
 								{
-									label: "Khóa",
-									value: "2",
+									label: "Ngừng bán",
+									value: "false",
 								},
 							]}
 						/>
@@ -380,6 +454,7 @@ const ProductManagerView = (props: Props) => {
 							lineHeight="1.5"
 							w="260px"
 							placeholder="Tìm kiếm sản phẩm"
+							{...register("name")}
 						/>
 					</Flex>
 				</Flex>
@@ -411,12 +486,7 @@ const ProductManagerView = (props: Props) => {
 				columns={columns}
 				useData={useGetAllProductQuery}
 				defaultPageSize={10}
-				query={{
-					_page: 1,
-					_limit: 20,
-					_order: "desc",
-					_sort: "created_at",
-				}}
+				query={debounceQuery}
 			/>
 
 			<ConfirmThinkPro

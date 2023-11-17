@@ -37,6 +37,7 @@ export async function getAllCategory(req, res, next) {
 			_order = "desc",
 			_limit = 10,
 			_type = _type || 'category_brand',
+			_name = "",
 		} = req.query;
 
 		const options = {
@@ -50,6 +51,7 @@ export async function getAllCategory(req, res, next) {
 
 		const { docs, ...paginate } = await Category.paginate({
 			type: _type,
+			$or: [{ name: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }],
 		}, options);
 
 		return res.json({

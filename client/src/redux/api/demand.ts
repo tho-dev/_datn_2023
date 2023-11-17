@@ -1,6 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { IDemand } from "~/interface/demand";
-import { objectToUrlParams } from "~/utils/fc";
+import { baseQuery, objectToUrlParams } from "~/utils/fc";
 
 type TQuery = {
 	_order?: string;
@@ -11,21 +11,19 @@ type TQuery = {
 
 const demandApi = createApi({
 	reducerPath: "demand",
-	baseQuery: fetchBaseQuery({
-		baseUrl: process.env.VITE_API_URL + "/demand",
-	}),
+	baseQuery: baseQuery,
 	tagTypes: ["DemandTag"],
 	endpoints: (build) => ({
 		getAllDemand: build.query({
-			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
+			query: (query: TQuery) => `/demand?${objectToUrlParams(query)}`,
 			providesTags: ["DemandTag"],
 		}),
 		getSingleDemand: build.query({
-			query: (id) => `/${id}`,
+			query: (id) => `/demand/${id}`,
 		}),
 		createDemand: build.mutation<any, IDemand>({
 			query: (body) => ({
-				url: ``,
+				url: `/demand`,
 				method: "POST",
 				body,
 			}),
@@ -33,7 +31,7 @@ const demandApi = createApi({
 		}),
 		updateDemand: build.mutation<any, { _id: number }>({
 			query: ({ _id, ...patch }) => ({
-				url: `/${_id}`,
+				url: `/demand/${_id}`,
 				method: "PUT",
 				body: patch,
 			}),
@@ -41,7 +39,7 @@ const demandApi = createApi({
 		}),
 		deleteDemand: build.mutation<any, number>({
 			query: (id) => ({
-				url: `/${id}`,
+				url: `/demand/${id}`,
 				method: "DELETE",
 			}),
 			invalidatesTags: ["DemandTag"],
