@@ -70,11 +70,7 @@ const Client = (props: Props) => {
           key={comment.id}
         >
           <Flex alignItems={"center"} gap={2}>
-            <Avatar
-              size="md"
-              name="Kent Dodds"
-              src="https://bit.ly/kent-c-dodds"
-            />{" "}
+            <Avatar size="md" name="Kent Dodds" src={comment.userAvatar} />{" "}
             <Flex justifyContent={"space-between"} w={"full"}>
               <Box>
                 <Text
