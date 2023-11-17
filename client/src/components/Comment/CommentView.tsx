@@ -34,6 +34,7 @@ const CommentView = ({ productId }: any) => {
           <AddComment productId={productId} onClose={onCloseDialog} />
         </Box>
       </Box>
+      
     </>
   );
 };

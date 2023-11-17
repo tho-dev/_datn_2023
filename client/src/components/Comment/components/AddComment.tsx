@@ -15,7 +15,6 @@ import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
 import moment from "moment";
 
-
 type Props = {
   onClose: () => void;
   productId: string;
@@ -26,27 +25,31 @@ const AddComment = ({ onClose, productId }: Props) => {
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm();
 
   // user
-  const { user } = useAppSelector((state: RootState) => state.persistedReducer.global);
-  const userFullName = user?.first_name + ' ' + user?.last_name;
+  const { user } = useAppSelector(
+    (state: RootState) => state.persistedReducer.global
+  );
+  const userFullName = user?.first_name + " " + user?.last_name;
   const now = moment();
   const dateTime = now.format("HH:mm DD/MM/YYYY");
 
   function onSubmit(values: any) {
     const uuid = uuidv4();
 
-    set(ref(db, 'comments/' + uuid), {
+    set(ref(db, "comments/" + uuid), {
       id: uuid,
       userId: user?._id,
       userAvatar: user?.avatar,
       userName: userFullName,
       content: values.content,
       dateTime,
-      productId: productId
-    })
+      productId: productId,
+    });
+    setValue("content", "");
   }
 
   return (
