@@ -20,6 +20,7 @@ import QuillThinkPro from "~/components/QuillThinkPro";
 import { useEffect, useState } from "react";
 import { useNavigate, Link as ReactRouterLink } from "react-router-dom";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useAppSelector } from "~/redux/hook/hook";
 type Props = {
 	onClose: () => void;
 	parents: any;
@@ -37,8 +38,8 @@ const AddPostMangerView = ({ onClose }: Props) => {
 		reset,
 	} = useForm();
 	const [createProduct] = useCreatePostMutation();
-	const [parents, setParents] = useState<any>([]); 
- 
+	const [parents, setParents] = useState<any>([]);
+
 
 	const { data: categories } = useGetAllCategoryQuery({
 		_limit: 20,
@@ -61,14 +62,18 @@ const AddPostMangerView = ({ onClose }: Props) => {
 
 	const [createPost, { isLoading }] = useCreatePostMutation();
 	const navigate = useNavigate();
+	const { user } = useAppSelector((state) => state.persistedReducer.global);
+
 	const onSubmit = async (data: any) => {
 		data = {
-			...data, 
+			...data,
 			parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
+			created_by: `${user.first_name} ${user.last_name}`, // Set created_by field
 		};
+		console.log('Submitting data:', data);
 
-		try { 
+		try {
 			await createPost(data).unwrap();
 			toast({
 				title: "Thành công",
@@ -77,8 +82,8 @@ const AddPostMangerView = ({ onClose }: Props) => {
 				status: "success",
 				description: "Tạo danh mục thành công",
 			});
-			reset();
-			navigate("/admin/bai-viet");
+			// reset();
+			// navigate("/admin/bai-viet");
 
 		} catch (error: any) {
 			toast({
@@ -90,7 +95,7 @@ const AddPostMangerView = ({ onClose }: Props) => {
 			});
 		}
 		reset();
-		// onClose();
+		onClose();
 	};
 	const thumbnail = watch("thumbnail");
 	const title = watch("title");
@@ -137,180 +142,175 @@ const AddPostMangerView = ({ onClose }: Props) => {
 				gap={{
 					xl: "6",
 				}}
-				templateColumns={{
-					xl: "repeat(3, 1fr)",
-				}}
 			>
-				<GridItem colSpan={1}>
-					<Flex
-						flexDir="column"
-						gap="4"
-						bgColor="white"
-						my={4}
-						padding="16px 24px"
-						borderRadius={6}
-						w={"100%"}
-						boxShadow="lg"
-					>
-						<FormControl isInvalid={errors.file as any}>
-							<Flex
-								justifyContent="center"
-								mt="8"
+				<Flex
+					flexDir="column"
+					gap="4"
+					bgColor="white"
+					my={4}
+					padding="16px 24px"
+					borderRadius={6}
+					w={"100%"}
+					boxShadow="lg"
+				>
+					<FormControl isInvalid={errors.file as any}>
+						<Flex
+							justifyContent="center"
+							mt="8"
+						>
+							<Box
+								w="200px"
+								h="200px"
 							>
-								<Box
-									w="200px"
-									h="200px"
-								>
-									<FileUploadThinkPro
-										fileName="category"
-										getDataFn={(data: any) => setValue("thumbnail", data)}
-										setData={watch("thumbnail")}
-									/>
-								</Box>
-							</Flex>
+								<FileUploadThinkPro
+									fileName="banner"
+									getDataFn={(data: any) => setValue("thumbnail", data)}
+									setData={watch("thumbnail")}
+								/>
+							</Box>
+						</Flex>
 
-							<FormErrorMessage>{(errors.thumbnail as any) && errors?.thumbnail?.message}</FormErrorMessage>
-						</FormControl>
-						<FormControl isInvalid={errors.title as any}>
-							<FormLabel
-								htmlFor="title"
-								fontSize="15"
-								fontWeight="semibold"
-							>
-								Tiêu đề
-							</FormLabel>
-							<Input
-								id="title"
-								placeholder="VD: Dell"
-								{...register("title", {
-									required: "Không được để trống !!!",
-								})}
-							/>
-							<FormErrorMessage>{(errors.title as any) && errors?.title?.message}</FormErrorMessage>
-						</FormControl>
-
-						{/* Bài viết */}
-						<SelectThinkPro
-							title="Danh mục"
-							control={control}
-							data={parents}
-							name="category_id"
-							placeholder="-- Danh mục --"
-							rules={{ required: "Không được để trống" }}
+						<FormErrorMessage>{(errors.thumbnail as any) && errors?.thumbnail?.message}</FormErrorMessage>
+					</FormControl>
+					<FormControl isInvalid={errors.title as any}>
+						<FormLabel
+							htmlFor="title"
+							fontSize="15"
+							fontWeight="semibold"
+						>
+							Tiêu đề
+						</FormLabel>
+						<Input
+							id="title"
+							placeholder="VD: Dell"
+							{...register("title", {
+								required: "Không được để trống !!!",
+							})}
 						/>
+						<FormErrorMessage>{(errors.title as any) && errors?.title?.message}</FormErrorMessage>
+					</FormControl>
 
-						{/* description */}
-						<FormControl isInvalid={errors.description as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="description"
-								fontWeight="semibold"
-							>
-								Bài viết
-							</FormLabel>
-							<QuillThinkPro
-								data={description}
-								onEditorStateChange={onEditorStateChangeDescription as any}
-							/>
-							<FormErrorMessage>{(errors.description as any) && errors?.description?.message}</FormErrorMessage>
-						</FormControl>
+					{/* Bài viết */}
+					<SelectThinkPro
+						title="Danh mục"
+						control={control}
+						data={parents}
+						name="category_id"
+						placeholder="-- Danh mục --"
+						rules={{ required: "Không được để trống" }}
+					/>
 
-						{/* content */}
-						<FormControl isInvalid={errors.content as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="content"
-								fontWeight="semibold"
-							>
-								Nội dung
-							</FormLabel>
-							<QuillThinkPro
-								data={content}
-								onEditorStateChange={onEditorStateChangeContent as any}
-							/>
-							<FormErrorMessage>{(errors.content as any) && errors?.content?.message}</FormErrorMessage>
-						</FormControl>
+					{/* description */}
+					<FormControl isInvalid={errors.description as any}>
+						<FormLabel
+							fontSize="15"
+							htmlFor="description"
+							fontWeight="semibold"
+						>
+							Bài viết
+						</FormLabel>
+						<QuillThinkPro
+							data={description}
+							onEditorStateChange={onEditorStateChangeDescription as any}
+						/>
+						<FormErrorMessage>{(errors.description as any) && errors?.description?.message}</FormErrorMessage>
+					</FormControl>
 
-						{/* meta_keyword */}
-						<FormControl isInvalid={errors.meta_keyword as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="meta_keyword"
-								fontWeight="semibold"
-							>
-								Meta keyword
-							</FormLabel>
-							<QuillThinkPro
-								data={meta_keyword}
-								onEditorStateChange={onEditorStateChangeMetaKeyword as any}
-							/>
-							<FormErrorMessage>{(errors.meta_keyword as any) && errors?.meta_keyword?.message}</FormErrorMessage>
-						</FormControl>
+					{/* content */}
+					<FormControl isInvalid={errors.content as any}>
+						<FormLabel
+							fontSize="15"
+							htmlFor="content"
+							fontWeight="semibold"
+						>
+							Nội dung
+						</FormLabel>
+						<QuillThinkPro
+							data={content}
+							onEditorStateChange={onEditorStateChangeContent as any}
+						/>
+						<FormErrorMessage>{(errors.content as any) && errors?.content?.message}</FormErrorMessage>
+					</FormControl>
 
-						{/* meta_description */}
-						<FormControl isInvalid={errors.meta_description as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="meta_description"
-								fontWeight="semibold"
-							>
-								Meta description
-							</FormLabel>
-							<QuillThinkPro
-								data={meta_description}
-								onEditorStateChange={onEditorStateChangeMetaDescription as any}
-							/>
-							<FormErrorMessage>{(errors.meta_description as any) && errors?.meta_description?.message}</FormErrorMessage>
-						</FormControl>
+					{/* meta_keyword */}
+					<FormControl isInvalid={errors.meta_keyword as any}>
+						<FormLabel
+							fontSize="15"
+							htmlFor="meta_keyword"
+							fontWeight="semibold"
+						>
+							Meta keyword
+						</FormLabel>
+						<QuillThinkPro
+							data={meta_keyword}
+							onEditorStateChange={onEditorStateChangeMetaKeyword as any}
+						/>
+						<FormErrorMessage>{(errors.meta_keyword as any) && errors?.meta_keyword?.message}</FormErrorMessage>
+					</FormControl>
 
-						{/* meta_title */}
-						<FormControl isInvalid={errors.meta_title as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="meta_title"
-								fontWeight="semibold"
-							>
-								Meta title
-							</FormLabel>
-							<QuillThinkPro
-								data={meta_title}
-								onEditorStateChange={onEditorStateChangeMetaTitle as any}
-							/>
-							<FormErrorMessage>{(errors.meta_title as any) && errors?.meta_title?.message}</FormErrorMessage>
-						</FormControl>
-					</Flex>
-					<Flex
-						gap="3"
-						justifyContent="flex-end"
-						mt="6"
+					{/* meta_description */}
+					<FormControl isInvalid={errors.meta_description as any}>
+						<FormLabel
+							fontSize="15"
+							htmlFor="meta_description"
+							fontWeight="semibold"
+						>
+							Meta description
+						</FormLabel>
+						<QuillThinkPro
+							data={meta_description}
+							onEditorStateChange={onEditorStateChangeMetaDescription as any}
+						/>
+						<FormErrorMessage>{(errors.meta_description as any) && errors?.meta_description?.message}</FormErrorMessage>
+					</FormControl>
+
+					{/* meta_title */}
+					<FormControl isInvalid={errors.meta_title as any}>
+						<FormLabel
+							fontSize="15"
+							htmlFor="meta_title"
+							fontWeight="semibold"
+						>
+							Meta title
+						</FormLabel>
+						<QuillThinkPro
+							data={meta_title}
+							onEditorStateChange={onEditorStateChangeMetaTitle as any}
+						/>
+						<FormErrorMessage>{(errors.meta_title as any) && errors?.meta_title?.message}</FormErrorMessage>
+					</FormControl>
+				</Flex>
+				<Flex
+					gap="3"
+					justifyContent="flex-end"
+					mt="6"
+				>
+					<Button
+						textColor="text.textDelete"
+						bgColor="transparent"
+						fontWeight="bold"
+						px="4"
+						_hover={{
+							bgColor: "bg.bgDelete",
+						}}
+						leftIcon={<CloseSmallIcon size={4} />}
+						onClick={onClose}
+						as={ReactRouterLink}
+						to="/admin/bai-viet"
 					>
-						<Button
-							textColor="text.textDelete"
-							bgColor="transparent"
-							fontWeight="bold"
-							px="4"
-							_hover={{
-								bgColor: "bg.bgDelete",
-							}}
-							leftIcon={<CloseSmallIcon size={4} />}
-							onClick={onClose}
-							as={ReactRouterLink}
-							to="/admin/bai-viet"
-						>
-							Đóng
-						</Button>
-						<Button
-							w={"40"}
-							isLoading={isLoading}
-							type="submit"
-							bgColor="bg.bgSuccess"
-							color="text.textSuccess"
-						>
-							Tạo mới
-						</Button>
-					</Flex>
-				</GridItem>
-				<GridItem colSpan={2}>
+						Đóng
+					</Button>
+					<Button
+						w={"40"}
+						isLoading={isLoading}
+						type="submit"
+						bgColor="bg.bgSuccess"
+						color="text.textSuccess"
+					>
+						Tạo mới
+					</Button>
+				</Flex>
+				{/* <GridItem colSpan={2}>
 					<ReviewAddPostManger
 						thumbnail={thumbnail}
 						title={title}
@@ -320,7 +320,7 @@ const AddPostMangerView = ({ onClose }: Props) => {
 						meta_description={meta_description}
 						meta_title={meta_title}
 					/>
-				</GridItem>
+				</GridItem> */}
 
 			</Grid>
 

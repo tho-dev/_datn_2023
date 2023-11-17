@@ -1,18 +1,28 @@
-import { Box, Text, Flex } from "@chakra-ui/layout"; 
-import { Divider } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {
+	Box,
+	Text,
+	Flex,
+	Divider,
+	Spinner,
+} from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import PostRelate from "./components/PostRelate";
-import { useGetAllPostQuery, useGetSinglePostQuery } from "~/redux/api/post";
-import { NavArrowLeflIcon, NavArrowRightIcon } from "~/components/common/Icons";
+import {
+	useGetAllPostQuery,
+	useGetSinglePostQuery,
+} from "~/redux/api/post";
+import {
+	NavArrowLeflIcon,
+	NavArrowRightIcon,
+} from "~/components/common/Icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import AllNewsView from "./AllNewsView";
-import { useEffect, useState } from "react";
 import moment from "moment";
 import { useAppSelector } from "~/redux/hook/hook";
-
+import LoadingPolytech from "~/components/LoadingPolytech";
 
 type Props = {
 	mt?: any;
@@ -21,15 +31,13 @@ type Props = {
 
 const ContentView = ({ columns = 4 }: Props) => {
 	const { slug } = useParams();
-	const { data: product } = useGetSinglePostQuery(
+	const { data: product, isLoading: isProductLoading } = useGetSinglePostQuery(
 		slug as string
 	);
 
-	// const { slug: params } = useParams();
 	const [slugs, setSlug] = useState<string>("");
 	const [data, setData] = useState<any>([]);
-
-	const { data: posts } = useGetAllPostQuery({
+	const { data: posts, isLoading: isPostsLoading } = useGetAllPostQuery({
 		_order: "asc",
 		_sort: "date",
 		_page: 1,
@@ -44,12 +52,13 @@ const ContentView = ({ columns = 4 }: Props) => {
 		}
 	}, [posts]);
 
-	const { user } = useAppSelector((state) => state.persistedReducer.global);
 	const now = moment();
 	const diffInSeconds = now.diff(product?.data.created_at, "seconds");
 	const diffInMinutes = Math.ceil(diffInSeconds / 60);
 	const diffInHours = Math.ceil(diffInMinutes / 60);
 	const diffInDays = Math.ceil(diffInHours / 24);
+
+	if (isProductLoading || isPostsLoading) return <LoadingPolytech />;
 
 	return (
 		<>
@@ -84,7 +93,7 @@ const ContentView = ({ columns = 4 }: Props) => {
 							fontWeight={"bold"}
 						>
 							<Text as="h3" fontWeight="black" lineHeight="1.3">
-								{user.first_name + " " + user.last_name}
+								{product?.data.created_by}
 							</Text>
 							<Text mx={2}>|</Text>
 							<Text fontWeight="medium" fontSize="13px">
@@ -205,8 +214,9 @@ const ContentView = ({ columns = 4 }: Props) => {
 										h="full"
 										overflow="hidden"
 										rounded="lg"
-										borderWidth="1px"
+										// borderWidth="1px"
 										borderColor="border.primary"
+										bg={"white"}
 									>
 										<PostRelate product={product} key={index} />
 									</Box>

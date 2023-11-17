@@ -37,11 +37,11 @@ const PostView = (props: Props) => {
 	const [parents, setParents] = useState<any>([]);
 	const [category, setCategory] = useState<any>(null);
 	const columnHelper = createColumnHelper<any>();
-	// const {
-	// 	isOpen: isOpenActionCreatePost,
-	// 	onOpen: onOpenActionCreatePost,
-	// 	onClose: onCloseActionCreatePost,
-	// } = useDisclosure();
+	const {
+		isOpen: isOpenActionCreatePost,
+		onOpen: onOpenActionCreatePost,
+		onClose: onCloseActionCreatePost,
+	} = useDisclosure();
 	const {
 		isOpen: isOpenActionUpdateCategory,
 		onOpen: onOpenActionUpdateCategory,
@@ -115,6 +115,15 @@ const PostView = (props: Props) => {
 					<Text
 						fontWeight="medium"
 						fontSize="13px"
+						css={{
+							display: "-webkit-box",
+							WebkitLineClamp: 2,
+							WebkitBoxOrient: "vertical",
+							overflow: "hidden",
+							"& p": {
+								display: "inline",
+							},
+						}}
 					>
 						{info.getValue()}
 					</Text>
@@ -388,9 +397,9 @@ const PostView = (props: Props) => {
 						lineHeight="2"
 						color="text.textSuccess"
 						bgColor="bg.bgSuccess"
-						// onClick={onOpenActionCreatePost}
-						as={ReactRouterLink}
-						to="/admin/bai-viet/add"
+						onClick={onOpenActionCreatePost}
+						// as={ReactRouterLink}
+						// to="/admin/bai-viet/add"
 					>
 						Tạo Mới
 					</Button>
@@ -418,7 +427,7 @@ const PostView = (props: Props) => {
 				/>
 			</Box>
 			{/* Form */}
-			{/* <PostDialogThinkPro
+			<PostDialogThinkPro
 				isOpen={isOpenActionCreatePost}
 				onClose={onCloseActionCreatePost}
 				isCentered
@@ -427,7 +436,7 @@ const PostView = (props: Props) => {
 				<AddPostMangerView
 					onClose={onCloseActionCreatePost}
 					parents={parents}  />
-			</PostDialogThinkPro> */}
+			</PostDialogThinkPro>
 
 			<PostDialogThinkPro
 				isOpen={isOpenActionUpdateCategory}

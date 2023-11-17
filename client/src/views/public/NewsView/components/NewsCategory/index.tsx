@@ -31,7 +31,7 @@ const NewsCategory = () => {
 		}
 	}, [posts]);
 
-	console.log(data);
+	// console.log(data);
 
 	return (
 		<Box>
@@ -74,7 +74,6 @@ const NewsCategory = () => {
 									h="full"
 									overflow="hidden"
 									rounded="lg"
-									borderWidth="1px"
 									borderColor="border.primary"
 								>
 									<AllCategory product={product} key={index} />
