@@ -4,7 +4,6 @@ import { useDisclosure } from "@chakra-ui/react";
 import AddComment from "./components/AddComment";
 
 const CommentView = ({ productId }: any) => {
-  console.log(productId)
   const {
     isOpen: isOpenDialog,
     onOpen: onOpenDialog,
@@ -31,7 +30,7 @@ const CommentView = ({ productId }: any) => {
           }}
         >
           {/* <Assess /> */}
-          <Client />
+          <Client productId={productId} />
           <AddComment productId={productId} onClose={onCloseDialog} />
         </Box>
       </Box>
