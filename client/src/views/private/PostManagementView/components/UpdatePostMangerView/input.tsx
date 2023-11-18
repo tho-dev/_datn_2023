@@ -43,10 +43,9 @@ const ActionUpdatePost = ({ onClose, parents, slug }: Props) => {
 	const [updatePost, { isLoading }] = useUpdatePostMutation();
 	const navigate = useNavigate();
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async ({ category, related_posts, slug, created_by, updated_by, ...data }: any) => {
 		data = {
 			...data,
-			parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
 		};
 

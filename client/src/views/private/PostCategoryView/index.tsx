@@ -270,28 +270,9 @@ const PostCategoryView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						w="50%"
+						w="30%"
 						gap="4"
 					>
-						<Box>
-							<SelectThinkPro
-								control={control}
-								name="category"
-								title=""
-								placeholder="-- Trạng thái --"
-								data={[
-									{
-										label: "Hoạt Động",
-										value: "1",
-									},
-									{
-										label: "Khóa",
-										value: "2",
-									},
-								]}
-							/>
-						</Box>
-
 						<Flex
 							flex="1"
 							px="4"

@@ -14,7 +14,7 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
 import ActionUpdatePost from "./components/UpdatePostMangerView/input";
 import { useDeletePostMutation, useGetAllPostQuery } from "~/redux/api/post";
@@ -26,7 +26,8 @@ import { useGetAllCategoryQuery } from "~/redux/api/category";
 import PostDialogThinkPro from "~/components/DialogThinkPro/PostDialogThinkPro";
 import AddPostMangerView from "./components/AddPostMangerView/AddPostMangerView";
 import SelectThinkPro from "~/components/SelectThinkPro";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
@@ -48,7 +49,27 @@ const PostView = (props: Props) => {
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
-	const { control } = useForm();
+	const { control, register } = useForm();
+	const categoryForm = useWatch({
+		control,
+		name: "category",
+	});
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
+
+	const query = useMemo(() => {
+		return {
+			_page: 1,
+			_limit: 20,
+			_order: "desc",
+			_sort: "created_at",
+			_name: nameForm,
+			_category: categoryForm ? categoryForm?.value : "",
+		};
+	}, [categoryForm, nameForm]);
+	const queryDebonce = useDebounce(query, 500);
 
 	const [deletePost] = useDeletePostMutation();
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
@@ -356,7 +377,8 @@ const PostView = (props: Props) => {
 								fontWeight="medium"
 								lineHeight="1.5"
 								w="260px"
-								placeholder="Tìm kiếm danh mục bài viết"
+								placeholder="Tìm kiếm bài viết"
+								{...register("name")}
 							/>
 						</Flex>
 					</Flex>
@@ -382,12 +404,7 @@ const PostView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllPostQuery}
 					defaultPageSize={10}
-					query={{
-						_page: 1,
-						_limit: 20,
-						_order: "desc",
-						_sort: "created_at",
-					}}
+					query={queryDebonce}
 				/>
 
 				{/* Cofirm */}

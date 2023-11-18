@@ -12,8 +12,7 @@ export async function getAllPost(req, res, next) {
       _sort = "created_at",
       _order = "desc",
       _limit = 10,
-      _type = '',
-      _name = ""
+      _type = ''
     } = req.query;
 
     const options = {
@@ -34,12 +33,8 @@ export async function getAllPost(req, res, next) {
       type: 'category_post'
     })
 
-    const { docs, ...paginate } = await Post.paginate({
-      $and: [
-        _type ? { category_id: category?._id } : {},
-        _name ? { $or: [{ name: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }] } : {}
-      ]
-    }, options);
+    const query = _type ? { category_id: category?._id } : {}
+    const { docs, ...paginate } = await Post.paginate(query, options);
 
     const results = await Promise.all((docs?.map(async (doc) => {
       const category = await Category.findOne({
