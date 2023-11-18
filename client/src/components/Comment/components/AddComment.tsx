@@ -30,7 +30,7 @@ const AddComment = ({ onClose, productId }: Props) => {
   } = useForm();
 
   // user
-  const { user } = useAppSelector(
+  const { user, isLogin } = useAppSelector(
     (state: RootState) => state.persistedReducer.global
   );
   const userFullName = user?.first_name + " " + user?.last_name;
@@ -59,11 +59,16 @@ const AddComment = ({ onClose, productId }: Props) => {
           <Textarea
             h={30}
             id="content"
-            placeholder="Hãy chia sẻ cảm nhận đánh giá của bạn về sản phẩm này nhé"
+            placeholder={
+              isLogin
+                ? "Hãy chia sẻ cảm nhận đánh giá của bạn về sản phẩm này nhé"
+                : "Hãy đăng nhập để đánh giá về sản phẩm"
+            }
             size="lager"
             {...register("content", {
               required: "Không được để trống !!!",
             })}
+            isReadOnly={!isLogin}
           />
           <FormErrorMessage>
             {(errors.name as any) && errors?.name?.message}
@@ -74,10 +79,11 @@ const AddComment = ({ onClose, productId }: Props) => {
       <Flex gap="3" justifyContent="flex-start" mt="4">
         <Button
           type="submit"
-          bgColor="text.textSuccess"
+          bgColor={isLogin ? "text.textSuccess" : "bg.darkGray"}
           textColor="text.white"
           fontWeight="bold"
           px="4"
+          isDisabled={!isLogin}
         >
           Gửi đánh giá
         </Button>
