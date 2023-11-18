@@ -42,8 +42,8 @@ const orderApi = createApi({
 			providesTags: ["Order"],
 		}),
 		getOrderByUserId: builder.query({
-			query: (id) => ({
-				url: `/order/orderByUserId/${id}`,
+			query: (query) => ({
+				url: `/order/orderByUserId?${objectToUrlParams(query)}`,
 				method: "GET",
 			}),
 			providesTags: ["Order"],
@@ -56,10 +56,9 @@ const orderApi = createApi({
 			providesTags: ["Order"],
 		}),
 		getOrderByPhoneNumber: builder.mutation<any, any>({
-			query: (data) => ({
-				url: `/order/orderByPhoneNumber`,
-				method: "POST",
-				body: data,
+			query: (query) => ({
+				url: `/order/orderByPhoneNumber?${objectToUrlParams(query)}`,
+				method: "PUT",
 			}),
 			invalidatesTags: ["Order"],
 		}),
@@ -171,6 +170,13 @@ const orderApi = createApi({
 			}),
 			invalidatesTags: ["Order"],
 		}),
+		confirmDelivered: builder.mutation<any, any>({
+			query: (id) => ({
+				url: `/order/confirm-completed/${id}`,
+				method: "PUT",
+			}),
+			invalidatesTags: ["Order"],
+		}),
 	}),
 });
 export const {
@@ -196,6 +202,7 @@ export const {
 	useUpdateinfoCustomerMutation,
 	useDecrementProductMutation,
 	useIncrementProductMutation,
+	useConfirmDeliveredMutation,
 } = orderApi;
 
 export const productReducer = orderApi.reducer;
