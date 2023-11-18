@@ -24,6 +24,7 @@ const returnedSchema = new Schema(
     phone_number: {
       type: Number,
     },
+    images: [],
     created_at: {
       type: Date,
       default: Date.now,

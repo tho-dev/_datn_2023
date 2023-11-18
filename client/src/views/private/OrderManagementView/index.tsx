@@ -222,6 +222,10 @@ const OrderManagementView = (props: Props) => {
                   label: "Hoàn hàng",
                   value: "returned",
                 },
+                {
+                  label: "Chờ hoàn thành",
+                  value: "pendingComplete",
+                },
               ]}
             />
           </Box>
@@ -288,7 +292,7 @@ const OrderManagementView = (props: Props) => {
               fontWeight="medium"
               lineHeight="1.5"
               w="260px"
-              placeholder="Tìm kiếm đơn hàng..."
+              placeholder="Tìm kiếm theo tên,mã,..."
               onChange={(e) =>
                 setDebouncedSearchTerm({ search: e.target.value })
               }

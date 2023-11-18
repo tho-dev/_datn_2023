@@ -17,25 +17,44 @@ import {
   FormErrorMessage,
   Textarea,
 } from "@chakra-ui/react";
-import { NavArrowLeflIcon } from "~/components/common/Icons/index";
+import {
+  CloseSmallIcon,
+  NavArrowLeflIcon,
+  NavArrowRightIcon,
+  PlusIcon,
+} from "~/components/common/Icons/index";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import DetailOrder from "./DetailOrder";
 import { useState } from "react";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import orderApi, {
   useCancelOrderMutation,
+  useConfirmDeliveredMutation,
   useReturnOrderMutation,
 } from "~/redux/api/order";
 import moment from "moment";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useAppDispatch } from "~/redux/hook/hook";
+import LoadingPolytech from "~/components/LoadingPolytech";
+import { chuyenDoiSoDienThoaiVe0, formatPhoneNumberPlus } from "~/utils/fc";
+import FileUploadThinkPro from "~/components/FileUploadThinkPro";
+import Media from "~/views/private/ProductManagerView/components/AddProductMangerView/components/Media";
 
 type Props = {
   dataOrder: any[];
   phoneNumber: any;
+  setQuery: any;
+  paginate: any;
+  loading: boolean;
 };
 
-const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
+const ListOrder = ({
+  dataOrder,
+  phoneNumber,
+  setQuery,
+  paginate,
+  loading,
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenReturn,
@@ -51,17 +70,27 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    control,
     formState: { errors },
   } = useForm();
+  console.log(watch("images.url"));
+
   const [orderDetail, setOrderDetail] = useState({} as any);
+
   const toast = useToast();
   const handleGetOrderDetail = (item: any) => {
     setOrderDetail(item);
     onOpen();
   };
   const dispatch = useAppDispatch();
+
   const [cancelOrder] = useCancelOrderMutation();
   const [returnOrder] = useReturnOrderMutation();
+  const [confirmDelivered] = useConfirmDeliveredMutation();
+
   const handleOpenModelReturn = (order: any, e: any) => {
     e.stopPropagation();
     onOpenReturn();
@@ -125,9 +154,18 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
     setOrderDetail(order);
   };
   const onSubmitFormReturn = (data: any) => {
+    if (data?.images.length > 3) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: "Tối đa 3 ảnh sản phẩm",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const currentDate = new Date();
     const targetTime = new Date(orderDetail.updated_at);
-
     targetTime.setDate(targetTime.getDate() + 1);
     if (currentDate > targetTime) {
       return toast({
@@ -169,28 +207,107 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
         onCloseReturn();
       });
   };
+  const currentDate = new Date();
+
+  const handleConfirmCompleted = (order: any, e: any) => {
+    e.stopPropagation();
+    confirmDelivered(order?._id)
+      .unwrap()
+      .then((data) => {
+        dispatch(orderApi.util.invalidateTags(["Order"]));
+        toast({
+          title: "Hệ thống",
+          description: data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: "Hệ thống",
+          description: error.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
+  };
+  const handleNextPaginate = () => {
+    setQuery({ _page: paginate?.nextPage });
+  };
+  const handlePrevPaginate = () => {
+    setQuery({ _page: paginate?.prevPage });
+  };
+  if (loading) {
+    return <LoadingPolytech />;
+  }
+
   return (
     <Box p="4" rounded="md">
       <Flex justifyContent="space-between">
         <Heading py="4" color="text.black" fontSize="xl">
-          Đơn hàng của bạn : {phoneNumber}
+          Đơn hàng của bạn : {formatPhoneNumberPlus(phoneNumber)}
         </Heading>
+        <Flex
+          gap="2"
+          display={{
+            sm: "none",
+            lg: "flex",
+          }}
+        >
+          <Flex
+            w="9"
+            h="9"
+            rounded="full"
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="bg.white"
+            className="btn-prev-menu"
+            bgColor={paginate.prevPage ? "bg.white" : "#ccc"}
+            _hover={{ bgColor: "bg.gray" }}
+          >
+            <NavArrowLeflIcon
+              size={4}
+              strokeWidth={3}
+              color="text.black"
+              onClick={handlePrevPaginate}
+              isDisabled={!paginate.prevPage}
+            />
+          </Flex>
+
+          <Flex
+            w="9"
+            h="9"
+            rounded="full"
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="bg.white"
+            className="btn-next-menu"
+            bgColor={paginate.nextPage ? "bg.white" : "#ccc"}
+            _hover={{ bgColor: "bg.gray" }}
+          >
+            <NavArrowRightIcon
+              size={4}
+              strokeWidth={3}
+              color="text.black"
+              onClick={handleNextPaginate}
+              isDisabled={!paginate.nextPage}
+            />
+          </Flex>
+        </Flex>
       </Flex>
 
-      <Grid gridTemplateColumns="repeat(3,1fr)" gap={4} w="100%">
-        {dataOrder.length > 0 ? (
+      <Grid gridTemplateColumns="repeat(3,1fr)" gap={4} w="100%" my={6}>
+        {dataOrder?.length > 0 ? (
           dataOrder.map((item) => {
+            const targetTime = new Date(item?.created_at);
+            targetTime.setMinutes(targetTime.getMinutes() + 15);
             return (
               <GridItem>
-                <Box
-                  p="4"
-                  my={4}
-                  rounded="md"
-                  backgroundColor="bg.white"
-                  cursor={"pointer"}
-                  onClick={() => handleGetOrderDetail(item)}
-                  minH={250}
-                >
+                <Box p="4" rounded="md" backgroundColor="bg.white" minH={250}>
                   <Flex justifyContent="space-between">
                     <Text fontSize="14px" fontWeight={"bold"}>
                       Mã đơn hàng:{" "}
@@ -267,20 +384,37 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
                   </Box>
                   <Divider />
 
-                  <Flex justifyContent="space-between" alignItems={"center"}>
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems={"center"}
+                    w={"100%"}
+                    gap={4}
+                  >
                     <Flex gap={2} my={2}>
-                      {item.status == "processing" && (
-                        <Button
-                          fontWeight={"600"}
-                          fontSize={"12px"}
-                          _hover={{ bgColor: "red" }}
-                          type="button"
-                          onClick={(e) => handleOpenModelCancel(item, e)}
-                          size={"sm"}
-                        >
-                          Huỷ đơn
-                        </Button>
-                      )}
+                      <Button
+                        fontWeight={"600"}
+                        fontSize={"12px"}
+                        _hover={{ bgColor: "blue" }}
+                        type="button"
+                        bgColor={"bg.blue"}
+                        size={"sm"}
+                        onClick={() => handleGetOrderDetail(item)}
+                      >
+                        Xem thêm
+                      </Button>
+                      {item.status == "processing" &&
+                        currentDate < targetTime && (
+                          <Button
+                            fontWeight={"600"}
+                            fontSize={"12px"}
+                            _hover={{ bgColor: "red" }}
+                            type="button"
+                            onClick={(e) => handleOpenModelCancel(item, e)}
+                            size={"sm"}
+                          >
+                            Huỷ đơn
+                          </Button>
+                        )}
                       {item.status == "delivered" && (
                         <Button
                           size={"sm"}
@@ -293,28 +427,42 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
                           Hoàn hàng
                         </Button>
                       )}
+                      {item.status == "pendingComplete" && (
+                        <Button
+                          size={"sm"}
+                          fontSize={"12px"}
+                          fontWeight={"600 "}
+                          bg={"bg.green"}
+                          _hover={{ bgColor: "green" }}
+                          onClick={(e) => handleConfirmCompleted(item, e)}
+                        >
+                          Đã nhận hàng
+                        </Button>
+                      )}
                     </Flex>
-
-                    <Text fontSize="14px" fontWeight="bold">
-                      Thành tiền:{" "}
-                      <Text
-                        as={"span"}
-                        fontSize="14px"
-                        fontWeight={"bold"}
-                        color={"text.red"}
-                      >
-                        {item?.total_amount.toLocaleString()}đ
+                    <Box>
+                      <Text fontSize="14px" fontWeight="bold">
+                        Thành tiền:{" "}
+                        <Text
+                          as={"span"}
+                          fontSize="14px"
+                          fontWeight={"bold"}
+                          color={"text.red"}
+                        >
+                          {item?.total_amount.toLocaleString()}đ
+                        </Text>
                       </Text>
-                    </Text>
+                    </Box>
                   </Flex>
                 </Box>
               </GridItem>
             );
           })
         ) : (
-          <Box>không có gì</Box>
+          <Box>Không có đơn hàng nào</Box>
         )}
       </Grid>
+
       <DialogThinkPro
         isOpen={isOpen}
         onClose={onClose}
@@ -379,6 +527,7 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
                   {...register("phone_number", {
                     required: "Trường bắt buộc nhập",
                   })}
+                  isReadOnly
                 />
                 <FormErrorMessage>
                   {(errors.phone_number as any) &&
@@ -399,6 +548,16 @@ const ListOrder = ({ dataOrder, phoneNumber }: Props) => {
                 />
               </FormControl>
             </Flex>
+            <Box>
+              <Media
+                register={register}
+                watch={watch}
+                getValues={getValues}
+                setValue={setValue}
+                errors={errors}
+                control={control}
+              />
+            </Box>
           </Box>
           <Flex py={"5"} px={"5"} justifyContent="flex-end" gap={6}>
             <Button

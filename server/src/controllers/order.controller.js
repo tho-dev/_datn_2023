@@ -4,6 +4,7 @@ import { Cart } from "../models/cart.model";
 import { Sku, Variant } from "../models/product.model";
 import Returned from "../models/return.model";
 import Axios from "axios";
+import mongoose from "mongoose";
 import {
   calculate_fee,
   calculate_time,
@@ -177,9 +178,15 @@ export const getAll = async (req, res, next) => {
       payment_status,
     } = req.query;
     const conditions = {};
-
     if (search) {
-      conditions.customer_name = { $regex: new RegExp(search, "i") };
+      conditions.$or = [
+        { customer_name: { $regex: new RegExp(search, "i") } },
+        {
+          _id: mongoose.Types.ObjectId.isValid(search)
+            ? new mongoose.Types.ObjectId(search)
+            : null,
+        },
+      ];
     }
 
     if (status) {
@@ -377,6 +384,7 @@ export const updateStatus = async (req, res, next) => {
       "processing",
       "confirmed",
       "delivering",
+      "pendingComplete",
       "cancelled",
       "delivered",
       "returned",
@@ -416,12 +424,10 @@ export const updateStatus = async (req, res, next) => {
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
-    if (status == "delivered") {
-      await Order.findByIdAndUpdate(id, {
-        $set: {
-          payment_status: "paid",
-        },
-      });
+    if (status === "delivered") {
+      throw createError.BadRequest(
+        "Đợi xác nhận từ khách hàng để hoàn thành đơn"
+      );
     }
     if (status === "confirmed" && ordered.shipping_method === "shipped") {
       const shipping = await Shipping.findOne({ _id: ordered.shipping_info });
@@ -855,9 +861,7 @@ export const sendOtpCode = async (req, res, next) => {
 export const verifyOtpCode = async (req, res, next) => {
   try {
     const { phone_number, code } = req.body;
-    console.log(phone_number, code);
     const result = await TextFlow.verifyCode(phone_number, code);
-    console.log(result);
     if (!result.valid) {
       throw createError.BadRequest("Mã code không đúng");
     }
@@ -902,14 +906,38 @@ export const serviceFree = async (req, res, next) => {
 // lấy đơn hàng theo số điện thoại
 export const getOrderByPhoneNumber = async (req, res, next) => {
   try {
-    const { phone_number } = req.body;
-    const results = await Order.find({ phone_number: phone_number });
+    const {
+      _page = 1,
+      _sort = "created_at",
+      _order = "desc",
+      _limit = 6,
+      search,
+      phone_number,
+    } = req.query;
+    const conditions = {};
 
-    if (!results || results.length === 0) {
+    if (search) {
+      conditions.customer_name = { $regex: new RegExp(search, "i") };
+    }
+    if (phone_number) {
+      conditions.phone_number = phone_number;
+    }
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        [_sort]: _order == "desc" ? -1 : 1,
+      },
+      select: ["-deleted", "-deleted_at"],
+    };
+
+    const { docs, ...paginate } = await Order.paginate(conditions, options);
+
+    if (!docs) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
 
-    const orderDetailsPromises = results.map(async (result) => {
+    const orderDetailsPromises = docs.map(async (result) => {
       const orderDetails = await Order_Detail.find({ order_id: result._id });
       const newOrder = await Promise.all(
         orderDetails.map(async (item) => {
@@ -930,11 +958,13 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
     });
 
     const ordersWithDetails = await Promise.all(orderDetailsPromises);
-
     return res.json({
       status: 200,
-      message: "Tìm thấy đơn hàng thành công",
-      data: ordersWithDetails,
+      message: "Lấy toàn bộ sản phẩm thành công",
+      data: {
+        items: ordersWithDetails,
+        paginate,
+      },
     });
   } catch (error) {
     next(error);
@@ -943,17 +973,41 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
 // lấy đơn hàng theo user_id
 export const getOrderByUserId = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const result = await Order.find({ user_id: id }).populate([
-      "shipping_info",
-    ]);
-    if (result.length <= 0) {
+    const {
+      _page = 1,
+      _sort = "created_at",
+      _order = "desc",
+      _limit = 10,
+      status,
+      id,
+    } = req.query;
+    const conditions = {};
+    if (status) {
+      conditions.status = status;
+    }
+    if (id) {
+      conditions.user_id = id;
+    }
+
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        [_sort]: _order == "desc" ? -1 : 1,
+      },
+      select: ["-deleted", "-deleted_at"],
+      populate: "shipping_info",
+    };
+
+    const { docs, ...paginate } = await Order.paginate(conditions, options);
+
+    if (docs.length <= 0) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
 
     // const order_details = await Order_Detail.find({ order_id: result._id });
     const order_details = await Promise.all(
-      result.map(async (item) => {
+      docs.map(async (item) => {
         const order_detail = await Order_Detail.find({ order_id: item._id });
         const new_order_details = await Promise.all(
           order_detail.map(async (item) => {
@@ -979,7 +1033,10 @@ export const getOrderByUserId = async (req, res, next) => {
     return res.json({
       status: 200,
       message: "Tìm thấy đơn hàng thành công",
-      data: order_details,
+      data: {
+        items: order_details,
+        paginate,
+      },
     });
   } catch (error) {
     next(error);
@@ -1227,7 +1284,7 @@ export const getAllOrder = async (req, res, next) => {
 
 export const returnedOrder = async (req, res, next) => {
   try {
-    const { order_id, reason, customer_name, phone_number } = req.body;
+    const { order_id, reason, customer_name, phone_number, images } = req.body;
     const return_order = await Returned.findOne({ order_id });
     if (return_order) {
       throw createError.BadRequest("Đơn hàng đã được yêu cầu hoàn hàng");
@@ -1241,6 +1298,7 @@ export const returnedOrder = async (req, res, next) => {
       reason,
       customer_name,
       phone_number,
+      images,
     });
     if (!returned) throw createError.BadRequest("Hoàn hàng không thành công");
     return res.json({
@@ -1375,6 +1433,38 @@ export const delete_all_order = async (req, res, next) => {
     return res.json({
       status: 200,
       message: "thành công",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateStatusDelivered = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const ordered = await Order.findById(id);
+    if (ordered.status !== "pendingComplete") {
+      throw createError.NotFound("Trạng thái đơn hàng không hợp lệ");
+    }
+    if (!ordered) {
+      throw createError.NotFound("Không tìm thấy đơn hàng");
+    }
+    const order = await Order.findByIdAndUpdate(
+      id,
+      {
+        $set: { status: "delivered", payment_status: "paid" },
+        $push: {
+          status_detail: {
+            status: "delivered",
+          },
+        },
+      },
+      { new: true }
+    );
+    return res.json({
+      status: 200,
+      message: "Cập nhật trạng thái thành công",
+      data: order,
     });
   } catch (error) {
     next(error);

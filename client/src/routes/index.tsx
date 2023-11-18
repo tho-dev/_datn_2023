@@ -104,7 +104,7 @@ const routes: RouteObject[] = [
             element: <HistoryOrderView />,
           },
           {
-            path: "khuyen-mai",
+            path: "khuyen-mai/:slug",
             element: <PromotionView />,
           },
           {
