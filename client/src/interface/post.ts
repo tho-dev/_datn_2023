@@ -7,5 +7,6 @@ export interface IPost{
     slug: string, 
     thumbnail: any,
     created_at: any,
+    created_by: any
     name: any
 }

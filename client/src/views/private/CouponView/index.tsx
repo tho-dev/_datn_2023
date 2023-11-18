@@ -1,4 +1,3 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -14,134 +13,85 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
-import DialogThinkPro from "~/components/DialogThinkPro";
-import ActionCreateBrand from "./components/ActionCreateBrand";
-import ActionUpdateBrand from "./components/ActionUpdateBrand";
-import { useDeleteBrandMutation, useGetAllBrandsQuery } from "~/redux/api/brand";
-import { useGetAllCategoryQuery } from "~/redux/api/category";
 import { createColumnHelper } from "@tanstack/react-table";
-import TableThinkPro from "~/components/TableThinkPro";
-import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
-import SelectThinkPro from "~/components/SelectThinkPro";
+import { useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { Link as ReactRouterLink } from "react-router-dom";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import DialogThinkPro from "~/components/DialogThinkPro";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import TableThinkPro from "~/components/TableThinkPro";
+import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { useDeletePromotionMutation, useGetAllPromotionQuery, useGetSinglePromotionQuery } from "~/redux/api/promotion";
+import ActionCreatePromotion from "./components/ActionCreatePromotion";
+import ActionUpdatePromotion from "./components/ActionUpdatePromotion";
 import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
-type TQuery = {
-	_limit: number;
-	_page: number;
-	_parent: boolean;
-	_sort: string;
-	_order: string;
-	_type: string;
-	_name?: string;
-	_category?: string;
-};
-
-const BrandView = (props: Props) => {
+const CouponView = (props: Props) => {
 	const toast = useToast();
 	const columnHelper = createColumnHelper<any>();
 
 	const [id, setId] = useState(null);
-	const [brand, setBrand] = useState<any>(null);
-	const [parents, setParents] = useState<any>([]);
-	const [categoriesBrand, setCategoriesBrand] = useState<any>([]);
-	const [query, setQuery] = useState<TQuery>({
-		_limit: 20,
-		_page: 1,
-		_parent: true,
-		_sort: "created_at",
-		_order: "desc",
-		_type: "category_brand",
-	});
-	const deboundceQuery = useDebounce(query, 300);
+	const [slug, setSlug] = useState(null);
 
 	const {
-		isOpen: isOpenActionCreateBrand,
-		onOpen: onOpenActionCreateBrand,
-		onClose: onCloseActionCreateBrand,
+		isOpen: isOpenActionCreatePromtion,
+		onOpen: onOpenActionCreatePromtion,
+		onClose: onCloseActionCreatePromtion,
 	} = useDisclosure();
 	const {
-		isOpen: isOpenActionUpdateBrand,
-		onOpen: onOpenActionUpdateBrand,
-		onClose: onCloseActionUpdateBrand,
+		isOpen: isOpenActionUpdatePromotion,
+		onOpen: onOpenActionUpdatePromtion,
+		onClose: onCloseActionUpdatePromotion,
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
-	const { control, register } = useForm();
+	const [deletedPromotion] = useDeletePromotionMutation();
+	const { data: promotion } = useGetSinglePromotionQuery(
+		{
+			slug: slug,
+		},
+		{
+			skip: !slug,
+		}
+	);
+
+	const { control, register } = useForm({
+		defaultValues: {
+			name: "",
+			status: "",
+		},
+	});
+	const statusForm: any = useWatch({
+		control,
+		name: "status",
+	});
 	const nameForm = useWatch({
 		control,
 		name: "name",
 	});
-	const categoryForm = useWatch({
-		control,
-		name: "category",
-	});
+	const query = useMemo(() => {
+		return {
+			_limit: 10,
+			_page: 1,
+			_name: nameForm,
+			_status: statusForm ? JSON.parse(statusForm?.value) : "",
+		};
+	}, [statusForm, nameForm]);
+	const debounceQuery = useDebounce(query, 500);
 
-	const [deleteBrand] = useDeleteBrandMutation();
-	const { data: brands, isLoading } = useGetAllBrandsQuery({
-		_limit: 20,
-		_page: 1,
-		_sort: "created_at",
-		_order: "desc",
-	});
-	const { data: categories } = useGetAllCategoryQuery({
-		_limit: 20,
-		_page: 1,
-		_sort: "created_at",
-		_order: "desc",
-		_type: "category_brand",
-	});
-
-	useEffect(() => {
-		if (brands) {
-			const parentsFilter = brands?.data?.items?.map((brand: any) => {
-				return {
-					label: brand?.name,
-					value: brand?._id,
-				};
-			});
-
-			setParents(parentsFilter);
-		}
-	}, [brands, isLoading]);
-
-	useEffect(() => {
-		if (categories) {
-			const categoriesFilter = categories?.data?.items?.map((brand: any) => {
-				return {
-					label: brand?.name,
-					value: brand?._id,
-				};
-			});
-
-			setCategoriesBrand(categoriesFilter);
-		}
-	}, [categories, isLoading]);
-
-	useEffect(() => {
-		if (query) {
-			setQuery({
-				...query,
-				_name: nameForm,
-				_category: categoryForm?.value,
-			});
-		}
-	}, [nameForm, categoryForm]);
-
-	const handleDeleteBrand = async () => {
+	const handleDeletePromotion = async () => {
 		try {
-			await deleteBrand(id as any).unwrap();
+			await deletedPromotion(id as any).unwrap();
 			toast({
 				title: "Thành công",
 				duration: 1600,
 				position: "top-right",
 				status: "success",
-				description: "Xóa danh mục thành công",
+				description: "Xóa khuyến mãi thành công",
 			});
 		} catch (error: any) {
 			toast({
@@ -169,17 +119,11 @@ const BrandView = (props: Props) => {
 			cell: (info) => {
 				return <Text fontSize="sm">{info.getValue()}</Text>;
 			},
-			header: "Thương hiệu",
+			header: "Khuyến mãi",
 		}),
 		columnHelper.accessor("slug", {
 			cell: (info) => `/${info.getValue()}`,
-			header: "Đường dẫn",
-		}),
-		columnHelper.accessor("category", {
-			cell: (info) => {
-				return <Text fontSize="sm">{info.getValue()?.name}</Text>;
-			},
-			header: "Danh mục",
+			header: "Slug",
 		}),
 		columnHelper.accessor("thumbnail", {
 			cell: ({ getValue }) => {
@@ -195,27 +139,28 @@ const BrandView = (props: Props) => {
 					/>
 				);
 			},
-			header: "Ảnh",
+			header: "Banner",
 		}),
-		columnHelper.accessor("description", {
+		columnHelper.accessor("status", {
 			cell: (info) => {
 				return (
 					<Text
-						fontSize="sm"
-						css={{
-							display: "-webkit-box",
-							WebkitLineClamp: 2,
-							WebkitBoxOrient: "vertical",
-							overflow: "hidden",
-						}}
+						display="inline-flex"
+						fontSize="13px"
+						px="4"
+						py="1"
+						rounded="md"
+						fontWeight="semibold"
+						color={info.getValue() ? "text.textSuccess" : "text.textDelete"}
+						bgColor={info.getValue() ? "bg.bgSuccess" : "bg.bgDelete"}
 					>
-						{info.getValue()}
+						{info.getValue() ? "Đang khuyến mãi" : "Ngừng khuyến mãi"}
 					</Text>
 				);
 			},
-			header: "Mô tả",
+			header: "Trạng thái",
 		}),
-		columnHelper.accessor("created_at", {
+		columnHelper.accessor("start_time", {
 			cell: (info) => (
 				<Text
 					fontWeight="medium"
@@ -224,18 +169,18 @@ const BrandView = (props: Props) => {
 					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
 				</Text>
 			),
-			header: "Ngày tạo",
+			header: "Ngày bắt đầu",
 		}),
-		columnHelper.accessor("updated_at", {
+		columnHelper.accessor("expired_time", {
 			cell: (info) => (
 				<Text
 					fontWeight="medium"
 					fontSize="13px"
 				>
-					{moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS")}
+					{info.getValue() ? moment(info.getValue()).format("DD-MM-YYYY HH:MM:SS") : "Đang cập nhật"}
 				</Text>
 			),
-			header: "Ngày cập nhật",
+			header: "Ngày kết thúc",
 		}),
 		columnHelper.accessor("action", {
 			cell: ({ row }) => {
@@ -268,20 +213,8 @@ const BrandView = (props: Props) => {
 								py="2"
 								icon={<EditIcon size={4} />}
 								onClick={() => {
-									const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
-
-									setBrand({
-										_id: doc?._id,
-										name: doc?.name,
-										thumbnail: doc?.thumbnail,
-										parent_id: parent_id,
-										category_id: {
-											label: doc?.category?.name,
-											value: doc?.category?.category_id,
-										},
-										description: doc?.description,
-									});
-									onOpenActionUpdateBrand();
+									setSlug(doc?.slug);
+									onOpenActionUpdatePromtion();
 								}}
 							>
 								Cập Nhật
@@ -314,7 +247,7 @@ const BrandView = (props: Props) => {
 						fontWeight="semibold"
 						textTransform="uppercase"
 					>
-						Danh Sách Thương Hiệu
+						Danh Sách Voucher
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -332,7 +265,7 @@ const BrandView = (props: Props) => {
 							</BreadcrumbItem>
 
 							<BreadcrumbItem isCurrentPage>
-								<BreadcrumbLink href="thuong-hieu">Thương hiệu</BreadcrumbLink>
+								<BreadcrumbLink href="khuyen-mai">Coupon</BreadcrumbLink>
 							</BreadcrumbItem>
 						</Breadcrumb>
 					</Box>
@@ -344,20 +277,29 @@ const BrandView = (props: Props) => {
 				>
 					<Flex
 						gap="4"
-						w="40%"
+						w="50%"
 					>
-						<Box display="inline-block">
+						<Box>
 							<SelectThinkPro
 								control={control}
-								name="category"
+								name="status"
 								title=""
-								placeholder="-- Danh mục --"
-								data={categoriesBrand}
+								placeholder="-- Trạng thái --"
+								data={[
+									{
+										label: "Đang khuyến mãi",
+										value: "true",
+									},
+									{
+										label: "Ngừng khuyến mãi",
+										value: "false",
+									},
+								]}
 							/>
 						</Box>
 
 						<Flex
-							flex="2"
+							flex="1"
 							px="4"
 							rounded="8px"
 							alignItems="center"
@@ -382,13 +324,13 @@ const BrandView = (props: Props) => {
 								fontWeight="medium"
 								lineHeight="1.5"
 								w="260px"
-								placeholder="Tìm kiếm thương hiệu"
+								placeholder="Tìm kiếm coupon"
 								{...register("name")}
 							/>
 						</Flex>
 					</Flex>
 					<Flex
-						w="40%"
+						flex="1"
 						justifyContent="flex-end"
 					>
 						<Button
@@ -403,7 +345,7 @@ const BrandView = (props: Props) => {
 							lineHeight="2"
 							color="text.textSuccess"
 							bgColor="bg.bgSuccess"
-							onClick={onOpenActionCreateBrand}
+							onClick={onOpenActionCreatePromtion}
 						>
 							Tạo Mới
 						</Button>
@@ -413,49 +355,45 @@ const BrandView = (props: Props) => {
 				{/* Danh sách */}
 				<TableThinkPro
 					columns={columns}
-					useData={useGetAllBrandsQuery}
-					defaultPageSize={15}
-					query={deboundceQuery}
+					useData={useGetAllPromotionQuery}
+					defaultPageSize={10}
+					query={debounceQuery}
 				/>
 			</Box>
 			{/* Form */}
 			<DialogThinkPro
-				isOpen={isOpenActionCreateBrand}
-				onClose={onCloseActionCreateBrand}
+				size="6xl"
+				isOpen={isOpenActionCreatePromtion}
+				onClose={onCloseActionCreatePromtion}
 				isCentered
 				title={
 					<Heading
 						fontSize="16"
 						textTransform="uppercase"
 					>
-						Tạo mới thương hiệu
+						Tạo mới khuyến mãi
 					</Heading>
 				}
 			>
-				<ActionCreateBrand
-					onClose={onCloseActionCreateBrand}
-					parents={parents}
-					categories={categoriesBrand}
-				/>
+				<ActionCreatePromotion onClose={onCloseActionCreatePromtion} />
 			</DialogThinkPro>
 			<DialogThinkPro
-				isOpen={isOpenActionUpdateBrand}
-				onClose={onCloseActionUpdateBrand}
+				isOpen={isOpenActionUpdatePromotion}
+				onClose={onCloseActionUpdatePromotion}
 				isCentered
+				size="6xl"
 				title={
 					<Heading
 						fontSize="16"
 						textTransform="uppercase"
 					>
-						Cập nhật thương hiệu
+						Cập nhật khuyến mãi
 					</Heading>
 				}
 			>
-				<ActionUpdateBrand
-					onClose={onCloseActionUpdateBrand}
-					brand={brand}
-					parents={parents}
-					categories={categoriesBrand}
+				<ActionUpdatePromotion
+					promotion={promotion}
+					onClose={onCloseActionUpdatePromotion}
 				/>
 			</DialogThinkPro>
 
@@ -463,11 +401,11 @@ const BrandView = (props: Props) => {
 			<ConfirmThinkPro
 				isOpen={isOpenComfirm}
 				onClose={onCloseComfirm}
-				content="Bạn có muốn xóa bỏ thương hiệu này không?"
-				handleClick={handleDeleteBrand}
+				content="Bạn có muốn xóa bỏ trương trình khuyến mãi này không?"
+				handleClick={handleDeletePromotion}
 			/>
 		</>
 	);
 };
 
-export default BrandView;
+export default CouponView;

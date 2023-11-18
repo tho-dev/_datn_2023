@@ -13,6 +13,8 @@ export async function getAllPromotion(req, res, next) {
 			_sort = "created_at",
 			_order = "desc",
 			_limit = 10,
+			_name = "",
+			_status = ''
 		} = req.query;
 
 		const options = {
@@ -24,7 +26,12 @@ export async function getAllPromotion(req, res, next) {
 			select: ['-deleted', '-deleted_at']
 		};
 
-		const { docs, ...paginate } = await Promotion.paginate({}, options);
+		const { docs, ...paginate } = await Promotion.paginate({
+			$and: [
+				_name ? { $or: [{ name: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }] } : {},
+				_status ? { status: JSON.parse(_status) } : {}
+			]
+		}, options);
 
 		return res.json({
 			status: 200,
@@ -122,7 +129,7 @@ export async function getPromtionDetail(req, res, next) {
 				},
 				category: {
 					label: product.category_id.name,
-					value: product.category_id.slug
+					value: product.category_id._id
 				},
 
 

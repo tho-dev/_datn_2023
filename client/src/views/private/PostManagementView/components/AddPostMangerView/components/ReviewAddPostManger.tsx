@@ -69,18 +69,6 @@ const ReviewAddPostManger = ({
                 </Box>
             </Flex>
 
-            {/* Image */}
-            <Image
-                justifyContent="center"
-                m={"0px 35%"}
-                w="300px"
-                h="250px"
-                alt="Dan Abramov"
-                src={thumbnail ? thumbnail.url : "https://lapcity.vn/wp-content/uploads/2021/07/dell-xps-voi-man-hinh-4k.jpg"}
-                objectFit="cover"
-            />
-
-
             {/* content */}
             <Box
                 mt={"25px"}
@@ -92,6 +80,17 @@ const ReviewAddPostManger = ({
 
             </Box>
 
+            {/* Image */}
+            <Image
+                justifyContent="center"
+                m={"0px 35%"}
+                w="300px"
+                h="250px"
+                alt="Dan Abramov"
+                src={thumbnail ? thumbnail.url : "https://lapcity.vn/wp-content/uploads/2021/07/dell-xps-voi-man-hinh-4k.jpg"}
+                objectFit="cover"
+            />
+ 
 
             {/* meta_keyword */}
             <Box

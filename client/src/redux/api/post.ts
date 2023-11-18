@@ -1,6 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { IPost } from "~/interface/post";
-import { objectToUrlParams } from "~/utils/fc";
+import { baseQuery, objectToUrlParams } from "~/utils/fc";
 
 type TQuery = {
 	_order?: string;
@@ -12,25 +12,23 @@ type TQuery = {
 
 const postApi = createApi({
 	reducerPath: "post",
-	baseQuery: fetchBaseQuery({
-		baseUrl: process.env.VITE_API_URL + "/post",
-	}),
+	baseQuery: baseQuery,
 	tagTypes: ["PostTag"],
 	endpoints: (build) => ({
 		getAllPost: build.query({
-			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
+			query: (query: TQuery) => `/post?${objectToUrlParams(query)}`,
 			providesTags: ["PostTag"],
 		}),
 		getSinglePost: build.query<any, string>({
 			query: (slug) => ({
-				url: `/${slug}`,
+				url: `/post/${slug}`,
 				method: "GET",
 			}),
 			providesTags: (result, error, slug) => [{ type: "PostTag", slug }],
 		}),
 		createPost: build.mutation<any, IPost>({
 			query: (body) => ({
-				url: ``,
+				url: `/post`,
 				method: "POST",
 				body,
 			}),
@@ -38,7 +36,7 @@ const postApi = createApi({
 		}),
 		updatePost: build.mutation<any, { _id: number }>({
 			query: ({ _id, ...patch }) => ({
-				url: `/${_id}`,
+				url: `/post/${_id}`,
 				method: "PUT",
 				body: patch,
 			}),
@@ -46,7 +44,7 @@ const postApi = createApi({
 		}),
 		deletePost: build.mutation<any, number>({
 			query: (id) => ({
-				url: `/${id}`,
+				url: `/post/${id}`,
 				method: "DELETE",
 			}),
 			invalidatesTags: ["PostTag"],

@@ -186,7 +186,6 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 								backgroundColor: "#F47690",
 								border: "2px solid #fff",
 							}}
-							shadow="sm"
 						>
 							<BellIcon
 								size={6}
@@ -300,6 +299,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 				</Box>
 				<Flex
 					gap="4"
+					px="4"
+					py="2"
 					alignItems="center"
 					justifyContent="center"
 					position="relative"
@@ -307,7 +308,6 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 					onClick={onToggle}
 					_hover={{ bg: "bg.gray" }}
 					cursor="pointer"
-					shadow="sm"
 				>
 					<Avatar
 						name="ThinkPro"

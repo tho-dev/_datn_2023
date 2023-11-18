@@ -101,6 +101,8 @@ export async function getAllProduct(req, res, next) {
       _order = "desc",
       _limit = 10,
       _keyword = "",
+      _category = "",
+      _brand = ""
     } = req.query;
 
     const options = {
@@ -132,7 +134,18 @@ export async function getAllProduct(req, res, next) {
     }
     conditions.status = true;
 
-    const { docs, ...paginate } = await Product.paginate(conditions, options);
+    const { docs, ...paginate } = await Product.paginate({
+      $and: [
+        { status: true },
+        {
+          $or: [
+            { name: new RegExp(_keyword, 'i'), description: new RegExp(_keyword, 'i') }
+          ]
+        },
+        _category ? { category_id: _category } : {},
+        _brand ? { brand_id: _brand } : {},
+      ]
+    }, options);
 
     // hàm lấy ra các 1 sku của một sản phẩm
     const getSku = async (product, id) => {
@@ -216,6 +229,10 @@ export async function getAllProductManager(req, res, next) {
       _sort = "created_at",
       _order = "desc",
       _limit = 10,
+      _name = '',
+      _category = '',
+      _brand = '',
+      _status = ''
     } = req.query;
 
     const options = {
@@ -236,7 +253,14 @@ export async function getAllProductManager(req, res, next) {
       ],
     };
 
-    const { docs, ...paginate } = await Product.paginate({}, options);
+    const { docs, ...paginate } = await Product.paginate({
+      $and: [
+        _name ? { $or: [{ name: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }] } : {},
+        _brand ? { brand_id: _brand } : {},
+        _category ? { category_id: _category } : {},
+        _status ? { status: JSON.parse(_status) } : {}
+      ]
+    }, options);
 
     // hàm lấy ra các 1 sku của một sản phẩm
     const getSku = async (product, id) => {

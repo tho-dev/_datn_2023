@@ -1,4 +1,3 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -14,28 +13,46 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
+import { createColumnHelper } from "@tanstack/react-table";
+import moment from "moment/moment";
 import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
+import { useForm, useWatch } from "react-hook-form";
+import { Link as ReactRouterLink } from "react-router-dom";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import DialogThinkPro from "~/components/DialogThinkPro";
+import TableThinkPro from "~/components/TableThinkPro";
+import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { useDeleteCategoryMutation, useGetAllCategoryQuery } from "~/redux/api/category";
 import ActionCreateCategory from "./components/ActionCreateCategory";
 import ActionUpdateCategory from "./components/ActionUpdateCategory";
-import { useDeleteCategoryMutation, useGetAllCategoryQuery } from "~/redux/api/category";
-import { createColumnHelper } from "@tanstack/react-table";
-import TableThinkPro from "~/components/TableThinkPro";
-import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import moment from "moment/moment";
-import SelectThinkPro from "~/components/SelectThinkPro";
-import { useForm } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
+type TQuery = {
+	_limit: number;
+	_page: number;
+	_sort: string;
+	_order: string;
+	_type: string;
+	_name?: string;
+};
 
 const CategoryManagerView = (props: Props) => {
 	const toast = useToast();
-	// thương hiệu cha
+	const columnHelper = createColumnHelper<any>();
+
 	const [id, setId] = useState(null);
 	const [category, setCategory] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
-	const columnHelper = createColumnHelper<any>();
+	const [query, setQuery] = useState<TQuery>({
+		_limit: 20,
+		_page: 1,
+		_sort: "created_at",
+		_order: "desc",
+		_type: "category_brand",
+	});
+	const debounceQuery = useDebounce(query, 500);
+
 	const {
 		isOpen: isOpenActionCreateCategory,
 		onOpen: onOpenActionCreateCategory,
@@ -46,10 +63,17 @@ const CategoryManagerView = (props: Props) => {
 		onOpen: onOpenActionUpdateCategory,
 		onClose: onCloseActionUpdateCategory,
 	} = useDisclosure();
-
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
-	const { control } = useForm();
+	const { control, register } = useForm({
+		defaultValues: {
+			name: "",
+		},
+	});
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
 
 	const [deleteCategory] = useDeleteCategoryMutation();
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
@@ -59,6 +83,15 @@ const CategoryManagerView = (props: Props) => {
 		_order: "desc",
 		_type: "category_brand",
 	});
+
+	useEffect(() => {
+		if (query) {
+			setQuery({
+				...query,
+				_name: nameForm,
+			});
+		}
+	}, [nameForm]);
 
 	useEffect(() => {
 		if (categories) {
@@ -296,28 +329,9 @@ const CategoryManagerView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						w="50%"
+						w="30%"
 						gap="4"
 					>
-						<Box>
-							<SelectThinkPro
-								control={control}
-								name="category"
-								title=""
-								placeholder="-- Trạng thái --"
-								data={[
-									{
-										label: "Hoạt Động",
-										value: "1",
-									},
-									{
-										label: "Khóa",
-										value: "2",
-									},
-								]}
-							/>
-						</Box>
-
 						<Flex
 							flex="1"
 							px="4"
@@ -345,6 +359,7 @@ const CategoryManagerView = (props: Props) => {
 								lineHeight="1.5"
 								w="260px"
 								placeholder="Tìm kiếm danh mục"
+								{...register("name")}
 							/>
 						</Flex>
 					</Flex>
@@ -370,13 +385,7 @@ const CategoryManagerView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllCategoryQuery}
 					defaultPageSize={10}
-					query={{
-						_limit: 20,
-						_page: 1,
-						_sort: "created_at",
-						_order: "desc",
-						_type: "category_brand",
-					}}
+					query={debounceQuery}
 				/>
 
 				{/* Cofirm */}

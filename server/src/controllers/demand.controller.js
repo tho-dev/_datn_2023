@@ -9,6 +9,7 @@ export async function getAllDemand(req, res, next) {
 			_sort = "created_at",
 			_order = "desc",
 			_limit = 10,
+			_name = ""
 		} = req.query;
 
 		const options = {
@@ -20,7 +21,9 @@ export async function getAllDemand(req, res, next) {
 			select: ['-deleted', '-deleted_at']
 		};
 
-		const { docs, ...paginate } = await Demand.paginate({}, options);
+		const { docs, ...paginate } = await Demand.paginate({
+			name: new RegExp(_name, 'i')
+		}, options);
 
 		return res.json({
 			status: 200,

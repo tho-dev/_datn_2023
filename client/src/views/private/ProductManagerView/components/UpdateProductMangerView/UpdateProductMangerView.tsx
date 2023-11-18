@@ -79,12 +79,18 @@ const UpdateProductMangerView = (props: Props) => {
 	});
 
 	// xử lý call api
-	const { data: brands } = useGetAllBrandsQuery({
-		_page: 1,
-		_limit: 200,
-		_order: "desc",
-		_sort: "created_at",
-	});
+	const { data: brands } = useGetAllBrandsQuery(
+		{
+			_page: 1,
+			_limit: 200,
+			_order: "desc",
+			_sort: "created_at",
+			_category: category?.value,
+		},
+		{
+			skip: !category?.value,
+		}
+	);
 
 	const { data: categories } = useGetAllCategoryQuery({
 		_page: 1,
@@ -116,7 +122,28 @@ const UpdateProductMangerView = (props: Props) => {
 	const [saveVariants] = useSaveVariantsMutation();
 
 	useEffect(() => {
-		if (product && brands && categories) {
+		if (brands) {
+			setValue("brand_id", "");
+			const selectBrands = brands?.data?.items?.map((brand: any) => ({
+				label: brand?.name,
+				value: brand?._id,
+			}));
+			setBrandsFilter(selectBrands);
+		}
+	}, [brands, category]);
+
+	useEffect(() => {
+		if (categories) {
+			const selectCategories = categories?.data?.items?.map((category: any) => ({
+				label: category?.name,
+				value: category?._id,
+			}));
+			setCategoriesFilter(selectCategories);
+		}
+	}, [categories]);
+
+	useEffect(() => {
+		if (product) {
 			const data = {
 				...product?.data,
 				brand_id: {
@@ -128,22 +155,10 @@ const UpdateProductMangerView = (props: Props) => {
 					value: product?.data?.category?._id,
 				},
 			};
-			const selectBrands = brands?.data?.items?.map((brand: any) => ({
-				label: brand?.name,
-				value: brand?._id,
-			}));
-
-			const selectCategories = categories?.data?.items?.map((category: any) => ({
-				label: category?.name,
-				value: category?._id,
-			}));
-
 			setDefaultData(data);
-			setBrandsFilter(selectBrands);
-			setCategoriesFilter(selectCategories);
 			reset(data);
 		}
-	}, [product, categories, brands]);
+	}, [product]);
 
 	useEffect(() => {
 		if (variantsDB) {

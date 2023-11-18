@@ -12,11 +12,13 @@ import insert from "./insert.router";
 import collection from "./collection.router";
 import general from "./general.router";
 import notification from "./notification.router";
+import coupon from "./coupon.router"
 import promotion from "./promotion.router";
 import ads from "./ads.router";
 
 const routes = (app) => {
   app.use("/api", general);
+  app.use("/api/coupon", coupon)
   app.use("/api/example", example);
   app.use("/api/product", product);
   app.use("/api/category", category);
@@ -30,7 +32,7 @@ const routes = (app) => {
   app.use("/api/insert", insert);
   app.use("/api/collection", collection);
   app.use("/api/notification", notification);
-  app.use("/api/promotions", promotion);
+  app.use("/api/promotions", promotion)
   app.use("/api/ads", ads);
 };
 

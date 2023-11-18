@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { objectToUrlParams } from "~/utils/fc";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQuery, objectToUrlParams } from "~/utils/fc";
 
 type TQuery = {
 	_order?: string;
@@ -10,23 +10,21 @@ type TQuery = {
 
 const promotionApi = createApi({
 	reducerPath: "promotion",
-	baseQuery: fetchBaseQuery({
-		baseUrl: process.env.VITE_API_URL + "/promotions",
-	}),
+	baseQuery: baseQuery,
 	tagTypes: ["PromotionTag", "PromotionSingleTag"],
 	endpoints: (build) => ({
 		getAllPromotion: build.query({
-			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
+			query: (query: TQuery) => `/promotions?${objectToUrlParams(query)}`,
 			providesTags: ["PromotionTag"],
 		}),
 		getSinglePromotion: build.query({
-			query: ({ slug }) => `/detail?slug=${slug}`,
+			query: ({ slug }) => `/promotions/detail?slug=${slug}`,
 			providesTags: ["PromotionSingleTag"],
 			transformResponse: (res: any) => res?.data,
 		}),
 		createPromotion: build.mutation({
 			query: (body) => ({
-				url: ``,
+				url: `/promotions`,
 				method: "POST",
 				body,
 			}),
@@ -34,7 +32,7 @@ const promotionApi = createApi({
 		}),
 		updatePromotion: build.mutation<any, { _id: number }>({
 			query: ({ _id, ...patch }) => ({
-				url: `/${_id}`,
+				url: `/promotions/${_id}`,
 				method: "PUT",
 				body: patch,
 			}),
@@ -42,7 +40,7 @@ const promotionApi = createApi({
 		}),
 		deletePromotion: build.mutation({
 			query: (id) => ({
-				url: `/${id}`,
+				url: `/promotions/${id}`,
 				method: "DELETE",
 			}),
 			invalidatesTags: ["PromotionTag"],
