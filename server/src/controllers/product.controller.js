@@ -248,7 +248,6 @@ export async function getAllProductManager(req, res, next) {
         [_sort]: _order == "desc" ? -1 : 1,
       },
       select: [
-        "-assets",
         "-attributes",
         "-description",
         "-specs",
@@ -280,6 +279,8 @@ export async function getAllProductManager(req, res, next) {
 
     // hàm lấy ra các 1 sku của một sản phẩm
     const getSku = async (product, id) => {
+      console.log('product?.images', product?.images)
+
       const brand = await Brand.findOne({
         _id: product?.brand_id,
       });
@@ -306,7 +307,7 @@ export async function getAllProductManager(req, res, next) {
         brand_id: undefined,
         category_id: undefined,
         images: undefined,
-        image: product?.images[0]?.url,
+        image: product?.images?.[0]?.url,
         brand: brand?.name,
         category: category?.name,
         colors,

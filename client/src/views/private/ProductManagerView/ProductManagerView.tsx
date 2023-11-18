@@ -111,7 +111,7 @@ const ProductManagerView = (props: Props) => {
 			});
 			setBrandsFilter(brandsRes);
 		}
-	}, [brands, categoryForm]);
+	}, [brands, categoryForm?.value]);
 
 	useEffect(() => {
 		if (categories) {
