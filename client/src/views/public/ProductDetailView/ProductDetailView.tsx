@@ -36,6 +36,7 @@ import CardThinkPro from "~/components/CardThinkPro";
 import ViewedProduct from "~/components/ViewedThinkPro/ViewedProduct";
 import { CommentView } from "~/components/Comment";
 
+
 type Props = {};
 
 const ProductDetailView = (props: Props) => {
@@ -248,9 +249,8 @@ const ProductDetailView = (props: Props) => {
                     objectFit: "contain",
                     borderRadius: "6px",
                   }}
-                  src={`http://www.youtube.com/embed/${
-                    product?.data?.video_review?.split("=")?.[1]
-                  }`}
+                  src={`http://www.youtube.com/embed/${product?.data?.video_review?.split("=")?.[1]
+                    }`}
                 ></iframe>
                 <Divider my="5" />
               </Box>
@@ -307,7 +307,7 @@ const ProductDetailView = (props: Props) => {
       </Flex>
 
       {/* Đánh giá của khách hàng */}
-      <CommentView />
+      <CommentView productId={product?.data._id} />
 
       {/* Sản phẩm liên quan */}
       <Heading fontSize="18px" fontWeight="bold" mb="4">
@@ -399,7 +399,7 @@ const ProductDetailView = (props: Props) => {
         <Text fontSize={"18px"} fontWeight={"bold"} my={4}>
           Sản phẩm đã xem
         </Text>
-        {productViewed.length >= 5 ? (
+        {productViewed?.length >= 5 ? (
           <ViewedProduct products={productViewed} />
         ) : (
           <ListThinkPro data={productViewed} />

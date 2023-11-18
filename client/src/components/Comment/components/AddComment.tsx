@@ -1,36 +1,55 @@
 import { useForm } from "react-hook-form";
 import {
   FormErrorMessage,
-  FormLabel,
   FormControl,
-  Input,
   Button,
   Flex,
-  Text,
   Textarea,
-  Box,
-  Image,
 } from "@chakra-ui/react";
-import { CloseSmallIcon, PictureIcon, Star } from "~/components/common/Icons";
+import { v4 as uuidv4 } from "uuid";
+// import { set, ref, onValue, remove, update } from "firebase/database";
+// import { db } from '~/firebase';
+import { ref, set } from "firebase/database";
+import { db } from "~/firebase";
+import { useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
+import moment from "moment";
 
 type Props = {
   onClose: () => void;
+  productId: string;
 };
 
-const AddComment = ({ onClose }: Props) => {
+const AddComment = ({ onClose, productId }: Props) => {
+  // handle form
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm();
 
+  // user
+  const { user } = useAppSelector(
+    (state: RootState) => state.persistedReducer.global
+  );
+  const userFullName = user?.first_name + " " + user?.last_name;
+  const now = moment();
+  const dateTime = now.format("HH:mm DD/MM/YYYY");
+
   function onSubmit(values: any) {
-    return new Promise((resolve: any) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
+    const uuid = uuidv4();
+
+    set(ref(db, "comments/" + uuid), {
+      id: uuid,
+      userId: user?._id,
+      userAvatar: user?.avatar,
+      userName: userFullName,
+      content: values.content,
+      dateTime,
+      productId: productId,
     });
+    setValue("content", "");
   }
 
   return (
@@ -39,10 +58,10 @@ const AddComment = ({ onClose }: Props) => {
         <FormControl isInvalid={errors.name as any} mt={7}>
           <Textarea
             h={30}
-            id="name"
+            id="content"
             placeholder="Hãy chia sẻ cảm nhận đánh giá của bạn về sản phẩm này nhé"
             size="lager"
-            {...register("name", {
+            {...register("content", {
               required: "Không được để trống !!!",
             })}
           />
