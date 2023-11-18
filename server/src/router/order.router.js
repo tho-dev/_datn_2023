@@ -20,19 +20,30 @@ import {
   returnedOrder,
   confirm_returnedOrder,
   delete_all_order,
+  getReturnedOrder,
+  deleteOneProduct_order,
+  addOneProduct_order,
+  deleteProduct_order,
+  updateStatusDelivered,
 } from "../controllers/order.controller";
 
 const router = express.Router();
+
+router.put("/decrement", deleteOneProduct_order);
+router.put("/increment", addOneProduct_order);
+router.put("/decrement-product-order", deleteProduct_order);
 
 router.post("/send-otp", sendOtpCode);
 router.post("/payment-status", updatePaymentStatus);
 router.post("/verify-otp", verifyOtpCode);
 router.post("/calculateFee", serviceFree);
-router.post("/orderByPhoneNumber", getOrderByPhoneNumber);
-router.get("/orderByUserId/:id", getOrderByUserId);
+router.put("/orderByPhoneNumber", getOrderByPhoneNumber);
+router.get("/orderByUserId", getOrderByUserId);
 router.post("/getTokenPrintBill", getTokenPrintBills);
 router.post("/return", returnedOrder);
+router.get("/return", getReturnedOrder);
 router.put("/return/:id", confirm_returnedOrder);
+router.put("/confirm-completed/:id", updateStatusDelivered);
 
 router.post("/", createOrder);
 router.get("/", getAll);

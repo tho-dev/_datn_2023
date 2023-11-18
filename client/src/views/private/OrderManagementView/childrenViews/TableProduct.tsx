@@ -22,6 +22,8 @@ export default function TableProduct<Data extends object>({
   data,
   columns,
 }: TableThinkProProps<Data>) {
+  console.log(data);
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
     columns,
@@ -36,7 +38,7 @@ export default function TableProduct<Data extends object>({
   });
 
   return (
-    <Box px="4" py="6" borderWidth="1px" borderColor="border.gray" rounded="lg">
+    <Box borderWidth="1px" borderColor="border.gray" rounded="lg">
       <Table>
         <Thead rounded="md" overflow="hidden" h="48px">
           {table.getHeaderGroups().map((headerGroup) => (

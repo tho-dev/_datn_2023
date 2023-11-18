@@ -1,38 +1,32 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
-import { Image, Divider, Button } from "@chakra-ui/react";
-import { PlusIcon } from "../common/Icons";
-import { addViewedItem } from "~/redux/slices/globalSlice";
+import { Button, Checkbox, Divider, Image } from "@chakra-ui/react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { RootState } from "~/redux/store";
+import { addViewedItem, setItems, remoteItems } from "~/redux/slices/globalSlice";
 import { formatNumber } from "~/utils/fc";
-import defaultImage from "~/assets/images/logo-thinkpro.svg";
+import { PlusIcon } from "../common/Icons";
+import { useToast } from "@chakra-ui/react";
 
 type Props = {
 	product?: IProduct;
 	mode?: string;
-	showCompare?: boolean;
 };
 
-const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
+const CardThinkPro = ({ product, mode = "home" }: Props) => {
+	const toast = useToast();
 	const dispatch = useAppDispatch();
+	const { items, isCompare } = useAppSelector((state) => state.persistedReducer.global);
 
 	const handleViewProduct = () => {
-		const productData = {
-			productName: "LG Gram 14 2022",
-			price: "19.999.000",
-		};
-		dispatch(addViewedItem(productData));
+		dispatch(addViewedItem(product));
 	};
 
 	return (
-		<Link
-			to={`/${product?.shared_url}`}
-			as={ReactRouterLink}
+		<Box
 			w="full"
 			h="full"
 			overflow="hidden"
-			rounded="md"
+			rounded="xl"
 			display="inline-block"
 			backgroundColor="bg.white"
 			_hover={{
@@ -41,8 +35,11 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
 			onClick={handleViewProduct}
 		>
 			<Box
+				to={`/${product?.shared_url}`}
+				as={ReactRouterLink}
 				pb="100%"
 				position="relative"
+				display="block"
 			>
 				<Box
 					top="0"
@@ -86,14 +83,17 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
 					>
 						{formatNumber(`${product?.price_before_discount}`)}
 					</Text>
-					<Text
-						p="2px"
-						fontSize="10px"
-						color="text.red"
-						backgroundColor="#fff5f7"
-					>
-						{`${product?.price_discount_percent}%`}
-					</Text>
+
+					{product?.price_discount_percent != 0 && (
+						<Text
+							p="2px"
+							fontSize="10px"
+							color="text.red"
+							backgroundColor="#fff5f7"
+						>
+							{`${product?.price_discount_percent}%`}
+						</Text>
+					)}
 				</Flex>
 				<Flex
 					gap="1"
@@ -130,33 +130,72 @@ const CardThinkPro = ({ product, mode = "home", showCompare }: Props) => {
 						/>
 					</>
 				)}
-
-				{/* {product?.specs && <Divider my="3" />} */}
-				{/* <Text
-					color="text.black"
-					fontSize="sm"
-					fontWeight="medium"
-					textDecoration="underline"
-				>
-					Quà tặng 400.000
-				</Text> */}
-				{showCompare && (
+				{isCompare && (
 					<>
 						<Divider my="3" />
 						<Flex>
-							<Button
-								bgColor="white"
-								color="blue"
-								leftIcon={<PlusIcon size={4} />}
-								padding={1}
-							>
-								So sánh
-							</Button>
+							{items?.find((item: any) => item.id == product?._id) ? (
+								<Checkbox defaultChecked>
+									<Text
+										fontSize="xs"
+										color="text.blue"
+										fontWeight="semibold"
+										onClick={() => {
+											dispatch(
+												remoteItems({
+													id: product?._id,
+												})
+											);
+										}}
+									>
+										Đã thêm vào so sánh
+									</Text>
+								</Checkbox>
+							) : (
+								<Button
+									bgColor="white"
+									color="blue"
+									leftIcon={<PlusIcon size={4} />}
+									padding={1}
+									h="36px"
+									fontSize="13px"
+									onClick={() => {
+										if (items?.length >= 4) {
+											toast({
+												title: "Cảnh báo",
+												duration: 1200,
+												description: "Bạn chỉ so sánh tối đa 4 sản phẩm",
+												status: "warning",
+												position: "top-right",
+											});
+											return;
+										}
+
+										dispatch(
+											setItems([
+												...items,
+												{
+													id: product?._id,
+													slug: product?.slug,
+													shared_url: product?.shared_url,
+													name: product?.name,
+													image: product?.image,
+													space: product?.specs,
+													price: product?.price_before_discount,
+													price_discount_percent: product?.price_discount_percent,
+												},
+											])
+										);
+									}}
+								>
+									So sánh
+								</Button>
+							)}
 						</Flex>
 					</>
 				)}
 			</Flex>
-		</Link>
+		</Box>
 	);
 };
 

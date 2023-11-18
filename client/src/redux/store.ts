@@ -1,12 +1,11 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 // slice
-import globalSlice from './slices/globalSlice';
-import cartSlice from './slices/cartSlice';
-import userSlice from './slices/userSlice';
-
+import globalSlice from "./slices/globalSlice";
+import cartSlice from "./slices/cartSlice";
+import userSlice from "./slices/userSlice";
 //api
 import authApi from "../redux/api/user";
 import productApi from "./api/product";
@@ -16,13 +15,17 @@ import brandApi from "../redux/api/brand";
 import categoryApi from "../redux/api/category";
 import demandApi from "../redux/api/demand";
 import collectionApi from "../redux/api/collection";
-import postApi from './api/post';
-import notificationApi from './api/notification';
+import postApi from "./api/post";
+import notificationApi from "./api/notification";
+import generalApi from "./api/general";
+import promotionApi from "./api/promotion";
+import adsApi from "./api/ads";
+import couponApi from "./api/coupon";
 
 const persistConfig = {
-	key: 'root',
+	key: "root",
 	storage,
-	blacklist: ['_persist'],
+	blacklist: ["_persist"],
 };
 
 const rootReducer = combineReducers({
@@ -43,6 +46,10 @@ const middleware = [
 	collectionApi.middleware,
 	postApi.middleware,
 	notificationApi.middleware,
+	promotionApi.middleware,
+	generalApi.middleware,
+	adsApi.middleware,
+	couponApi.middleware,
 ];
 
 const store = configureStore({
@@ -58,9 +65,16 @@ const store = configureStore({
 		[collectionApi.reducerPath]: collectionApi.reducer,
 		[postApi.reducerPath]: postApi.reducer,
 		[notificationApi.reducerPath]: notificationApi.reducer,
+		[generalApi.reducerPath]: generalApi.reducer,
+		[promotionApi.reducerPath]: promotionApi.reducer,
+		[adsApi.reducerPath]: adsApi.reducer,
+		[couponApi.reducerPath]: couponApi.reducer,
 	},
-	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middleware),
-})
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: false,
+		}).concat(...middleware),
+});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

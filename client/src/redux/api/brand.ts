@@ -1,35 +1,33 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { IBrand } from "~/interface/brand";
-import { objectToUrlParams } from "~/utils/fc";
+import { baseQuery, objectToUrlParams } from "~/utils/fc";
 
 type TQuery = {
 	_order?: string;
 	_sort?: string;
 	_page?: number;
 	_limit?: number;
+	_category?: string;
 };
 
 const brandApi = createApi({
 	reducerPath: "brand",
-	baseQuery: fetchBaseQuery({
-		baseUrl: process.env.VITE_API_URL + "/brand",
-	}),
+	baseQuery: baseQuery,
 	tagTypes: ["BrandTag"],
-
 	endpoints: (build) => ({
 		getAllBrands: build.query({
-			query: (query: TQuery) => `?${objectToUrlParams(query)}`,
+			query: (query: TQuery) => `/brand?${objectToUrlParams(query)}`,
 			providesTags: ["BrandTag"],
 		}),
 		getSingleBrand: build.query({
 			query: (id) => ({
-				url: `/${id}`,
+				url: `/brand/${id}`,
 				method: "GET",
 			}),
 		}),
 		createBrand: build.mutation<IBrand, IBrand>({
 			query: (body) => ({
-				url: ``,
+				url: `/brand`,
 				method: "POST",
 				body,
 			}),
@@ -38,7 +36,7 @@ const brandApi = createApi({
 
 		updateBrand: build.mutation({
 			query: ({ _id, ...patch }) => ({
-				url: `/${_id}`,
+				url: `/brand/${_id}`,
 				method: "PUT",
 				body: patch,
 			}),
@@ -47,7 +45,7 @@ const brandApi = createApi({
 
 		deleteBrand: build.mutation<IBrand, IBrand>({
 			query: (id) => ({
-				url: `/${id}`,
+				url: `/brand/${id}`,
 				method: "DELETE",
 			}),
 			invalidatesTags: ["BrandTag"],

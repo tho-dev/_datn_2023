@@ -1,4 +1,3 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -13,24 +12,44 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
+import { createColumnHelper } from "@tanstack/react-table";
+import moment from "moment/moment";
 import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
+import { useForm, useWatch } from "react-hook-form";
+import { Link as ReactRouterLink } from "react-router-dom";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import DialogThinkPro from "~/components/DialogThinkPro";
+import TableThinkPro from "~/components/TableThinkPro";
+import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { useDeleteDemandMutation, useGetAllDemandQuery } from "~/redux/api/demand";
 import ActionCreateDemand from "./ActionCreateDemand";
 import ActionUpdateDemand from "./ActionUpdateDemand";
-import { useDeleteDemandMutation, useGetAllDemandQuery } from "~/redux/api/demand";
-import { createColumnHelper } from "@tanstack/react-table";
-import TableThinkPro from "~/components/TableThinkPro";
-import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import moment from "moment/moment";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
+type TQuery = {
+	_page: number;
+	_limit: number;
+	_order: string;
+	_sort: string;
+	_name?: string;
+};
+
 const DemandView = (props: Props) => {
 	const toast = useToast();
+	const columnHelper = createColumnHelper<any>();
 	const [id, setId] = useState(null);
 	const [demand, setDemand] = useState<any>(null);
-	const columnHelper = createColumnHelper<any>();
+	const [query, setQuery] = useState<TQuery>({
+		_page: 1,
+		_limit: 10,
+		_order: "desc",
+		_sort: "created_at",
+	});
+
+	const debounceQuery = useDebounce(query, 300);
+
 	const {
 		isOpen: isOpenActionCreateDemand,
 		onOpen: onOpenActionCreateDemand,
@@ -43,8 +62,28 @@ const DemandView = (props: Props) => {
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
-	const [deleteDemand] = useDeleteDemandMutation();
+	const { control, register } = useForm({
+		defaultValues: {
+			name: "",
+		},
+	});
 
+	const name = useWatch({
+		control,
+		name: "name",
+	});
+
+	useEffect(() => {
+		if (query) {
+			setQuery({
+				...query,
+				_name: name,
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [name]);
+
+	const [deleteDemand] = useDeleteDemandMutation();
 	const handleDeleteDemand = async () => {
 		try {
 			await deleteDemand(id as any).unwrap();
@@ -146,6 +185,7 @@ const DemandView = (props: Props) => {
 			header: "Action",
 		}),
 	];
+
 	return (
 		<>
 			<Box
@@ -153,7 +193,7 @@ const DemandView = (props: Props) => {
 				px="6"
 				py="8"
 				mb="8"
-				rounded="lg"
+				rounded="xl"
 			>
 				<Flex
 					alignItems="center"
@@ -163,8 +203,10 @@ const DemandView = (props: Props) => {
 					<Heading
 						as="h2"
 						fontSize="18"
+						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Quản lý nhu cầu
+						Danh Sách Nhu Cầu
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -193,43 +235,51 @@ const DemandView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						w="30%"
+						gap="4"
 					>
 						<Flex
-							as="span"
+							flex="1"
+							px="4"
+							rounded="lg"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm nhu cầu"
+								{...register("name")}
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Nhu cầu..."
-						/>
 					</Flex>
 					<Button
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
-								color="text.white"
+								color="text.textSuccess"
 							/>
 						}
 						px="4"
 						lineHeight="2"
-						bgColor="bg.green"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
 						onClick={onOpenActionCreateDemand}
 					>
 						Tạo Mới
@@ -241,12 +291,7 @@ const DemandView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllDemandQuery}
 					defaultPageSize={10}
-					query={{
-						_page: 1,
-						_limit: 10,
-						_order: "desc",
-						_sort: "created_at",
-					}}
+					query={debounceQuery}
 				/>
 
 				{/* Cofirm */}
@@ -262,7 +307,14 @@ const DemandView = (props: Props) => {
 				isOpen={isOpenActionCreateDemand}
 				onClose={onCloseActionCreateDemand}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới nhu cầu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Tạo mới nhu cầu
+					</Heading>
+				}
 			>
 				<ActionCreateDemand onClose={onCloseActionCreateDemand} />
 			</DialogThinkPro>
@@ -270,7 +322,14 @@ const DemandView = (props: Props) => {
 				isOpen={isOpenActionUpdateDemand}
 				onClose={onCloseActionUpdateDemand}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật nhu cầu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật nhu cầu
+					</Heading>
+				}
 			>
 				<ActionUpdateDemand
 					onClose={onCloseActionUpdateDemand}

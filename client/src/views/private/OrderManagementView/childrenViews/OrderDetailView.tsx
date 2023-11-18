@@ -1,5 +1,5 @@
 import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/layout";
-import { Button, Table, useDisclosure } from "@chakra-ui/react";
+import { Button, Image, Table, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
   AddressIcon,
@@ -28,6 +28,8 @@ import TableProduct from "./TableProduct";
 import ExportOrderPDF from "./ExportOrderPDF";
 import { PDFViewer } from "@react-pdf/renderer";
 import DialogThinkPro from "~/components/DialogThinkPro";
+import { Link, Link as ReactRouterLink } from "react-router-dom";
+import { chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 
 type Props = {};
 
@@ -36,7 +38,13 @@ const OrderDetailView = (props: Props) => {
   const toast = useToast();
   const [openPrint, setOpenPrint] = useState(false);
   const [tokenPrint, setTokenPrint] = useState("");
+  const [orderStatus, setOrderStatus] = useState("");
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isOpenOrder,
+    onClose: onCloseOrder,
+    onOpen: onOpenOrder,
+  } = useDisclosure();
   const {
     isOpen: isPDFOpen,
     onClose: onPDFClose,
@@ -47,7 +55,8 @@ const OrderDetailView = (props: Props) => {
     id,
   });
   const [cancelOrder] = useCancelOrderMutation();
-  const [tokenPrintOrder] = useTokenPrintOrderMutation();
+  const [tokenPrintOrder, { isLoading: isLoadingPrint }] =
+    useTokenPrintOrderMutation();
   const [updateStatusOrder] = useUpdateStatusOrderMutation();
   const columnHelper = createColumnHelper<any>();
 
@@ -60,7 +69,27 @@ const OrderDetailView = (props: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
-
+  const checkStatusOrder = (status: string) => {
+    if (status == "processing") {
+      return "Chờ xác nhận";
+    }
+    if (status == "confirmed") {
+      return "Đã xác nhận";
+    }
+    if (status == "delivering") {
+      return "Đang vận chuyển";
+    }
+    if (status == "cancelled") {
+      return "Đã huỷ đơn";
+    }
+    if (status == "delivered") {
+      return "Đã hoàn thành";
+    }
+    if (status == "returned") {
+      return "Đã hoàn hàng";
+    }
+    return "Chờ xác nhận";
+  };
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -72,39 +101,98 @@ const OrderDetailView = (props: Props) => {
 
     columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue()?._id ?? "id"}</h1>;
+        return (
+          <Text fontSize="14px" fontWeight="semibold">
+            {info.getValue()?._id ?? "id"}
+          </Text>
+        );
       },
       header: "ID sản phẩm",
     }),
     columnHelper.accessor("sku_id", {
+      cell: ({ getValue }) => {
+        return (
+          <Image
+            src={getValue()?.image.url}
+            w="64px"
+            h="64px"
+            objectFit="contain"
+            bgColor="bg.gray"
+            rounded="md"
+            p="2"
+          />
+        );
+      },
+      header: "Ảnh",
+    }),
+    columnHelper.accessor("sku_id", {
       cell: (info) => {
-        return <h1>{info.getValue()?.name ?? "Sản phẩm"}</h1>;
+        return (
+          <Text fontSize="14px" fontWeight="semibold">
+            {info.getValue()?.name ?? "Sản phẩm"}
+          </Text>
+        );
       },
       header: "Tên sản phẩm",
     }),
+    columnHelper.accessor("option_value", {
+      cell: (info) => {
+        return (
+          <Text fontSize="14px" fontWeight="semibold">
+            {info.getValue()?.join(",") ?? "Sản phẩm"}
+          </Text>
+        );
+      },
+      header: "Cấu hình",
+    }),
     columnHelper.accessor("price", {
-      cell: (info) => info.getValue()?.toLocaleString(),
+      cell: (info) => (
+        <Text fontSize="14px" fontWeight="semibold">
+          {info.getValue()?.toLocaleString()}đ
+        </Text>
+      ),
       header: "Đơn giá",
       meta: {
         isNumeric: true,
       },
     }),
     columnHelper.accessor("quantity", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Text fontSize="14px" fontWeight="semibold">
+          {info.getValue()}
+        </Text>
+      ),
       header: "Số lượng",
       meta: {
         isNumeric: true,
       },
     }),
     columnHelper.accessor("#", {
-      cell: (info) =>
-        (
-          info.row.original.price * info.row.original.quantity
-        )?.toLocaleString(),
+      cell: (info) => (
+        <Text fontSize="14px" fontWeight="semibold">
+          {(
+            info.row.original.price * info.row.original.quantity
+          )?.toLocaleString()}
+          đ
+        </Text>
+      ),
       header: "Thành tiền",
     }),
   ];
   const handleCancelOrder = (id: string) => {
+    if (
+      data?.data.status !== "processing" ||
+      data?.data.status !== "confirmed"
+    ) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Không thể huỷ đơn hàng ${data?.data.status}`,
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     cancelOrder({ id })
       .unwrap()
       .then((data: any) => {
@@ -117,7 +205,6 @@ const OrderDetailView = (props: Props) => {
         });
       })
       .catch((error) => {
-        console.log(error);
         toast({
           title: "Hệ thống thông báo",
           description: `${error.data.errors.message}`,
@@ -129,7 +216,6 @@ const OrderDetailView = (props: Props) => {
     onClose();
   };
   const handlePrinOrder = async () => {
-    console.log(data?.data.status);
     if (
       data?.data.status == ("processing" as any) ||
       data?.data.status == ("confirmed" as any)
@@ -147,27 +233,44 @@ const OrderDetailView = (props: Props) => {
       isClosable: true,
     });
   };
+
   const handlePrint = async (value: string) => {
-    const data_update = {
-      id: id,
-      status: "confirmed",
-    };
-    const update_status: any = await updateStatusOrder(data_update);
-    if (update_status.data.status !== 200) {
-      toast({
-        title: "Hệ thống thông báo",
-        description: `Không thể in vận đơn`,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
     const newTab = window.open(
       `https://dev-online-gateway.ghn.vn/a5/public-api/${value}?token=${tokenPrint}`,
       "_blank"
     );
+    setOpenPrint(false);
     newTab?.focus();
+  };
+  const handleOpenModelStatus = (status: string) => {
+    setOrderStatus(status);
+    onOpenOrder();
+  };
+  const handleChangeStatusOrder = () => {
+    updateStatusOrder({ status: orderStatus, id: id })
+      .unwrap()
+      .then((data) => {
+        console.log(data);
+        toast({
+          title: "Hệ thống thông báo",
+          description: `${data.message}`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Hệ thống thông báo",
+          description: `${err.data.errors.message}`,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        onCloseOrder();
+      });
   };
   return (
     <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
@@ -176,6 +279,22 @@ const OrderDetailView = (props: Props) => {
           <Text>Chi tiết đơn hàng</Text>
         </Heading>
         <Flex gap={4}>
+          {data?.data.status === "processing" && (
+            <Button onClick={() => handleOpenModelStatus("confirmed")}>
+              Xác nhận đơn
+            </Button>
+          )}
+          {data?.data.status === "confirmed" && (
+            <Button onClick={() => handleOpenModelStatus("delivering")}>
+              Vận chuyển đơn
+            </Button>
+          )}
+          {data?.data.status === "delivering" && (
+            <Button onClick={() => handleOpenModelStatus("pendingComplete")}>
+              Hoàn thành đơn
+            </Button>
+          )}
+
           {data?.data.shipping_method === "at_store" ? (
             <Button
               leftIcon={<DownloadIcon size={24} />}
@@ -187,6 +306,8 @@ const OrderDetailView = (props: Props) => {
             <Button
               leftIcon={<DownloadIcon size={24} />}
               onClick={handlePrinOrder}
+              loadingText="Đang tải..."
+              isLoading={isLoadingPrint}
             >
               {" "}
               In vận đơn
@@ -214,7 +335,7 @@ const OrderDetailView = (props: Props) => {
         <OrderDetailMetricItem
           heading="Thông tin KH"
           text={data?.data.customer_name}
-          phone={data?.data.phone_number}
+          phone={chuyenDoiSoDienThoaiVe0(data?.data.phone_number)}
           icon={<UserIcon size={6} color="green" />}
           color="green"
         />
@@ -225,7 +346,11 @@ const OrderDetailView = (props: Props) => {
               ? data?.data.shop_address
               : data?.data.shipping_info.shipping_address
           }
-          phone={data?.data.shipping_method}
+          phone={
+            data?.data.shipping_method == "at_store"
+              ? "Mua tại cửa hàng"
+              : "Ship"
+          }
           icon={<LocationIcon size={24} color="blue" />}
           color="blue"
         />
@@ -257,10 +382,10 @@ const OrderDetailView = (props: Props) => {
                 p={2}
                 borderBottom="1px solid #ccc"
               >
-                <Text fontSize={16} fontWeight="semibold">
+                <Text fontSize={14} fontWeight="semibold">
                   Tổng số lượng:{" "}
                 </Text>
-                <Text>
+                <Text fontSize={14} fontWeight="semibold">
                   {data.data.products.reduce(
                     (acc: any, product: any) => acc + product.quantity,
                     0
@@ -273,10 +398,19 @@ const OrderDetailView = (props: Props) => {
                 p={2}
                 borderBottom="1px solid #ccc"
               >
-                <Text fontSize={16} fontWeight="semibold">
-                  Tổng Tiền:{" "}
+                <Text fontSize={14} fontWeight="semibold">
+                  Tổng tiền sản phẩm:{" "}
                 </Text>
-                <Text>{data?.data.total_amount.toLocaleString()}</Text>
+                <Text fontSize={14} fontWeight="semibold">
+                  {data.data.products
+                    .reduce(
+                      (acc: any, product: any) =>
+                        acc + product.quantity * product.price,
+                      0
+                    )
+                    .toLocaleString()}
+                  đ
+                </Text>
               </Flex>
               <Flex
                 my={1}
@@ -284,10 +418,27 @@ const OrderDetailView = (props: Props) => {
                 p={2}
                 borderBottom="1px solid #ccc"
               >
-                <Text fontSize={16} fontWeight="semibold">
-                  Giảm Giá:{" "}
+                <Text fontSize={14} fontWeight="semibold">
+                  Giảm giá:{" "}
                 </Text>
-                <Text>0</Text>
+                <Text fontSize={14} fontWeight="semibold">
+                  0đ
+                </Text>
+              </Flex>
+              <Flex
+                my={1}
+                justifyContent="space-between"
+                p={2}
+                borderBottom="1px solid #ccc"
+              >
+                <Text fontSize={14} fontWeight="semibold">
+                  Tiền vận chuyển:{" "}
+                </Text>
+                <Text fontSize={14} fontWeight="semibold">
+                  {data?.data.shipping_info?.transportation_fee.toLocaleString() ||
+                    0}
+                  đ
+                </Text>
               </Flex>
               <Flex
                 my={1}
@@ -298,7 +449,13 @@ const OrderDetailView = (props: Props) => {
                 <Text fontSize={16} fontWeight="bold">
                   Thành tiền:{" "}
                 </Text>
-                <Text>{data?.data.total_amount.toLocaleString()}</Text>
+                <Text fontSize={14} fontWeight="semibold">
+                  {(
+                    data?.data.total_amount +
+                    (data?.data.shipping_info?.transportation_fee || 0)
+                  ).toLocaleString() || 0}
+                  đ
+                </Text>
               </Flex>
             </Box>
           </Flex>
@@ -318,7 +475,7 @@ const OrderDetailView = (props: Props) => {
               Vận chuyển:{" "}
               {data?.data.shipping_method === "at_store"
                 ? "Mua trực tiếp"
-                : "shipping"}
+                : "Giao tận nơi"}
             </Heading>
             <Flex justifyContent="center" alignItems="center" fontSize={15}>
               <Flex
@@ -326,6 +483,7 @@ const OrderDetailView = (props: Props) => {
                 justifyContent={"center"}
                 flexDir={"column"}
                 alignItems={"center"}
+                w={"100%"}
               >
                 <CarIcon />
                 <Text fontWeight={700}>
@@ -333,18 +491,28 @@ const OrderDetailView = (props: Props) => {
                     ? "Tại Cửa hàng"
                     : "Giao hàng nhanh"}
                 </Text>
-                <Text fontSize="12px" fontWeight="semibold">
-                  Trạng thái thanh toán:
-                  {data?.data.payment_status == "paid"
-                    ? "Đã thanh toán"
-                    : "Chưa thanh toán"}
-                </Text>
-                <Text fontSize="12px" fontWeight="semibold">
-                  Phương thức Giao hàng:{" "}
-                  {data?.data.shipping_method == "at_store"
-                    ? "Tại cửa hàng"
-                    : "Shipping"}
-                </Text>
+
+                <Flex w={"100%"}>
+                  <Text fontSize="14px" fontWeight="semibold" w={"50%"}>
+                    Thanh toán:
+                  </Text>
+                  <Text fontSize="14px" fontWeight="semibold">
+                    {data?.data.payment_status == "paid"
+                      ? "Đã thanh toán"
+                      : "Chưa thanh toán"}
+                  </Text>
+                </Flex>
+
+                <Flex w={"100%"}>
+                  <Text fontSize="14px" fontWeight="semibold" w={"50%"}>
+                    Giao hàng:{" "}
+                  </Text>
+                  <Text fontSize="14px" fontWeight="semibold">
+                    {data?.data.shipping_method == "at_store"
+                      ? "Tại cửa hàng"
+                      : "Giao tận nơi"}
+                  </Text>
+                </Flex>
               </Flex>
             </Flex>
           </Box>
@@ -363,36 +531,40 @@ const OrderDetailView = (props: Props) => {
             </Heading>
             <Flex pt={4} flexDir="column" gap={2} fontSize={15}>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Trạng thái thanh toán:
                 </Text>
-                <Text>
+                <Text fontWeight="semibold">
                   {data?.data.payment_method.message == "failed"
                     ? "Chưa thanh toán"
                     : "Đã thanh toán"}
                 </Text>
               </Flex>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Phương thức:
                 </Text>
-                <Text>{data?.data.payment_method.orderInfo}</Text>
+                <Text fontWeight="semibold">
+                  {data?.data.payment_method.orderInfo}
+                </Text>
               </Flex>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Hình thức thanh toán:
                 </Text>
-                <Text>
+                <Text fontWeight="semibold">
                   {data?.data.payment_method.orderType == "cash"
                     ? "Tiền mặt"
                     : data?.data.payment_method.orderType}
                 </Text>
               </Flex>
               <Flex>
-                <Text w="40%" fontWeight="semibold">
+                <Text w="50%" fontWeight="semibold">
                   Mã:
                 </Text>
-                <Text>{data?.data.payment_method.partnerCode}</Text>
+                <Text fontWeight="semibold">
+                  {data?.data.payment_method.partnerCode}
+                </Text>
               </Flex>
             </Flex>
           </Box>
@@ -415,15 +587,18 @@ const OrderDetailView = (props: Props) => {
         >
           <Heading fontSize={18}>
             {" "}
-            Trạng thái đơn hàng: {data?.data.status}
+            Trạng thái đơn hàng: {checkStatusOrder(data?.data.status)}
           </Heading>
           <Flex gap={4}>
             <Button
+              as={ReactRouterLink}
+              to={`/admin/don-hang/cap-nhat/${id}`}
               leftIcon={<AddressIcon size={6} />}
               bg="#FFCCFF"
               _hover={{ bg: "#CCCCFF" }}
+              fontWeight={"semibold"}
             >
-              Thay đổi địa chỉ
+              Cập nhật thông tin
             </Button>
             <Button
               leftIcon={<CloseIcon size={6} />}
@@ -443,7 +618,13 @@ const OrderDetailView = (props: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         handleClick={() => handleCancelOrder(data?.data._id)}
-        content="Bạn có muốn xoá đơn hàng này"
+        content="Bạn có muốn xoá đơn hàng này?"
+      />
+      <ConfirmThinkPro
+        isOpen={isOpenOrder}
+        onClose={onCloseOrder}
+        handleClick={handleChangeStatusOrder}
+        content="Bạn có muốn thay đổi trạng thái của đơn hàng?"
       />
       <ModelPrint
         isOpen={openPrint}

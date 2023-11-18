@@ -8,6 +8,7 @@ import initRouter from "./router/index.router.js";
 import createError from "http-errors";
 import { connect } from "./config/database.config.js";
 import { connectRedis } from "./config/redis.config.js";
+import { checkStatusOrder } from "./config/checkStatusOrder.js";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use(
   cors({
     origin: [
       process.env.FE_URL,
+      process.env.BE_URL,
       process.env.MOMO_URL,
       "http://localhost:3000",
       "http://192.168.1.10:3000",
@@ -78,7 +80,7 @@ io.on("connection", (socket) => {
     delete userRooms[socket.id];
   });
 });
-
+checkStatusOrder();
 // listen
 server.listen(port, () => {
   console.log(`http://localhost:${port}`);

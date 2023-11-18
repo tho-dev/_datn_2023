@@ -2,6 +2,7 @@ import Post from "../models/post.model"
 import createError from "http-errors"
 import { postSchema } from "../validations/post.validations"
 import Category from "../models/category.model"
+import User from "../models/user.model";
 import moment from "moment/moment"
 
 export async function getAllPost(req, res, next) {
@@ -23,9 +24,9 @@ export async function getAllPost(req, res, next) {
       select: [
         "-deleted",
         "-deleted_at",
-        "-category_id"
       ],
     };
+
 
     const category = await Category.findOne({
       slug: _type,
@@ -35,11 +36,34 @@ export async function getAllPost(req, res, next) {
     const query = _type ? { category_id: category?._id } : {}
     const { docs, ...paginate } = await Post.paginate(query, options);
 
+    const results = await Promise.all((docs?.map(async (doc) => {
+      const category = await Category.findOne({
+        _id: doc?.category_id
+      }).select('name slug ')
+
+      const userCreated = await User.findOne({
+        _id: doc.created_by
+      })
+
+      const userUpdated = await User.findOne({
+        _id: doc.updated_by
+      })
+
+      return {
+        ...doc?.toObject(),
+        category_id: undefined,
+        thumbnail: doc?.thumbnail?.url,
+        category: category?.name,
+        created_by: userCreated ? `${userCreated?.first_name} ${userCreated?.last_name}` : null,
+        updated_by: userUpdated ? `${userUpdated?.first_name} ${userUpdated?.last_name}` : null,
+      }
+    })))
+
     return res.json({
       status: 200,
       message: "Thành công",
       data: {
-        items: docs,
+        items: results,
         paginate,
       },
     });
@@ -64,6 +88,14 @@ export async function getSinglePost(req, res, next) {
       _id: post?.category_id
     }).select('_id name slug shared_url description thumbnail')
 
+    const userCreated = await User.findOne({
+      _id: post.created_by
+    })
+
+    const userUpdated = await User.findOne({
+      _id: post.updated_by
+    })
+
     const related_posts = await Post.find({
       $and: [
         { category_id: post?.category_id }, // Lấy các bài viết cùng danh mục
@@ -71,13 +103,14 @@ export async function getSinglePost(req, res, next) {
       ]
     })
 
-
     return res.json({
       status: 200,
       message: 'Thành công',
       data: {
         ...post.toObject(),
         category_id: undefined,
+        created_by: userCreated ? `${userCreated?.first_name} ${userCreated?.last_name}` : null,
+        updated_by: userUpdated ? `${userUpdated?.first_name} ${userUpdated?.last_name}` : null,
         category: {
           ...category.toObject()
         },
@@ -99,7 +132,10 @@ export async function createPost(req, res, next) {
       throw createError.BadRequest(errors)
     }
 
-    const doc = await Post.create(payload)
+    const doc = await Post.create({
+      ...payload,
+      created_by: req.user._id
+    })
 
     return res.status(201).json({
       status: 201,
@@ -134,6 +170,7 @@ export async function updatePost(req, res, next) {
     // cập nhật
     post.set({
       ...payload,
+      updated_by: req.user._id,
       updated_at: moment(new Date()).toISOString()
     })
     await post.save()

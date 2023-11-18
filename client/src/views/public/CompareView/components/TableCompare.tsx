@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout";
+import { Box, Flex, Grid, GridItem } from "@chakra-ui/layout";
 import React from "react";
 import {
 	Table,
@@ -17,14 +17,18 @@ import {
 	AccordionIcon,
 } from "@chakra-ui/react";
 
-type Props = {};
+type Props = {
+	item: any;
+	index: number;
+};
 
-const TableCompare = (props: Props) => {
+const TableCompare = ({ item, index }: Props) => {
 	return (
 		<Box margin="20px 0">
 			<Accordion
 				allowToggle
-				defaultChecked={true}
+				defaultIndex={[0]}
+				allowMultiple
 			>
 				<AccordionItem border="none">
 					<AccordionButton
@@ -34,6 +38,7 @@ const TableCompare = (props: Props) => {
 						_hover={{
 							bgColor: "bg.gray",
 						}}
+						defaultChecked
 					>
 						<Text
 							width="100%"
@@ -42,158 +47,70 @@ const TableCompare = (props: Props) => {
 							fontSize="md"
 							color="text.black"
 						>
-							Bộ xử lý
+							{item?.group_name}
 						</Text>
 						<AccordionIcon />
 					</AccordionButton>
+
 					<AccordionPanel padding={0}>
-						<TableContainer>
-							<Table>
-								<Tbody>
-									<Tr>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											1
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											2
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-									</Tr>
-									<Tr>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											1
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											2
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-									</Tr>
-									<Tr>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											1
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											2
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-										<Td
-											px="3"
-											py="2"
-											fontSize="sm"
-											borderWidth="1px"
-											borderColor="border.primary"
-										>
-											3
-										</Td>
-									</Tr>
-								</Tbody>
-							</Table>
-						</TableContainer>
+						{item?.items?.map((z: any, i: number) => {
+							return (
+								<Flex key={i}>
+									<Box
+										w="calc(240px + 16px)"
+										px="3"
+										py="2"
+										fontSize="sm"
+										fontWeight="semibold"
+										borderWidth="0.5px"
+										borderColor="border.primary"
+									>
+										{z.label}
+									</Box>
+									<Grid
+										flex="1"
+										gridTemplateColumns="repeat(4,1fr)"
+									>
+										{z?.values?.map((v: any, k: number) => {
+											return (
+												<GridItem
+													key={k}
+													px="3"
+													py="2"
+													borderWidth="0.5px"
+													borderColor="border.primary"
+												>
+													<Text
+														fontSize="13px"
+														fontWeight="medium"
+													>
+														{v}
+													</Text>
+												</GridItem>
+											);
+										})}
+										{Array(4 - z?.values.length)
+											.fill(0)
+											.map((o, q) => {
+												return (
+													<GridItem
+														key={q}
+														px="3"
+														py="2"
+														borderWidth="0.5px"
+														borderColor="border.primary"
+													>
+														<Text
+															fontSize="13px"
+															fontWeight="medium"
+														></Text>
+													</GridItem>
+												);
+											})}
+									</Grid>
+								</Flex>
+							);
+						})}
 					</AccordionPanel>
 				</AccordionItem>
 			</Accordion>

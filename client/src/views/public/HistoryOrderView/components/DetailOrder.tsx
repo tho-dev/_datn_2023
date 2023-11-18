@@ -1,25 +1,27 @@
-import React from "react";
 import {
   Box,
   Divider,
   Flex,
-  TabPanel,
   Text,
   Tag,
-  GridItem,
+  Skeleton,
+  SkeletonText,
 } from "@chakra-ui/react";
 import ItemCart from "./ItemCart";
+import { formatCurrency } from "~/utils/fc";
 
-type Props = {};
+type Props = {
+  orderDetail: any;
+};
 
-const DetailOrder = (props: Props) => {
+const DetailOrder = ({ orderDetail }: Props) => {
   return (
     <Box p="4" my={4} rounded="md" backgroundColor="bg.gray">
       <Flex justifyContent="space-between">
         <Text fontSize="14px" fontWeight={"bold"}>
-          Mã đơn hàng:{" "}
-          <Text as={"span"} fontSize="14px">
-            #1234567
+          Mã đơn hàng:
+          <Text as={"span"} fontSize="12px">
+            POLYTECH{orderDetail?._id}
           </Text>
         </Text>
         <Tag
@@ -28,94 +30,13 @@ const DetailOrder = (props: Props) => {
           textTransform={"uppercase"}
           color={"text.red"}
         >
-          pending
+          {orderDetail?.status}
         </Tag>
       </Flex>
       <Divider />
-      <Box>
-        <ItemCart />
-        <Flex justifyContent="space-between">
-          <Text fontSize="14px" fontWeight="bold">
-            Số lượng:{" "}
-            <Text
-              as={"span"}
-              fontSize="14px"
-              fontWeight={"bold"}
-              color={"text.red"}
-            >
-              5 * 200đ
-            </Text>
-          </Text>
-          <Text fontSize="14px" fontWeight="bold">
-            Thành tiền:{" "}
-            <Text
-              as={"span"}
-              fontSize="14px"
-              fontWeight={"bold"}
-              color={"text.red"}
-            >
-              1000 đ
-            </Text>
-          </Text>
-        </Flex>
-        <Divider />
-      </Box>
-      <Box>
-        <ItemCart />
-        <Flex justifyContent="space-between">
-          <Text fontSize="14px" fontWeight="bold">
-            Số lượng:{" "}
-            <Text
-              as={"span"}
-              fontSize="14px"
-              fontWeight={"bold"}
-              color={"text.red"}
-            >
-              5 * 200đ
-            </Text>
-          </Text>
-          <Text fontSize="14px" fontWeight="bold">
-            Thành tiền:{" "}
-            <Text
-              as={"span"}
-              fontSize="14px"
-              fontWeight={"bold"}
-              color={"text.red"}
-            >
-              1000 đ
-            </Text>
-          </Text>
-        </Flex>
-        <Divider />
-      </Box>
-      <Box>
-        <ItemCart />
-        <Flex justifyContent="space-between">
-          <Text fontSize="14px" fontWeight="bold">
-            Số lượng:{" "}
-            <Text
-              as={"span"}
-              fontSize="14px"
-              fontWeight={"bold"}
-              color={"text.red"}
-            >
-              5 * 200đ
-            </Text>
-          </Text>
-          <Text fontSize="14px" fontWeight="bold">
-            Thành tiền:{" "}
-            <Text
-              as={"span"}
-              fontSize="14px"
-              fontWeight={"bold"}
-              color={"text.red"}
-            >
-              1000 đ
-            </Text>
-          </Text>
-        </Flex>
-        <Divider />
-      </Box>
+      {orderDetail?.orders.map((item: any) => {
+        return <ItemCart product={item} key={item._id} />;
+      })}
 
       <Box my={4} rounded="md" backgroundColor="bg.gray">
         <Flex justifyContent="space-between" my={1}>
@@ -128,7 +49,7 @@ const DetailOrder = (props: Props) => {
             fontWeight={"bold"}
             color={"text.red"}
           >
-            3 sản phẩm
+            {orderDetail?.orders.length} sản phẩm
           </Text>
         </Flex>
         <Flex justifyContent="space-between" my={1}>
@@ -141,33 +62,7 @@ const DetailOrder = (props: Props) => {
             fontWeight={"bold"}
             color={"text.red"}
           >
-            3000đ
-          </Text>
-        </Flex>
-        <Flex justifyContent="space-between" my={1}>
-          <Text fontSize="14px" fontWeight="bold">
-            Tổng tiền giao hàng :{" "}
-          </Text>
-          <Text
-            as={"span"}
-            fontSize="14px"
-            fontWeight={"bold"}
-            color={"text.red"}
-          >
-            200đ
-          </Text>
-        </Flex>
-        <Flex justifyContent="space-between" my={1}>
-          <Text fontSize="14px" fontWeight="bold">
-            Thuế VAT 10% :{" "}
-          </Text>
-          <Text
-            as={"span"}
-            fontSize="14px"
-            fontWeight={"bold"}
-            color={"text.red"}
-          >
-            300đ
+            1000
           </Text>
         </Flex>
         <Divider />
@@ -181,7 +76,7 @@ const DetailOrder = (props: Props) => {
             fontWeight={"bold"}
             color={"text.red"}
           >
-            3500đ
+            {orderDetail?.total_amount?.toLocaleString()}đ
           </Text>
         </Flex>
       </Box>

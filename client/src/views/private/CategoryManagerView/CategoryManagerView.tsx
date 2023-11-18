@@ -1,4 +1,3 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -14,26 +13,46 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
+import { createColumnHelper } from "@tanstack/react-table";
+import moment from "moment/moment";
 import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
+import { useForm, useWatch } from "react-hook-form";
+import { Link as ReactRouterLink } from "react-router-dom";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import DialogThinkPro from "~/components/DialogThinkPro";
+import TableThinkPro from "~/components/TableThinkPro";
+import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { useDeleteCategoryMutation, useGetAllCategoryQuery } from "~/redux/api/category";
 import ActionCreateCategory from "./components/ActionCreateCategory";
 import ActionUpdateCategory from "./components/ActionUpdateCategory";
-import { useDeleteCategoryMutation, useGetAllCategoryQuery } from "~/redux/api/category";
-import { createColumnHelper } from "@tanstack/react-table";
-import TableThinkPro from "~/components/TableThinkPro";
-import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import moment from "moment/moment";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
+type TQuery = {
+	_limit: number;
+	_page: number;
+	_sort: string;
+	_order: string;
+	_type: string;
+	_name?: string;
+};
 
 const CategoryManagerView = (props: Props) => {
 	const toast = useToast();
-	// thương hiệu cha
+	const columnHelper = createColumnHelper<any>();
+
 	const [id, setId] = useState(null);
 	const [category, setCategory] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
-	const columnHelper = createColumnHelper<any>();
+	const [query, setQuery] = useState<TQuery>({
+		_limit: 20,
+		_page: 1,
+		_sort: "created_at",
+		_order: "desc",
+		_type: "category_brand",
+	});
+	const debounceQuery = useDebounce(query, 500);
+
 	const {
 		isOpen: isOpenActionCreateCategory,
 		onOpen: onOpenActionCreateCategory,
@@ -44,8 +63,17 @@ const CategoryManagerView = (props: Props) => {
 		onOpen: onOpenActionUpdateCategory,
 		onClose: onCloseActionUpdateCategory,
 	} = useDisclosure();
-
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+
+	const { control, register } = useForm({
+		defaultValues: {
+			name: "",
+		},
+	});
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
 
 	const [deleteCategory] = useDeleteCategoryMutation();
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
@@ -55,6 +83,15 @@ const CategoryManagerView = (props: Props) => {
 		_order: "desc",
 		_type: "category_brand",
 	});
+
+	useEffect(() => {
+		if (query) {
+			setQuery({
+				...query,
+				_name: nameForm,
+			});
+		}
+	}, [nameForm]);
 
 	useEffect(() => {
 		if (categories) {
@@ -250,7 +287,7 @@ const CategoryManagerView = (props: Props) => {
 				px="6"
 				py="8"
 				mb="8"
-				rounded="lg"
+				rounded="xl"
 			>
 				<Flex
 					alignItems="center"
@@ -259,10 +296,11 @@ const CategoryManagerView = (props: Props) => {
 				>
 					<Heading
 						as="h2"
-						fontSize="18px"
+						fontSize="18"
 						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Danh mục
+						Danh Sách Danh Mục
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -291,43 +329,51 @@ const CategoryManagerView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						w="30%"
+						gap="4"
 					>
 						<Flex
-							as="span"
+							flex="1"
+							px="4"
+							rounded="8px"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm danh mục"
+								{...register("name")}
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Danh mục..."
-						/>
 					</Flex>
 					<Button
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
-								color="text.white"
+								color="text.textSuccess"
 							/>
 						}
 						px="4"
 						lineHeight="2"
-						bgColor="bg.green"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
 						onClick={onOpenActionCreateCategory}
 					>
 						Tạo Mới
@@ -339,13 +385,7 @@ const CategoryManagerView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllCategoryQuery}
 					defaultPageSize={10}
-					query={{
-						_limit: 20,
-						_page: 1,
-						_sort: "created_at",
-						_order: "desc",
-						_type: "category_brand",
-					}}
+					query={debounceQuery}
 				/>
 
 				{/* Cofirm */}
@@ -361,7 +401,14 @@ const CategoryManagerView = (props: Props) => {
 				isOpen={isOpenActionCreateCategory}
 				onClose={onCloseActionCreateCategory}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới danh mục</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Tạo mới danh mục
+					</Heading>
+				}
 			>
 				<ActionCreateCategory
 					onClose={onCloseActionCreateCategory}
@@ -372,7 +419,14 @@ const CategoryManagerView = (props: Props) => {
 				isOpen={isOpenActionUpdateCategory}
 				onClose={onCloseActionUpdateCategory}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật danh mục</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật danh mục
+					</Heading>
+				}
 			>
 				<ActionUpdateCategory
 					onClose={onCloseActionUpdateCategory}

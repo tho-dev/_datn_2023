@@ -3,35 +3,36 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Link, Text, Heading } from "@chakra-ui/layout";
 import { Image, color } from "@chakra-ui/react";
 import { Navigation } from "swiper/modules";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ReactRouterLink, useParams } from "react-router-dom";
+import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useEffect, useState } from "react";
+import AllCategory from "./AllCategory";
+import { NavArrowLeflIcon, NavArrowRightIcon } from "~/components/common/Icons";
+// import { NewsView } from "../..";
 
-const newsCategories = [
-	{
-		image: "https://thinkpro.vn/post/post-category-thumbnail.jpeg",
-		title: "Tất cả ",
-	},
-	{
-		image: "https://images.thinkgroup.vn/unsafe/360x200/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg",
-		title: "Tin tức",
-	},
-	{
-		image: "https://images.thinkgroup.vn/unsafe/360x200/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/15/dsc05780-thinkpro.jpeg",
-		title: "Đánh giá",
-	},
-	{
-		image: "https://images.thinkgroup.vn/unsafe/360x200/https://media-api-beta.thinkpro.vn/media/social/articles/2022/6/14/lenovo-thinkpad-13s-hero-1126.jpg",
-		title: "Tư vấn",
-	},
-	{
-		image: "https://images.thinkgroup.vn/unsafe/360x200/https://media-api-beta.thinkpro.vn/media/social/articles/2023/7/14/1990826390-huge-2-thinkpro.jpg",
-		title: "Thủ thuật",
-	},
-	{
-		image: "https://images.thinkgroup.vn/unsafe/360x200/https://media-api-beta.thinkpro.vn/media/social/articles/2022/6/27/laptopnew-gigabyte-aorus-15p-gioi-thieu-69c89b23-7c9f-4776-bb59-54e5530b3432.jpg",
-		title: "Khuyến mại",
-	},
-];
+
 const NewsCategory = () => {
+	const [showCompare, setShowCompare] = useState<boolean>(false);
+	const [data, setData] = useState<any>([]);
+
+
+	const { data: posts } = useGetAllCategoryQuery({
+		_order: "asc",
+		_sort: "date",
+		_page: 1,
+		_limit: 10,
+		_type: "category_post"
+	});
+
+	useEffect(() => {
+		if (posts) {
+			const docs = posts?.data?.items as any;
+			setData([...data, ...docs]);
+		}
+	}, [posts]);
+
+	// console.log(data);
+
 	return (
 		<Box>
 			<Heading
@@ -43,74 +44,89 @@ const NewsCategory = () => {
 			>
 				Tin tức công nghệ
 			</Heading>
-			<Flex gap="4">
+			<Flex position="relative">
 				<Swiper
 					modules={[Navigation]}
 					speed={400}
-					slidesPerView={8}
-					spaceBetween={20}
+					spaceBetween={16}
 					loop={true}
 					navigation={{
-						nextEl: ".btn-next",
-						prevEl: ".btn-prev",
+						nextEl: ".discount__btn-next",
+						prevEl: ".discount__btn-prev",
 					}}
 					breakpoints={{
 						0: {
 							slidesPerView: 1,
-							spaceBetween: 6,
 						},
 						768: {
-							slidesPerView: 4,
+							slidesPerView: 3,
 						},
 						1200: {
-							slidesPerView: 6,
+							slidesPerView: 5,
 						},
 					}}
 				>
-					{newsCategories.map((item: any, index: number) => {
+					{data?.map((product: any, index: number) => {
 						return (
 							<SwiperSlide key={index}>
-								<Link
-									as={ReactRouterLink}
+								<Box
+									w="full"
 									h="full"
-									role="group"
-									cursor="pointer"
-									rounded="lg"
 									overflow="hidden"
-									display="inline-flex"
-									flexDir="column"
-									backgroundColor="bg.white"
-									_hover={{
-										transition: "all 0.3s ease-in",
-										backgroundColor: "bg.blue",
-										"& > *": {
-											// Chọn phần thay đổi màu của thẻ con
-											color: "text.white", // Đổi màu chữ của thẻ con khi hover vào thẻ cha
-										},
-									}}
+									rounded="lg"
+									borderColor="border.primary"
 								>
-									<Box>
-										<Image
-											src={item?.image}
-											w="full"
-											h="120px"
-											objectFit="cover"
-										/>
-									</Box>
-									<Text
-										color="text.black"
-										p="3"
-										fontSize="md"
-										fontWeight="semibold"
-									>
-										{item.title}
-									</Text>
-								</Link>
+									<AllCategory product={product} key={index} />
+								</Box>
 							</SwiperSlide>
 						);
 					})}
+
+
 				</Swiper>
+				{/* <Flex
+					w="9"
+					h="9"
+					position="absolute"
+					left="-4"
+					top={"calc(50% - 24px)"}
+					translateY="-50%"
+					zIndex="5"
+					rounded="full"
+					cursor="pointer"
+					alignItems="center"
+					justifyContent="center"
+					backgroundColor="bg.bgEdit"
+					className="discount__btn-prev"
+				>
+					<NavArrowLeflIcon
+						size={4}
+						color="text.textEdit"
+					/>
+				</Flex>
+				<Flex
+					w="9"
+					h="9"
+					position="absolute"
+					right="-4"
+					top={"calc(50% - 24px)"}
+					translateY="-50%"
+					zIndex="5"
+					rounded="full"
+					cursor="pointer"
+					alignItems="center"
+					justifyContent="center"
+					backgroundColor="bg.bgEdit"
+					className="discount__btn-next"
+				>
+					<NavArrowRightIcon
+						size={4}
+						color="text.textEdit"
+					/>
+				</Flex> */}
 			</Flex>
+			
+ 
 		</Box>
 	);
 };

@@ -28,9 +28,11 @@ import { useNavigate } from "react-router";
 import Time from "./Time";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { resetOtp, setCheckOtp } from "~/redux/slices/globalSlice";
-import { useCreateCartMutation, useDeleteCartMutation } from "~/redux/api/cart";
+import cartApi, {
+  useCreateCartMutation,
+  useDeleteCartMutation,
+} from "~/redux/api/cart";
 import { v4 as uuidv4 } from "uuid";
-import { addCart } from "~/redux/slices/cartSlice";
 import { socket } from "~/App";
 import { useAddNotiMutation } from "~/redux/api/notification";
 type Props = {
@@ -53,8 +55,6 @@ const PopupCheckOtp = ({
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
   const [paymentMomo] = usePaymentMomoMutation();
-  const [deleteCart] = useDeleteCartMutation();
-  const [createCart] = useCreateCartMutation();
 
   const { time, isCheckOtp } = useAppSelector(
     (state) => state.persistedReducer.global
@@ -82,6 +82,8 @@ const PopupCheckOtp = ({
           .unwrap()
           .then((data) => {
             // onCloseOtp();
+            dispatch(resetOtp(false));
+            dispatch(cartApi.util.invalidateTags(["Cart"]));
             addNoti({
               sender_id: null,
               receivers_id: null,
@@ -93,17 +95,6 @@ const PopupCheckOtp = ({
               .then((data) => {
                 const new_data = { ...data?.data, roomName: "don-hang" };
                 socket.emit("sendNotification", new_data);
-              });
-
-            deleteCart(cart_id)
-              .unwrap()
-              .then((data) => {
-                const data1 = {
-                  cart_id: uuidv4(),
-                  product: {},
-                };
-                createCart(data1);
-                dispatch(addCart(data.cart_id));
               });
             if (payment_method == "online") {
               paymentMomo({
@@ -119,6 +110,7 @@ const PopupCheckOtp = ({
             }
           })
           .catch((err) => {
+            dispatch(resetOtp(false));
             toast({
               title: "Đơn hàng",
               description: err.data.errors.message,
@@ -131,9 +123,11 @@ const PopupCheckOtp = ({
           .finally(() => {
             onCloseOtp();
             dispatch(resetOtp(false));
+            setLoading(false);
           });
       })
       .catch((err) => {
+        setLoading(false);
         toast({
           title: "OTP",
           description: err.data.errors.message,
@@ -142,9 +136,6 @@ const PopupCheckOtp = ({
           isClosable: true,
           position: "top-right",
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
   useEffect(() => {

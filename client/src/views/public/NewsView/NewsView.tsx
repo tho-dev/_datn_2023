@@ -1,8 +1,42 @@
 import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem } from "@chakra-ui/layout";
 import NewsCategory from "./components/NewsCategory";
-import { Divider } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/react";
+import { Divider, Button } from "@chakra-ui/react";
+import { useGetAllPostQuery } from "~/redux/api/post";
+import AllNewsView from "./AllNewsView";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+
+
 const NewsView = () => {
+	const { slug: params } = useParams();
+	const [showCompare, setShowCompare] = useState<boolean>(false);
+	const [data, setData] = useState<any>([]);
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const { data: posts } = useGetAllPostQuery({
+		_order: "asc",
+		_sort: "date",
+		_page: currentPage,
+		_limit: 5,
+		_type: params || ""
+	});
+
+	useEffect(() => {
+		if (posts) {
+			const docs = posts?.data?.items as any;
+			setData([...docs]);
+		}
+	}, [posts]);
+ 
+
+	const loadMore = () => {
+		if (posts?.data?.paginate?.hasNextPage) {
+			setCurrentPage(currentPage + 1);
+		}
+	};
+	// console.log("Data:", data);
+
+
 	return (
 		<Box>
 			<NewsCategory />
@@ -17,309 +51,32 @@ const NewsView = () => {
 				templateColumns={{
 					sm: "repeat(1, 1fr)",
 					md: "repeat(1, 1fr)",
-					xl: "repeat(3, 1fr)",
+					xl: "repeat(1, 1fr)",
 				}}
 			>
-				<GridItem colSpan={2}>
-					<Box my="6">
-						<Grid
-							gap={6}
-							templateColumns={{
-								sm: "repeat(1, 1fr)",
-								md: "repeat(2, 1fr)",
-								xl: "repeat(2, 1fr)",
-							}}
-						>
-							<GridItem>
-								<Box
-									rounded="lg"
-									overflow="hidden"
-									position="relative"
-									paddingBottom="55%"
-								>
-									<Box
-										position="absolute"
-										w="full"
-										h="full"
-									>
-										<Image
-											w="full"
-											h="full"
-											objectFit="cover"
-											src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg"
-										/>
-									</Box>
-								</Box>
-							</GridItem>
-							<GridItem>
-								<Box>
-									<Text
-										fontSize="xl"
-										fontWeight="semibold"
-									>
-										Windows 11 vừa cập nhật, vá lỗi chậm SSD tới nhiều người dùng
-									</Text>
-									<Text
-										fontSize="md"
-										my="4"
-									>
-										Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng
-										Microsoft vẫn âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục.
-									</Text>
-									<Flex fontSize="sm">
-										<Text>Nguyen Cong Minh</Text>
-										<Text mx={2}>|</Text>
-										<Text>5 ngay</Text>
-									</Flex>
-								</Box>
-							</GridItem>
-						</Grid>
-					</Box>
-					<Box my="6">
-						<Grid
-							gap={6}
-							templateColumns={{
-								sm: "repeat(1, 1fr)",
-								md: "repeat(2, 1fr)",
-								xl: "repeat(2, 1fr)",
-							}}
-						>
-							<GridItem>
-								<Box
-									rounded="lg"
-									overflow="hidden"
-									position="relative"
-									paddingBottom="55%"
-								>
-									<Box
-										position="absolute"
-										w="full"
-										h="full"
-									>
-										<Image
-											w="full"
-											h="full"
-											objectFit="cover"
-											src="https://images.thinkgroup.vn/unsafe/https://media-api-beta.thinkpro.vn/media/social/articles/2023/8/17/samsung-m2-ssd-thinkpro-1Kk.jpg"
-										/>
-									</Box>
-								</Box>1/
-							</GridItem>
-							<GridItem>
-								<Box>
-									<Text
-										fontSize="xl"
-										fontWeight="semibold"
-									>
-										Windows 11 vừa cập nhật, vá lỗi chậm SSD tới nhiều người dùng
-									</Text>
-									<Text
-										fontSize="md"
-										my="4"
-									>
-										Mặc dù chưa bao giờ bình luận công khai về lỗi tốc độ SSD trên Windows 11, nhưng
-										Microsoft vẫn âm thầm ghi nhận vấn đề này và liên tục tìm giải pháp khắc phục.
-									</Text>
-									<Flex fontSize="sm">
-										<Text>Nguyen Cong Minh</Text>
-										<Text mx={2}>|</Text>
-										<Text>5 ngay</Text>
-									</Flex>
-								</Box>
-							</GridItem>
-						</Grid>
-					</Box>
-				</GridItem>
-				<GridItem
-					colSpan={1}
-					h="800px"
-					overflowY="auto"
-				>
-					<Box
-						scrollMarginY={3}
-						maxH="100%"
-					>
-						<Heading
-							as="h2"
-							my="4"
-							fontSize="2xl"
-							color="text.black"
-							fontWeight="semibold"
-						>
-							Hot nhất trong tuần
-						</Heading>
-						<Wrap>
-							<WrapItem>
-								<Box
-									backgroundColor="bg.white"
-									rounded="lg"
-									py="2"
-									px="3"
-									fontSize="xs"
-								>
-									lenovo yoga book 9i
-								</Box>
-							</WrapItem>
-							<WrapItem>
-								<Box
-									backgroundColor="bg.white"
-									rounded="lg"
-									py="2"
-									px="3"
-									fontSize="xs"
-								>
-									lenovo yoga book 9i
-								</Box>
-							</WrapItem>
-							<WrapItem>
-								<Box
-									backgroundColor="bg.white"
-									rounded="lg"
-									py="2"
-									px="3"
-									fontSize="xs"
-								>
-									lenovo yoga book 9i
-								</Box>
-							</WrapItem>
-							<WrapItem>
-								<Box
-									backgroundColor="bg.white"
-									rounded="lg"
-									py="2"
-									px="3"
-									fontSize="xs"
-								>
-									lenovo yoga book 9i
-								</Box>
-							</WrapItem>
 
-							<WrapItem>
-								<Box
-									backgroundColor="bg.white"
-									rounded="lg"
-									py="2"
-									px="3"
-									fontSize="xs"
-								>
-									lenovo yoga book 9i
-								</Box>
-							</WrapItem>
-							<WrapItem>
-								<Box
-									backgroundColor="bg.white"
-									rounded="lg"
-									py="2"
-									px="3"
-									fontSize="xs"
-								>
-									lenovo yoga book 9i
-								</Box>
-							</WrapItem>
-							<WrapItem>
-								<Box
-									backgroundColor="bg.white"
-									rounded="lg"
-									py="2"
-									px="3"
-									fontSize="xs"
-								>
-									lenovo yoga book 9i
-								</Box>
-							</WrapItem>
-						</Wrap>
-						<Box>
-							<Heading
-								as="h2"
-								mt="10"
-								fontSize="2xl"
-								color="text.black"
-								fontWeight="semibold"
-							>
-								Có thể bạn thích
-							</Heading>
-							<Flex flexDir="column">
-								{Array(6)
-									.fill(0)
-									.map(() => {
-										return (
-											<Flex
-												gap={4}
-												mt="6"
-											>
-												<Box
-													w="100px"
-													h="100px"
-												>
-													<Image
-														w="100%"
-														h="100%"
-														objectFit="cover"
-														src="https://images.thinkgroup.vn/unsafe/200x200/https://media-api-beta.thinkpro.vn/media/core/products/2022/10/21/tai-nghe-chup-tai-marshall-major-4-1.jpeg"
-													/>
-												</Box>
-												<Box>
-													<Text
-														fontSize="sm"
-														fontWeight="bold"
-													>
-														Tai nghe chụp tai Marshall Major 4
-													</Text>
-													<Flex
-														my={2}
-														alignItems="center"
-													>
-														<Text
-															fontSize="lg"
-															color="text.red"
-															fontWeight="bold"
-														>
-															3.249.000
-														</Text>
-														<Text
-															ml={2}
-															fontSize="md"
-															textDecoration="line-through"
-														>
-															3.999.000
-														</Text>
-														<Text
-															rounded="sm"
-															ml="2"
-															color="text.white"
-															px="1"
-															py="2px"
-															fontSize="xs"
-															textAlign="center"
-															backgroundColor="bg.red"
-														>
-															-18%
-														</Text>
-													</Flex>
-													<Flex alignItems="center">
-														<Text
-															color="text.slate"
-															fontSize="sm"
-															fontWeight="semibold"
-														>
-															Màu
-														</Text>
-														<Box
-															h="4"
-															rounded="sm"
-															w="4"
-															ml="2"
-															backgroundColor="bg.blue"
-														></Box>
-													</Flex>
-												</Box>
-											</Flex>
-										);
-									})}
-							</Flex>
-						</Box>
-					</Box>
+				<GridItem  >
+					{data?.map((product: any, index: number) => (
+						<AllNewsView product={product} key={index} />
+					))}
+					<Flex
+						justifyContent="center"
+						alignItems="center"
+						mt="4" 
+					>
+						<Button
+							bg="white"
+							color="text.blue"
+							fontWeight="bold"
+							onClick={loadMore}  
+							disabled={!posts?.data?.paginate?.hasNextPage}
+							_hover={{ bg: "gray.200" }}  
+						>
+							Xem Thêm
+						</Button> 
+					</Flex>
 				</GridItem>
+ 
 			</Grid>
 		</Box>
 	);

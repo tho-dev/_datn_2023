@@ -1,4 +1,4 @@
-import { FormControl, FormErrorMessage, FormLabel, Text } from "@chakra-ui/react";
+import { Box, FormControl, FormErrorMessage, FormLabel, Text } from "@chakra-ui/react";
 import { Select, chakraComponents } from "chakra-react-select";
 import { Controller } from "react-hook-form";
 
@@ -12,10 +12,10 @@ type TOptions = {
 };
 
 type Props = {
-	control: any;
-	name: any;
-	title: string;
-	placeholder: string;
+	control?: any;
+	name?: any;
+	title?: string;
+	placeholder?: string;
 	data?: Array<TOptions> | any;
 	defaultValue?: any;
 	rules?: any;
@@ -23,14 +23,36 @@ type Props = {
 
 const OptionComponent = {
 	Option: ({ children, ...props }: any) => (
-		<chakraComponents.Option {...props}>
-			<Text
-				as="div"
-				fontSize="sm"
-			>
-				{children}
-			</Text>
-		</chakraComponents.Option>
+		<Box
+			p="1"
+			rounded="sm"
+			overflow="hidden"
+			__css={{
+				"& > div": {
+					px: "2",
+					py: "2",
+					m: 0,
+					rounded: "md",
+					_hover: {
+						bgColor: "#f8f9fa",
+					},
+				},
+			}}
+		>
+			<chakraComponents.Option {...props}>
+				<Text
+					as="div"
+					fontSize="13px"
+					fontWeight="medium"
+					px="2"
+					py="1"
+					w="full"
+					maxH="max-content"
+				>
+					{children}
+				</Text>
+			</chakraComponents.Option>
+		</Box>
 	),
 	Control: ({ children, ...props }: any) => (
 		<chakraComponents.Control {...props}>
@@ -39,6 +61,7 @@ const OptionComponent = {
 				w="full"
 				display="flex"
 				fontSize="sm"
+				h="48px"
 			>
 				{children}
 			</Text>
@@ -57,13 +80,17 @@ const SelectThinkPro = ({ control, name, data, placeholder, title = "Select", de
 					<FormControl
 						isInvalid={!!error}
 						h="max-content"
+						w="full"
+						minWidth="full"
 					>
-						<FormLabel
-							fontSize="sm"
-							fontWeight="semibold"
-						>
-							{title}
-						</FormLabel>
+						{title && (
+							<FormLabel
+								fontSize="sm"
+								fontWeight="semibold"
+							>
+								{title}
+							</FormLabel>
+						)}
 
 						<Select
 							name={name}

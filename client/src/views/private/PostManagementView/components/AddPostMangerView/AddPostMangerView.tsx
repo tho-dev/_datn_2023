@@ -1,25 +1,25 @@
-import { useForm } from "react-hook-form";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-	FormErrorMessage,
-	FormLabel,
-	FormControl,
-	Input,
+	Box,
 	Button,
 	Flex,
-	Box,
-	useToast,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
 	Grid,
 	GridItem,
+	Input,
+	Textarea,
+	useToast,
 } from "@chakra-ui/react";
-import { CloseSmallIcon } from "~/components/common/Icons";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link as ReactRouterLink } from "react-router-dom";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
+import QuillThinkPro from "~/components/QuillThinkPro";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import { useCreatePostMutation } from "~/redux/api/post";
-import ReviewAddPostManger from "./components/ReviewAddPostManger";
-import QuillThinkPro from "~/components/QuillThinkPro";
-import { useEffect } from "react";
-import { useNavigate, Link as ReactRouterLink } from "react-router-dom";
-
+import { useAppSelector } from "~/redux/hook/hook";
 type Props = {
 	onClose: () => void;
 	parents: any;
@@ -38,14 +38,16 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 	} = useForm();
 
 	const [createPost, { isLoading }] = useCreatePostMutation();
-	const navigate = useNavigate();
+	const { user } = useAppSelector((state) => state.persistedReducer.global);
 
 	const onSubmit = async (data: any) => {
 		data = {
 			...data,
 			parent_id: data?.parent_id?.value,
 			category_id: data?.category_id?.value,
+			created_by: `${user.first_name} ${user.last_name}`, // Set created_by field
 		};
+		console.log("Submitting data:", data);
 
 		try {
 			await createPost(data).unwrap();
@@ -56,9 +58,8 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 				status: "success",
 				description: "Tạo danh mục thành công",
 			});
-			reset();
-			navigate("/admin/bai-viet");
-
+			// reset();
+			// navigate("/admin/bai-viet");
 		} catch (error: any) {
 			toast({
 				title: "Có lỗi",
@@ -68,48 +69,19 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 				description: JSON.stringify(error?.data?.errors),
 			});
 		}
-
 		reset();
 		onClose();
 	};
-	const thumbnail = watch("thumbnail");
-	const title = watch("title");
-	const category_id = watch("category_id")
-	const description = watch("description");
+	// const category_id = watch("category_id")
 	const content = watch("content");
-	const meta_keyword = watch("meta_keyword");
-	const meta_description = watch("meta_description");
-	const meta_title = watch("meta_title");
 
 	useEffect(() => {
-		register("description", { required: "Không được để trống" });
 		register("content", { required: "Không được để trống" });
-		register("meta_keyword", { required: "Không được để trống" });
-		register("meta_description", { required: "Không được để trống" });
-		register("meta_title", { required: "Không được để trống" });
 	}, [register]);
-
-	const onEditorStateChangeDescription = (value: any) => {
-		setValue("description", value);
-	};
 
 	const onEditorStateChangeContent = (value: any) => {
 		setValue("content", value);
 	};
-
-	const onEditorStateChangeMetaKeyword = (value: any) => {
-		setValue("meta_keyword", value);
-	};
-
-	const onEditorStateChangeMetaDescription = (value: any) => {
-		setValue("meta_description", value);
-	};
-
-	const onEditorStateChangeMetaTitle = (value: any) => {
-		setValue("meta_title", value);
-	};
-
-
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -117,40 +89,40 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 				gap={{
 					xl: "6",
 				}}
-				templateColumns={{
-					xl: "repeat(3, 1fr)",
-				}}
+				templateColumns="repeat(12, 1fr)"
 			>
-				<GridItem colSpan={1}>
+				<GridItem colSpan={12}>
+					<FormControl isInvalid={errors.file as any}>
+						<Flex
+							justifyContent="center"
+							mt="8"
+						>
+							<Box
+								w="50%"
+								h="260px"
+								rounded="2xl"
+								overflow="hidden"
+							>
+								<FileUploadThinkPro
+									fileName="banner"
+									getDataFn={(data: any) => setValue("thumbnail", data)}
+									setData={watch("thumbnail")}
+								/>
+							</Box>
+						</Flex>
+
+						<FormErrorMessage>{(errors.thumbnail as any) && errors?.thumbnail?.message}</FormErrorMessage>
+					</FormControl>
+				</GridItem>
+				<GridItem colSpan={9}>
 					<Flex
 						flexDir="column"
 						gap="4"
 						bgColor="white"
 						my={4}
-						padding="16px 24px"
 						borderRadius={6}
 						w={"100%"}
-						boxShadow="lg"
 					>
-						<FormControl isInvalid={errors.file as any}>
-							<Flex
-								justifyContent="center"
-								mt="8"
-							>
-								<Box
-									w="200px"
-									h="200px"
-								>
-									<FileUploadThinkPro
-										fileName="category"
-										getDataFn={(data: any) => setValue("thumbnail", data)}
-										setData={watch("thumbnail")}
-									/>
-								</Box>
-							</Flex>
-
-							<FormErrorMessage>{(errors.thumbnail as any) && errors?.thumbnail?.message}</FormErrorMessage>
-						</FormControl>
 						<FormControl isInvalid={errors.title as any}>
 							<FormLabel
 								htmlFor="title"
@@ -169,28 +141,86 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 							<FormErrorMessage>{(errors.title as any) && errors?.title?.message}</FormErrorMessage>
 						</FormControl>
 
-						{/* Bài viết */}
-						<SelectThinkPro
-							control={control}
-							name="category_id"
-							title="Danh mục"
-							placeholder="-- Danh mục --"
-							data={parents}
-							rules={{ required: "Không được để trống" }}
-						/>
+						{/* description */}
 						<FormControl isInvalid={errors.description as any}>
 							<FormLabel
 								fontSize="15"
 								htmlFor="description"
 								fontWeight="semibold"
 							>
-								Bài viết
+								Nội dung
 							</FormLabel>
-							<QuillThinkPro
-								data={description}
-								onEditorStateChange={onEditorStateChangeDescription as any}
+							<Textarea
+								id="description"
+								placeholder="Nội dung"
+								{...register("description", {
+									required: "Không được để trống !!!",
+								})}
 							/>
-							<FormErrorMessage>{(errors.description as any) && errors?.description?.message}</FormErrorMessage>
+							<FormErrorMessage>
+								{(errors.description as any) && errors?.description?.message}
+							</FormErrorMessage>
+						</FormControl>
+
+						{/* meta_keyword */}
+						<FormControl isInvalid={errors.meta_title as any}>
+							<FormLabel
+								htmlFor="meta_title"
+								fontSize="15"
+								fontWeight="semibold"
+							>
+								Meta title
+							</FormLabel>
+							<Input
+								id="meta_title"
+								placeholder="Meta title"
+								{...register("meta_title", {
+									required: "Không được để trống !!!",
+								})}
+							/>
+							<FormErrorMessage>
+								{(errors.meta_title as any) && errors?.meta_title?.message}
+							</FormErrorMessage>
+						</FormControl>
+
+						<FormControl isInvalid={errors.meta_keyword as any}>
+							<FormLabel
+								htmlFor="meta_keyword"
+								fontSize="15"
+								fontWeight="semibold"
+							>
+								Meta keyword
+							</FormLabel>
+							<Input
+								id="meta_keyword"
+								placeholder="Meta keyword"
+								{...register("meta_keyword", {
+									required: "Không được để trống !!!",
+								})}
+							/>
+							<FormErrorMessage>
+								{(errors.meta_keyword as any) && errors?.meta_keyword?.message}
+							</FormErrorMessage>
+						</FormControl>
+
+						<FormControl isInvalid={errors.meta_description as any}>
+							<FormLabel
+								htmlFor="meta_description"
+								fontSize="15"
+								fontWeight="semibold"
+							>
+								Meta description
+							</FormLabel>
+							<Textarea
+								id="meta_description"
+								placeholder="Meta description"
+								{...register("meta_description", {
+									required: "Không được để trống !!!",
+								})}
+							/>
+							<FormErrorMessage>
+								{(errors.meta_description as any) && errors?.meta_description?.message}
+							</FormErrorMessage>
 						</FormControl>
 
 						{/* content */}
@@ -200,7 +230,7 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 								htmlFor="content"
 								fontWeight="semibold"
 							>
-								Nội dung
+								Mô tả
 							</FormLabel>
 							<QuillThinkPro
 								data={content}
@@ -208,55 +238,28 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 							/>
 							<FormErrorMessage>{(errors.content as any) && errors?.content?.message}</FormErrorMessage>
 						</FormControl>
-
-						{/* meta_keyword */}
-						<FormControl isInvalid={errors.meta_keyword as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="meta_keyword"
-								fontWeight="semibold"
-							>
-								Meta keyword
-							</FormLabel>
-							<QuillThinkPro
-								data={meta_keyword}
-								onEditorStateChange={onEditorStateChangeMetaKeyword as any}
-							/>
-							<FormErrorMessage>{(errors.meta_keyword as any) && errors?.meta_keyword?.message}</FormErrorMessage>
-						</FormControl>
-
-						{/* meta_description */}
-						<FormControl isInvalid={errors.meta_description as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="meta_description"
-								fontWeight="semibold"
-							>
-								Meta description
-							</FormLabel>
-							<QuillThinkPro
-								data={meta_description}
-								onEditorStateChange={onEditorStateChangeMetaDescription as any}
-							/>
-							<FormErrorMessage>{(errors.meta_description as any) && errors?.meta_description?.message}</FormErrorMessage>
-						</FormControl>
-
-						{/* meta_title */}
-						<FormControl isInvalid={errors.meta_title as any}>
-							<FormLabel
-								fontSize="15"
-								htmlFor="meta_title"
-								fontWeight="semibold"
-							>
-								Meta title
-							</FormLabel>
-							<QuillThinkPro
-								data={meta_title}
-								onEditorStateChange={onEditorStateChangeMetaTitle as any}
-							/>
-							<FormErrorMessage>{(errors.meta_title as any) && errors?.meta_title?.message}</FormErrorMessage>
-						</FormControl>
 					</Flex>
+				</GridItem>
+				<GridItem colSpan={3}>
+					<Flex
+						flexDir="column"
+						gap="4"
+						bgColor="white"
+						my={4}
+						borderRadius={6}
+						w={"100%"}
+					>
+						<SelectThinkPro
+							title="Danh mục"
+							control={control}
+							data={parents}
+							name="category_id"
+							placeholder="-- Danh mục --"
+							rules={{ required: "Không được để trống" }}
+						/>
+					</Flex>
+				</GridItem>
+				<GridItem colSpan={12}>
 					<Flex
 						gap="3"
 						justifyContent="flex-end"
@@ -264,13 +267,9 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 					>
 						<Button
 							textColor="text.textDelete"
-							bgColor="transparent"
+							bgColor="bg.bgDelete"
 							fontWeight="bold"
 							px="4"
-							_hover={{
-								bgColor: "bg.bgDelete",
-							}}
-							leftIcon={<CloseSmallIcon size={4} />}
 							onClick={onClose}
 							as={ReactRouterLink}
 							to="/admin/bai-viet"
@@ -278,31 +277,17 @@ const AddPostMangerView = ({ onClose, parents }: Props) => {
 							Đóng
 						</Button>
 						<Button
-							type="submit"
-							bgColor="text.textSuccess"
-							textColor="text.white"
-							fontWeight="bold"
-							px="4"
+							w={"40"}
 							isLoading={isLoading}
+							type="submit"
+							bgColor="bg.bgSuccess"
+							color="text.textSuccess"
 						>
 							Tạo mới
 						</Button>
 					</Flex>
 				</GridItem>
-				<GridItem colSpan={2}>
-					<ReviewAddPostManger
-						thumbnail={thumbnail}
-						title={title}
-						description={description}
-						content={content}
-						meta_keyword={meta_keyword}
-						meta_description={meta_description}
-						meta_title={meta_title}
-					/>
-				</GridItem>
-
 			</Grid>
-
 		</form>
 	);
 };

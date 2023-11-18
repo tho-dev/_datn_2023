@@ -7,73 +7,107 @@ import {
   Spacer,
   Divider,
 } from "@chakra-ui/layout";
-import { Avatar, Image } from "@chakra-ui/react";
-import {
-  Annotation,
-  Thumbs,
-  Chat,
-  Share,
-  Check,
-  Star,
-} from "~/components/common/Icons";
+import { Avatar, Button, Image, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { set, ref, onValue, remove, update } from "firebase/database";
+import { db } from "~/firebase";
+import { useAppSelector } from "~/redux/hook/hook";
+import { RootState } from "~/redux/store";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 
-type Props = {};
+type Props = {
+  productId: string;
+};
 
 const Client = (props: Props) => {
+  const [comments, setComments] = useState<any>([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [comment, setComment] = useState({} as any);
+  const { productId } = props;
+  const { user } = useAppSelector(
+    (state: RootState) => state.persistedReducer.global
+  );
+
+  //get data
+  useEffect(() => {
+    onValue(ref(db), (snapshot: any) => {
+      const data = snapshot.val();
+      if (data) {
+        const commentArray: any = Object.entries(data.comments).map(
+          ([_, comment]) => ({ comment })
+        );
+
+        setComments(
+          commentArray.filter(({ comment }: any) => {
+            return comment.productId == productId;
+          })
+        );
+      }
+    });
+  }, []);
+
+  //delete
+  const openConfirm = (id: any) => {
+    setComment(id);
+    onOpen();
+  };
+  const handleDelete = () => {
+    remove(ref(db, `/comments/${comment?.id}`));
+    onClose();
+  };
+
   return (
     <Box>
-      <Divider mt={6} />
-
-      <Grid
-        mt={5}
-        gap={{
-          sm: "0",
-          md: "0",
-          xl: "8",
-        }}
-        templateColumns={{
-          sm: "repeat(1, 1fr)",
-          md: "repeat(1, 1fr)",
-          xl: "repeat(4, 1fr)",
-        }}
-      >
-        <GridItem mr={7} colSpan={1}>
-          <Flex>
-            <Avatar
-              name="ThinkPro"
-              // src="https://bit.ly/broken-link"
-              w="10"
-              h="10"
-              color="#12AFF0"
-              fontSize="xs"
-              bgColor="#12AFF033"
-            />
-            <Box ml={3}>
-              <Text fontWeight={"black"}>Duy Thuan</Text>
-              <Text fontSize={13} color={"gray"}>
-                Đã tham gia 2 tháng
-              </Text>
-            </Box>
+      <Text pl={"10px"} fontSize={"16px"} fontWeight={700}>
+        Bình Luận sản phẩm
+      </Text>
+      {comments.map(({ comment }: any) => (
+        <Box
+          boxShadow={"sm"}
+          borderRadius={"12px"}
+          p={"16px"}
+          my={"10px"}
+          key={comment.id}
+        >
+          <Flex alignItems={"center"} gap={2}>
+            <Avatar size="md" name="Kent Dodds" src={comment.userAvatar} />{" "}
+            <Flex justifyContent={"space-between"} w={"full"}>
+              <Box>
+                <Text
+                  fontSize={"14px"}
+                  fontWeight={700}
+                  color={"blue.500"}
+                  pr={"10px"}
+                >
+                  {comment.userName}
+                </Text>
+                <Text> {comment.content}</Text>
+                <Flex alignItems={"center"}>
+                  <Text fontSize={"12px"} color={"gray.400"}>
+                    {comment.dateTime}
+                  </Text>
+                  {comment.userId == user?._id && (
+                    <Button
+                      bg={"none"}
+                      color={"gray.500"}
+                      _hover={{ color: "black" }}
+                      onClick={() => openConfirm(comment)}
+                    >
+                      Xóa
+                    </Button>
+                  )}
+                </Flex>
+              </Box>
+            </Flex>
           </Flex>
-        </GridItem>
-        <GridItem colSpan={3}>
-          <Text color={"black"} fontSize={"13px"}>
-            Bàn phím gõ êm, vì size nhỏ gọn nên các phím mũi tên hơi gần các
-            phím khác. 10 chế độ LED chủ yếu là chế độ chuyển động. Kết nối USB
-            type A to C nên tiện tháo rời và di chuyển.
-          </Text>
-          <Flex
-            mt={"5px"}
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-          >
-            <Text color={"gray"} fontSize={"12px"}>
-              Đánh giá vào 10 tháng trước
-            </Text>
-          </Flex>
-        </GridItem>
-      </Grid>
+        </Box>
+      ))}
+      <ConfirmThinkPro
+        isOpen={isOpen}
+        onClose={onClose}
+        handleClick={handleDelete}
+        content="Bạn có chắc chắn muốn xóa bình luận này ?"
+      />
     </Box>
   );
 };

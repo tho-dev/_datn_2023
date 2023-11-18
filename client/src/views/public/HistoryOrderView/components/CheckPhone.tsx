@@ -1,6 +1,10 @@
+import { useForm } from "react-hook-form";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { useNavigate } from "react-router-dom";
+
 import { Box, Grid, GridItem } from "@chakra-ui/layout";
-import React, { useState } from "react";
-import { Image } from "@chakra-ui/react";
+import { useState } from "react";
+import { Image, useToast } from "@chakra-ui/react";
 import banner from "~/assets/images/TGDD-540x270-1.png";
 import {
   FormControl,
@@ -11,17 +15,64 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
+import { useGetOrderByPhoneNumberMutation } from "~/redux/api/order";
+import { chuyenDoiSoDienThoai } from "~/utils/fc";
+import ReCAPTCHA from "react-google-recaptcha";
 
-import CheckOtp from "./CheckOtp";
 type Props = {
-  handleCheckOrdered: () => void;
+  setCheckPhone: any;
+  handleGetPhoneNumber: (phoneNumber: any) => void;
+  setQuery: any;
+  loading: boolean;
 };
 
-const CheckPhone = ({ handleCheckOrdered }: Props) => {
-  const [isPhone, setIphone] = useState<boolean>(false);
-  const handleCheckOtp = () => {
-    setIphone(true);
+const CheckPhone = ({
+  setCheckPhone,
+  handleGetPhoneNumber,
+  setQuery,
+  loading,
+}: Props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<any>();
+
+  const toast = useToast();
+
+  const [checkCaptch, setCheckCaptch] = useState(false);
+
+  const onChange = (value: any) => {
+    setCheckCaptch(true);
   };
+
+  const onSubmit = async (data: any) => {
+    if (!checkCaptch) {
+      return toast({
+        title: "Hệ thống",
+        description: "Bạn chưa xác minh captch",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+    const phone_number = chuyenDoiSoDienThoai(data.phone_number);
+    if (!phone_number) {
+      return toast({
+        title: "Hệ thống",
+        description: "Sai định dạng số điện thoại",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+    setQuery({ phone_number: phone_number });
+    setCheckPhone(false);
+    handleGetPhoneNumber(phone_number);
+  };
+
   return (
     <Box>
       <Grid gridTemplateColumns="repeat(2,1fr)">
@@ -36,9 +87,12 @@ const CheckPhone = ({ handleCheckOrdered }: Props) => {
           </Box>
         </GridItem>
         <GridItem>
-          {isPhone ? (
-            <CheckOtp handleCheckOrdered={handleCheckOrdered} />
-          ) : (
+          <form
+            style={{
+              width: "100%",
+            }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Flex
               padding="20px"
               height="500px"
@@ -47,7 +101,11 @@ const CheckPhone = ({ handleCheckOrdered }: Props) => {
               borderRadius="6px"
               alignItems="center"
             >
-              <FormControl margin="20px 0" w="70%">
+              <FormControl
+                isInvalid={errors.phone_number as any}
+                margin="20px 0"
+                w="70%"
+              >
                 <FormLabel
                   marginTop="20px"
                   fontSize="18px"
@@ -57,22 +115,36 @@ const CheckPhone = ({ handleCheckOrdered }: Props) => {
                   Tra cứu thông tin đơn hàng
                 </FormLabel>
                 <Input
+                  id="phone_number"
+                  {...register("phone_number")}
                   type="number"
                   placeholder="Nhập số điện thoại mua hàng"
+                  px="2"
                 />
                 <FormHelperText></FormHelperText>
+                <FormErrorMessage>
+                  {(errors.phone_number as any) &&
+                    (errors?.phone_number?.message as any)}
+                </FormErrorMessage>
               </FormControl>
               <Button
-                mt={4}
+                my={4}
                 type="submit"
                 bgColor="bg.blue"
+                _hover={{ bgColor: "blue" }}
                 w="70%"
-                onClick={handleCheckOtp}
+                loadingText="Đang tìm kiếm đơn hàng..."
+                isLoading={!loading}
+                fontSize={"16px"}
               >
-                Tra cứu
+                Tra cứu thông tin
               </Button>
+              <ReCAPTCHA
+                sitekey={process.env.GOOGLE_SITE_KEY as string}
+                onChange={onChange}
+              />
             </Flex>
-          )}
+          </form>
         </GridItem>
       </Grid>
     </Box>

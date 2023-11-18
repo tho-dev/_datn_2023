@@ -81,11 +81,11 @@ const Title = ({ filters }: Props) => {
 										>
 											<Button
 												h="auto"
-												px="3"
-												py="2"
+												px="4"
+												py="3"
 												size="small"
 												lineHeight="150%"
-												rounded="md"
+												rounded="lg"
 												color="text.black"
 												backgroundColor="bg.gray"
 												_hover={{ bg: "gray.200" }}

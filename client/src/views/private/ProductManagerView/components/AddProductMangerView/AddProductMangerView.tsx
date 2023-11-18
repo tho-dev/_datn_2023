@@ -64,12 +64,18 @@ const AddProductMangerView = (props: Props) => {
 	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
 
 	// xử lý call api
-	const { data: brands } = useGetAllBrandsQuery({
-		_page: 1,
-		_limit: 200,
-		_order: "desc",
-		_sort: "created_at",
-	});
+	const { data: brands } = useGetAllBrandsQuery(
+		{
+			_page: 1,
+			_limit: 200,
+			_order: "desc",
+			_sort: "created_at",
+			_category: category?.value,
+		},
+		{
+			skip: !category?.value,
+		}
+	);
 
 	const { data: categories } = useGetAllCategoryQuery({
 		_page: 1,
@@ -90,21 +96,25 @@ const AddProductMangerView = (props: Props) => {
 	const [saveVariants] = useSaveVariantsMutation();
 
 	useEffect(() => {
-		if (brands && categories) {
+		if (brands) {
+			setValue("brand_id", "");
 			const selectBrands = brands?.data?.items?.map((brand: any) => ({
 				label: brand?.name,
 				value: brand?._id,
 			}));
+			setBrandsFilter(selectBrands);
+		}
+	}, [brands, category]);
 
+	useEffect(() => {
+		if (categories) {
 			const selectCategories = categories?.data?.items?.map((category: any) => ({
 				label: category?.name,
 				value: category?._id,
 			}));
-
-			setBrandsFilter(selectBrands);
 			setCategoriesFilter(selectCategories);
 		}
-	}, [brands, categories]);
+	}, [categories]);
 
 	useEffect(() => {
 		if (category?.label == "Laptop") {
@@ -181,12 +191,13 @@ const AddProductMangerView = (props: Props) => {
 			bgColor="bg.white"
 			py="8"
 			px="6"
-			rounded="lg"
+			rounded="xl"
 		>
 			<Heading
 				fontSize="18"
 				color="text.black"
 				lineHeight="100%"
+				textTransform="uppercase"
 			>
 				Tạo mới sản phẩm
 			</Heading>
@@ -376,7 +387,7 @@ const AddProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price && "border.error"}
 											>
@@ -417,7 +428,7 @@ const AddProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price_before_discount && "border.error"}
 											>

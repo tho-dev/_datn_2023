@@ -26,17 +26,18 @@ const Cart = ({ data }: Props) => {
         borderBottom="1px solid #e2e8f0"
       >
         <Text color="text.black">
-          {data ? data.products?.length : 0} sản phẩm
+          {data ? data?.products?.length : 0} sản phẩm
         </Text>
         <Link to="gio-hang" as={ReactRouterLink} color="text.blue">
           Xem tất cả
         </Link>
       </Flex>
       <Flex px="4" flexDirection="column">
-        {data.products.length > 0 ? (
-          data?.products.map((product: any) => {
+        {data?.products?.length > 0 ? (
+          data?.products.map((product: any, index: number) => {
             return (
               <Flex
+                key={index}
                 w="full"
                 my="3"
                 position="relative"
@@ -157,7 +158,8 @@ const Cart = ({ data }: Props) => {
       >
         <Text fontSize="sm">Tổng tiền:</Text>
         <Text fontSize="xl">
-          {data.products.length > 0 ? data.total_money.toLocaleString() : 0} đ
+          {data?.products?.length > 0 ? data?.total_money?.toLocaleString() : 0}{" "}
+          đ
         </Text>
       </Flex>
     </Box>

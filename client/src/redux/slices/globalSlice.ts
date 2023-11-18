@@ -8,6 +8,10 @@ export interface IGlobalState {
 	time: number;
 	isCheckOtp: boolean;
 	isLoading: boolean;
+	homeSettings: any;
+	isCompare: boolean;
+	items: any;
+	keywords: any;
 }
 
 const initialState: IGlobalState = {
@@ -18,6 +22,10 @@ const initialState: IGlobalState = {
 	time: 0,
 	isCheckOtp: false,
 	isLoading: false,
+	homeSettings: {},
+	isCompare: false,
+	items: [],
+	keywords: [""],
 };
 
 const globalSlice = createSlice({
@@ -60,9 +68,37 @@ const globalSlice = createSlice({
 			const { loading } = action.payload;
 			state.isLoading = loading;
 		},
+		setHomeSetting: (state, action: PayloadAction) => {
+			state.homeSettings = action.payload;
+		},
+		setIsCompare: (state, action: any) => {
+			state.isCompare = action.payload;
+		},
+		setItems: (state, action) => {
+			state.items = action.payload;
+		},
+		remoteItems: (state, action) => {
+			state.items = state.items.filter((item: any) => item.id != action.payload.id);
+		},
+		setKeywords: (state, action) => {
+			state.keywords = [...state.keywords, action.payload];
+		},
 	},
 });
 
-export const { login, logout, addViewedItem, setTime, setOtp, setCheckOtp, resetOtp, setIsLoading } =
-	globalSlice.actions;
+export const {
+	login,
+	logout,
+	addViewedItem,
+	setTime,
+	setOtp,
+	setCheckOtp,
+	resetOtp,
+	setIsLoading,
+	setHomeSetting,
+	setIsCompare,
+	setItems,
+	remoteItems,
+	setKeywords,
+} = globalSlice.actions;
 export default globalSlice.reducer;

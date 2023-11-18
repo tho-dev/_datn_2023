@@ -1,16 +1,26 @@
-import { Box, Flex, Heading, Text, Link, Grid, GridItem } from "@chakra-ui/layout";
-import CommonBox from "./components/CommonBox";
-import { Button, FormControl, FormErrorMessage, FormLabel, Input, Switch } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Heading } from "@chakra-ui/layout";
+import {
+	Button,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
+	Input,
+	Switch,
+	useDisclosure,
+	useToast,
+} from "@chakra-ui/react";
 import { useFieldArray, useForm } from "react-hook-form";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
-import { Link as ReactRouterLink } from "react-router-dom";
-import { ArrowRightUpIcon } from "~/components/common/Icons";
-import DialogThinkPro from "~/components/DialogThinkPro";
-import { useDisclosure } from "@chakra-ui/react";
+import CommonBox from "./components/CommonBox";
+import { useEffect, useState } from "react";
+import { useGetGeneralQuery, useUpdateGeneralMutation } from "~/redux/api/general";
 
 type Props = {};
 
 const SettingView = (props: Props) => {
+	const toast = useToast();
+	const [defaultData, setDefaultData] = useState<any>();
+
 	const {
 		control,
 		handleSubmit,
@@ -19,21 +29,46 @@ const SettingView = (props: Props) => {
 		getValues,
 		watch,
 		reset,
-		resetField,
 		formState: { errors, isSubmitting },
 	} = useForm<any>({
 		mode: "onTouched",
+		defaultValues: defaultData,
 	});
-
-	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const { fields, remove, append } = useFieldArray({
 		control,
 		name: "branch",
 	});
 
+	const { data: general } = useGetGeneralQuery({});
+	const [updateGeneral] = useUpdateGeneralMutation();
+
+	useEffect(() => {
+		if (general) {
+			setDefaultData(general?.data);
+			reset(general?.data);
+		}
+	}, [general]);
+
 	const onSubmit = async (data: any) => {
-		console.log("data", data);
+		try {
+			await updateGeneral(data).unwrap();
+			toast({
+				status: "success",
+				title: "Thành công",
+				description: "Cập nhật cấu hình thành công",
+				duration: 1600,
+				position: "top-right",
+			});
+		} catch (error) {
+			toast({
+				status: "error",
+				title: "Có lỗi",
+				description: "Cập nhật cấu hình thất bại",
+				duration: 1600,
+				position: "top-right",
+			});
+		}
 	};
 
 	return (
@@ -45,7 +80,8 @@ const SettingView = (props: Props) => {
 		>
 			<Heading
 				fontSize="lg"
-				fontWeight="bold"
+				fontWeight="semibold"
+				textTransform="uppercase"
 			>
 				Cấu Hình Chung
 			</Heading>
@@ -171,7 +207,7 @@ const SettingView = (props: Props) => {
 													rounded="full"
 												>
 													<FileUploadThinkPro
-														fileName="category"
+														fileName="banner"
 														getDataFn={(data) => setValue("logo", data)}
 														setData={watch("logo")}
 													/>
@@ -201,7 +237,7 @@ const SettingView = (props: Props) => {
 													rounded="full"
 												>
 													<FileUploadThinkPro
-														fileName="assets"
+														fileName="banner"
 														getDataFn={(data) => setValue("banner_thumbnail", data)}
 														setData={watch("banner_thumbnail")}
 													/>
@@ -320,64 +356,124 @@ const SettingView = (props: Props) => {
 										{fields.map((field: any, index) => {
 											return (
 												<Box
+													px="4"
+													py="6"
 													key={field.id}
-													p="4"
-													rounded="md"
-													fontSize="sm"
-													color="text.black"
-													backgroundColor="bg.gray"
+													rounded="lg"
+													borderWidth="1px"
+													borderColor="#eef1f6"
+													boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 												>
 													<Flex justifyContent="space-between">
-														<Box>
-															<Text fontWeight="semibold">{field.city}</Text>
-															<Text>{field.address}</Text>
-														</Box>
-														<Flex gap="2">
-															<Button
-																w="10"
-																h="8"
-																size="small"
-																bgColor="bg.bgDelete"
-																color="text.textDelete"
-																onClick={() => remove(index)}
-															>
-																Xóa
-															</Button>
-															<Button
-																w="10"
-																h="8"
-																size="small"
-																bgColor="bg.bgEdit"
-																color="text.textEdit"
-															>
-																Sửa
-															</Button>
-														</Flex>
+														<Heading
+															color="text.textDelete"
+															fontSize="md"
+															fontWeight="bold"
+														>
+															✔ Chi nhánh {index + 1}
+														</Heading>
+
+														<Button
+															onClick={() => remove(index)}
+															size="small"
+															px="4"
+															bgColor="bg.bgDelete"
+															color="text.textDelete"
+														>
+															Xóa
+														</Button>
 													</Flex>
 													<Flex
 														mt="2"
-														alignItems="flex-end"
-														justifyContent="space-between"
+														gap="3"
+														flexDir="column"
 													>
-														<Box fontSize="xs">
-															<Text
+														<FormControl>
+															<FormLabel
+																fontSize="sm"
 																fontWeight="semibold"
-																color="#f93920"
 															>
-																Đã đóng cửa, hẹn bạn 09:00 ngày mai
-															</Text>
-															<Text fontWeight="medium">09:00 - 21:00</Text>
-														</Box>
-														<Link
-															as={ReactRouterLink}
-															fontSize="xs"
-															color="text.blue"
-															fontWeight="bold"
-															textDecoration="none"
-														>
-															Chỉ đường
-															<ArrowRightUpIcon size={4} />
-														</Link>
+																Thành phố
+															</FormLabel>
+															<Input
+																{...register(`branch.${index}.city`, {
+																	required: "Không được để trống",
+																})}
+																placeholder="Thành phố Hồ Chí Minh, ..."
+															/>
+														</FormControl>
+														<FormControl>
+															<FormLabel
+																fontSize="sm"
+																fontWeight="semibold"
+															>
+																Địa chỉ
+															</FormLabel>
+															<Input
+																{...register(`branch.${index}.address`, {
+																	required: "Không được để trống",
+																})}
+																placeholder="Số 5 - 7 Nguyễn Huy Tưởng, F6, Q. Bình Thạnh, .."
+															/>
+														</FormControl>
+														<Flex gap="4">
+															<FormControl>
+																<FormLabel
+																	htmlFor="title"
+																	fontSize="sm"
+																	fontWeight="semibold"
+																>
+																	Thời gian mở cửa
+																</FormLabel>
+																<Input
+																	{...register(`branch.${index}.time_open`, {
+																		required: "Không được để trống",
+																	})}
+																	placeholder="9:00, .."
+																/>
+															</FormControl>
+															<FormControl>
+																<FormLabel
+																	htmlFor="title"
+																	fontSize="sm"
+																	fontWeight="semibold"
+																>
+																	Thời gian đóng cửa
+																</FormLabel>
+																<Input
+																	id="banner_title"
+																	{...register(`branch.${index}.time_close`, {
+																		required: "Không được để trống",
+																	})}
+																	placeholder="22:00, ..."
+																/>
+															</FormControl>
+														</Flex>
+														<FormControl>
+															<FormLabel
+																htmlFor="title"
+																fontSize="sm"
+																fontWeight="semibold"
+															>
+																Trạng thái
+															</FormLabel>
+															<Switch defaultChecked />
+														</FormControl>
+														<FormControl>
+															<FormLabel
+																htmlFor="title"
+																fontSize="sm"
+																fontWeight="semibold"
+															>
+																Map
+															</FormLabel>
+															<Input
+																{...register(`branch.${index}.map`, {
+																	required: "Không được để trống",
+																})}
+																placeholder="https://www.google.com/maps/place/ThinkPro+-+95+Tr%E1%BA%A7n+Thi%E1%BB%87n+Ch%C3%A1nh,+P12,+Q10,+TP+HCM/@10.7720769,106.6680882,17z/data=!3m1!4b1!4m5!3m4!1s0x31752fea4b76a251:0x3b34f5af9212aadc!8m2!3d10.7720769!4d106.6702769."
+															/>
+														</FormControl>
 													</Flex>
 												</Box>
 											);
@@ -389,12 +485,12 @@ const SettingView = (props: Props) => {
 										bgColor="bg.bgSuccess"
 										color="text.textSuccess"
 										onClick={() => {
-											onOpen();
 											setValue("branch", [
 												...(getValues().branch || []),
 												{
-													name: "",
-													time: "",
+													city: "",
+													time_open: "",
+													time_close: "",
 													map: "",
 													address: "",
 													status: true,
@@ -414,6 +510,7 @@ const SettingView = (props: Props) => {
 					position="fixed"
 					bottom="2"
 					left="50%"
+					zIndex="999"
 					transform="translateX(calc(50% - 260px))"
 					w="full"
 					maxW="400px"
@@ -444,132 +541,6 @@ const SettingView = (props: Props) => {
 						Cập Nhật
 					</Button>
 				</Flex>
-
-				{/* Form thêm chi nhánh */}
-				<DialogThinkPro
-					title={
-						<Heading
-							fontSize="lg"
-							fontWeight="semibold"
-						>
-							Tạo chi nhánh
-						</Heading>
-					}
-					isCentered
-					isOpen={isOpen}
-					onClose={onClose}
-				>
-					<Flex
-						gap="4"
-						flexDir="column"
-					>
-						<FormControl>
-							<FormLabel
-								fontSize="sm"
-								fontWeight="semibold"
-							>
-								Thành phố
-							</FormLabel>
-							<Input
-								{...register(`branch.${fields.length}.city`, {
-									required: "Không được để trống",
-								})}
-								placeholder="Thành phố Hồ Chí Minh, ..."
-							/>
-						</FormControl>
-						<FormControl>
-							<FormLabel
-								fontSize="sm"
-								fontWeight="semibold"
-							>
-								Địa chỉ
-							</FormLabel>
-							<Input
-								id="banner_title"
-								{...register("banner_title", {
-									required: "Không được để trống",
-								})}
-								placeholder="Số 5 - 7 Nguyễn Huy Tưởng, F6, Q. Bình Thạnh, .."
-								borderColor={errors?.banner_title && "red.500"}
-							/>
-							<FormErrorMessage>
-								{(errors?.banner_title as any) && errors?.banner_title?.message}
-							</FormErrorMessage>
-						</FormControl>
-						<Flex gap="4">
-							<FormControl isInvalid={errors?.banner_title as any}>
-								<FormLabel
-									htmlFor="title"
-									fontSize="sm"
-									fontWeight="semibold"
-								>
-									Thời gian mở cửa
-								</FormLabel>
-								<Input
-									id="banner_title"
-									{...register("banner_title", {
-										required: "Không được để trống",
-									})}
-									placeholder="9:00, .."
-									borderColor={errors?.banner_title && "red.500"}
-								/>
-								<FormErrorMessage>
-									{(errors?.banner_title as any) && errors?.banner_title?.message}
-								</FormErrorMessage>
-							</FormControl>
-							<FormControl isInvalid={errors?.banner_title as any}>
-								<FormLabel
-									htmlFor="title"
-									fontSize="sm"
-									fontWeight="semibold"
-								>
-									Thời gian đóng cửa
-								</FormLabel>
-								<Input
-									id="banner_title"
-									{...register("banner_title", {
-										required: "Không được để trống",
-									})}
-									placeholder="22:00, ..."
-									borderColor={errors?.banner_title && "red.500"}
-								/>
-								<FormErrorMessage>
-									{(errors?.banner_title as any) && errors?.banner_title?.message}
-								</FormErrorMessage>
-							</FormControl>
-						</Flex>
-						<FormControl isInvalid={errors?.banner_title as any}>
-							<FormLabel
-								htmlFor="title"
-								fontSize="sm"
-								fontWeight="semibold"
-							>
-								Trạng thái
-							</FormLabel>
-							<Switch id="email-alerts" />
-						</FormControl>
-						<FormControl isInvalid={errors?.banner_title as any}>
-							<FormLabel
-								htmlFor="title"
-								fontSize="sm"
-								fontWeight="semibold"
-							>
-								Map
-							</FormLabel>
-							<Input
-								id="banner_title"
-								{...register("banner_title", {
-									required: "Không được để trống",
-								})}
-								placeholder="https://www.google.com/maps/place/ThinkPro+-+95+Tr%E1%BA%A7n+Thi%E1%BB%87n+Ch%C3%A1nh,+P12,+Q10,+TP+HCM/@10.7720769,106.6680882,17z/data=!3m1!4b1!4m5!3m4!1s0x31752fea4b76a251:0x3b34f5af9212aadc!8m2!3d10.7720769!4d106.6702769."
-								borderColor={errors?.banner_title && "red.500"}
-							/>
-							<FormErrorMessage>
-								{(errors?.banner_title as any) && errors?.banner_title?.message}
-							</FormErrorMessage>
-						</FormControl>
-					</Flex>
-				</DialogThinkPro>
 			</form>
 		</Box>
 	);

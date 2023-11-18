@@ -10,31 +10,8 @@ import { Image } from "@chakra-ui/react";
 
 type Props = {
 	items?: any;
+	category?: any;
 };
-
-// Bộ lọc giá
-const price: any = [
-	{
-		to: 0.6,
-		from: null,
-	},
-	{
-		to: 0.6,
-		from: 1.2,
-	},
-	{
-		to: 1.2,
-		from: 1.8,
-	},
-	{
-		to: 1.8,
-		from: 2.4,
-	},
-	{
-		to: 2.4,
-		from: 3,
-	},
-];
 
 // Quyền lợi
 const usps: any = [
@@ -60,7 +37,7 @@ const usps: any = [
 	},
 ];
 
-const Filter = ({ items }: Props) => {
+const Filter = ({ items, category }: Props) => {
 	return (
 		<>
 			<Box
@@ -69,9 +46,10 @@ const Filter = ({ items }: Props) => {
 				py="5"
 				bgColor="bg.gray"
 				rounded="md"
+				maxH="auto"
 			>
 				<Link
-					to="/test"
+					to={`/${category?.shared_url}`}
 					as={ReactRouterLink}
 					fontSize="md"
 					color="text.blue"
@@ -84,7 +62,7 @@ const Filter = ({ items }: Props) => {
 					}}
 				>
 					<Text as="span">Xem tất cả</Text>
-					<Text as="span">Laptop</Text>
+					<Text as="span">{category?.name}</Text>
 					<ArrowRightIcon size={5} />
 				</Link>
 				<Flex
@@ -107,14 +85,14 @@ const Filter = ({ items }: Props) => {
 							color="text.black"
 							fontWeight="semibold"
 						>
-							Hoặc chọn Laptop theo thương hiệu
+							Hoặc chọn {category?.name} theo thương hiệu
 						</Text>
 						<Grid
 							mt="3"
 							gap="1"
 							templateColumns={{
 								sm: "repeat(1, 1fr)",
-								lg: "repeat(2, 1fr)",
+								lg: "repeat(3, 1fr)",
 							}}
 						>
 							{items?.map((item: any, index: number) => {
@@ -126,6 +104,7 @@ const Filter = ({ items }: Props) => {
 									>
 										<Link
 											as={ReactRouterLink}
+											to={`/${item?.shared_url}`}
 											display="inline-flex"
 											gap="1"
 											fontSize="sm"
@@ -136,65 +115,6 @@ const Filter = ({ items }: Props) => {
 											}}
 										>
 											<Text as="span">{item?.name}</Text>
-											<Box>
-												<ArrowRightUpIcon
-													size={4}
-													color="text.blue"
-													strokeWidth={2}
-												/>
-											</Box>
-										</Link>
-									</GridItem>
-								);
-							})}
-						</Grid>
-					</Flex>
-					<Flex
-						flex="1"
-						flexDir="column"
-					>
-						<Text
-							fontSize="md"
-							color="text.black"
-							fontWeight="semibold"
-						>
-							Khoảng giá
-						</Text>
-						<Grid
-							mt="3"
-							gap="1"
-							templateColumns="repeat(1, 1fr)"
-						>
-							{price?.map((item: any, index: number, origin: any) => {
-								let title = "";
-
-								if (index == 0) {
-									title = `Dưới ${item?.to}tr`;
-								} else if (index == origin?.length) {
-									title = `Trên ${item?.to}tr`;
-								} else {
-									title = `Từ ${item?.to}tr đến ${item.from}tr`;
-								}
-
-								return (
-									<GridItem
-										key={index}
-										display="flex"
-										justifyContent="flex-start"
-									>
-										<Link
-											as={ReactRouterLink}
-											display="inline-flex"
-											gap="1"
-											fontSize="sm"
-											color="text.black"
-											fontWeight="medium"
-											_hover={{
-												textDecoration: "none",
-											}}
-										>
-											<Text as="span"></Text>
-											{title}
 											<Box>
 												<ArrowRightUpIcon
 													size={4}

@@ -24,6 +24,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm } from "react-hook-form";
 
 type Props = {};
 
@@ -46,6 +48,8 @@ const PostCategoryView = (props: Props) => {
 	} = useDisclosure();
 
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+
+	const { control } = useForm();
 
 	const [deleteCategory] = useDeleteCategoryMutation();
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
@@ -224,7 +228,7 @@ const PostCategoryView = (props: Props) => {
 				px="6"
 				py="8"
 				mb="8"
-				rounded="lg"
+				rounded="xl"
 			>
 				<Flex
 					alignItems="center"
@@ -235,8 +239,9 @@ const PostCategoryView = (props: Props) => {
 						as="h2"
 						fontSize="18px"
 						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Danh mục bài viết
+						Danh Sách Danh mục bài viết
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -265,43 +270,51 @@ const PostCategoryView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						w="30%"
+						gap="4"
 					>
 						<Flex
-							as="span"
+							flex="1"
+							px="4"
+							rounded="8px"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm danh mục bài viết"
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Danh mục..."
-						/>
 					</Flex>
+
 					<Button
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
-								color="text.white"
+								color="text.textSuccess"
 							/>
 						}
 						px="4"
 						lineHeight="2"
-						bgColor="bg.green"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
 						onClick={onOpenActionCreateCategory}
 					>
 						Tạo Mới
@@ -335,7 +348,14 @@ const PostCategoryView = (props: Props) => {
 				isOpen={isOpenActionCreateCategory}
 				onClose={onCloseActionCreateCategory}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới danh mục bài viết</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Tạo mới danh mục bài viết
+					</Heading>
+				}
 			>
 				<ActionCreateCategory
 					onClose={onCloseActionCreateCategory}
@@ -346,7 +366,14 @@ const PostCategoryView = (props: Props) => {
 				isOpen={isOpenActionUpdateCategory}
 				onClose={onCloseActionUpdateCategory}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật danh mục bài viết</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật danh mục bài viết
+					</Heading>
+				}
 			>
 				<ActionUpdateCategory
 					onClose={onCloseActionUpdateCategory}

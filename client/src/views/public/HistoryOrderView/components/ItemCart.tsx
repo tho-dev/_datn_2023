@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Box, Flex, HStack, Heading } from "@chakra-ui/layout";
-import { Image, Text, Input, Button } from "@chakra-ui/react";
-import { MinusIcon, PlusIcon } from "~/components/common/Icons";
+// import React, { useEffect, useState } from 'react';
+import { Box, Flex } from "@chakra-ui/layout";
+import { Image, Text } from "@chakra-ui/react";
+import { formatCurrency } from "~/utils/fc";
 
-type Props = {};
+type Props = {
+  product: any;
+};
 
-const ItemCart = (props: Props) => {
-  const [quantity, setQuantity] = useState<number>(1);
-
+const ItemCart = ({ product }: Props) => {
   return (
     <>
       <Flex justifyContent={"space-between"} my={"4"}>
         <Flex gap="2" alignItems="center">
           <Box w="56px" h="56px">
             <Image
-              src="https://images.thinkgroup.vn/unsafe/300x300/https://media-api-beta.thinkpro.vn/media/core/categories/2021/12/29/Rectangle%201461-7.png"
+              src={product?.image?.url}
               alt="name"
               w="full"
               h="full"
@@ -23,7 +23,7 @@ const ItemCart = (props: Props) => {
           </Box>
           <Box ml={"5"}>
             <Text as={"p"} fontSize={"14px"} fontWeight={"bold"}>
-              Dell Inspiron 16 5630
+              {product?.name}
             </Text>
             <Box>
               <Text
@@ -38,6 +38,30 @@ const ItemCart = (props: Props) => {
             </Box>
           </Box>
         </Flex>
+      </Flex>
+      <Flex justifyContent="space-between">
+        <Text fontSize="14px" fontWeight="bold">
+          Số lượng:{" "}
+          <Text
+            as={"span"}
+            fontSize="14px"
+            fontWeight={"bold"}
+            color={"text.red"}
+          >
+            {product?.quantity}
+          </Text>
+        </Text>
+        <Text fontSize="14px" fontWeight="bold">
+          Thành tiền:{" "}
+          <Text
+            as={"span"}
+            fontSize="14px"
+            fontWeight={"bold"}
+            color={"text.red"}
+          >
+            {product?.total_money.toLocaleString()} đ
+          </Text>
+        </Text>
       </Flex>
     </>
   );

@@ -22,6 +22,7 @@ import {
   Divider,
   AbsoluteCenter,
 } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import {
   Link as ReactRouterLink,
   useNavigate,
@@ -30,11 +31,13 @@ import {
 import { registerSchema } from "~/validate/user";
 import { useToast } from "@chakra-ui/react";
 import { useSignupMutation } from "~/redux/api/user";
+import ReCAPTCHA from "react-google-recaptcha";
 type Props = {};
 
 const SignUpView = (props: Props) => {
   const navigate = useNavigate();
   const toast = useToast();
+  const [checkCaptch, setCheckCaptch] = useState(false);
   const {
     register,
     handleSubmit,
@@ -42,8 +45,12 @@ const SignUpView = (props: Props) => {
   } = useForm<any>({
     resolver: joiResolver(registerSchema),
   });
+  const onChange = (value: any) => {
+    setCheckCaptch(true);
+  };
   const [signup] = useSignupMutation();
   const onSubmit = async (data: any) => {
+    if (!checkCaptch) return;
     const avatar =
       "https://i.pinimg.com/222x/90/9e/9e/909e9e27ae77ca7da531375be6c05ac5.jpg";
     const newData = {
@@ -237,7 +244,10 @@ const SignUpView = (props: Props) => {
                   (errors?.confirm_password?.message as any)}
               </FormErrorMessage>
             </FormControl>
-
+            <ReCAPTCHA
+              sitekey={process.env.GOOGLE_SITE_KEY as string}
+              onChange={onChange}
+            />
             <Button size="lager" type="submit" w="full" mt="4" rounded="full">
               Đăng Ký
             </Button>

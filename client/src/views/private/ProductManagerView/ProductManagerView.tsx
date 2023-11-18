@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -13,7 +14,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
@@ -21,12 +22,109 @@ import { AirplayIcon, EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/
 import { useGetAllProductQuery } from "~/redux/api/product";
 import { formatNumber } from "~/utils/fc";
 import moment from "moment/moment";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm, useWatch } from "react-hook-form";
+import { useGetAllCategoryQuery } from "~/redux/api/category";
+import { useGetAllBrandsQuery } from "~/redux/api/brand";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
 const ProductManagerView = (props: Props) => {
+	const [brandsFilter, setBrandsFilter] = useState<any>([]);
+	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
+
 	const columnHelper = createColumnHelper<any>();
 	const { isOpen: isOpenConfirm, onOpen: onOpenConfirm, onClose: onCloseConfirm } = useDisclosure();
+
+	const { control, register, setValue } = useForm({
+		defaultValues: {
+			name: "",
+			category: "",
+			brand: "",
+			status: {
+				label: "Đang bán",
+				value: "true",
+			},
+		},
+	});
+
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
+	const categoryForm: any = useWatch({
+		control,
+		name: "category",
+	});
+	const brandForm: any = useWatch({
+		control,
+		name: "brand",
+	});
+	const statusForm: any = useWatch({
+		control,
+		name: "status",
+	});
+
+	const query = useMemo(() => {
+		return {
+			_page: 1,
+			_limit: 20,
+			_order: "desc",
+			_sort: "created_at",
+			_name: nameForm,
+			_category: categoryForm?.value,
+			_brand: brandForm?.value,
+			_status: JSON.parse(statusForm?.value || ""),
+		};
+	}, [nameForm, categoryForm?.value, brandForm?.value, statusForm]);
+	const debounceQuery = useDebounce(query, 500);
+
+	const { data: brands } = useGetAllBrandsQuery(
+		{
+			_limit: 100,
+			_page: 1,
+			_sort: "created_at",
+			_order: "desc",
+			_category: categoryForm?.value as string,
+		},
+		{
+			skip: !categoryForm?.value,
+		}
+	);
+	const { data: categories } = useGetAllCategoryQuery({
+		_limit: 20,
+		_page: 1,
+		_sort: "created_at",
+		_order: "desc",
+		_type: "category_brand",
+	});
+
+	useEffect(() => {
+		if (brands) {
+			setValue("brand", "");
+			const brandsRes = brands?.data?.items?.map((brand: any) => {
+				return {
+					label: brand?.name,
+					value: brand?._id,
+				};
+			});
+			setBrandsFilter(brandsRes);
+		}
+	}, [brands, categoryForm?.value]);
+
+	useEffect(() => {
+		if (categories) {
+			const categoriesFilter = categories?.data?.items?.map((brand: any) => {
+				return {
+					label: brand?.name,
+					value: brand?._id,
+				};
+			});
+
+			setCategoriesFilter(categoriesFilter);
+		}
+	}, [categories]);
 
 	const columns = [
 		columnHelper.accessor("#", {
@@ -189,8 +287,6 @@ const ProductManagerView = (props: Props) => {
 		}),
 		columnHelper.accessor("action", {
 			cell: ({ row }) => {
-				console.log("row", row);
-
 				return (
 					<Menu>
 						<MenuButton textAlign="center">
@@ -251,8 +347,10 @@ const ProductManagerView = (props: Props) => {
 				<Heading
 					as="h2"
 					fontSize="18"
+					fontWeight="semibold"
+					textTransform="uppercase"
 				>
-					Quản lý sản phẩm
+					Danh Sách Sản Phẩm
 				</Heading>
 				<Box>
 					<Breadcrumb
@@ -287,48 +385,100 @@ const ProductManagerView = (props: Props) => {
 				mb="6"
 			>
 				<Flex
-					px="4"
-					rounded="4px"
-					alignItems="center"
-					borderWidth="1px"
-					borderColor="#e9ebec"
+					gap="4"
+					w="70%"
 				>
+					<Box flex="1">
+						<SelectThinkPro
+							control={control}
+							name="category"
+							title=""
+							placeholder="-- Danh mục --"
+							data={categoriesFilter}
+						/>
+					</Box>
+
+					<Box flex="1">
+						<SelectThinkPro
+							control={control}
+							name="brand"
+							title=""
+							placeholder="-- Thương hiệu --"
+							data={brandsFilter}
+						/>
+					</Box>
+
+					<Box flex="1">
+						<SelectThinkPro
+							control={control}
+							name="status"
+							title=""
+							placeholder="-- Trạng thái --"
+							data={[
+								{
+									label: "Đang bán",
+									value: "true",
+								},
+								{
+									label: "Ngừng bán",
+									value: "false",
+								},
+							]}
+						/>
+					</Box>
+
 					<Flex
-						as="span"
+						flex="2"
+						px="4"
+						rounded="8px"
 						alignItems="center"
-						justifyContent="center"
+						borderWidth="1px"
+						borderColor="#e9ebec"
 					>
-						<SearchIcon
-							size={5}
-							color="text.black"
-							strokeWidth={1}
+						<Flex
+							as="span"
+							alignItems="center"
+							justifyContent="center"
+						>
+							<SearchIcon
+								size={5}
+								color="text.black"
+								strokeWidth={1}
+							/>
+						</Flex>
+						<Input
+							border="none"
+							padding="0.6rem 0.9rem"
+							fontSize="15"
+							fontWeight="medium"
+							lineHeight="1.5"
+							w="260px"
+							placeholder="Tìm kiếm sản phẩm"
+							{...register("name")}
 						/>
 					</Flex>
-					<Input
-						border="none"
-						padding="0.6rem 0.9rem"
-						fontSize="15"
-						fontWeight="medium"
-						lineHeight="1.5"
-						w="260px"
-						placeholder="Tìm kiếm..."
-					/>
 				</Flex>
-				<Button
-					as={ReactRouterLink}
-					to="/admin/san-pham/add"
-					leftIcon={
-						<PlusCircleIcon
-							size={5}
-							color="text.white"
-						/>
-					}
-					px="4"
-					lineHeight="2"
-					bgColor="bg.green"
+				<Flex
+					w="30%"
+					justifyContent="flex-end"
 				>
-					Tạo Mới
-				</Button>
+					<Button
+						as={ReactRouterLink}
+						to="/admin/san-pham/add"
+						leftIcon={
+							<PlusCircleIcon
+								size={5}
+								color="text.textSuccess"
+							/>
+						}
+						px="4"
+						lineHeight="2"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
+					>
+						Tạo mới
+					</Button>
+				</Flex>
 			</Flex>
 
 			{/* hiểu thị dữ liệu */}
@@ -336,12 +486,7 @@ const ProductManagerView = (props: Props) => {
 				columns={columns}
 				useData={useGetAllProductQuery}
 				defaultPageSize={10}
-				query={{
-					_page: 1,
-					_limit: 20,
-					_order: "desc",
-					_sort: "created_at",
-				}}
+				query={debounceQuery}
 			/>
 
 			<ConfirmThinkPro

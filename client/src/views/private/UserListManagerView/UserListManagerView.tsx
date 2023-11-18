@@ -39,14 +39,11 @@ const UserListManagerView = (props: Props) => {
 
   const [search, setSearch] = useState("");
   const [idUser, setIdUser] = useState("");
+  const [filter, setFilter] = useState({
+    role: null,
+    verified: null,
+  } as any);
   const toast = useToast();
-  const { data, isLoading } = useGetAllQuery({
-    _limit: 10,
-    _page: 1,
-    _sort: "created_at",
-    _order: "desc",
-    search: search,
-  });
   const [deleteUser] = useDeleteUserMutation();
   const [update] = useUpdateMutation();
 
@@ -56,6 +53,9 @@ const UserListManagerView = (props: Props) => {
   };
   const handleUpdateRole = (e: any, id: any) => {
     const data = { role: e.target.value };
+    if (user.role === "admin" && e.target.value === "manager") {
+      return alert("Bạn không đủ quyền");
+    }
     update({ data, id })
       .unwrap()
       .then((data) => {
@@ -138,6 +138,7 @@ const UserListManagerView = (props: Props) => {
         onCloseBlock();
       });
   };
+
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -260,17 +261,20 @@ const UserListManagerView = (props: Props) => {
     }),
   ];
 
-  if (isLoading) return <Box>Loading...</Box>;
-
   const handleSearched = (e: any) => {
     setSearch(e.target.value as string);
   };
 
   return (
-    <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="lg">
+    <Box bgColor="bg.white" px="6" py="8" mb="8" rounded="xl">
       <Flex alignItems="center" justifyContent="space-between" pb="5">
-        <Heading as="h2" fontSize="18px" fontWeight="semibold">
-          Quản lý tài khoản
+        <Heading
+          as="h2"
+          fontSize="18px"
+          fontWeight="semibold"
+          textTransform="uppercase"
+        >
+          Danh Sách Tài Khoản
         </Heading>
         <Box>
           <Breadcrumb spacing="8px" separator="/" fontSize="sm">
@@ -288,7 +292,11 @@ const UserListManagerView = (props: Props) => {
           </Breadcrumb>
         </Box>
       </Flex>
-      <UserSearch search={search} handleSearched={handleSearched} />
+      <UserSearch
+        search={search}
+        handleSearched={handleSearched}
+        setFilter={setFilter}
+      />
       <Box
         w={{
           sm: "100%",
@@ -306,6 +314,8 @@ const UserListManagerView = (props: Props) => {
             _sort: "created_at",
             _order: "desc",
             search,
+            role: filter.role,
+            verified: filter.verified,
           }}
         />
       </Box>

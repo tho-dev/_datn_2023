@@ -126,12 +126,13 @@ const AddProductMangerView = (props: Props) => {
 			bgColor="bg.white"
 			py="8"
 			px="6"
-			rounded="lg"
+			rounded="xl"
 		>
 			<Heading
 				fontSize="18"
 				color="text.black"
 				lineHeight="100%"
+				textTransform="uppercase"
 			>
 				Cập nhật biến thể sản phẩm
 			</Heading>
@@ -347,7 +348,7 @@ const AddProductMangerView = (props: Props) => {
 															})}
 															placeholder="Giá trị thuộc tính"
 															type={isColor ? "color" : "text"}
-															w={isColor ? "40px" : "full"}
+															w={isColor ? "48px" : "full"}
 															px={isColor ? "0" : "4"}
 														/>
 
@@ -386,7 +387,7 @@ const AddProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price && "border.error"}
 											>
@@ -427,7 +428,7 @@ const AddProductMangerView = (props: Props) => {
 												alignItems="center"
 												justifyContent="space-between"
 												borderWidth="1px"
-												rounded="4px"
+												rounded="8px"
 												px="4"
 												borderColor={errors?.price_before_discount && "border.error"}
 											>

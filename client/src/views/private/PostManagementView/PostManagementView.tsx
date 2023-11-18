@@ -14,8 +14,8 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons"; 
+import { useEffect, useMemo, useState } from "react";
+import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
 import ActionUpdatePost from "./components/UpdatePostMangerView/input";
 import { useDeletePostMutation, useGetAllPostQuery } from "~/redux/api/post";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -25,14 +25,16 @@ import moment from "moment/moment";
 import { useGetAllCategoryQuery } from "~/redux/api/category";
 import PostDialogThinkPro from "~/components/DialogThinkPro/PostDialogThinkPro";
 import AddPostMangerView from "./components/AddPostMangerView/AddPostMangerView";
-
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm, useWatch } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
 const PostView = (props: Props) => {
 	const toast = useToast();
 	const [id, setId] = useState(null);
-	const [post, setPost] = useState<any>(null);
+	const [slug, setSlug] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
 	const columnHelper = createColumnHelper<any>();
 	const {
@@ -41,17 +43,38 @@ const PostView = (props: Props) => {
 		onClose: onCloseActionCreatePost,
 	} = useDisclosure();
 	const {
-		isOpen: isOpenActionUpdatePost,
-		onOpen: onOpenActionUpdatePost,
-		onClose: onCloseActionUpdatePost,
+		isOpen: isOpenActionUpdateCategory,
+		onOpen: onOpenActionUpdateCategory,
+		onClose: onCloseActionUpdateCategory,
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
+
+	const { control, register } = useForm();
+	const categoryForm = useWatch({
+		control,
+		name: "category",
+	});
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
+
+	const query = useMemo(() => {
+		return {
+			_page: 1,
+			_limit: 20,
+			_order: "desc",
+			_sort: "created_at",
+			_name: nameForm,
+			_category: categoryForm ? categoryForm?.value : "",
+		};
+	}, [categoryForm, nameForm]);
+	const queryDebonce = useDebounce(query, 500);
 
 	const [deletePost] = useDeletePostMutation();
 	const { data: categories, isLoading } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
-		_parent: true,
 		_sort: "created_at",
 		_order: "desc",
 		_type: "category_post",
@@ -59,12 +82,10 @@ const PostView = (props: Props) => {
 
 	useEffect(() => {
 		if (categories) {
-			const parentsFilter = categories?.data?.items?.map((category: any) => {
-				return {
-					label: category?.name,
-					value: category?._id,
-				};
-			});
+			const parentsFilter = categories?.data?.items?.map((category: any) => ({
+				label: category?.name,
+				value: category?._id,
+			}));
 
 			setParents(parentsFilter);
 		}
@@ -114,6 +135,15 @@ const PostView = (props: Props) => {
 					<Text
 						fontWeight="medium"
 						fontSize="13px"
+						css={{
+							display: "-webkit-box",
+							WebkitLineClamp: 2,
+							WebkitBoxOrient: "vertical",
+							overflow: "hidden",
+							"& p": {
+								display: "inline",
+							},
+						}}
 					>
 						{info.getValue()}
 					</Text>
@@ -138,7 +168,7 @@ const PostView = (props: Props) => {
 			cell: ({ getValue }) => {
 				return (
 					<Image
-						src={getValue()?.url}
+						src={getValue()}
 						w="64px"
 						h="64px"
 						objectFit="contain"
@@ -169,24 +199,27 @@ const PostView = (props: Props) => {
 			},
 			header: "Đường dẫn",
 		}),
-		columnHelper.accessor("description", {
-			cell: (info) => {
-				return (
-					<Text
-						fontWeight="medium"
-						fontSize="13px"
-						css={{
-							display: "-webkit-box",
-							WebkitLineClamp: 2,
-							WebkitBoxOrient: "vertical",
-							overflow: "hidden",
-						}}
-					>
-						{info.getValue()}
-					</Text>
-				);
-			},
-			header: "Mô tả",
+		columnHelper.accessor("created_by", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{info.getValue()}
+				</Text>
+			),
+			header: "Người tạo",
+		}),
+		columnHelper.accessor("updated_by", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{info.getValue() ? info.getValue() : "Đang cập nhật"}
+				</Text>
+			),
+			header: "Người cập nhật",
 		}),
 		columnHelper.accessor("created_at", {
 			cell: (info) => (
@@ -242,19 +275,8 @@ const PostView = (props: Props) => {
 								py="2"
 								icon={<EditIcon size={4} />}
 								onClick={() => {
-									const category_id = parents?.find((item: any) => item?.value == doc?.category_id);
-									setPost({
-										_id: doc?._id,
-										title: doc?.title,
-										thumbnail: doc?.thumbnail,
-										category_id: category_id,
-										description: doc?.description,
-										content: doc?.content,
-										meta_keyword: doc?.meta_keyword,
-										meta_description: doc?.meta_description,
-										meta_title: doc?.meta_title,
-									});
-									onOpenActionUpdatePost();
+									setSlug(doc?.slug);
+									onOpenActionUpdateCategory();
 								}}
 							>
 								Cập Nhật
@@ -266,7 +288,7 @@ const PostView = (props: Props) => {
 			header: "Action",
 		}),
 	];
-	
+
 	return (
 		<>
 			<Box
@@ -274,7 +296,7 @@ const PostView = (props: Props) => {
 				px="6"
 				py="8"
 				mb="8"
-				rounded="lg"
+				rounded="xl"
 			>
 				<Flex
 					alignItems="center"
@@ -284,8 +306,10 @@ const PostView = (props: Props) => {
 					<Heading
 						as="h2"
 						fontSize="18"
+						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Quản lý bài viết
+						Danh Sách Bài Viết
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -314,46 +338,62 @@ const PostView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						w="50%"
+						gap="4"
 					>
+						<Box>
+							<SelectThinkPro
+								control={control}
+								name="category"
+								title=""
+								placeholder="-- Danh mục --"
+								data={parents}
+							/>
+						</Box>
+
 						<Flex
-							as="span"
+							flex="1"
+							px="4"
+							rounded="8px"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm bài viết"
+								{...register("name")}
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Bài viết..."
-						/>
 					</Flex>
-					<Button 
+					<Button
 						leftIcon={
 							<PlusCircleIcon
 								size={5}
-								color="text.white"
+								color="text.textSuccess"
 							/>
 						}
 						px="4"
 						lineHeight="2"
-						bgColor="bg.green"
-						// onClick={onOpenActionCreatePost}
-						as={ReactRouterLink}
-						to="/admin/bai-viet/add"
+						color="text.textSuccess"
+						bgColor="bg.bgSuccess"
+						onClick={onOpenActionCreatePost}
 					>
 						Tạo Mới
 					</Button>
@@ -364,14 +404,7 @@ const PostView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllPostQuery}
 					defaultPageSize={10}
-					query={{
-						_page: 1,
-						_limit: 20,
-						_parent: true,
-						_order: "desc",
-						_sort: "created_at",
-						// _type: "category_post"
-					}}
+					query={queryDebonce}
 				/>
 
 				{/* Cofirm */}
@@ -384,25 +417,41 @@ const PostView = (props: Props) => {
 			</Box>
 			{/* Form */}
 			<PostDialogThinkPro
+				size="6xl"
 				isOpen={isOpenActionCreatePost}
 				onClose={onCloseActionCreatePost}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới bài viết</Heading>}
+				title={
+					<Heading
+						fontSize="lg"
+						textTransform="uppercase"
+					>
+						Tạo mới bài viết
+					</Heading>
+				}
 			>
 				<AddPostMangerView
 					onClose={onCloseActionCreatePost}
-					parents={parents}  />
+					parents={parents}
+				/>
 			</PostDialogThinkPro>
-			
+
 			<PostDialogThinkPro
-				isOpen={isOpenActionUpdatePost}
-				onClose={onCloseActionUpdatePost}
+				isOpen={isOpenActionUpdateCategory}
+				onClose={onCloseActionUpdateCategory}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật bài viết</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật bài viết
+					</Heading>
+				}
 			>
 				<ActionUpdatePost
-					onClose={onCloseActionUpdatePost}
-					post={post}
+					onClose={onCloseActionUpdateCategory}
+					slug={slug}
 					parents={parents}
 				/>
 			</PostDialogThinkPro>
@@ -411,5 +460,3 @@ const PostView = (props: Props) => {
 };
 
 export default PostView;
-
-

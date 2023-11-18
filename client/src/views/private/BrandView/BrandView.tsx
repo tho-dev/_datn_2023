@@ -25,17 +25,41 @@ import { createColumnHelper } from "@tanstack/react-table";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
+import SelectThinkPro from "~/components/SelectThinkPro";
+import { useForm, useWatch } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
+type TQuery = {
+	_limit: number;
+	_page: number;
+	_parent: boolean;
+	_sort: string;
+	_order: string;
+	_type: string;
+	_name?: string;
+	_category?: string;
+};
+
 const BrandView = (props: Props) => {
 	const toast = useToast();
-	// thương hiệu cha
+	const columnHelper = createColumnHelper<any>();
+
 	const [id, setId] = useState(null);
 	const [brand, setBrand] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
 	const [categoriesBrand, setCategoriesBrand] = useState<any>([]);
-	const columnHelper = createColumnHelper<any>();
+	const [query, setQuery] = useState<TQuery>({
+		_limit: 20,
+		_page: 1,
+		_parent: true,
+		_sort: "created_at",
+		_order: "desc",
+		_type: "category_brand",
+	});
+	const deboundceQuery = useDebounce(query, 300);
+
 	const {
 		isOpen: isOpenActionCreateBrand,
 		onOpen: onOpenActionCreateBrand,
@@ -48,6 +72,16 @@ const BrandView = (props: Props) => {
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
+	const { control, register } = useForm();
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
+	const categoryForm = useWatch({
+		control,
+		name: "category",
+	});
+
 	const [deleteBrand] = useDeleteBrandMutation();
 	const { data: brands, isLoading } = useGetAllBrandsQuery({
 		_limit: 20,
@@ -55,7 +89,6 @@ const BrandView = (props: Props) => {
 		_sort: "created_at",
 		_order: "desc",
 	});
-
 	const { data: categories } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
@@ -89,6 +122,16 @@ const BrandView = (props: Props) => {
 			setCategoriesBrand(categoriesFilter);
 		}
 	}, [categories, isLoading]);
+
+	useEffect(() => {
+		if (query) {
+			setQuery({
+				...query,
+				_name: nameForm,
+				_category: categoryForm?.value,
+			});
+		}
+	}, [nameForm, categoryForm]);
 
 	const handleDeleteBrand = async () => {
 		try {
@@ -268,8 +311,10 @@ const BrandView = (props: Props) => {
 					<Heading
 						as="h2"
 						fontSize="18"
+						fontWeight="semibold"
+						textTransform="uppercase"
 					>
-						Thương Hiệu
+						Danh Sách Thương Hiệu
 					</Heading>
 					<Box>
 						<Breadcrumb
@@ -298,47 +343,71 @@ const BrandView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						px="4"
-						rounded="4px"
-						alignItems="center"
-						borderWidth="1px"
-						borderColor="#e9ebec"
+						gap="4"
+						w="40%"
 					>
+						<Box display="inline-block">
+							<SelectThinkPro
+								control={control}
+								name="category"
+								title=""
+								placeholder="-- Danh mục --"
+								data={categoriesBrand}
+							/>
+						</Box>
+
 						<Flex
-							as="span"
+							flex="2"
+							px="4"
+							rounded="8px"
 							alignItems="center"
-							justifyContent="center"
+							borderWidth="1px"
+							borderColor="#e9ebec"
 						>
-							<SearchIcon
-								size={5}
-								color="text.black"
-								strokeWidth={1}
+							<Flex
+								as="span"
+								alignItems="center"
+								justifyContent="center"
+							>
+								<SearchIcon
+									size={5}
+									color="text.black"
+									strokeWidth={1}
+								/>
+							</Flex>
+							<Input
+								border="none"
+								padding="0.6rem 0.9rem"
+								fontSize="15"
+								fontWeight="medium"
+								lineHeight="1.5"
+								w="260px"
+								placeholder="Tìm kiếm thương hiệu"
+								{...register("name")}
 							/>
 						</Flex>
-						<Input
-							border="none"
-							padding="0.6rem 0.9rem"
-							fontSize="15"
-							fontWeight="medium"
-							lineHeight="1.5"
-							w="260px"
-							placeholder="Thương hiệu..."
-						/>
 					</Flex>
-					<Button
-						leftIcon={
-							<PlusCircleIcon
-								size={5}
-								color="text.white"
-							/>
-						}
-						px="4"
-						lineHeight="2"
-						bgColor="bg.green"
-						onClick={onOpenActionCreateBrand}
+					<Flex
+						w="40%"
+						justifyContent="flex-end"
 					>
-						Tạo Mới
-					</Button>
+						<Button
+							// flex="1"
+							leftIcon={
+								<PlusCircleIcon
+									size={5}
+									color="text.textSuccess"
+								/>
+							}
+							px="4"
+							lineHeight="2"
+							color="text.textSuccess"
+							bgColor="bg.bgSuccess"
+							onClick={onOpenActionCreateBrand}
+						>
+							Tạo Mới
+						</Button>
+					</Flex>
 				</Flex>
 
 				{/* Danh sách */}
@@ -346,14 +415,7 @@ const BrandView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllBrandsQuery}
 					defaultPageSize={15}
-					query={{
-						_limit: 20,
-						_page: 1,
-						_parent: true,
-						_sort: "created_at",
-						_order: "desc",
-						_type: "category_brand",
-					}}
+					query={deboundceQuery}
 				/>
 			</Box>
 			{/* Form */}
@@ -361,7 +423,14 @@ const BrandView = (props: Props) => {
 				isOpen={isOpenActionCreateBrand}
 				onClose={onCloseActionCreateBrand}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới thương hiệu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Tạo mới thương hiệu
+					</Heading>
+				}
 			>
 				<ActionCreateBrand
 					onClose={onCloseActionCreateBrand}
@@ -373,7 +442,14 @@ const BrandView = (props: Props) => {
 				isOpen={isOpenActionUpdateBrand}
 				onClose={onCloseActionUpdateBrand}
 				isCentered
-				title={<Heading fontSize="18">Cập nhật thương hiệu</Heading>}
+				title={
+					<Heading
+						fontSize="16"
+						textTransform="uppercase"
+					>
+						Cập nhật thương hiệu
+					</Heading>
+				}
 			>
 				<ActionUpdateBrand
 					onClose={onCloseActionUpdateBrand}

@@ -1,11 +1,96 @@
-import Category from "../models/category.model"
-import Brand from "../models/brand.model"
-import moment from "moment/moment"
-import { optionSchema, optionValuesSchema, productSchema, variantSchema } from "../validations/product.valiations"
-import { Product, Option, OptionValue, Sku, Variant } from '../models/product.model'
-import { Demand, DemandValue } from "../models/demand.model"
-import { sortOptions } from "../utils/fc"
+import Category from "../models/category.model";
+import Brand from "../models/brand.model";
+import moment from "moment/moment";
+import {
+  optionSchema,
+  optionValuesSchema,
+  productSchema,
+  variantSchema,
+} from "../validations/product.valiations";
+import {
+  Product,
+  Option,
+  OptionValue,
+  Sku,
+  Variant,
+} from "../models/product.model";
+import { Demand, DemandValue } from "../models/demand.model";
+import { sortOptions } from "../utils/fc";
+import createError from "http-errors";
+import fetch from "node-fetch";
 
+// so sánh sản phẩm
+export async function compareProduct(req, res, next) {
+  try {
+    const payload = req.body;
+
+    const data = await Promise.all(
+      payload?.slugs?.map(async (slug) => {
+        const res = await fetch(
+          "http://localhost:8080/api" + "/product/" + slug
+        );
+        const product = await res.json();
+        return product?.data;
+      })
+    );
+
+    const groupMap = new Map();
+
+    for (const item of data) {
+      // Duyệt qua mảng attributes trong mỗi item
+      for (const attribute of item.attributes) {
+        const groupName = attribute.group_name;
+
+        // Nếu group_name chưa tồn tại trong Map, thêm mới
+        if (!groupMap.has(groupName)) {
+          groupMap.set(groupName, []);
+        }
+
+        // Thêm items vào mảng tương ứng với group_name
+        const groupItems = groupMap.get(groupName);
+        const itemsInGroup = attribute.items.map((item) => ({ ...item })); // Clone items
+        groupItems.push(itemsInGroup);
+      }
+    }
+
+    const resultArray = Array.from(groupMap).map(([groupName, itemsArray]) => {
+      const labelMap = new Map();
+
+      // Logic lọc giống nhau và giá trị khác nhau
+      itemsArray.forEach((item) => {
+        item.forEach(({ label, value }) => {
+          if (!labelMap.has(label)) {
+            labelMap.set(label, { label, values: [] });
+          }
+
+          const labelObject = labelMap.get(label);
+          labelObject.values.push(value);
+        });
+      });
+
+      // Chuyển từ Map thành mảng các đối tượng
+      const labelsArray = Array.from(labelMap).map(
+        ([label, labelObject]) => labelObject
+      );
+
+      return {
+        group_name: groupName,
+        items: labelsArray,
+      };
+    });
+
+    return res.json({
+      message: "Thành công",
+      status: 200,
+      data: resultArray,
+      abc: data?.map((a) => ({
+        attributes: a.attributes,
+      })),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 // controller products
 export async function getAllProduct(req, res, next) {
@@ -15,6 +100,9 @@ export async function getAllProduct(req, res, next) {
       _sort = "created_at",
       _order = "desc",
       _limit = 10,
+      _keyword = "",
+      _category = "",
+      _brand = ""
     } = req.query;
 
     const options = {
@@ -37,9 +125,26 @@ export async function getAllProduct(req, res, next) {
         "-updated_at",
       ],
     };
+    const conditions = {};
+    if (_keyword) {
+      conditions.$or = [
+        { name: { $regex: new RegExp(_keyword, "i") } },
+        { SKU: { $regex: new RegExp(_keyword, "i") } },
+      ];
+    }
+    conditions.status = true;
 
     const { docs, ...paginate } = await Product.paginate({
-      status: true
+      $and: [
+        { status: true },
+        {
+          $or: [
+            { name: new RegExp(_keyword, 'i'), description: new RegExp(_keyword, 'i') }
+          ]
+        },
+        _category ? { category_id: _category } : {},
+        _brand ? { brand_id: _brand } : {},
+      ]
     }, options);
 
     // hàm lấy ra các 1 sku của một sản phẩm
@@ -54,26 +159,29 @@ export async function getAllProduct(req, res, next) {
       });
 
       // lấy ra option value
-      let optionsFilter = await Promise.all(variants?.map(async (item) => {
-        const optionFind = await Option.findOne({
-          _id: item?.option_id
+      let optionsFilter = await Promise.all(
+        variants?.map(async (item) => {
+          const optionFind = await Option.findOne({
+            _id: item?.option_id,
+          });
+
+          return {
+            ...item.toObject(),
+            name: optionFind?.name,
+          };
         })
+      );
+      optionsFilter = sortOptions(optionsFilter);
 
-        return {
-          ...item.toObject(),
-          name: optionFind?.name
-        }
-      }))
-      optionsFilter = sortOptions(optionsFilter)
+      const optionValue = await Promise.all(
+        optionsFilter?.map(async (item) => {
+          const doc = await OptionValue.findOne({
+            _id: item?.option_value_id,
+          });
 
-      const optionValue = await Promise.all(optionsFilter?.map(async (item) => {
-        const doc = await OptionValue.findOne({
-          _id: item?.option_value_id
+          return doc?.label;
         })
-
-        return doc?.label
-      }))
-
+      );
 
       // lấy ra các options
       const options = await Option.find({
@@ -81,7 +189,9 @@ export async function getAllProduct(req, res, next) {
       });
 
       // lấy ra option màu
-      const option = options?.find((option) => option.name == "color" || option.name == "mau");
+      const option = options?.find(
+        (option) => option.name == "color" || option.name == "mau"
+      );
       const colors = await OptionValue.find({
         option_id: option?._id,
       }).select("-_id value label");
@@ -119,6 +229,10 @@ export async function getAllProductManager(req, res, next) {
       _sort = "created_at",
       _order = "desc",
       _limit = 10,
+      _name = '',
+      _category = '',
+      _brand = '',
+      _status = ''
     } = req.query;
 
     const options = {
@@ -138,19 +252,26 @@ export async function getAllProductManager(req, res, next) {
       ],
     };
 
-    const { docs, ...paginate } = await Product.paginate({}, options);
+    const { docs, ...paginate } = await Product.paginate({
+      $and: [
+        _name ? { $or: [{ name: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }] } : {},
+        _brand ? { brand_id: _brand } : {},
+        _category ? { category_id: _category } : {},
+        _status ? { status: JSON.parse(_status) } : {}
+      ]
+    }, options);
 
     // hàm lấy ra các 1 sku của một sản phẩm
     const getSku = async (product, id) => {
       console.log('product?.images', product?.images)
 
       const brand = await Brand.findOne({
-        _id: product?.brand_id
-      })
+        _id: product?.brand_id,
+      });
 
       const category = await Category.findOne({
-        _id: product?.category_id
-      })
+        _id: product?.category_id,
+      });
 
       // lấy ra các options
       const options = await Option.find({
@@ -158,7 +279,9 @@ export async function getAllProductManager(req, res, next) {
       });
 
       // lấy ra option màu
-      const option = options?.find((option) => option.name == "mau" || option.name == "color");
+      const option = options?.find(
+        (option) => option.name == "mau" || option.name == "color"
+      );
       const colors = await OptionValue.find({
         option_id: option?._id,
       }).select("-_id value label");
@@ -212,42 +335,44 @@ export async function getSingleProduct(req, res, next) {
 
     // lấy ra thang đánh giá nhu cầu
     const demandValues = await DemandValue.find({
-      product_id: product?._id
-    })
+      product_id: product?._id,
+    });
 
-    const demands = await Promise.all(demandValues?.map(async (item) => {
-      const doc = await Demand.findById(item?.demand_id)
+    const demands = await Promise.all(
+      demandValues?.map(async (item) => {
+        const doc = await Demand.findById(item?.demand_id);
 
-      return {
-        name: doc?.name,
-        point: item?.point,
-        slug: doc?.slug
-      }
-    }))
+        return {
+          name: doc?.name,
+          point: item?.point,
+          slug: doc?.slug,
+        };
+      })
+    );
 
     // lấy danh mục sản phẩm
     const category = await Category.findOne({
-      _id: product?.category_id
-    }).select("_id name slug type")
+      _id: product?.category_id,
+    }).select("_id name slug type");
 
     // lấy thương hiệu sản phẩm
     const brand = await Brand.findOne({
       _id: product?.brand_id,
     }).select("_id name slug shared_url description thumbnail");
 
-
-
     // lấy options
     let options = await Option.find({
-      product_id: product?._id
-    })
+      product_id: product?._id,
+    });
 
-    options = sortOptions(options)
+    options = sortOptions(options);
 
     // lấy ra tất skus sản phẩm
     const skus = await Sku.find({
-      product_id: product?._id
-    }).select('-product_id -assets -created_at -updated_at -deleted -deleted_at')
+      product_id: product?._id,
+    }).select(
+      "-product_id -assets -created_at -updated_at -deleted -deleted_at"
+    );
 
     // lấy ra tất cả các biến thể sản phẩm dựa vào sku
     const variants = await Variant.find({
@@ -277,7 +402,9 @@ export async function getSingleProduct(req, res, next) {
 
     // hàm lấy ra options -> visual = color
     const getProductColor = async (array) => {
-      const option = options?.find((option) => option?.name == "color" || option?.name == "mau");
+      const option = options?.find(
+        (option) => option?.name == "color" || option?.name == "mau"
+      );
       const variant = array?.find(
         (variant) => variant?.option_id?.toString() == option?._id?.toString()
       );
@@ -297,21 +424,25 @@ export async function getSingleProduct(req, res, next) {
 
       const color = await getProductColor(variants);
       // lấy ra giá trị biến thể của 1 sku
-      const optionFilter = await Promise.all(variants?.map(async (item) => {
-        const optionFind = await Option.findOne({
-          _id: item?.option_id
+      const optionFilter = await Promise.all(
+        variants?.map(async (item) => {
+          const optionFind = await Option.findOne({
+            _id: item?.option_id,
+          });
+
+          return {
+            ...item.toObject(),
+            name: optionFind?.name,
+            label: optionFind?.label,
+            position: optionFind?.position,
+          };
         })
+      );
 
-        return {
-          ...item.toObject(),
-          name: optionFind?.name,
-          label: optionFind?.label,
-          position: optionFind?.position,
-        }
-      }))
-
-      const optionsFilter = sortOptions(optionFilter)
-      const optionValues = await Promise.all(optionsFilter?.map((doc) => getOptionValue(doc?.option_value_id)))
+      const optionsFilter = sortOptions(optionFilter);
+      const optionValues = await Promise.all(
+        optionsFilter?.map((doc) => getOptionValue(doc?.option_value_id))
+      );
 
       return {
         ...sku.toObject(),
@@ -320,36 +451,51 @@ export async function getSingleProduct(req, res, next) {
       };
     };
 
-    let optionsFilter = await Promise.all(variants?.map(async (item) => {
-      const optionFind = await Option.findOne({
-        _id: item?.option_id
+    let optionsFilter = await Promise.all(
+      variants?.map(async (item) => {
+        const optionFind = await Option.findOne({
+          _id: item?.option_id,
+        });
+
+        return {
+          ...item.toObject(),
+          name: optionFind?.name,
+          label: optionFind?.label,
+          position: optionFind?.position,
+        };
       })
+    );
 
-      return {
-        ...item.toObject(),
-        name: optionFind?.name,
-        label: optionFind?.label,
-        position: optionFind?.position
-      }
-    }))
-
-    optionsFilter = sortOptions(optionsFilter)
+    optionsFilter = sortOptions(optionsFilter);
 
     // lấy giá trị của từng thuộc tính
-    const data1 = await Promise.all(options?.map((option) => getOptionValues(option, option?._id)))
+    const data1 = await Promise.all(
+      options?.map((option) => getOptionValues(option, option?._id))
+    );
     // lấy ra biến tất cả các biến thể
-    const data2 = await Promise.all(skus?.map((sku) => getVariants(sku, sku?._id)))
+    const data2 = await Promise.all(
+      skus?.map((sku) => getVariants(sku, sku?._id))
+    );
     // lấy ra giá trị biến thể của 1 sku
-    const data3 = await Promise.all(optionsFilter?.map(async (item) => await getOptionValue(item?.option_value_id)))
+    const data3 = await Promise.all(
+      optionsFilter?.map(
+        async (item) => await getOptionValue(item?.option_value_id)
+      )
+    );
     // lấy màu của sản phẩm
-    const color = await getProductColor(variants)
+    const color = await getProductColor(variants);
 
     // lấy ra sản phẩm liên quan
     const relateDproducts = await Product.find({
       _id: { $ne: product?._id },
       category_id: category?._id,
       status: true,
-    }).limit(5).select("-images -seo -attributes -description -category_id -brand_id -deleted -deleted_at -created_at -updated_at")
+    })
+      .limit(20)
+      .select(
+        "-images -seo -attributes -description -category_id -brand_id -deleted -deleted_at -created_at -updated_at"
+      )
+      .sort("created_at");
 
     const getSku = async (product, id) => {
       const sku = await Sku.findOne({
@@ -362,26 +508,29 @@ export async function getSingleProduct(req, res, next) {
       });
 
       // lấy ra option value
-      let optionsFilter = await Promise.all(variants?.map(async (item) => {
-        const optionFind = await Option.findOne({
-          _id: item?.option_id
+      let optionsFilter = await Promise.all(
+        variants?.map(async (item) => {
+          const optionFind = await Option.findOne({
+            _id: item?.option_id,
+          });
+
+          return {
+            ...item.toObject(),
+            name: optionFind?.name,
+          };
         })
+      );
+      optionsFilter = sortOptions(optionsFilter);
 
-        return {
-          ...item.toObject(),
-          name: optionFind?.name
-        }
-      }))
-      optionsFilter = sortOptions(optionsFilter)
+      const optionValue = await Promise.all(
+        optionsFilter?.map(async (item) => {
+          const doc = await OptionValue.findOne({
+            _id: item?.option_value_id,
+          });
 
-      const optionValue = await Promise.all(optionsFilter?.map(async (item) => {
-        const doc = await OptionValue.findOne({
-          _id: item?.option_value_id
+          return doc?.label;
         })
-
-        return doc?.label
-      }))
-
+      );
 
       // lấy ra các options
       const options = await Option.find({
@@ -389,7 +538,9 @@ export async function getSingleProduct(req, res, next) {
       });
 
       // lấy ra option màu
-      const option = options?.find((option) => option.name == "color" || option.name == "mau");
+      const option = options?.find(
+        (option) => option.name == "color" || option.name == "mau"
+      );
       const colors = await OptionValue.find({
         option_id: option?._id,
       }).select("-_id value label");
@@ -409,7 +560,7 @@ export async function getSingleProduct(req, res, next) {
 
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: "Thành công",
       data: {
         ...product.toObject(),
         ...sku.toObject(),
@@ -422,11 +573,11 @@ export async function getSingleProduct(req, res, next) {
         option_value: data3,
         variants: data1,
         skus: data2,
-        related_products: products
-      }
-    })
+        related_products: products,
+      },
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
 
@@ -446,27 +597,29 @@ export async function getProductById(req, res, next) {
 
     // lấy ra thang đánh giá nhu cầu
     const demandValues = await DemandValue.find({
-      product_id: product?._id
-    })
+      product_id: product?._id,
+    });
 
-    const demands = await Promise.all(demandValues?.map(async (item) => {
-      const doc = await Demand.findById(item?.demand_id)
+    const demands = await Promise.all(
+      demandValues?.map(async (item) => {
+        const doc = await Demand.findById(item?.demand_id);
 
-      return {
-        _id: item?._id,
-        name: doc?.name,
-        point: item?.point,
-        slug: doc?.slug,
-        product_id: item?.product_id,
-        demand_id: item?.demand_id,
-        created_at: item?.created_at
-      }
-    }))
+        return {
+          _id: item?._id,
+          name: doc?.name,
+          point: item?.point,
+          slug: doc?.slug,
+          product_id: item?.product_id,
+          demand_id: item?.demand_id,
+          created_at: item?.created_at,
+        };
+      })
+    );
 
     // lấy danh mục sản phẩm
     const category = await Category.findOne({
-      _id: product?.category_id
-    }).select("_id name slug type")
+      _id: product?.category_id,
+    }).select("_id name slug type");
 
     // lấy thương hiệu sản phẩm
     const brand = await Brand.findOne({
@@ -476,7 +629,7 @@ export async function getProductById(req, res, next) {
     // lấy options
     const options = await Option.find({
       product_id: id,
-    })
+    });
 
     const getOptionValues = async (option, id) => {
       let optionValues = await OptionValue.find({
@@ -496,7 +649,7 @@ export async function getProductById(req, res, next) {
       return {
         name: {
           value: option?.name,
-          label: option?.label
+          label: option?.label,
         },
         position: option?.position,
         option_id: id,
@@ -504,16 +657,17 @@ export async function getProductById(req, res, next) {
       };
     };
 
-    const optionsSort = sortOptions(options)
+    const optionsSort = sortOptions(options);
 
     const variants = await Promise.all(
-      optionsSort?.map((option) => getOptionValues(option.toObject(), option?._id))
+      optionsSort?.map((option) =>
+        getOptionValues(option.toObject(), option?._id)
+      )
     );
-
 
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: "Thành công",
       data: {
         ...product.toObject(),
         category_id: undefined,
@@ -521,11 +675,11 @@ export async function getProductById(req, res, next) {
         brand,
         category,
         demands,
-        variants: variants
-      }
-    })
+        variants: variants,
+      },
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
 
@@ -540,42 +694,48 @@ export async function createProduct(req, res, next) {
       throw createError.BadRequest(errors);
     }
 
-    const { variants, demands, ...payload } = body
+    const { variants, demands, ...payload } = body;
     const product = await Product.create(payload);
 
     // nhu cầu
-    await Promise.all(demands?.map(async (demand) => {
-      await DemandValue.create({
-        product_id: product?._id,
-        point: Number(demand?.point),
-        demand_id: demand?._id,
+    await Promise.all(
+      demands?.map(async (demand) => {
+        await DemandValue.create({
+          product_id: product?._id,
+          point: Number(demand?.point),
+          demand_id: demand?._id,
+        });
       })
-    }))
+    );
 
-    const result = await Promise.all(variants?.map(async (variant) => {
-      const option = await Option.create({
-        label: variant?.name?.label,
-        position: variant?.position,
-        product_id: product?._id
+    const result = await Promise.all(
+      variants?.map(async (variant) => {
+        const option = await Option.create({
+          label: variant?.name?.label,
+          position: variant?.position,
+          product_id: product?._id,
+        });
+
+        const optionValue = await Promise.all(
+          variant?.options?.map(async (item) => {
+            const doc = await OptionValue.create({
+              ...item,
+              option_id: option?._id,
+              product_id: product?._id,
+            });
+          })
+        );
+
+        return option;
       })
-
-      const optionValue = await Promise.all(variant?.options?.map(async (item) => {
-        const doc = await OptionValue.create({
-          ...item,
-          option_id: option?._id,
-          product_id: product?._id
-        })
-      }))
-
-      return option
-    }))
+    );
 
     return res.status(201).json({
       status: 201,
       message: "Thành công",
       data: {
         product: product,
-        options: result
+        options: result,
       },
     });
   } catch (error) {
@@ -595,7 +755,7 @@ export async function updateProduct(req, res, next) {
       throw createError.BadRequest(errors);
     }
 
-    const { variants, demands, ...payload } = body
+    const { variants, demands, ...payload } = body;
 
     const doc = await Product.findOneAndUpdate(
       { _id: id },
@@ -603,71 +763,77 @@ export async function updateProduct(req, res, next) {
       { new: true }
     );
 
-    console.log('demands', demands)
+    console.log("demands", demands);
 
     // cập nhật đánh giá nhu cầu
-    await Promise.all(demands?.map(async (demand) => {
-      const { _id: demandValueID, name, slug, ...demandValue } = demand
+    await Promise.all(
+      demands?.map(async (demand) => {
+        const { _id: demandValueID, name, slug, ...demandValue } = demand;
 
-      await DemandValue.findOneAndUpdate({
-        _id: demandValueID
-      }, {
-        ...demandValue,
-        point: Number(demandValue?.point),
-        updated_at: moment(new Date()).toISOString()
-      },
-        { new: true }
-      )
-
-    }))
-
-
-    // cập nhật options và option value
-    await Promise.all(variants?.map(async (variant) => {
-      const optionID = variant?.option_id
-      // thêm mới option và option value
-      if (!optionID) {
-        const option = await Option.create({
-          label: variant?.name?.label,
-          position: variant?.position,
-          product_id: id
-        })
-
-        await Promise.all(variant?.options?.map(async (item) => {
-          await OptionValue.create({
-            ...item,
-            option_id: option?._id,
-            product_id: id
-          })
-        }))
-
-        return option
-      } else {
-        // thêm mới option và option value
-        const position = variant?.position
-        await Option.findOneAndUpdate(
-          { _id: optionID },
+        await DemandValue.findOneAndUpdate(
           {
-            position: position,
-            created_at: moment(new Date()).toISOString(),
-            updated_at: moment(new Date()).toISOString()
+            _id: demandValueID,
+          },
+          {
+            ...demandValue,
+            point: Number(demandValue?.point),
+            updated_at: moment(new Date()).toISOString(),
           },
           { new: true }
         );
+      })
+    );
 
-        // await Promise.all(variant?.options?.map(async (item) => {
-        //   const optionValueID = item?.option_value_id
+    // cập nhật options và option value
+    await Promise.all(
+      variants?.map(async (variant) => {
+        const optionID = variant?.option_id;
+        // thêm mới option và option value
+        if (!optionID) {
+          const option = await Option.create({
+            label: variant?.name?.label,
+            position: variant?.position,
+            product_id: id,
+          });
 
-        //   await OptionValue.findOneAndUpdate(
-        //     { _id: optionValueID },
-        //     { ...payload, created_at: moment(new Date()).toISOString(), updated_at: moment(new Date()).toISOString() },
-        //     { new: true }
-        //   );
-        // }))
+          await Promise.all(
+            variant?.options?.map(async (item) => {
+              await OptionValue.create({
+                ...item,
+                option_id: option?._id,
+                product_id: id,
+              });
+            })
+          );
 
-        // return option
-      }
-    }))
+          return option;
+        } else {
+          // thêm mới option và option value
+          const position = variant?.position;
+          await Option.findOneAndUpdate(
+            { _id: optionID },
+            {
+              position: position,
+              created_at: moment(new Date()).toISOString(),
+              updated_at: moment(new Date()).toISOString(),
+            },
+            { new: true }
+          );
+
+          // await Promise.all(variant?.options?.map(async (item) => {
+          //   const optionValueID = item?.option_value_id
+
+          //   await OptionValue.findOneAndUpdate(
+          //     { _id: optionValueID },
+          //     { ...payload, created_at: moment(new Date()).toISOString(), updated_at: moment(new Date()).toISOString() },
+          //     { new: true }
+          //   );
+          // }))
+
+          // return option
+        }
+      })
+    );
 
     return res.status(200).json({
       status: 200,
@@ -814,7 +980,7 @@ export async function getAllOption(req, res, next) {
     const { product_id } = req.params;
     const options = await Option.find({
       product_id,
-    })
+    });
 
     const getOptionValues = async (option, id) => {
       let optionValues = await OptionValue.find({
@@ -838,10 +1004,12 @@ export async function getAllOption(req, res, next) {
       };
     };
 
-    const optionsSort = sortOptions(options)
+    const optionsSort = sortOptions(options);
 
     const data = await Promise.all(
-      optionsSort?.map((option) => getOptionValues(option.toObject(), option?._id))
+      optionsSort?.map((option) =>
+        getOptionValues(option.toObject(), option?._id)
+      )
     );
 
     return res.json({
@@ -986,7 +1154,6 @@ export async function getAllVariant(req, res, next) {
       product_id,
     });
 
-
     // hàm lấy ra các thuộc tính biến thể của 1 sku
     const getOptionValue = async (id) => {
       const value = await OptionValue.findOne({
@@ -998,7 +1165,9 @@ export async function getAllVariant(req, res, next) {
 
     // hàm lấy ra options -> name = color
     const getProductColor = async (array) => {
-      const option = options?.find((option) => option?.name == "color" || option?.name == "mau");
+      const option = options?.find(
+        (option) => option?.name == "color" || option?.name == "mau"
+      );
       const variant = array?.find(
         (variant) => variant?.option_id?.toString() == option?._id?.toString()
       );
@@ -1019,20 +1188,24 @@ export async function getAllVariant(req, res, next) {
 
       const color = await getProductColor(variants);
       // lấy ra giá trị biến thể của 1 sku
-      const optionFilter = await Promise.all(variants?.map(async (item) => {
-        const optionFind = await Option.findOne({
-          _id: item?.option_id
+      const optionFilter = await Promise.all(
+        variants?.map(async (item) => {
+          const optionFind = await Option.findOne({
+            _id: item?.option_id,
+          });
+
+          return {
+            ...item.toObject(),
+            name: optionFind?.name,
+            position: optionFind?.position,
+          };
         })
+      );
 
-        return {
-          ...item.toObject(),
-          name: optionFind?.name,
-          position: optionFind?.position
-        }
-      }))
-
-      const optionsFilter = sortOptions(optionFilter)
-      const optionValues = await Promise.all(optionsFilter?.map((doc) => getOptionValue(doc?.option_value_id)))
+      const optionsFilter = sortOptions(optionFilter);
+      const optionValues = await Promise.all(
+        optionsFilter?.map((doc) => getOptionValue(doc?.option_value_id))
+      );
 
       return {
         ...sku,
@@ -1097,7 +1270,6 @@ export async function saveVariant(req, res, next) {
       options?.map((option) => getOptionValues(option.toObject(), option?._id))
     );
 
-
     // hàm đăng ký các biến thể sản phẩm
     const generateVariant = (input) => {
       if (input.length === 0) return [];
@@ -1148,11 +1320,15 @@ export async function saveVariant(req, res, next) {
     });
 
     // insert tất cả skus đã đăng ký vào db
-    const skus = await Promise.all(arraySkus?.map((item, index) => Sku.create({
-      ...item,
-      image: {},
-      SKU: `${item?.SKU}-${index + 1}`
-    })));
+    const skus = await Promise.all(
+      arraySkus?.map((item, index) =>
+        Sku.create({
+          ...item,
+          image: {},
+          SKU: `${item?.SKU}-${index + 1}`,
+        })
+      )
+    );
 
     // hàm đăng ký các variant options
     const variantOptions = (variants, skus) => {
@@ -1226,51 +1402,52 @@ export async function deteleVariant(req, res, next) {
 
 export async function getSingleVariant(req, res, next) {
   try {
-    const { product_id, sku_id } = req.params
+    const { product_id, sku_id } = req.params;
 
     const sku = await Sku.findOne({
-      _id: sku_id
-    }).select("-deleted -deleted_at -created_at -updated_at")
+      _id: sku_id,
+    }).select("-deleted -deleted_at -created_at -updated_at");
 
     const variants = await Variant.find({
-      sku_id: sku_id
-    }).select('-deleted -deleted_at -created_at -updated_at')
+      sku_id: sku_id,
+    }).select("-deleted -deleted_at -created_at -updated_at");
 
-    const options = await Promise.all(variants?.map(async (variant) => {
-      const option = await Option.findOne({
-        _id: variant?.option_id
+    const options = await Promise.all(
+      variants?.map(async (variant) => {
+        const option = await Option.findOne({
+          _id: variant?.option_id,
+        });
+
+        const optionValue = await OptionValue.findOne({
+          _id: variant?.option_value_id,
+        });
+
+        return {
+          _id: option?._id,
+          label: option?.label,
+          name: option?.name,
+          position: option?.position,
+          option_value: {
+            _id: optionValue?._id,
+            label: optionValue?.label,
+            value: optionValue?.value,
+          },
+        };
       })
+    );
 
-      const optionValue = await OptionValue.findOne({
-        _id: variant?.option_value_id
-      })
-
-      return {
-        _id: option?._id,
-        label: option?.label,
-        name: option?.name,
-        position: option?.position,
-        option_value: {
-          _id: optionValue?._id,
-          label: optionValue?.label,
-          value: optionValue?.value,
-        }
-      }
-    }))
-
-    const optionSort = sortOptions(options)
-
+    const optionSort = sortOptions(options);
 
     return res.json({
       status: 200,
-      message: 'Thành công',
+      message: "Thành công",
       data: {
         ...sku.toObject(),
-        options: optionSort
-      }
-    })
+        options: optionSort,
+      },
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
 
@@ -1286,7 +1463,7 @@ export async function updateVariant(req, res, next) {
       throw createError.BadRequest(errors);
     }
 
-    const { options, ...payload } = body
+    const { options, ...payload } = body;
 
     const doc = await Sku.findOneAndUpdate(
       { _id: sku_id },
@@ -1295,47 +1472,48 @@ export async function updateVariant(req, res, next) {
     );
 
     // cập nhật options và option value
-    await Promise.all(options?.map(async (option) => {
-      const optionID = option?._id
-      const optionValueID = option?.option_value?._id
+    await Promise.all(
+      options?.map(async (option) => {
+        const optionID = option?._id;
+        const optionValueID = option?.option_value?._id;
 
-      const optionPayload = {
-        label: option?.label,
-        name: option?.name,
-        position: option?.position,
-      }
+        const optionPayload = {
+          label: option?.label,
+          name: option?.name,
+          position: option?.position,
+        };
 
-      const optionValuePayload = {
-        label: option?.option_value?.label,
-        value: option?.option_value?.value,
-      }
+        const optionValuePayload = {
+          label: option?.option_value?.label,
+          value: option?.option_value?.value,
+        };
 
-      // thêm mới option và option value
-      await Option.findOneAndUpdate(
-        { _id: optionID },
-        {
-          ...optionPayload,
-          updated_at: moment(new Date()).toISOString()
-        },
-        { new: true }
-      );
+        // thêm mới option và option value
+        await Option.findOneAndUpdate(
+          { _id: optionID },
+          {
+            ...optionPayload,
+            updated_at: moment(new Date()).toISOString(),
+          },
+          { new: true }
+        );
 
-      await OptionValue.findOneAndUpdate(
-        { _id: optionValueID },
-        {
-          ...optionValuePayload,
-          updated_at: moment(new Date()).toISOString()
-        },
-        { new: true }
-      );
-    }))
+        await OptionValue.findOneAndUpdate(
+          { _id: optionValueID },
+          {
+            ...optionValuePayload,
+            updated_at: moment(new Date()).toISOString(),
+          },
+          { new: true }
+        );
+      })
+    );
 
     return res.status(200).json({
       status: 200,
       message: "Thành công",
       data: doc,
     });
-
   } catch (error) {
     next(error);
   }
