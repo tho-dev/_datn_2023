@@ -2,6 +2,7 @@ import Post from "../models/post.model"
 import createError from "http-errors"
 import { postSchema } from "../validations/post.validations"
 import Category from "../models/category.model"
+import User from "../models/user.model";
 import moment from "moment/moment"
 
 export async function getAllPost(req, res, next) {
@@ -45,11 +46,21 @@ export async function getAllPost(req, res, next) {
         _id: doc?.category_id
       }).select('name slug ')
 
+      const userCreated = await User.findOne({
+        _id: doc.created_by
+      })
+
+      const userUpdated = await User.findOne({
+        _id: doc.updated_by
+      })
+
       return {
         ...doc?.toObject(),
         category_id: undefined,
         thumbnail: doc?.thumbnail?.url,
-        category: category?.name
+        category: category?.name,
+        created_by: userCreated ? `${userCreated?.first_name} ${userCreated?.last_name}` : null,
+        updated_by: userUpdated ? `${userUpdated?.first_name} ${userUpdated?.last_name}` : null,
       }
     })))
 
