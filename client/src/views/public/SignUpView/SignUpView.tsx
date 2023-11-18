@@ -245,7 +245,7 @@ const SignUpView = (props: Props) => {
               </FormErrorMessage>
             </FormControl>
             <ReCAPTCHA
-              sitekey="6LeWzOIoAAAAALbs9isOwZpU9o7yFULgPxLtoluK"
+              sitekey={process.env.GOOGLE_SITE_KEY as string}
               onChange={onChange}
             />
             <Button size="lager" type="submit" w="full" mt="4" rounded="full">

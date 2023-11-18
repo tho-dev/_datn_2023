@@ -130,7 +130,7 @@ const GmailView = (props: Props) => {
       cell: (info) => (
         <Text fontSize="sm">
           {moment(info.getValue()).format("DD-MM-YYYY") <
-          moment().format("YYYY-MM-DD")
+          moment().format("DD-MM-YYYY")
             ? "Đã kết thúc"
             : "Đang diễn ra"}
         </Text>

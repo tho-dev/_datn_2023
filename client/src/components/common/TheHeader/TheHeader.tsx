@@ -33,7 +33,6 @@ const TheHeader = (props: Props) => {
 			.unwrap()
 			.then(() => {
 				dispatch(logout());
-				dispatch(removeCart(""));
 				navigate("/");
 			});
 	};

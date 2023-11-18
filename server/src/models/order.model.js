@@ -130,6 +130,7 @@ const orderSchema = new Schema(
         "confirmed",
         "delivering",
         "cancelled",
+        "pendingComplete",
         "delivered",
         "returned",
       ],

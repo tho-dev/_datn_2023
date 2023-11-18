@@ -209,7 +209,7 @@ const CartView = (props: Props) => {
             {data?.data?.products?.length > 0 && (
               <Box my={4}>
                 <ReCAPTCHA
-                  sitekey="6LeWzOIoAAAAALbs9isOwZpU9o7yFULgPxLtoluK"
+                  sitekey={process.env.GOOGLE_SITE_KEY as string}
                   onChange={onChange}
                 />
               </Box>

@@ -80,14 +80,6 @@ const routes: RouteObject[] = [
 						element: <ProfileView />,
 					},
 					{
-						path: ":slug",
-						element: <SlugView />,
-					},
-					{
-						path: ":slug/:slug",
-						element: <ProductDetailView />,
-					},
-					{
 						path: "tin-tuc/:slug",
 						element: <NewsView />,
 					},
@@ -95,7 +87,6 @@ const routes: RouteObject[] = [
 						path: "tin-tuc/:slug/:slug",
 						element: <ContentView />,
 					},
-
 					{
 						path: "tim-kiem",
 						element: <SearchView />,
@@ -111,6 +102,14 @@ const routes: RouteObject[] = [
 					{
 						path: "thanks",
 						element: <ThankView />,
+					},
+					{
+						path: ":slug",
+						element: <SlugView />,
+					},
+					{
+						path: ":slug/:slug",
+						element: <ProductDetailView />,
 					},
 				],
 			},

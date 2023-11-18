@@ -113,6 +113,15 @@ const UpdateOrder = (props: Props) => {
       });
   };
   const handleIncrementProduct = (sku_id: any) => {
+    if (data?.data.status !== "processing") {
+      return toast({
+        title: "Hệ thống thông báo",
+        duration: 1600,
+        position: "bottom-right",
+        status: "error",
+        description: `Không thể cập nhật đơn hàng ${data?.data.status}`,
+      });
+    }
     incrementProduct({ order_id: id, sku_id: sku_id })
       .unwrap()
       .then((data) => {
@@ -135,6 +144,15 @@ const UpdateOrder = (props: Props) => {
       });
   };
   const handleDecrementProduct = (sku_id: any) => {
+    if (data?.data.status !== "processing") {
+      return toast({
+        title: "Hệ thống thông báo",
+        duration: 1600,
+        position: "bottom-right",
+        status: "error",
+        description: `Không thể cập nhật đơn hàng ${data?.data.status}`,
+      });
+    }
     decrementProduct({ order_id: id, sku_id: sku_id })
       .unwrap()
       .then((data) => {
@@ -164,6 +182,7 @@ const UpdateOrder = (props: Props) => {
       setTransportFee(data?.data?.shipping_info?.transportation_fee);
     }
   }, [data]);
+
   if (isLoading) {
     return <Box>Loading..</Box>;
   }

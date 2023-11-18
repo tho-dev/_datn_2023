@@ -51,22 +51,22 @@ const AddGmailView = (props: Props) => {
       jobId,
     };
 
-    // add(new_data)
-    //   .unwrap()
-    //   .then((data) => {
-    //     toast({
-    //       title: "Hệ thống",
-    //       duration: 1600,
-    //       position: "bottom-right",
-    //       status: "success",
-    //       description: data.message,
-    //     });
-    //     reset();
-    //     navigate("/admin/khuyen-mai/gmail");
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    add(new_data)
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: "Hệ thống",
+          duration: 1600,
+          position: "bottom-right",
+          status: "success",
+          description: data.message,
+        });
+        reset();
+        navigate("/admin/khuyen-mai/gmail");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const content = watch("content");
