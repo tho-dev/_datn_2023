@@ -10,29 +10,31 @@ import { io } from "socket.io-client";
 export const socket = io("http://localhost:8080" || "");
 
 function App() {
-  const [createCart] = useCreateCartMutation();
-  const dispatch = useAppDispatch();
-  const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
+	const [createCart] = useCreateCartMutation();
+	const dispatch = useAppDispatch();
+	const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
 
-  useEffect(() => {
-    if (!cart_id) {
-      const data = {
-        cart_id: uuidv4(),
-        product: {},
-      };
-      createCart(data)
-        .unwrap()
-        .then(({ data }) => {
-          dispatch(addCart(data.cart_id));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [cart_id]);
+	console.log("cart_id", cart_id);
 
-  const router = createBrowserRouter(routes);
-  return <RouterProvider router={router} />;
+	useEffect(() => {
+		if (!cart_id) {
+			const data = {
+				cart_id: uuidv4(),
+				product: {},
+			};
+			createCart(data)
+				.unwrap()
+				.then(({ data }) => {
+					dispatch(addCart(data.cart_id));
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
+	}, [cart_id]);
+
+	const router = createBrowserRouter(routes);
+	return <RouterProvider router={router} />;
 }
 
 export default App;

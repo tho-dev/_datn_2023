@@ -88,6 +88,14 @@ export async function getSinglePost(req, res, next) {
       _id: post?.category_id
     }).select('_id name slug shared_url description thumbnail')
 
+    const userCreated = await User.findOne({
+      _id: post.created_by
+    })
+
+    const userUpdated = await User.findOne({
+      _id: post.updated_by
+    })
+
     const related_posts = await Post.find({
       $and: [
         { category_id: post?.category_id }, // Lấy các bài viết cùng danh mục
@@ -95,13 +103,14 @@ export async function getSinglePost(req, res, next) {
       ]
     })
 
-
     return res.json({
       status: 200,
       message: 'Thành công',
       data: {
         ...post.toObject(),
         category_id: undefined,
+        created_by: userCreated ? `${userCreated?.first_name} ${userCreated?.last_name}` : null,
+        updated_by: userUpdated ? `${userUpdated?.first_name} ${userUpdated?.last_name}` : null,
         category: {
           ...category.toObject()
         },
