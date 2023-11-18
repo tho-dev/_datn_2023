@@ -13,7 +13,8 @@ export async function getAllPost(req, res, next) {
       _order = "desc",
       _limit = 10,
       _type = '',
-      _name = ""
+      _name = "",
+      _category = ""
     } = req.query;
 
     const options = {
@@ -36,8 +37,8 @@ export async function getAllPost(req, res, next) {
 
     const { docs, ...paginate } = await Post.paginate({
       $and: [
-        _type ? { category_id: category?._id } : {},
-        _name ? { $or: [{ name: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }] } : {}
+        _name ? { $or: [{ title: new RegExp(_name, 'i') }, { description: new RegExp(_name, 'i') }] } : {},
+        _category ? { category_id: _category } : {}
       ]
     }, options);
 
