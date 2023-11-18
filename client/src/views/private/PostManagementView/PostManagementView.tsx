@@ -33,15 +33,14 @@ type Props = {};
 const PostView = (props: Props) => {
 	const toast = useToast();
 	const [id, setId] = useState(null);
-	const [post, setPost] = useState<any>(null);
+	const [slug, setSlug] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
-	const [category, setCategory] = useState<any>(null);
 	const columnHelper = createColumnHelper<any>();
-	// const {
-	// 	isOpen: isOpenActionCreatePost,
-	// 	onOpen: onOpenActionCreatePost,
-	// 	onClose: onCloseActionCreatePost,
-	// } = useDisclosure();
+	const {
+		isOpen: isOpenActionCreatePost,
+		onOpen: onOpenActionCreatePost,
+		onClose: onCloseActionCreatePost,
+	} = useDisclosure();
 	const {
 		isOpen: isOpenActionUpdateCategory,
 		onOpen: onOpenActionUpdateCategory,
@@ -115,6 +114,15 @@ const PostView = (props: Props) => {
 					<Text
 						fontWeight="medium"
 						fontSize="13px"
+						css={{
+							display: "-webkit-box",
+							WebkitLineClamp: 2,
+							WebkitBoxOrient: "vertical",
+							overflow: "hidden",
+							"& p": {
+								display: "inline",
+							},
+						}}
 					>
 						{info.getValue()}
 					</Text>
@@ -170,29 +178,28 @@ const PostView = (props: Props) => {
 			},
 			header: "Đường dẫn",
 		}),
-		columnHelper.accessor("description", {
-			cell: (info) => {
-				const description = info.getValue();
-				return (
-					<Text
-						fontWeight="medium"
-						fontSize="13px"
-						css={{
-							display: "-webkit-box",
-							WebkitLineClamp: 2,
-							WebkitBoxOrient: "vertical",
-							overflow: "hidden",
-							"& p": {
-								display: "inline",
-							},
-						}}
-						dangerouslySetInnerHTML={{ __html: description }}
-					/>
-				);
-			},
-			header: "Mô tả",
+		columnHelper.accessor("created_by", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{info.getValue()}
+				</Text>
+			),
+			header: "Người tạo",
 		}),
-
+		columnHelper.accessor("updated_by", {
+			cell: (info) => (
+				<Text
+					fontWeight="medium"
+					fontSize="13px"
+				>
+					{info.getValue() ? info.getValue() : "Đang cập nhật"}
+				</Text>
+			),
+			header: "Người cập nhật",
+		}),
 		columnHelper.accessor("created_at", {
 			cell: (info) => (
 				<Text
@@ -247,22 +254,7 @@ const PostView = (props: Props) => {
 								py="2"
 								icon={<EditIcon size={4} />}
 								onClick={() => {
-									const parent_id = parents?.find((item: any) => item?.value == doc?.parent_id);
-									setCategory({
-										_id: doc?._id,
-										title: doc?.title,
-										thumbnail: doc?.thumbnail,
-										parent_id: parent_id,
-										category_id: {
-											label: doc?.category?.name,
-											value: doc?.category?.category_id,
-										},
-										description: doc?.description,
-										content: doc?.content,
-										meta_keyword: doc?.meta_keyword,
-										meta_description: doc?.meta_description,
-										meta_title: doc?.meta_title,
-									});
+									setSlug(doc?.slug);
 									onOpenActionUpdateCategory();
 								}}
 							>
@@ -334,16 +326,7 @@ const PostView = (props: Props) => {
 								name="category"
 								title=""
 								placeholder="-- Danh mục --"
-								data={[
-									{
-										label: "Tin Hót",
-										value: "1",
-									},
-									{
-										label: "Công Nghệ",
-										value: "2",
-									},
-								]}
+								data={parents}
 							/>
 						</Box>
 
@@ -388,9 +371,7 @@ const PostView = (props: Props) => {
 						lineHeight="2"
 						color="text.textSuccess"
 						bgColor="bg.bgSuccess"
-						// onClick={onOpenActionCreatePost}
-						as={ReactRouterLink}
-						to="/admin/bai-viet/add"
+						onClick={onOpenActionCreatePost}
 					>
 						Tạo Mới
 					</Button>
@@ -418,16 +399,25 @@ const PostView = (props: Props) => {
 				/>
 			</Box>
 			{/* Form */}
-			{/* <PostDialogThinkPro
+			<PostDialogThinkPro
+				size="6xl"
 				isOpen={isOpenActionCreatePost}
 				onClose={onCloseActionCreatePost}
 				isCentered
-				title={<Heading fontSize="18">Tạo mới bài viết</Heading>}
+				title={
+					<Heading
+						fontSize="lg"
+						textTransform="uppercase"
+					>
+						Tạo mới bài viết
+					</Heading>
+				}
 			>
 				<AddPostMangerView
 					onClose={onCloseActionCreatePost}
-					parents={parents}  />
-			</PostDialogThinkPro> */}
+					parents={parents}
+				/>
+			</PostDialogThinkPro>
 
 			<PostDialogThinkPro
 				isOpen={isOpenActionUpdateCategory}
@@ -444,7 +434,7 @@ const PostView = (props: Props) => {
 			>
 				<ActionUpdatePost
 					onClose={onCloseActionUpdateCategory}
-					category={category}
+					slug={slug}
 					parents={parents}
 				/>
 			</PostDialogThinkPro>

@@ -83,6 +83,7 @@ const ProductDetailView = (props: Props) => {
             status: "success",
             duration: 2000,
             isClosable: true,
+            position: "top-right",
           });
         })
         .catch((err) => {
@@ -93,6 +94,7 @@ const ProductDetailView = (props: Props) => {
             status: "error",
             duration: 2000,
             isClosable: true,
+            position: "top-right",
           });
         });
       return;

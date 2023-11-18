@@ -1,4 +1,3 @@
-import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import {
 	Breadcrumb,
@@ -13,26 +12,44 @@ import {
 	useDisclosure,
 	useToast,
 } from "@chakra-ui/react";
+import { createColumnHelper } from "@tanstack/react-table";
+import moment from "moment/moment";
 import { useEffect, useState } from "react";
-import { SearchIcon, PlusCircleIcon, TraskIcon, EditIcon } from "~/components/common/Icons";
+import { useForm, useWatch } from "react-hook-form";
+import { Link as ReactRouterLink } from "react-router-dom";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import DialogThinkPro from "~/components/DialogThinkPro";
+import TableThinkPro from "~/components/TableThinkPro";
+import { EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { useDeleteDemandMutation, useGetAllDemandQuery } from "~/redux/api/demand";
 import ActionCreateDemand from "./ActionCreateDemand";
 import ActionUpdateDemand from "./ActionUpdateDemand";
-import { useDeleteDemandMutation, useGetAllDemandQuery } from "~/redux/api/demand";
-import { createColumnHelper } from "@tanstack/react-table";
-import TableThinkPro from "~/components/TableThinkPro";
-import ConfirmThinkPro from "~/components/ConfirmThinkPro";
-import moment from "moment/moment";
-import SelectThinkPro from "~/components/SelectThinkPro";
-import { useForm } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
+type TQuery = {
+	_page: number;
+	_limit: number;
+	_order: string;
+	_sort: string;
+	_name?: string;
+};
+
 const DemandView = (props: Props) => {
 	const toast = useToast();
+	const columnHelper = createColumnHelper<any>();
 	const [id, setId] = useState(null);
 	const [demand, setDemand] = useState<any>(null);
-	const columnHelper = createColumnHelper<any>();
+	const [query, setQuery] = useState<TQuery>({
+		_page: 1,
+		_limit: 10,
+		_order: "desc",
+		_sort: "created_at",
+	});
+
+	const debounceQuery = useDebounce(query, 300);
+
 	const {
 		isOpen: isOpenActionCreateDemand,
 		onOpen: onOpenActionCreateDemand,
@@ -45,10 +62,28 @@ const DemandView = (props: Props) => {
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
-	const { control } = useForm();
+	const { control, register } = useForm({
+		defaultValues: {
+			name: "",
+		},
+	});
+
+	const name = useWatch({
+		control,
+		name: "name",
+	});
+
+	useEffect(() => {
+		if (query) {
+			setQuery({
+				...query,
+				_name: name,
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [name]);
 
 	const [deleteDemand] = useDeleteDemandMutation();
-
 	const handleDeleteDemand = async () => {
 		try {
 			await deleteDemand(id as any).unwrap();
@@ -150,6 +185,7 @@ const DemandView = (props: Props) => {
 			header: "Action",
 		}),
 	];
+
 	return (
 		<>
 			<Box
@@ -199,27 +235,9 @@ const DemandView = (props: Props) => {
 					mb="6"
 				>
 					<Flex
-						w="50%"
+						w="30%"
 						gap="4"
 					>
-						<Box>
-							<SelectThinkPro
-								control={control}
-								name="category"
-								title=""
-								placeholder="-- Trạng thái --"
-								data={[
-									{
-										label: "Hoạt Động",
-										value: "1",
-									},
-									{
-										label: "Khóa",
-										value: "2",
-									},
-								]}
-							/>
-						</Box>
 						<Flex
 							flex="1"
 							px="4"
@@ -247,6 +265,7 @@ const DemandView = (props: Props) => {
 								lineHeight="1.5"
 								w="260px"
 								placeholder="Tìm kiếm nhu cầu"
+								{...register("name")}
 							/>
 						</Flex>
 					</Flex>
@@ -272,12 +291,7 @@ const DemandView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllDemandQuery}
 					defaultPageSize={10}
-					query={{
-						_page: 1,
-						_limit: 10,
-						_order: "desc",
-						_sort: "created_at",
-					}}
+					query={debounceQuery}
 				/>
 
 				{/* Cofirm */}

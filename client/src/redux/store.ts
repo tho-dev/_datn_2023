@@ -20,6 +20,7 @@ import notificationApi from "./api/notification";
 import generalApi from "./api/general";
 import promotionApi from "./api/promotion";
 import adsApi from "./api/ads";
+import couponApi from "./api/coupon";
 
 const persistConfig = {
 	key: "root",
@@ -48,6 +49,7 @@ const middleware = [
 	promotionApi.middleware,
 	generalApi.middleware,
 	adsApi.middleware,
+	couponApi.middleware,
 ];
 
 const store = configureStore({
@@ -66,6 +68,7 @@ const store = configureStore({
 		[generalApi.reducerPath]: generalApi.reducer,
 		[promotionApi.reducerPath]: promotionApi.reducer,
 		[adsApi.reducerPath]: adsApi.reducer,
+		[couponApi.reducerPath]: couponApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

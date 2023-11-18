@@ -1,11 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { objectToUrlParams } from "~/utils/fc";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQuery } from "~/utils/fc";
 
 const generalApi = createApi({
 	reducerPath: "general",
-	baseQuery: fetchBaseQuery({
-		baseUrl: process.env.VITE_API_URL,
-	}),
+	baseQuery: baseQuery,
 	tagTypes: ["GeneralTag"],
 	endpoints: (build) => ({
 		getGeneral: build.query({

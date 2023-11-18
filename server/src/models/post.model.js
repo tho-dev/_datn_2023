@@ -41,9 +41,7 @@ const postSchema = new Schema({
     type: String
   },
   created_by: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    default: null
+    type: String
   },
   updated_by: {
     type: Schema.Types.ObjectId,

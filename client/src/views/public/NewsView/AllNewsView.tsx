@@ -4,7 +4,7 @@ import { IPost } from "~/interface/post";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { addViewedItem } from "~/redux/slices/globalSlice";
 import { Link as ReactRouterLink } from "react-router-dom";
-import moment from "moment"; 
+import moment from "moment";
 
 
 type Props = {
@@ -21,8 +21,7 @@ const AllNewsView = ({ product }: Props) => {
     };
     dispatch(addViewedItem(productData));
   };
-
-  const { user } = useAppSelector((state) => state.persistedReducer.global);
+ 
 
   const now = moment();
   const diffInSeconds = now.diff(product?.created_at, "seconds");
@@ -52,9 +51,9 @@ const AllNewsView = ({ product }: Props) => {
         templateColumns={{
           sm: "repeat(1, 1fr)",
           md: "repeat(1, 1fr)",
-          xl: "repeat(2, 1fr)",
+          xl: "repeat(5, 1fr)",
         }}>
-        <GridItem>
+        <GridItem colSpan={2}>
           <Box
             rounded="lg"
             overflow="hidden"
@@ -71,11 +70,20 @@ const AllNewsView = ({ product }: Props) => {
             </Box>
           </Box>
         </GridItem>
-        <GridItem>
+        <GridItem colSpan={3}>
           <Box>
             <Text
               fontSize="xl"
               fontWeight="semibold"
+              css={{
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                "& p": {
+                  display: "inline",
+                },
+              }}
             >
               {product?.title}
             </Text>
@@ -98,7 +106,7 @@ const AllNewsView = ({ product }: Props) => {
             </Text>
             <Flex fontSize="sm">
               <Text as="h3" fontWeight="black" lineHeight="1.3">
-                {user.first_name + " " + user.last_name}
+                {product?.created_by}
               </Text>
               <Text mx={2}>|</Text>
               <Text fontWeight="medium" fontSize="13px">

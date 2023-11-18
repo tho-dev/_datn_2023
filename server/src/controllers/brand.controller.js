@@ -36,7 +36,7 @@ function nestedBrands(input, parentId) {
 // Lấy danh sách thương hiệu
 export async function getAllBrand(req, res, next) {
 	try {
-		const { _page = 1, _sort = "created_at", _order = "asc", _limit = 10 } = req.query;
+		const { _page = 1, _sort = "created_at", _order = "asc", _limit = 10, _name = "", _category = "" } = req.query;
 
 		const options = {
 			page: _page,
@@ -47,7 +47,18 @@ export async function getAllBrand(req, res, next) {
 			select: ['-deleted', '-deleted_at']
 		};
 
-		const { docs, ...paginate } = await Brand.paginate({}, options);
+		const { docs, ...paginate } = await Brand.paginate({
+			$and: [
+				_category ? { category_id: _category } : {},
+				{
+					$or: [
+						{ name: new RegExp(_name, 'i') },
+						{ description: new RegExp(_name, 'i') },
+					]
+				}
+			],
+		}, options);
+
 		const result = [];
 
 		for (const brand of docs) {

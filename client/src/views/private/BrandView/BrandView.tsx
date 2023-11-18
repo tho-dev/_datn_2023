@@ -26,18 +26,40 @@ import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import moment from "moment/moment";
 import SelectThinkPro from "~/components/SelectThinkPro";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type Props = {};
 
+type TQuery = {
+	_limit: number;
+	_page: number;
+	_parent: boolean;
+	_sort: string;
+	_order: string;
+	_type: string;
+	_name?: string;
+	_category?: string;
+};
+
 const BrandView = (props: Props) => {
 	const toast = useToast();
-	// thương hiệu cha
+	const columnHelper = createColumnHelper<any>();
+
 	const [id, setId] = useState(null);
 	const [brand, setBrand] = useState<any>(null);
 	const [parents, setParents] = useState<any>([]);
 	const [categoriesBrand, setCategoriesBrand] = useState<any>([]);
-	const columnHelper = createColumnHelper<any>();
+	const [query, setQuery] = useState<TQuery>({
+		_limit: 20,
+		_page: 1,
+		_parent: true,
+		_sort: "created_at",
+		_order: "desc",
+		_type: "category_brand",
+	});
+	const deboundceQuery = useDebounce(query, 300);
+
 	const {
 		isOpen: isOpenActionCreateBrand,
 		onOpen: onOpenActionCreateBrand,
@@ -50,7 +72,15 @@ const BrandView = (props: Props) => {
 	} = useDisclosure();
 	const { isOpen: isOpenComfirm, onOpen: onOpenConfirm, onClose: onCloseComfirm } = useDisclosure();
 
-	const { control } = useForm();
+	const { control, register } = useForm();
+	const nameForm = useWatch({
+		control,
+		name: "name",
+	});
+	const categoryForm = useWatch({
+		control,
+		name: "category",
+	});
 
 	const [deleteBrand] = useDeleteBrandMutation();
 	const { data: brands, isLoading } = useGetAllBrandsQuery({
@@ -59,7 +89,6 @@ const BrandView = (props: Props) => {
 		_sort: "created_at",
 		_order: "desc",
 	});
-
 	const { data: categories } = useGetAllCategoryQuery({
 		_limit: 20,
 		_page: 1,
@@ -93,6 +122,16 @@ const BrandView = (props: Props) => {
 			setCategoriesBrand(categoriesFilter);
 		}
 	}, [categories, isLoading]);
+
+	useEffect(() => {
+		if (query) {
+			setQuery({
+				...query,
+				_name: nameForm,
+				_category: categoryForm?.value,
+			});
+		}
+	}, [nameForm, categoryForm]);
 
 	const handleDeleteBrand = async () => {
 		try {
@@ -305,43 +344,15 @@ const BrandView = (props: Props) => {
 				>
 					<Flex
 						gap="4"
-						w="60%"
+						w="40%"
 					>
-						<Box flex="1">
-							<SelectThinkPro
-								control={control}
-								name="category"
-								title=""
-								placeholder="-- Trạng thái --"
-								data={[
-									{
-										label: "Hoạt Động",
-										value: "1",
-									},
-									{
-										label: "Khóa",
-										value: "2",
-									},
-								]}
-							/>
-						</Box>
-
-						<Box flex="1">
+						<Box display="inline-block">
 							<SelectThinkPro
 								control={control}
 								name="category"
 								title=""
 								placeholder="-- Danh mục --"
-								data={[
-									{
-										label: "Laptop",
-										value: "1",
-									},
-									{
-										label: "Bàn phím",
-										value: "2",
-									},
-								]}
+								data={categoriesBrand}
 							/>
 						</Box>
 
@@ -372,6 +383,7 @@ const BrandView = (props: Props) => {
 								lineHeight="1.5"
 								w="260px"
 								placeholder="Tìm kiếm thương hiệu"
+								{...register("name")}
 							/>
 						</Flex>
 					</Flex>
@@ -403,14 +415,7 @@ const BrandView = (props: Props) => {
 					columns={columns}
 					useData={useGetAllBrandsQuery}
 					defaultPageSize={15}
-					query={{
-						_limit: 20,
-						_page: 1,
-						_parent: true,
-						_sort: "created_at",
-						_order: "desc",
-						_type: "category_brand",
-					}}
+					query={deboundceQuery}
 				/>
 			</Box>
 			{/* Form */}
