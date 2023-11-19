@@ -49,9 +49,6 @@ const PopupCheckOtp = ({
   dataOrder,
 }: Props) => {
   const [value, setValue] = React.useState("");
-
-  const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
-
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
   const [paymentMomo] = usePaymentMomoMutation();

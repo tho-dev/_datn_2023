@@ -45,10 +45,10 @@ export function formatPhoneNumber(phoneNumber: string) {
 	return phoneNumber;
 }
 export function formatPhoneNumberPlus(phoneNumber: string) {
-  if (phoneNumber.startsWith('+84') && phoneNumber.length === 12) {
-    return '0' + phoneNumber.substring(3);
-  }
-  return phoneNumber;
+	if (phoneNumber.startsWith('+84') && phoneNumber.length === 12) {
+		return '0' + phoneNumber.substring(3);
+	}
+	return phoneNumber;
 }
 export const objectToUrlParams = (obj: { [key: string]: any }) => {
 	const params = [];
@@ -130,3 +130,25 @@ export const baseQuery = fetchBaseQuery({
 		return headers;
 	},
 });
+
+export const checkStatusOrder = (status: string) => {
+	if (status == "processing") {
+		return "Chờ xác nhận";
+	}
+	if (status == "confirmed") {
+		return "Đã xác nhận";
+	}
+	if (status == "delivering") {
+		return "Đang vận chuyển";
+	}
+	if (status == "cancelled") {
+		return "Đã huỷ đơn";
+	}
+	if (status == "delivered") {
+		return "Đã hoàn thành";
+	}
+	if (status == "returned") {
+		return "Đã hoàn hàng";
+	}
+	return "Chờ xác nhận";
+};

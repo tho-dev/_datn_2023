@@ -36,7 +36,6 @@ import CardThinkPro from "~/components/CardThinkPro";
 import ViewedProduct from "~/components/ViewedThinkPro/ViewedProduct";
 import { CommentView } from "~/components/Comment";
 
-
 type Props = {};
 
 const ProductDetailView = (props: Props) => {
@@ -108,6 +107,7 @@ const ProductDetailView = (props: Props) => {
           status: "success",
           duration: 2000,
           isClosable: true,
+          position: "top-right",
         });
       })
       .catch((err) => {
@@ -118,6 +118,7 @@ const ProductDetailView = (props: Props) => {
           status: "error",
           duration: 2000,
           isClosable: true,
+          position: "top-right",
         });
       });
   };
@@ -143,6 +144,7 @@ const ProductDetailView = (props: Props) => {
             status: "success",
             duration: 2000,
             isClosable: true,
+            position: "top-right",
           });
           navigate("/gio-hang");
         })
@@ -153,6 +155,7 @@ const ProductDetailView = (props: Props) => {
             status: "error",
             duration: 2000,
             isClosable: true,
+            position: "top-right",
           });
         });
     } else {
@@ -165,6 +168,7 @@ const ProductDetailView = (props: Props) => {
             status: "success",
             duration: 2000,
             isClosable: true,
+            position: "top-right",
           });
           navigate("/gio-hang");
         })
@@ -175,6 +179,7 @@ const ProductDetailView = (props: Props) => {
             status: "error",
             duration: 2000,
             isClosable: true,
+            position: "top-right",
           });
         });
     }
@@ -249,8 +254,9 @@ const ProductDetailView = (props: Props) => {
                     objectFit: "contain",
                     borderRadius: "6px",
                   }}
-                  src={`http://www.youtube.com/embed/${product?.data?.video_review?.split("=")?.[1]
-                    }`}
+                  src={`http://www.youtube.com/embed/${
+                    product?.data?.video_review?.split("=")?.[1]
+                  }`}
                 ></iframe>
                 <Divider my="5" />
               </Box>

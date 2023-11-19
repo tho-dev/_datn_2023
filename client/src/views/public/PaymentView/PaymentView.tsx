@@ -5,6 +5,7 @@ import {
   RadioGroup,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
@@ -36,6 +37,7 @@ import {
   formatPhoneNumber,
 } from "~/utils/fc";
 import { socket } from "~/App";
+import { useGetValueCouponMutation } from "~/redux/api/coupon";
 type Props = {};
 
 const Payment = (props: Props) => {
@@ -45,6 +47,7 @@ const Payment = (props: Props) => {
   const [address, setAddress] = React.useState("");
   const [transportFee, setTransportFee] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [voucher_value, setVourcher_value] = useState(0);
 
   const {
     isOpen: isOpenOtp,
@@ -56,6 +59,7 @@ const Payment = (props: Props) => {
     (state) => state.persistedReducer.global
   );
   const { data, isLoading, isError } = useGetCartQuery(cart_id);
+  const [getValueCoupon] = useGetValueCouponMutation();
   useEffect(() => {
     socket.emit(
       "joinRoom",
@@ -72,7 +76,7 @@ const Payment = (props: Props) => {
     watch,
     formState: { errors },
   } = useForm();
-
+  const toast = useToast();
   const submitForm = (order_infor: any) => {
     // kiểm tra số điện thoại
     const compare_phone_number = chuyenDoiSoDienThoai(order_infor.phone_number);
@@ -87,10 +91,37 @@ const Payment = (props: Props) => {
       phone_number: compare_phone_number,
       transportation_fee: transportFee,
     };
+
     setDataOrder(new_data);
     onOpenOtp();
   };
-
+  const voucher = watch("voucher");
+  const checkvoucher = (voucher_code: string) => {
+    getValueCoupon({ coupon_code: voucher_code })
+      .unwrap()
+      .then((data) => {
+        setVourcher_value(data?.data);
+        toast({
+          title: "Hệ thống thông báo",
+          description: "Áp dụng voucher thành công",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      })
+      .catch((err) => {
+        setVourcher_value(0);
+        toast({
+          title: "Hệ thống thông báo",
+          description: err.data.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
+  };
   const handleChooseAdress = (data: any) => {
     const checkData = data.every((select: any) => select !== undefined);
     if (checkData) {
@@ -120,6 +151,11 @@ const Payment = (props: Props) => {
         });
     }
   }, [methodOrder]);
+  useEffect(() => {
+    if (!voucher) {
+      setVourcher_value(0);
+    }
+  }, [voucher]);
 
   if (isLoading) {
     return <Box>Loading...</Box>;
@@ -388,6 +424,31 @@ const Payment = (props: Props) => {
                   </RadioGroup>
                 </FormControl>
               </Box>
+              <Box my={4}>
+                <FormControl isInvalid={errors?.voucher as any}>
+                  <FormLabel>Bạn đã có mã khuyến mãi ?</FormLabel>
+                  <Flex alignItems={"center"} gap={4}>
+                    <Input
+                      type="text"
+                      border={"none"}
+                      p={"8px 12px"}
+                      placeholder="Nhập voucher vào đây"
+                      bg={"#F6F9FC"}
+                      borderRadius={"6px"}
+                      fontSize={"14px"}
+                      {...register("voucher")}
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => checkvoucher(voucher)}
+                      bgColor={voucher ? "bg.red" : "bg.darkGray"}
+                    >
+                      Kiểm tra
+                    </Button>
+                  </Flex>
+                </FormControl>
+              </Box>
+
               <Flex mt={"16px"}>
                 <FormControl isInvalid={errors?.note as any}>
                   <FormLabel>Ghi chú</FormLabel>
@@ -411,7 +472,11 @@ const Payment = (props: Props) => {
               py={"5"}
               px={"5"}
             >
-              <PaySummary data={data.data} transport_fee={transportFee} />
+              <PaySummary
+                data={data.data}
+                transport_fee={transportFee}
+                voucher_value={voucher_value}
+              />
               <Button
                 w={"full"}
                 fontSize={"16px"}

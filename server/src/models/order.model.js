@@ -107,6 +107,10 @@ const orderSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    coupon_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Coupon",
+    },
     shop_address: {
       type: String,
     },
