@@ -29,7 +29,7 @@ import ExportOrderPDF from "./ExportOrderPDF";
 import { PDFViewer } from "@react-pdf/renderer";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import { Link, Link as ReactRouterLink } from "react-router-dom";
-import { chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
+import { checkStatusOrder, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 
 type Props = {};
 
@@ -54,6 +54,8 @@ const OrderDetailView = (props: Props) => {
   const { data, isLoading, isFetching, isError } = useGetOneShippingQuery({
     id,
   });
+  console.log(data);
+
   const [cancelOrder] = useCancelOrderMutation();
   const [tokenPrintOrder, { isLoading: isLoadingPrint }] =
     useTokenPrintOrderMutation();
@@ -69,27 +71,7 @@ const OrderDetailView = (props: Props) => {
   if (isError) {
     return <Box>isError...</Box>;
   }
-  const checkStatusOrder = (status: string) => {
-    if (status == "processing") {
-      return "Chờ xác nhận";
-    }
-    if (status == "confirmed") {
-      return "Đã xác nhận";
-    }
-    if (status == "delivering") {
-      return "Đang vận chuyển";
-    }
-    if (status == "cancelled") {
-      return "Đã huỷ đơn";
-    }
-    if (status == "delivered") {
-      return "Đã hoàn thành";
-    }
-    if (status == "returned") {
-      return "Đã hoàn hàng";
-    }
-    return "Chờ xác nhận";
-  };
+
   const columns = [
     columnHelper.accessor("#", {
       cell: (info) => {
@@ -422,7 +404,7 @@ const OrderDetailView = (props: Props) => {
                   Giảm giá:{" "}
                 </Text>
                 <Text fontSize={14} fontWeight="semibold">
-                  0đ
+                  {data?.data.coupon_id?.coupon_value.toLocaleString() || 0} đ
                 </Text>
               </Flex>
               <Flex

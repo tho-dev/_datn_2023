@@ -1,5 +1,6 @@
 import createError from "http-errors";
 import { Order, Shipping, Order_Detail } from "../models/order.model";
+import Coupon from "../models/coupon.model";
 import { Cart } from "../models/cart.model";
 import { Sku, Variant } from "../models/product.model";
 import Returned from "../models/return.model";
@@ -31,10 +32,23 @@ export const createOrder = async (req, res, next) => {
       cart_id,
       address,
       transportation_fee = 0,
+      voucher,
+      total_amount,
     } = req.body;
-
-    const cart = await Cart.findOne({ cart_id });
     let user_id = null;
+    let coupon_value = 0;
+    let coupon_id = null;
+    const cart = await Cart.findOne({ cart_id });
+
+    if (voucher) {
+      const coupon = await Coupon.findOne({
+        $and: [{ coupon_code: voucher, status: true }],
+      });
+      coupon_value = coupon.coupon_value;
+      coupon_id = coupon._id;
+      coupon.coupon_quantity--;
+      await coupon.save();
+    }
     const token = getAuthToken(req);
 
     if (token) {
@@ -93,6 +107,8 @@ export const createOrder = async (req, res, next) => {
         partnerCode: "TIENMAT",
       },
       user_id,
+      coupon_id,
+      total_amount: total_amount + transportation_fee - coupon_value,
     });
     const add_product_item = async (product) => {
       const new_item = await Order_Detail.create({
@@ -251,7 +267,7 @@ export const getAll = async (req, res, next) => {
 export const getOne = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const order = await Order.findById(id).populate("shipping_info");
+    const order = await Order.findById(id).populate("shipping_info coupon_id");
     if (!order) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }

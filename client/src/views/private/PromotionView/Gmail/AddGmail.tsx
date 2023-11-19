@@ -71,12 +71,18 @@ const AddGmailView = (props: Props) => {
 
   const content = watch("content");
   const email = watch("email");
+
   useEffect(() => {
     if (validateEmail(email)) {
+      const emailsValue = emails?.filter((item: string) => item === email);
+      if (emailsValue.length > 0) {
+        return setValue("email", "");
+      }
       setEmails([...emails, email]);
       setValue("email", "");
     }
   }, [email]);
+
   const handleRemoveEmail = (index: number) => {
     emails.splice(index, 1);
     setEmails([...emails]);

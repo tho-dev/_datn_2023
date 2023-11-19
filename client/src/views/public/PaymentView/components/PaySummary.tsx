@@ -5,9 +5,10 @@ import { Image, Text, Input, Button } from "@chakra-ui/react";
 type Props = {
   data: any;
   transport_fee: number;
+  voucher_value: number;
 };
 
-const PaySummary = ({ data, transport_fee }: Props) => {
+const PaySummary = ({ data, transport_fee, voucher_value }: Props) => {
   return (
     <Box>
       <Text as={"h5"} fontSize={"18px"} fontWeight={"600"} lineHeight={"27px"}>
@@ -18,7 +19,19 @@ const PaySummary = ({ data, transport_fee }: Props) => {
           Tạm tính:
         </Box>
         <Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight={600}>
-          {data?.total_money.toLocaleString()}
+          {data?.total_money.toLocaleString()}đ
+        </Box>
+      </Flex>
+      <Flex
+        justifyContent={"space-between"}
+        pb={"16px"}
+        borderColor="border.primary"
+      >
+        <Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight="medium">
+          Vận chuyển:
+        </Box>
+        <Box as={"p"} fontSize={"xs"} lineHeight={"18px"} fontWeight={600}>
+          {transport_fee?.toLocaleString()}đ
         </Box>
       </Flex>
       <Flex
@@ -28,10 +41,10 @@ const PaySummary = ({ data, transport_fee }: Props) => {
         borderColor="border.primary"
       >
         <Box as={"p"} fontSize={"12px"} lineHeight={"18px"} fontWeight="medium">
-          Vận chuyển:
+          Giảm giá:
         </Box>
         <Box as={"p"} fontSize={"xs"} lineHeight={"18px"} fontWeight={600}>
-          {transport_fee.toLocaleString()}
+          {voucher_value?.toLocaleString()}đ
         </Box>
       </Flex>
       <Flex justifyContent={"space-between"} py={"4"}>
@@ -39,7 +52,8 @@ const PaySummary = ({ data, transport_fee }: Props) => {
           Tổng cộng:
         </Box>
         <Box as={"p"} fontSize={"xl"} color={"#FE3464"} fontWeight={"semibold"}>
-          {(data.total_money + transport_fee).toLocaleString()}
+          {(data.total_money + transport_fee - voucher_value)?.toLocaleString()}
+          đ
         </Box>
       </Flex>
     </Box>

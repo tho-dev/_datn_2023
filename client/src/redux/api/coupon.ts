@@ -22,13 +22,20 @@ const couponApi = createApi({
 			providesTags: ["CouponTag"],
 			transformResponse: (res: any) => res?.data,
 		}),
+		getValueCoupon: build.mutation({
+			query: (data) => ({
+				url: `/coupon/coupon_value`,
+				method: "POST",
+				body: data
+			}),
+		}),
 		createCoupon: build.mutation({
 			query: (body) => ({
 				url: `/coupon`,
 				method: "POST",
 				body,
 			}),
-			invalidatesTags: ["CouponSingleTag"],
+			invalidatesTags: ["CouponSingleTag", "CouponTag"],
 		}),
 		updateCoupon: build.mutation<any, { _id: number }>({
 			query: ({ _id, ...patch }) => ({
@@ -54,6 +61,7 @@ export const {
 	useCreateCouponMutation,
 	useDeleteCounponMutation,
 	useUpdateCouponMutation,
+	useGetValueCouponMutation
 } = couponApi;
 
 export default couponApi;
