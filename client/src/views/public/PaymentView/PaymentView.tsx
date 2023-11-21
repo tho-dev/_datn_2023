@@ -75,6 +75,7 @@ const Payment = (props: Props) => {
     handleSubmit,
     watch,
     formState: { errors },
+    setValue,
   } = useForm();
   const toast = useToast();
   const submitForm = (order_infor: any) => {
@@ -120,6 +121,7 @@ const Payment = (props: Props) => {
           isClosable: true,
           position: "top-right",
         });
+        setValue("voucher", "");
       });
   };
   const handleChooseAdress = (data: any) => {

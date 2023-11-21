@@ -3,7 +3,7 @@ import ListCardCompare from "./components/ListCardCompare";
 import ListTableCompare from "./components/ListTableCompare";
 import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useCompareProductMutation } from "~/redux/api/product";
 import LoadingPolytech from "~/components/LoadingPolytech";
@@ -11,33 +11,37 @@ import LoadingPolytech from "~/components/LoadingPolytech";
 type Props = {};
 
 const CompareView = (props: Props) => {
-	const navigate = useNavigate();
-	const [products, setProducts] = useState([]);
-	const { items } = useAppSelector((state: RootState) => state.persistedReducer.global);
-	const [compareProduct, { isLoading }] = useCompareProductMutation();
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const { items } = useAppSelector(
+    (state: RootState) => state.persistedReducer.global
+  );
+  const [compareProduct, { isLoading }] = useCompareProductMutation();
+  const { slug } = useParams();
+  console.log(slug);
 
-	useEffect(() => {
-		const fetchApi = async () => {
-			const slugs = items?.map((item: any) => item?.slug);
-			const response = await compareProduct({ slugs: slugs }).unwrap();
-			setProducts(response?.data);
-			navigate(`/so-sanh/${slugs.join("-vs-")}`);
-		};
+  useEffect(() => {
+    const fetchApi = async () => {
+      const slugs = items?.map((item: any) => item?.slug);
+      const response = await compareProduct({ slugs: slugs }).unwrap();
+      setProducts(response?.data);
+      navigate(`/so-sanh/${slugs.join("-vs-")}`);
+    };
 
-		fetchApi();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [items]);
+    fetchApi();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
 
-	if (isLoading) {
-		return <LoadingPolytech />;
-	}
+  if (isLoading) {
+    return <LoadingPolytech />;
+  }
 
-	return (
-		<Box py="6">
-			<ListCardCompare items={items} />
-			<ListTableCompare products={products} />
-		</Box>
-	);
+  return (
+    <Box py="6">
+      <ListCardCompare items={items} />
+      <ListTableCompare products={products} />
+    </Box>
+  );
 };
 
 export default CompareView;

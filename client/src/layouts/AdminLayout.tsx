@@ -9,6 +9,7 @@ import { useAppSelector } from "~/redux/hook/hook";
 import { useGetByIdQuery, useGetAllQuery } from "~/redux/api/notification";
 import { socket } from "~/App";
 import { useToast } from "@chakra-ui/react";
+import LoadingPolytech from "~/components/LoadingPolytech";
 type Props = {};
 
 const AdminLayout = (props: Props) => {
@@ -39,7 +40,7 @@ const AdminLayout = (props: Props) => {
     setStatus(status);
   };
   if (isLoading) {
-    return <Box>Loading...</Box>;
+    return <LoadingPolytech />;
   }
   if (isFetching) {
     return <Box>isFetching...</Box>;
