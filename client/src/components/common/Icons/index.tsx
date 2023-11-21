@@ -1316,19 +1316,7 @@ export const DownloadIcon = ({ size = 32, color = "currentColor", ...props }) =>
 		<path d="M20 18H4v-7H2v7c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-7h-2v7Z" />
 	</svg>
 );
-export const LocationIcon = ({ size = 46, color = "currentColor", ...props }) => (
-	<svg
-		width={size}
-		height={size}
-		fill={color}
-		viewBox="0 0 24 24"
-		xmlns="http://www.w3.org/2000/svg"
-		{...props}
-	>
-		<path d="M12 14c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4Zm0-6c1.103 0 2 .897 2 2s-.897 2-2 2-2-.897-2-2 .897-2 2-2Z" />
-		<path d="M11.42 21.814a.998.998 0 0 0 1.16 0C12.884 21.599 20.03 16.44 20 10c0-4.411-3.589-8-8-8-4.41 0-8 3.589-8 7.995-.029 6.445 7.116 11.604 7.42 11.819ZM12 4c3.31 0 6 2.691 6 6.005.021 4.438-4.388 8.423-6 9.73-1.61-1.308-6.02-5.294-6-9.735 0-3.309 2.691-6 6-6Z" />
-	</svg>
-);
+
 export const PlusCircleIcon = ({ size = 35, strokeWidth = 1.5, color = "currentColor", ...props }) => (
 	<Icon
 		width={size}
@@ -1961,5 +1949,23 @@ export const ArrowReturnIcon = ({ size = 46, color = "currentColor", ...props })
 			d="M19.32 4.68a.6.6 0 0 1 .6.6v5.76a3 3 0 0 1-3 3H5.17l4.016 4.015a.6.6 0 1 1-.85.85l-5.04-5.04a.6.6 0 0 1 0-.85l4.8-4.8a.6.6 0 1 1 .85.85L5.169 12.84H16.92a1.8 1.8 0 0 0 1.8-1.8V5.28a.6.6 0 0 1 .6-.6Z"
 			clipRule="evenodd"
 		/>
+	</Icon>
+);
+
+export const LocationIcon = ({ size = 47, strokeWidth = 1, color = "#000000", ...props }) => (
+	<Icon
+		width={size}
+		height={size}
+		fill="none"
+		stroke={color}
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		strokeWidth={strokeWidth}
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path d="M12 2.25c-3.727 0-6.75 2.878-6.75 6.422 0 4.078 4.5 10.54 6.152 12.773a.739.739 0 0 0 1.196 0c1.652-2.231 6.152-8.692 6.152-12.773 0-3.544-3.023-6.422-6.75-6.422Z" />
+		<path d="M12 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" />
 	</Icon>
 );

@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Divider, Flex, TabPanel, Text, Tag, useDisclosure, Button } from "@chakra-ui/react";
 import ItemCart from "./ItemCart";
+import { checkOrderStatus, formatNumber } from "~/utils/fc";
 
 type Props = {
 	item: any;
@@ -28,32 +29,33 @@ const ItemOrder = ({
 		<Box
 			p="6"
 			my={4}
+			py="8"
+			px="6"
 			rounded="xl"
-			backgroundColor="bg.gray"
+			borderWidth="1px"
+			borderColor="#eef1f6"
+			boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 		>
 			<Flex justifyContent="space-between">
 				<Text
 					fontSize="14px"
 					fontWeight={"bold"}
 				>
-					Mã đơn hàng:
-					<Text
-						as={"span"}
-						fontSize="14px"
-					>
-						{item._id}
-					</Text>
+					Mã đơn hàng: #{item._id}
 				</Text>
-				<Tag
-					fontSize="10px"
-					fontWeight="bold"
-					textTransform={"uppercase"}
-					color="text.textDelete"
-					bgColor="bg.bgDelete"
-					rounded="md"
+
+				<Text
+					py="1"
+					px="4"
+					fontSize="xs"
+					fontWeight="semibold"
+					display="inline-block"
+					rounded="4px"
+					bg={checkOrderStatus(item.status as string)?.background}
+					color={checkOrderStatus(item.status as string)?.color}
 				>
-					{item.status}
-				</Tag>
+					{checkOrderStatus(item.status as string)?.status}
+				</Text>
 			</Flex>
 			<Divider my="1" />
 			<Box>
@@ -83,8 +85,8 @@ const ItemOrder = ({
 
 					<Button
 						fontWeight={"600 "}
-						bgColor="bg.bgSuccess"
-						color="text.textSuccess"
+						bgColor="bg.bgEdit"
+						color="text.textEdit"
 						h="40px"
 						fontSize="13px"
 						rounded="md"
@@ -94,7 +96,12 @@ const ItemOrder = ({
 					</Button>
 					{item.status == "delivered" && currentDate < targetTimeReturn && (
 						<Button
-							size={"sm"}
+							fontWeight={"600 "}
+							bgColor="bg.bgSuccess"
+							color="text.textSuccess"
+							h="40px"
+							fontSize="13px"
+							rounded="md"
 							onClick={() => handleOpenModelReturn(item)}
 						>
 							Hoàn hàng
@@ -102,8 +109,12 @@ const ItemOrder = ({
 					)}
 					{item.status == "pendingComplete" && (
 						<Button
-							bgColor="bg.green"
-							size={"sm"}
+							fontWeight={"600 "}
+							bgColor="bg.bgSuccess"
+							color="text.textSuccess"
+							h="40px"
+							fontSize="13px"
+							rounded="md"
 							onClick={() => handleConfirmCompleted(item)}
 						>
 							Đã nhận hàng
@@ -114,7 +125,7 @@ const ItemOrder = ({
 					fontSize="14px"
 					fontWeight="bold"
 				>
-					Thành tiền:{item?.total_amount.toLocaleString()}đ
+					Thành tiền: {formatNumber(`${item?.total_amount}`)} VND
 				</Text>
 			</Flex>
 		</Box>

@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Center, Flex, Text } from "@chakra-ui/layout";
 import { Button, Table, Tbody, Td, Th, Thead, Tr, Spinner } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -71,8 +71,6 @@ export default function TableThinkPro<Data extends object>({
 
 	return (
 		<Box
-			px="6"
-			py="8"
 			borderWidth="1px"
 			borderColor="border.primary"
 			rounded="xl"
@@ -104,13 +102,11 @@ export default function TableThinkPro<Data extends object>({
 										fontSize="xs"
 										_first={{
 											paddingLeft: 5,
-											borderTopLeftRadius: "10px",
-											borderBottomLeftRadius: "10px",
+											borderTopLeftRadius: "12px",
 										}}
 										_last={{
 											paddingRight: 5,
-											borderTopRightRadius: "10px",
-											borderBottomRightRadius: "10px",
+											borderTopRightRadius: "12px",
 										}}
 										w="max-content"
 									>
@@ -120,7 +116,10 @@ export default function TableThinkPro<Data extends object>({
 											w="inherit"
 											gap="8"
 										>
-											<Text as="span">
+											<Text
+												as="span"
+												fontSize="xs"
+											>
 												{flexRender(header.column.columnDef.header, header.getContext())}
 											</Text>
 
@@ -226,55 +225,77 @@ export default function TableThinkPro<Data extends object>({
 			</Table>
 			{!loading && (
 				<Flex
-					py="6"
+					py="4"
 					px="0"
+					mx="6"
 					alignItems="flex-end"
 					justifyContent="space-between"
 				>
-					<Button
-						h="38px"
+					<Flex
+						w="9"
+						h="9"
+						alignItems="center"
+						justifyContent="center"
 						bgColor="bg.white"
 						border="1px solid #D9E1E7CC"
-						rounded="lg"
+						rounded="full"
 						transition="all 0.3s"
 						color={table.getCanPreviousPage() ? "text.black" : "#1c1f2366"}
 						cursor={table.getCanPreviousPage() ? "pointer" : "not-allowed"}
-						leftIcon={
-							<ArrowRightIcon
-								size={4}
-								transform="rotate(180deg)"
-							/>
-						}
 						onClick={() => {
 							if (!table.getCanPreviousPage()) return;
 							table.previousPage();
 						}}
 					>
-						Previous
-					</Button>
+						<ArrowRightIcon
+							size={4}
+							transform="rotate(180deg)"
+						/>
+					</Flex>
 					<Flex
 						fontSize="sm"
 						color="text.black"
 						fontWeight="semibold"
+						px="4"
+						py="1"
+						gap="2"
 					>
-						{`Trang ${table.getState().pagination.pageIndex + 1}/${table.getPageCount()}`}
+						<Center
+							as="span"
+							display="inline-flex"
+							rounded="full"
+							fontSize="13px"
+						>
+							{table.getState().pagination.pageIndex + 1}
+						</Center>
+						|
+						<Center
+							as="span"
+							display="inline-flex"
+							rounded="full"
+							fontSize="13px"
+						>
+							{table.getPageCount()}
+						</Center>
 					</Flex>
-					<Button
-						h="38px"
+					<Flex
+						w="9"
+						h="9"
+						alignItems="center"
+						justifyContent="center"
 						bgColor="bg.white"
 						border="1px solid #D9E1E7CC"
-						rounded="lg"
+						rounded="full"
 						transition="all 0.3s"
 						color={table.getCanNextPage() ? "text.black" : "#1c1f2366"}
 						cursor={table.getCanNextPage() ? "pointer" : "not-allowed"}
-						rightIcon={<ArrowRightIcon size={4} />}
 						onClick={() => {
 							if (!table.getCanNextPage()) return;
 							table.nextPage();
 						}}
 					>
-						Next
-					</Button>
+						<ArrowRightIcon size={4} />
+					</Flex>
 				</Flex>
 			)}
 		</Box>

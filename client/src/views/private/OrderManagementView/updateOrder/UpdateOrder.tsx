@@ -26,6 +26,7 @@ import Transport from "~/views/public/PaymentView/components/Transport";
 import CartItem from "./components/CartItem";
 import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import LoadingPolytech from "~/components/LoadingPolytech";
 
 type Props = {};
 
@@ -171,7 +172,7 @@ const UpdateOrder = (props: Props) => {
 	}, [data]);
 
 	if (isLoading) {
-		return <Box>Loading..</Box>;
+		return <LoadingPolytech />;
 	}
 
 	const handleChooseAdress = (data: any) => {
@@ -199,15 +200,16 @@ const UpdateOrder = (props: Props) => {
 			px="6"
 			py="8"
 			mb="8"
-			rounded="lg"
+			rounded="xl"
 		>
 			<Heading
 				as="h2"
 				fontSize="18"
-				fontWeight={"600"}
-				pb={"20px"}
+				fontWeight={"bold"}
+				textTransform="uppercase"
+				mb="8"
 			>
-				Cập nhật đơn hàng: POLY{id}
+				Cập nhật đơn hàng: #{id}
 			</Heading>
 			<Grid
 				gridTemplateColumns="repeat(2,1fr)"
@@ -226,6 +228,13 @@ const UpdateOrder = (props: Props) => {
 							borderColor="#eef1f6"
 							boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 						>
+							<Heading
+								mb="4"
+								fontSize="md"
+								fontWeight="bold"
+							>
+								✔ Thông tin chung
+							</Heading>
 							<Flex gap={"16px"}>
 								<FormControl>
 									<FormLabel
@@ -251,7 +260,7 @@ const UpdateOrder = (props: Props) => {
 										fontSize="sm"
 										fontWeight="semibold"
 									>
-										Số điện thoại
+										SĐT
 									</FormLabel>
 									<Input
 										type="string"
@@ -369,20 +378,33 @@ const UpdateOrder = (props: Props) => {
 								justifyContent={"end"}
 								display={"flex"}
 							>
-								<Button type="submit">Cập Nhật</Button>
+								<Button
+									type="submit"
+									bg="bg.bgEdit"
+									color="text.textEdit"
+								>
+									Cập Nhật
+								</Button>
 							</Box>
 						</Box>
 					</form>
 				</GridItem>
 				<GridItem>
 					<Box
-						py="4"
-						px="2"
+						py="8"
+						px="6"
 						rounded="xl"
 						borderWidth="1px"
 						borderColor="#eef1f6"
 						boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 					>
+						<Heading
+							mb="4"
+							fontSize="md"
+							fontWeight="bold"
+						>
+							✔ Sản phẩm
+						</Heading>
 						{data?.data?.products.map((item: any) => {
 							return (
 								<CartItem
@@ -396,13 +418,20 @@ const UpdateOrder = (props: Props) => {
 					</Box>
 					<Box
 						my={8}
-						py="4"
-						px="2"
+						py="8"
+						px="6"
 						rounded="xl"
 						borderWidth="1px"
 						borderColor="#eef1f6"
 						boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 					>
+						<Heading
+							mb="4"
+							fontSize="md"
+							fontWeight="bold"
+						>
+							✔ Tổng tiền
+						</Heading>
 						<Flex
 							justifyContent="flex-end"
 							gap="20px"
