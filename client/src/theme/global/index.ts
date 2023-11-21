@@ -29,6 +29,8 @@ const GlobalStyles = {
 			textDelete: "#ef476f",
 			textSuccess: "#06d6a0",
 			textWarning: "#f1be46",
+			textEv: "#7c6bff",
+			textEn: "#4cabd4",
 		},
 		// màu background
 		bg: {
@@ -47,6 +49,8 @@ const GlobalStyles = {
 			bgDelete: "#fcdae2",
 			bgSuccess: "#cdf7ec",
 			bgWarning: "#fcf2da",
+			bgEv: "#e5e1ff",
+			bgEn: "#d2edf6",
 		},
 		border: {
 			primary: "#e9ebec",

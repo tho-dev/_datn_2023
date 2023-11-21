@@ -45,7 +45,7 @@ const DialogThinkPro = ({
 			// closeOnOverlayClick={false}
 		>
 			<AlertDialogOverlay bg="#1c1f23bf" />
-			<AlertDialogContent>
+			<AlertDialogContent rounded="2xl">
 				<AlertDialogHeader>{title}</AlertDialogHeader>
 				<AlertDialogCloseButton />
 				<AlertDialogBody>{children}</AlertDialogBody>

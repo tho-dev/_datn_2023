@@ -24,7 +24,7 @@ import { useGetAllOrderQuery } from "~/redux/api/order";
 import OrderFilter from "./components/OrderFilter";
 import { useForm } from "react-hook-form";
 import SelectThinkPro from "~/components/SelectThinkPro";
-import { chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
+import { checkOrderStatus, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 type Props = {};
 
 const OrderManagementView = (props: Props) => {
@@ -60,7 +60,7 @@ const OrderManagementView = (props: Props) => {
 					</Text>
 				);
 			},
-			header: "ID đơn hàng",
+			header: "ID",
 		}),
 		columnHelper.accessor("customer_name", {
 			cell: (info) => (
@@ -89,14 +89,33 @@ const OrderManagementView = (props: Props) => {
 			header: "Số điện thoại",
 		}),
 		columnHelper.accessor("status", {
-			cell: (info) => <Tag>{info.getValue()}</Tag>,
+			cell: (info) => (
+				<Text
+					py="1"
+					px="4"
+					fontSize="xs"
+					fontWeight="semibold"
+					display="inline-block"
+					rounded="4px"
+					bg={checkOrderStatus(info.getValue() as string)?.background}
+					color={checkOrderStatus(info.getValue() as string)?.color}
+				>
+					{checkOrderStatus(info.getValue() as string)?.status}
+				</Text>
+			),
 			header: "Trạng thái đơn hàng",
 		}),
 		columnHelper.accessor("payment_method", {
 			cell: (info) => (
 				<Text
-					fontWeight="medium"
-					fontSize="13px"
+					py="1"
+					px="4"
+					fontSize="xs"
+					fontWeight="semibold"
+					display="inline-block"
+					rounded="4px"
+					bg="bg.bgEdit"
+					color="text.textEdit"
 				>
 					{info.getValue()?.orderInfo || info.getValue() || ""}
 				</Text>
@@ -106,8 +125,14 @@ const OrderManagementView = (props: Props) => {
 		columnHelper.accessor("payment_status", {
 			cell: (info) => (
 				<Text
-					fontWeight="medium"
-					fontSize="13px"
+					py="1"
+					px="4"
+					fontSize="xs"
+					fontWeight="semibold"
+					display="inline-block"
+					rounded="4px"
+					bgColor={info.getValue() == "paid" ? "bg.bgSuccess" : "bg.bgDelete"}
+					color={info.getValue() == "paid" ? "text.textSuccess" : "text.textDelete"}
 				>
 					{info.getValue() == "paid" ? "Đã thanh toán" : "Chưa thanh toán"}
 				</Text>
@@ -174,10 +199,10 @@ const OrderManagementView = (props: Props) => {
 	return (
 		<Box
 			bgColor="bg.white"
-			px="6"
 			py="8"
+			px="6"
 			mb="8"
-			rounded="lg"
+			rounded="2xl"
 		>
 			<Flex
 				alignItems="center"
@@ -215,14 +240,14 @@ const OrderManagementView = (props: Props) => {
 			</Flex>
 			{/* <Metrics /> */}
 			<Flex
-				gap={2}
+				gap={6}
 				justifyContent={"space-between"}
 			>
 				<Flex
 					w="95%"
 					gap="4"
 				>
-					<Box flex="1.4">
+					<Box display="inline-block">
 						<SelectThinkPro
 							control={control}
 							name="status"
@@ -238,19 +263,19 @@ const OrderManagementView = (props: Props) => {
 									value: "confirmed",
 								},
 								{
-									label: "Đang giao",
+									label: "Đang vận chuyển",
 									value: "delivering",
 								},
 								{
-									label: "Đã giao",
+									label: "Đã hoàn thành",
 									value: "delivered",
 								},
 								{
-									label: "Đã huỷ",
+									label: "Đã huỷ đơn",
 									value: "cancelled",
 								},
 								{
-									label: "Hoàn hàng",
+									label: "Đã hoàn hàng",
 									value: "returned",
 								},
 								{
@@ -268,7 +293,7 @@ const OrderManagementView = (props: Props) => {
 						/>
 					</Box>
 
-					<Box flex="1.5">
+					<Box display="inline-block">
 						<SelectThinkPro
 							control={control}
 							name="payment_status"
@@ -287,7 +312,7 @@ const OrderManagementView = (props: Props) => {
 						/>
 					</Box>
 
-					<Box flex="1.5">
+					<Box display="inline-block">
 						<SelectThinkPro
 							control={control}
 							name="payment_method"

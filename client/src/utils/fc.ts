@@ -45,8 +45,8 @@ export function formatPhoneNumber(phoneNumber: string) {
 	return phoneNumber;
 }
 export function formatPhoneNumberPlus(phoneNumber: string) {
-	if (phoneNumber.startsWith('+84') && phoneNumber.length === 12) {
-		return '0' + phoneNumber.substring(3);
+	if (phoneNumber.startsWith("+84") && phoneNumber.length === 12) {
+		return "0" + phoneNumber.substring(3);
 	}
 	return phoneNumber;
 }
@@ -151,4 +151,51 @@ export const checkStatusOrder = (status: string) => {
 		return "Đã hoàn hàng";
 	}
 	return "Chờ xác nhận";
+};
+
+export const checkOrderStatus = (status: string) => {
+	switch (status) {
+		case "processing":
+			return {
+				status: "Chờ xác nhận",
+				color: "#f1bf63",
+				background: "#fcf2da",
+			};
+		case "pendingComplete":
+			return {
+				status: "Chờ hoàn thành",
+				color: "#f1bf63",
+				background: "#fcf2da",
+			};
+		case "returned":
+			return {
+				status: "Đã hoàn hàng",
+				color: "#fe3464",
+				background: "#fe34641a",
+			};
+		case "confirmed":
+			return {
+				status: "Đã xác nhận",
+				color: "#0abb87",
+				background: "#0abb871a",
+			};
+		case "delivering":
+			return {
+				status: "Đang vận chuyển",
+				color: "#0abb87",
+				background: "#0abb871a",
+			};
+		case "cancelled":
+			return {
+				status: "Đã hủy đơn",
+				color: "#fe3464",
+				background: "#fe34641a",
+			};
+		case "delivered":
+			return {
+				status: "Đã hoàn thành",
+				color: "#0abb87",
+				background: "#0abb871a",
+			};
+	}
 };
