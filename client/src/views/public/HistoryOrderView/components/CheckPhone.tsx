@@ -1,6 +1,4 @@
 import { useForm } from "react-hook-form";
-import { joiResolver } from "@hookform/resolvers/joi";
-import { useNavigate } from "react-router-dom";
 
 import { Box, Grid, GridItem } from "@chakra-ui/layout";
 import { useState } from "react";
@@ -15,7 +13,6 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
-import { useGetOrderByPhoneNumberMutation } from "~/redux/api/order";
 import { chuyenDoiSoDienThoai } from "~/utils/fc";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -42,7 +39,7 @@ const CheckPhone = ({
 
   const [checkCaptch, setCheckCaptch] = useState(false);
 
-  const onChange = (value: any) => {
+  const onChange = () => {
     setCheckCaptch(true);
   };
 

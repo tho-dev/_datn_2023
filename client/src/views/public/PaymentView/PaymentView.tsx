@@ -13,9 +13,8 @@ import { HelmetProvider } from "react-helmet-async";
 import PaySummary from "./components/PaySummary";
 import ProductPay from "./components/ProductPay";
 import { useForm } from "react-hook-form";
-import axios, { Axios } from "axios";
-import { useNavigate } from "react-router";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import axios from "axios";
+import { useAppSelector } from "~/redux/hook/hook";
 import { useGetCartQuery } from "~/redux/api/cart";
 import PopupCheckOtp from "./components/PopupCheckOtp";
 import {
@@ -26,21 +25,15 @@ import {
   Input,
   Link,
   Textarea,
-  IconButton,
 } from "@chakra-ui/react";
 import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Transport from "./components/Transport";
-import {
-  chuyenDoiSoDienThoai,
-  chuyenDoiSoDienThoaiVe0,
-  formatPhoneNumber,
-} from "~/utils/fc";
+import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 import { socket } from "~/App";
 import { useGetValueCouponMutation } from "~/redux/api/coupon";
-type Props = {};
 
-const Payment = (props: Props) => {
+const Payment = () => {
   const [dataOrder, setDataOrder] = useState({} as any);
   const [methodOrder, setMethodOrder] = React.useState("at_store");
   const [methodPayment, setMethodPayment] = React.useState("tructiep");

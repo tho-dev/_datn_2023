@@ -12,7 +12,7 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link as ReactRouterLink } from "react-router-dom";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";

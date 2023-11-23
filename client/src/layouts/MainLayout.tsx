@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { Box, Center, Flex } from "@chakra-ui/layout";
+import { Box, Center } from "@chakra-ui/layout";
 import { TheHeader } from "~/components/common/TheHeader";
 import { TheNav } from "~/components/common/TheNav";
 import { TheFooter } from "~/components/common/TheFooter";
@@ -8,9 +8,7 @@ import CompareThinkPro from "~/components/CompareThinkPro";
 import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
 
-type Props = {};
-
-const MainLayout = (props: Props) => {
+const MainLayout = () => {
   const { pathname } = useLocation();
   const [checkRouter, setCheckRouter] = useState(false);
 

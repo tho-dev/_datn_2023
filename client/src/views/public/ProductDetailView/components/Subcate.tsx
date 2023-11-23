@@ -1,9 +1,6 @@
-import React, { useState, useRef } from "react";
-import { useDisclosure, Text, Flex, Box, Image } from "@chakra-ui/react";
+import { Text, Flex, Box, Image } from "@chakra-ui/react";
 import { NavArrowRightIcon } from "~/components/common/Icons";
-import { GiftIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
-import logo from "~/assets/images/logo-thinkpro.svg";
 
 type Props = {
   brand: any;
@@ -11,8 +8,6 @@ type Props = {
 };
 
 const Subcate = ({ brand, category }: Props) => {
-  console.log(brand, category);
-
   return (
     <Box>
       <Box bgColor={"white"} borderRadius={"6px"} mt="4" p="6">

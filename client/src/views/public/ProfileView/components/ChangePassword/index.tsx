@@ -1,16 +1,14 @@
-import { Divider, Flex, Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
+import { Divider, Flex, Grid, GridItem, Stack } from "@chakra-ui/layout";
 import {
   Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Image,
   Input,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
 import { useForm } from "react-hook-form";
-import { CheckedIcon, CloseSmallIcon } from "~/components/common/Icons";
+import { CheckedIcon } from "~/components/common/Icons";
 import { useUpdatePassWordMutation } from "~/redux/api/user";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "~/redux/hook/hook";
@@ -29,7 +27,7 @@ const ChangePassword = ({ user }: Props) => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
   const onSubmit = (data: any) => {

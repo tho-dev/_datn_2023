@@ -1,4 +1,3 @@
-import React, { useState, useRef } from "react";
 import {
   useDisclosure,
   Text,
@@ -9,7 +8,6 @@ import {
 } from "@chakra-ui/react";
 import { NavArrowRightIcon } from "~/components/common/Icons";
 import DialogThinkPro from "~/components/DialogThinkPro";
-import ItemBonus from "../../CartView/components/ItemBonus";
 
 type Props = {
   attributes: any;

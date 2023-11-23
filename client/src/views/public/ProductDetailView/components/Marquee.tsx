@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -18,12 +18,10 @@ import Marquee from "react-fast-marquee";
 import {
   BellIcon,
   NavArrowRightIcon,
-  TimeIcon,
   EmailIcon,
   HeadphoneIcon,
   ClockIcon,
 } from "~/components/common/Icons";
-type Props = {};
 
 const dataFake = [
   {
@@ -61,9 +59,9 @@ const dataFake = [
       "Khách hàng bận bịu. Cán bộ, nhân viên ThinkPro càng phải phục vụ ngoài giờ để trải nghiệm của khách hàng được thông suốt.",
   },
 ];
-const MarqueeReact = (props: Props) => {
+const MarqueeReact = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [scrollBehavior, setScrollBehavior] = useState<any>("inside");
+  const [scrollBehavior] = useState<any>("inside");
   const btnRef = useRef(null);
   return (
     <>

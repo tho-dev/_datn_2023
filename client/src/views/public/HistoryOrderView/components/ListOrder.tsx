@@ -4,10 +4,7 @@ import {
   Divider,
   Flex,
   Text,
-  Tag,
   GridItem,
-  Image,
-  IconButton,
   useDisclosure,
   Button,
   useToast,
@@ -18,10 +15,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import {
-  CloseSmallIcon,
   NavArrowLeflIcon,
   NavArrowRightIcon,
-  PlusIcon,
 } from "~/components/common/Icons/index";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import DetailOrder from "./DetailOrder";
@@ -33,11 +28,10 @@ import orderApi, {
   useReturnOrderMutation,
 } from "~/redux/api/order";
 import moment from "moment";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useAppDispatch } from "~/redux/hook/hook";
 import LoadingPolytech from "~/components/LoadingPolytech";
-import { chuyenDoiSoDienThoaiVe0, formatPhoneNumberPlus } from "~/utils/fc";
-import FileUploadThinkPro from "~/components/FileUploadThinkPro";
+import { checkOrderStatus, formatPhoneNumberPlus } from "~/utils/fc";
 import Media from "~/views/private/ProductManagerView/components/AddProductMangerView/components/Media";
 
 type Props = {
@@ -123,7 +117,7 @@ const ListOrder = ({
     }
     cancelOrder({ id: orderDetail._id })
       .unwrap()
-      .then((data: any) => {
+      .then(() => {
         dispatch(orderApi.util.invalidateTags(["Order"]));
         toast({
           title: "Hệ thống",
@@ -134,7 +128,7 @@ const ListOrder = ({
           position: "bottom-right",
         });
       })
-      .catch((error: any) => {
+      .catch(() => {
         toast({
           title: "Hệ thống",
           description: "Huỷ đơn hàng thất bại",
@@ -300,7 +294,7 @@ const ListOrder = ({
         </Flex>
       </Flex>
 
-      <Grid gridTemplateColumns="repeat(3,1fr)" gap={4} w="100%" my={6}>
+      <Grid gridTemplateColumns="repeat(2,1fr)" gap={4} w="100%" my={6}>
         {dataOrder?.length > 0 ? (
           dataOrder.map((item) => {
             const targetTime = new Date(item?.created_at);
@@ -308,21 +302,25 @@ const ListOrder = ({
             return (
               <GridItem>
                 <Box p="4" rounded="md" backgroundColor="bg.white" minH={250}>
-                  <Flex justifyContent="space-between">
+                  <Flex justifyContent="space-between" p="2">
                     <Text fontSize="14px" fontWeight={"bold"}>
                       Mã đơn hàng:{" "}
                       <Text as={"span"} fontSize="12px">
                         POLYTECH{item?._id}
                       </Text>
                     </Text>
-                    <Tag
-                      fontSize="10px"
-                      fontWeight="bold"
-                      textTransform={"uppercase"}
-                      color={"text.red"}
+                    <Text
+                      py="1"
+                      px="4"
+                      fontSize="xs"
+                      fontWeight="semibold"
+                      display="inline-block"
+                      rounded="4px"
+                      bg={checkOrderStatus(item.status as string)?.background}
+                      color={checkOrderStatus(item.status as string)?.color}
                     >
-                      {item?.status}
-                    </Tag>
+                      {checkOrderStatus(item.status as string)?.status}
+                    </Text>
                   </Flex>
                   <Divider />
                   <Box>
@@ -330,6 +328,7 @@ const ListOrder = ({
                       justifyContent={"space-between"}
                       my={"4"}
                       alignItems="center"
+                      p="2"
                     >
                       <Flex
                         alignItems="center"
@@ -392,36 +391,39 @@ const ListOrder = ({
                   >
                     <Flex gap={2} my={2}>
                       <Button
-                        fontWeight={"600"}
-                        fontSize={"12px"}
-                        _hover={{ bgColor: "blue" }}
-                        type="button"
-                        bgColor={"bg.blue"}
-                        size={"sm"}
+                        fontWeight={"600 "}
+                        bgColor="bg.bgEdit"
+                        color="text.textEdit"
+                        h="40px"
+                        fontSize="13px"
+                        rounded="md"
                         onClick={() => handleGetOrderDetail(item)}
                       >
-                        Xem thêm
+                        Chi tiết
                       </Button>
                       {item.status == "processing" &&
                         currentDate < targetTime && (
                           <Button
                             fontWeight={"600"}
-                            fontSize={"12px"}
-                            _hover={{ bgColor: "red" }}
                             type="button"
+                            bgColor="bg.bgDelete"
+                            color="text.textDelete"
+                            h="40px"
+                            fontSize="13px"
+                            rounded="md"
                             onClick={(e) => handleOpenModelCancel(item, e)}
-                            size={"sm"}
                           >
                             Huỷ đơn
                           </Button>
                         )}
                       {item.status == "delivered" && (
                         <Button
-                          size={"sm"}
-                          fontSize={"12px"}
                           fontWeight={"600 "}
-                          bg={"bg.green"}
-                          _hover={{ bgColor: "green" }}
+                          bgColor="bg.bgSuccess"
+                          color="text.textSuccess"
+                          h="40px"
+                          fontSize="13px"
+                          rounded="md"
                           onClick={(e) => handleOpenModelReturn(item, e)}
                         >
                           Hoàn hàng
@@ -429,11 +431,12 @@ const ListOrder = ({
                       )}
                       {item.status == "pendingComplete" && (
                         <Button
-                          size={"sm"}
-                          fontSize={"12px"}
                           fontWeight={"600 "}
-                          bg={"bg.green"}
-                          _hover={{ bgColor: "green" }}
+                          bgColor="bg.bgSuccess"
+                          color="text.textSuccess"
+                          h="40px"
+                          fontSize="13px"
+                          rounded="md"
                           onClick={(e) => handleConfirmCompleted(item, e)}
                         >
                           Đã nhận hàng

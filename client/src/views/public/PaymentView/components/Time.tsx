@@ -1,7 +1,6 @@
-import { Box, Flex } from "@chakra-ui/layout";
-import { Button, IconButton, Text } from "@chakra-ui/react";
-import { bg } from "date-fns/locale";
-import React, { useEffect, useState } from "react";
+import { Flex } from "@chakra-ui/layout";
+import { IconButton, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { RefreshIcon } from "~/components/common/Icons";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { setCheckOtp, setOtp, setTime } from "~/redux/slices/globalSlice";

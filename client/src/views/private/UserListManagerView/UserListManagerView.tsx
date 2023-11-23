@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import UserSearch from "./components/UserSearch";
 import {
@@ -25,9 +25,8 @@ import {
 } from "~/redux/api/user";
 import moment from "moment";
 import { useAppSelector } from "~/redux/hook/hook";
-type Props = {};
 
-const UserListManagerView = (props: Props) => {
+const UserListManagerView = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -58,7 +57,7 @@ const UserListManagerView = (props: Props) => {
     }
     update({ data, id })
       .unwrap()
-      .then((data) => {
+      .then(() => {
         toast({
           title: "Thành công",
           duration: 1600,
@@ -116,7 +115,7 @@ const UserListManagerView = (props: Props) => {
     const data = { is_block: true };
     update({ data, id: idUser })
       .unwrap()
-      .then((data) => {
+      .then(() => {
         toast({
           title: "Thành công",
           duration: 1600,

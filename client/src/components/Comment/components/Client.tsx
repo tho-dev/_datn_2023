@@ -1,15 +1,7 @@
-import {
-  Box,
-  Flex,
-  Text,
-  Grid,
-  GridItem,
-  Spacer,
-  Divider,
-} from "@chakra-ui/layout";
-import { Avatar, Button, Image, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Avatar, Button, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { set, ref, onValue, remove, update } from "firebase/database";
+import { ref, onValue, remove } from "firebase/database";
 import { db } from "~/firebase";
 import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";

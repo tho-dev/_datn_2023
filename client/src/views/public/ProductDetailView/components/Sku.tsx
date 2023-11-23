@@ -1,16 +1,8 @@
 import { Box, Divider, Flex, Grid, GridItem } from "@chakra-ui/layout";
-import React, { useEffect, useState } from "react";
-import { Button, Input, Text, Tooltip } from "@chakra-ui/react";
-import {
-  CopyIcon,
-  MinusIcon,
-  PlusIcon,
-  WarningIcon,
-} from "~/components/common/Icons";
-import Gift from "./Gift";
-import Buy from "./Buy";
+import { Button, Input, Text } from "@chakra-ui/react";
+import { CopyIcon, MinusIcon, PlusIcon } from "~/components/common/Icons";
 import CustomRadio from "./CustomRadio";
-import { formatNumber, sortJSON } from "~/utils/fc";
+import { formatNumber } from "~/utils/fc";
 import { useNavigate } from "react-router";
 import { useToast } from "@chakra-ui/react";
 type Props = {

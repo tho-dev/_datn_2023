@@ -10,17 +10,13 @@ import {
   TabPanels,
   Tabs,
   Text,
-  IconButton,
-  Tooltip,
 } from "@chakra-ui/react";
 import Info from "./components/Info";
 import ChangePassword from "./components/ChangePassword";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { useAppSelector } from "~/redux/hook/hook";
 import { InforOrder } from "./components/InforOrder";
 
-type Props = {};
-
-const ProfileView = (props: Props) => {
+const ProfileView = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
   return (
     <Box my="6" px="6" py="4" rounded="xl" bgColor="bg.white">

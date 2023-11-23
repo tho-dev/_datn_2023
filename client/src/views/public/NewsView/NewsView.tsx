@@ -1,13 +1,4 @@
-import {
-  Box,
-  Grid,
-  GridItem,
-  Text,
-  Flex,
-  Heading,
-  Wrap,
-  WrapItem,
-} from "@chakra-ui/layout";
+import { Box, Grid, GridItem, Text, Flex } from "@chakra-ui/layout";
 import NewsCategory from "./components/NewsCategory";
 import { Divider, Button } from "@chakra-ui/react";
 import { useGetAllPostQuery } from "~/redux/api/post";
@@ -18,7 +9,6 @@ import LoadingPolytech from "~/components/LoadingPolytech";
 
 const NewsView = () => {
   const { slug: params } = useParams();
-  const [showCompare, setShowCompare] = useState<boolean>(false);
   const [data, setData] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
 

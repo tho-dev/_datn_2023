@@ -1,12 +1,10 @@
 import { Box, Flex, Heading } from "@chakra-ui/layout";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  useDisclosure,
   useToast,
-  Select,
   Button,
   FormErrorMessage,
   FormLabel,
@@ -19,16 +17,14 @@ import {
   TagLabel,
   TagCloseButton,
 } from "@chakra-ui/react";
-import { Link, Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import QuillThinkPro from "~/components/QuillThinkPro";
 import { v4 as uuidv4 } from "uuid";
 import { useAddMutation } from "~/redux/api/ads";
 import { validateEmail } from "~/utils/fc";
 
-type Props = {};
-
-const AddGmailView = (props: Props) => {
+const AddGmailView = () => {
   const [add, { isLoading }] = useAddMutation();
   const navigate = useNavigate();
   const [emails, setEmails] = useState([] as any);

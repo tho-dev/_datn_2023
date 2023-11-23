@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
   AlertDialogOverlay,
   AlertDialogContent,
-  AlertDialogHeader,
   AlertDialogCloseButton,
   Button,
   Flex,
@@ -13,11 +12,7 @@ import {
   Text,
   GridItem,
   Grid,
-  Input,
-  InputLeftElement,
-  InputGroup,
 } from "@chakra-ui/react";
-import { TraskIcon } from "~/components/common/Icons";
 import ItemModalOrder from "./ItemModalOrder";
 import Flatpickr from "react-flatpickr";
 
@@ -56,7 +51,6 @@ function findMostFrequentObject(arr: any) {
 const ModalOrder = ({
   isOpen = false,
   onClose,
-  icon = <TraskIcon size={14} color="bg.red" />,
   size = "3xl",
   title = "Chi tiết thống kê đơn hàng",
   textBtnClose = "Đóng",

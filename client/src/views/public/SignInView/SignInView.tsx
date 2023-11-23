@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { HelmetProvider, Helmet } from "react-helmet-async";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import {
@@ -27,14 +26,12 @@ import {
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { loginSchema } from "~/validate/user";
 import { useSigninMutation } from "~/redux/api/user";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { useAppDispatch } from "~/redux/hook/hook";
 import { login } from "~/redux/slices/globalSlice";
 import { useGetCartByUserIdMutation } from "~/redux/api/cart";
 import { addCart } from "~/redux/slices/cartSlice";
 
-type Props = {};
-
-const SignInView = (props: Props) => {
+const SignInView = () => {
   const [loading, setLoading] = useState(false);
   const {
     register,

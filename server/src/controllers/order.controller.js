@@ -945,6 +945,7 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
         [_sort]: _order == "desc" ? -1 : 1,
       },
       select: ["-deleted", "-deleted_at"],
+      populate: ["shipping_info", "coupon_id"],
     };
 
     const { docs, ...paginate } = await Order.paginate(conditions, options);
@@ -1020,7 +1021,7 @@ export const getOrderByUserId = async (req, res, next) => {
         [_sort]: _order == "desc" ? -1 : 1,
       },
       select: ["-deleted", "-deleted_at"],
-      populate: "shipping_info",
+      populate: ["shipping_info", "coupon_id"],
     };
 
     const { docs, ...paginate } = await Order.paginate(conditions, options);

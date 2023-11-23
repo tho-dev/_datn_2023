@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import * as Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import {
   ArrowLeftCirleIcon,
@@ -22,19 +21,14 @@ import {
   Divider,
   AbsoluteCenter,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import {
-  Link as ReactRouterLink,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
+import { useState } from "react";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { registerSchema } from "~/validate/user";
 import { useToast } from "@chakra-ui/react";
 import { useSignupMutation } from "~/redux/api/user";
 import ReCAPTCHA from "react-google-recaptcha";
-type Props = {};
 
-const SignUpView = (props: Props) => {
+const SignUpView = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const [checkCaptch, setCheckCaptch] = useState(false);
@@ -45,7 +39,7 @@ const SignUpView = (props: Props) => {
   } = useForm<any>({
     resolver: joiResolver(registerSchema),
   });
-  const onChange = (value: any) => {
+  const onChange = () => {
     setCheckCaptch(true);
   };
   const [signup] = useSignupMutation();

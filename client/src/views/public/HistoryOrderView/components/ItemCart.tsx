@@ -1,7 +1,6 @@
 // import React, { useEffect, useState } from 'react';
 import { Box, Flex } from "@chakra-ui/layout";
 import { Image, Text } from "@chakra-ui/react";
-import { formatCurrency } from "~/utils/fc";
 
 type Props = {
   product: any;
@@ -25,17 +24,25 @@ const ItemCart = ({ product }: Props) => {
             <Text as={"p"} fontSize={"14px"} fontWeight={"bold"}>
               {product?.name}
             </Text>
-            <Box>
-              <Text
-                as={"p"}
-                fontSize={"12px"}
-                backgroundColor={"#F6F9FC"}
-                my={"2"}
-                fontWeight={"semibold"}
-              >
-                i5 1340P, QHD+ 16GB, 512GB, Mới, Full box, Nhập khẩu
-              </Text>
-            </Box>
+            <Flex gap="2" flexWrap="wrap" my={2}>
+              {product.option_value?.map((x: any, i: any) => {
+                return (
+                  <Text
+                    key={i}
+                    px="3"
+                    py="1"
+                    fontSize="xs"
+                    fontWeight="semibold"
+                    rounded="xl"
+                    borderWidth="1px"
+                    borderColor="#eef1f6"
+                    boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
+                  >
+                    {x}
+                  </Text>
+                );
+              })}
+            </Flex>
           </Box>
         </Flex>
       </Flex>

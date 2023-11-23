@@ -1,7 +1,13 @@
-import { useState } from 'react';
-import { Box, Flex, Text } from '@chakra-ui/layout';
-import { ArrowUpIcon, MailIcon } from '~/components/common/Icons';
-import { Image, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack } from '@chakra-ui/react';
+import { useState } from "react";
+import { Box, Flex, Text } from "@chakra-ui/layout";
+import { ArrowUpIcon } from "~/components/common/Icons";
+import {
+  Slider,
+  SliderFilledTrack,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
+} from "@chakra-ui/react";
 type Props = {
   title: string;
 };
@@ -9,31 +15,47 @@ const TopProduct = ({ title }: Props) => {
   const [sliderValue, setSliderValue] = useState(50);
 
   const labelStyles = {
-    mt: '2',
-    ml: '-2.5',
+    mt: "2",
+    ml: "-2.5",
     // fontSize: 'sm',
   };
   return (
-    <Box width='33%' border='1px solid #f1f4f9' rounded='md'>
-      <Flex justifyContent='space-between' borderBottom='1px solid #f1f4f9' p='4'>
-        <Text fontSize='18' fontWeight='bold'>
+    <Box width="33%" border="1px solid #f1f4f9" rounded="md">
+      <Flex
+        justifyContent="space-between"
+        borderBottom="1px solid #f1f4f9"
+        p="4"
+      >
+        <Text fontSize="18" fontWeight="bold">
           {title}
         </Text>
-        <Flex alignItems='center'>
-          <Text mr='2'>Repost</Text>
-          <ArrowUpIcon size={4} color='black' />
+        <Flex alignItems="center">
+          <Text mr="2">Repost</Text>
+          <ArrowUpIcon size={4} color="black" />
         </Flex>
       </Flex>
 
-      <Box mb='2' p='4'>
-        <Box my='4'>
-          <Text fontSize='16' fontWeight='semibold'>
+      <Box mb="2" p="4">
+        <Box my="4">
+          <Text fontSize="16" fontWeight="semibold">
             Fashion & Clothing
           </Text>
           <Box>
-            <Slider aria-label='slider-ex-6' onChange={(val) => setSliderValue(val)}>
+            <Slider
+              aria-label="slider-ex-6"
+              onChange={(val) => setSliderValue(val)}
+            >
               <SliderMark value={75} {...labelStyles}></SliderMark>
-              <SliderMark value={sliderValue} textAlign='center' bg='blue.300' rounded='md' color='white' mt='-10' ml='-5' w='10'>
+              <SliderMark
+                value={sliderValue}
+                textAlign="center"
+                bg="blue.300"
+                rounded="md"
+                color="white"
+                mt="-10"
+                ml="-5"
+                w="10"
+              >
                 {sliderValue}%
               </SliderMark>
               <SliderTrack>
@@ -44,13 +66,25 @@ const TopProduct = ({ title }: Props) => {
           </Box>
         </Box>
         <Box mt={8}>
-          <Text fontSize='16' fontWeight='semibold'>
+          <Text fontSize="16" fontWeight="semibold">
             Fashion & Clothing
           </Text>
           <Box>
-            <Slider aria-label='slider-ex-6' onChange={(val) => setSliderValue(val)}>
+            <Slider
+              aria-label="slider-ex-6"
+              onChange={(val) => setSliderValue(val)}
+            >
               <SliderMark value={95} {...labelStyles}></SliderMark>
-              <SliderMark value={sliderValue} textAlign='center' bg='blue.300' rounded='md' color='white' mt='-10' ml='-5' w='10'>
+              <SliderMark
+                value={sliderValue}
+                textAlign="center"
+                bg="blue.300"
+                rounded="md"
+                color="white"
+                mt="-10"
+                ml="-5"
+                w="10"
+              >
                 {sliderValue}%
               </SliderMark>
               <SliderTrack>
@@ -60,14 +94,26 @@ const TopProduct = ({ title }: Props) => {
             </Slider>
           </Box>
         </Box>
-        <Box mt='8'>
-          <Text fontSize='16'  fontWeight='semibold'>
+        <Box mt="8">
+          <Text fontSize="16" fontWeight="semibold">
             Fashion & Clothing
           </Text>
           <Box>
-            <Slider aria-label='slider-ex-6' onChange={(val) => setSliderValue(val)}>
+            <Slider
+              aria-label="slider-ex-6"
+              onChange={(val) => setSliderValue(val)}
+            >
               <SliderMark value={100} {...labelStyles}></SliderMark>
-              <SliderMark value={sliderValue} textAlign='center' bg='blue.300' rounded='md' color='white' mt='-10' ml='-5' w='10'>
+              <SliderMark
+                value={sliderValue}
+                textAlign="center"
+                bg="blue.300"
+                rounded="md"
+                color="white"
+                mt="-10"
+                ml="-5"
+                w="10"
+              >
                 {sliderValue}%
               </SliderMark>
               <SliderTrack>

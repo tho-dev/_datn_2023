@@ -5,15 +5,10 @@ import {
   Flex,
   Text,
   Button,
-  useDisclosure,
-  Heading,
   Checkbox,
 } from "@chakra-ui/react";
-import React from "react";
 import CardCompare from "./CardCompare";
 import { PlusIcon } from "~/components/common/Icons";
-import DialogThinkPro from "~/components/DialogThinkPro";
-import ListThinkPro from "~/components/ListThinkPro";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -70,9 +65,9 @@ const ListCardCompare = ({ items }: Props) => {
 
           {Array(4 - items.length)
             .fill(0)
-            .map((item, index) => {
+            .map((item) => {
               return (
-                <GridItem key={index} borderLeft="1px solid #ccc">
+                <GridItem key={item} borderLeft="1px solid #ccc">
                   <Box
                     display="flex"
                     flexDirection="column"

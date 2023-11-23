@@ -4,19 +4,14 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Image,
   Input,
   Box,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import FileUploadThinkPro from "~/components/FileUploadThinkPro";
-import {
-  CheckedIcon,
-  CloseSmallIcon,
-  PicIcon,
-} from "~/components/common/Icons";
+import { CheckedIcon } from "~/components/common/Icons";
 import { useUpdateMutation } from "~/redux/api/user";
 
 type Props = {
@@ -31,10 +26,12 @@ const Info = ({ user }: Props) => {
     register,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
   const image = watch("avatar");
   const [file, setFile] = useState<any>(null);
+  console.log(file);
+
   const onSubmit = async (data: any) => {
     if (
       data.email === user?.email &&

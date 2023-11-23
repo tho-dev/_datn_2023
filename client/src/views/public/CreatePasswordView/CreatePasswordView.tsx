@@ -19,13 +19,9 @@ import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { sendOtpPasswordSchema } from "~/validate/user";
 import { useSendOtpResetPasswordMutation } from "~/redux/api/user";
 import { resetForm, resetPassword } from "~/redux/slices/userSlice";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { useAppDispatch } from "~/redux/hook/hook";
 
-type Props = {};
-
-type State = {};
-
-const CreatePasswordView = (props: Props) => {
+const CreatePasswordView = () => {
   const {
     register,
     handleSubmit,

@@ -1,10 +1,7 @@
 import { Flex, Text } from "@chakra-ui/layout";
 import { Spinner } from "@chakra-ui/react";
-import React from "react";
 
-type Props = {};
-
-const LoadingPolytech = (props: Props) => {
+const LoadingPolytech = () => {
   return (
     <Flex
       position="fixed"

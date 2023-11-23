@@ -8,9 +8,7 @@ import { useEffect, useState } from "react";
 import { useCompareProductMutation } from "~/redux/api/product";
 import LoadingPolytech from "~/components/LoadingPolytech";
 
-type Props = {};
-
-const CompareView = (props: Props) => {
+const CompareView = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const { items } = useAppSelector(

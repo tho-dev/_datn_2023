@@ -24,7 +24,7 @@ const postApi = createApi({
 				url: `/post/${slug}`,
 				method: "GET",
 			}),
-			providesTags: (result, error, slug) => [{ type: "PostTag", slug }],
+			providesTags: (slug) => [{ type: "PostTag", slug }],
 		}),
 		createPost: build.mutation<any, IPost>({
 			query: (body) => ({

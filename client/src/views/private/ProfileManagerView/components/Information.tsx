@@ -7,20 +7,15 @@ import {
   FormErrorMessage,
   Grid,
   GridItem,
-  HStack,
-  Radio,
-  RadioGroup,
   Image,
   Button,
   Divider,
   Spacer,
-  Select,
-  Checkbox,
   useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useUpdateMutation } from "~/redux/api/user";
-import React, { useState } from "react";
+import { useState } from "react";
 type Props = {
   data: any;
 };
@@ -29,7 +24,7 @@ const Information = ({ data }: Props) => {
   const [loading, setLoading] = useState(false);
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     handleSubmit,
   } = useForm();
   const toast = useToast();
@@ -39,7 +34,7 @@ const Information = ({ data }: Props) => {
     setLoading(true);
     update({ data: data_form, id: data._id })
       .unwrap()
-      .then((data) => {
+      .then(() => {
         toast({
           title: "Thành công",
           duration: 1600,

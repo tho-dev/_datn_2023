@@ -1,13 +1,9 @@
-import React from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import banner from "~/assets/images/email.png";
 import { Image } from "@chakra-ui/react";
 
-type Props = {};
-
-const AuthLayout = (props: Props) => {
+const AuthLayout = () => {
   return (
     <Grid templateColumns="repeat(12, 1fr)" h="100vh">
       <GridItem

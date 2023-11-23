@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router";
+import { useEffect, useState } from "react";
 import { Flex, Box } from "@chakra-ui/layout";
 import Sidebar from "~/components/common/Sidebar";
 import TopBar from "~/components/common/TopBar";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import PrivateRoute from "~/routes/protected";
 import { useAppSelector } from "~/redux/hook/hook";
-import { useGetByIdQuery, useGetAllQuery } from "~/redux/api/notification";
+import { useGetAllQuery } from "~/redux/api/notification";
 import { socket } from "~/App";
-import { useToast } from "@chakra-ui/react";
 import LoadingPolytech from "~/components/LoadingPolytech";
-type Props = {};
 
-const AdminLayout = (props: Props) => {
+const AdminLayout = () => {
   const [status, setStatus] = useState(null);
   const user = useAppSelector((state) => state.persistedReducer.global.user);
   const { data, isLoading, isFetching } = useGetAllQuery({ status: status });

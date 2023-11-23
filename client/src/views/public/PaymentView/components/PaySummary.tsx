@@ -1,6 +1,5 @@
-import React from "react";
-import { Box, Flex, Heading } from "@chakra-ui/layout";
-import { Image, Text, Input, Button } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/layout";
+import { Text } from "@chakra-ui/react";
 
 type Props = {
   data: any;

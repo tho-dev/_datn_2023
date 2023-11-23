@@ -90,6 +90,7 @@ const UserSearch = ({ search, handleSearched, setFilter }: Props) => {
             w="260px"
             placeholder="Tìm kiếm tài khoản"
             onChange={handleSearched}
+            value={search}
           />
         </Flex>
       </Flex>

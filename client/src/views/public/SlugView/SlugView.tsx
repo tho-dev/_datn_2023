@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -29,9 +29,7 @@ import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { setIsCompare, setItems } from "~/redux/slices/globalSlice";
 import { RootState } from "~/redux/store";
 
-type Props = {};
-
-const SlugView = (props: Props) => {
+const SlugView = () => {
   const { slug: params } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -49,7 +47,7 @@ const SlugView = (props: Props) => {
   });
   const debouncedQuery = useDebounce(query, 600);
 
-  const { control, register, reset, setValue, watch } = useForm<any>();
+  const { control, register, setValue, watch } = useForm<any>();
   const { fields } = useFieldArray({
     control,
     name: "filters",

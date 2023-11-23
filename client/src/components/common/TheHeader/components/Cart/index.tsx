@@ -1,8 +1,7 @@
-import React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Text, Link } from "@chakra-ui/layout";
-import { Button, Image } from "@chakra-ui/react";
-import { CartNotFoundIcon, CloseSmallIcon } from "~/components/common/Icons";
+import { Image } from "@chakra-ui/react";
+import { CartNotFoundIcon } from "~/components/common/Icons";
 
 type Props = {
   data: any;

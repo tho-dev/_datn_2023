@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Box, Flex, HStack, Heading } from "@chakra-ui/layout";
-import { Image, Text, Input, Button } from "@chakra-ui/react";
-import ItemBonus from "./ItemProductBonus";
+import { Box, Flex } from "@chakra-ui/layout";
+import { Image, Text } from "@chakra-ui/react";
 
 type Props = {
   product: any;

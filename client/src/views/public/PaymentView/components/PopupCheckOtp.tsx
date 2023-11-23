@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import {
-  Box,
   Button,
   FormControl,
   FormErrorMessage,
-  FormLabel,
-  HStack,
-  Input,
   PinInput,
   PinInputField,
-  Radio,
-  RadioGroup,
   Text,
-  useDisclosure,
   Flex,
   useToast,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
 import {
   useCheckOtpMutation,
   useCreateMutation,
@@ -28,13 +20,9 @@ import { useNavigate } from "react-router";
 import Time from "./Time";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { resetOtp, setCheckOtp } from "~/redux/slices/globalSlice";
-import cartApi, {
-  useCreateCartMutation,
-  useDeleteCartMutation,
-} from "~/redux/api/cart";
-import { v4 as uuidv4 } from "uuid";
 import { socket } from "~/App";
 import { useAddNotiMutation } from "~/redux/api/notification";
+import cartApi from "~/redux/api/cart";
 type Props = {
   isOpenOtp: any;
   onOpenOtp: () => void;
@@ -42,12 +30,7 @@ type Props = {
   dataOrder: any;
 };
 
-const PopupCheckOtp = ({
-  onOpenOtp,
-  isOpenOtp,
-  onCloseOtp,
-  dataOrder,
-}: Props) => {
+const PopupCheckOtp = ({ isOpenOtp, onCloseOtp, dataOrder }: Props) => {
   const [value, setValue] = React.useState("");
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
@@ -68,7 +51,7 @@ const PopupCheckOtp = ({
     e.preventDefault();
     setLoading(true);
     if (value.length < 6) return;
-    const { payment_method, ...rest } = dataOrder;
+    const { payment_method } = dataOrder;
     checkOtp({
       phone_number: dataOrder?.phone_number,
       code: value,
@@ -139,7 +122,7 @@ const PopupCheckOtp = ({
     if (time == 0 && !isCheckOtp && isOpenOtp) {
       dispatch(setCheckOtp(60));
       sendOtp({ phone_number: dataOrder.phone_number })
-        .then((data) => {
+        .then(() => {
           toast({
             title: "Thanh Toán",
             description: "Gửi mã OTP thành công",
@@ -149,7 +132,7 @@ const PopupCheckOtp = ({
             position: "bottom-right",
           });
         })
-        .catch((err) => {
+        .catch(() => {
           toast({
             title: "Thanh Toán",
             description: "Gửi mã OTP thất bại",
@@ -164,7 +147,7 @@ const PopupCheckOtp = ({
 
   const handleSendOtp = () => {
     sendOtp({ phone_number: dataOrder.phone_number })
-      .then((data) => {
+      .then(() => {
         dispatch(setCheckOtp(60));
         toast({
           title: "Thanh Toán",
@@ -175,7 +158,7 @@ const PopupCheckOtp = ({
           position: "bottom-right",
         });
       })
-      .catch((err) => {
+      .catch(() => {
         toast({
           title: "Thanh Toán",
           description: "Gửi lại mã OTP thất bại",

@@ -1,20 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Text,
-  Flex,
-  Box,
-  Heading,
-  Input,
-  Button,
-} from "@chakra-ui/react";
-import { NavArrowRightIcon } from "~/components/common/Icons";
+import { useState, useEffect } from "react";
+import { Flex, Box, Heading, Input, Button } from "@chakra-ui/react";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import axios from "axios";
 
@@ -25,7 +10,7 @@ type Props = {
   handleChooseAdress: (data: any) => void;
 };
 
-const Transport = ({ isOpen, onOpen, onClose, handleChooseAdress }: Props) => {
+const Transport = ({ isOpen, onClose, handleChooseAdress }: Props) => {
   const [selectedProvince, setSelectedProvince] = useState({
     label: undefined,
     value: undefined,
