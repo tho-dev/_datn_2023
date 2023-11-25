@@ -61,7 +61,7 @@ const SignInView = () => {
           status: "success",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
         if (cart_user.data.data) {
           dispatch(addCart(cart_user.data.data.cart_id));
@@ -77,7 +77,7 @@ const SignInView = () => {
           status: "error",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       }
     } catch (error: any) {
@@ -181,19 +181,20 @@ const SignInView = () => {
               mt="4"
               rounded="full"
               isLoading={loading}
+              loadingText={"Đang đăng nhập..."}
               _hover={{ bg: "red" }}
             >
               Đăng Nhập
             </Button>
           </Flex>
         </form>
-        <Box position="relative" py="10">
+        {/* <Box position="relative" py="10">
           <Divider />
-          <AbsoluteCenter bg="white" px="4">
+          <AbsoluteCenter bg="transparent" px="4">
             Or
           </AbsoluteCenter>
-        </Box>
-        <Flex w="full" direction="column" gap="4">
+        </Box> */}
+        {/* <Flex w="full" direction="column" gap="4">
           <Button
             size="lager"
             leftIcon={<GoogleIcon boxSize="5" />}
@@ -218,7 +219,7 @@ const SignInView = () => {
           >
             Đăng nhập bằng Facebook
           </Button>
-        </Flex>
+        </Flex> */}
       </Flex>
     </Center>
   );

@@ -1,6 +1,7 @@
 import { Text, Flex, Box, Image } from "@chakra-ui/react";
 import { NavArrowRightIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
+import images from "~/assets/images/logo-thinkpro.svg";
 
 type Props = {
   brand: any;
@@ -18,11 +19,11 @@ const Subcate = ({ brand, category }: Props) => {
                 w="full"
                 h="full"
                 objectFit="cover"
-                src={brand?.thumbnail?.url}
+                src={brand?.thumbnail?.url ?? images}
               />
             </Box>
             <Text fontSize={"sm"} fontWeight={600} pl={"2"}>
-              {category?.name + " " + brand?.name || ""}
+              {category?.name + " " + (brand?.name || "")}
             </Text>
           </Flex>
           <Box>

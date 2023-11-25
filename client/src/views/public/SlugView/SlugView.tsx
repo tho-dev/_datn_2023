@@ -5,6 +5,7 @@ import {
   CheckboxGroup,
   Flex,
   FormLabel,
+  Grid,
   Popover,
   PopoverContent,
   PopoverHeader,
@@ -139,13 +140,23 @@ const SlugView = () => {
   if (isFetchingFilter) return <LoadingPolytech />;
 
   if (isError) navigate("/404");
-  console.log(isCompare);
 
   return (
     <Box m="30px 0">
       <Title filters={filters?.data} />
 
-      <Flex gap="4">
+      <Grid
+        gap="4"
+        templateColumns={{
+          sm: "repeat(2, 1fr)",
+          md: "repeat(3, 1fr)",
+          xl: `repeat(4, 1fr)`,
+        }}
+        w={{
+          sm: "100%",
+          xl: "70%",
+        }}
+      >
         {fields?.map((item: any, index: number) => {
           return (
             <FilterProduct
@@ -160,7 +171,7 @@ const SlugView = () => {
             />
           );
         })}
-      </Flex>
+      </Grid>
 
       <Box m="30px 0">
         <Flex w="100%" justifyContent="space-between" m="30px 0">

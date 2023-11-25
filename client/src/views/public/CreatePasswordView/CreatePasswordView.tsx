@@ -26,6 +26,7 @@ const CreatePasswordView = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<any>({
     resolver: joiResolver(sendOtpPasswordSchema),
   });
@@ -45,6 +46,7 @@ const CreatePasswordView = () => {
         isClosable: true,
         position: "top",
       });
+      navigate("/thiet-lap-mat-khau");
     } else {
       toast({
         title: "Thiết lập mật khẩu thất bại",
@@ -54,12 +56,13 @@ const CreatePasswordView = () => {
         isClosable: true,
         position: "top",
       });
+      reset();
+      navigate("/quen-mat-khau");
     }
     dispatch(resetForm(result));
     dispatch(
       resetPassword({ result: result.data || result.error, email: data.email })
     );
-    navigate("/thiet-lap-mat-khau");
   };
   return (
     <Center h="full" px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}>
@@ -119,7 +122,9 @@ const CreatePasswordView = () => {
               mt="4"
               rounded="full"
               isLoading={isLoading}
-              loadingText={isLoading ? "Đang thiết lập" : ""}
+              loadingText={!isLoading ? "Đang thiết lập" : ""}
+              bg={"bg.green"}
+              color={isLoading ? "black" : "white"}
             >
               Thiết lập lại mật khẩu
             </Button>

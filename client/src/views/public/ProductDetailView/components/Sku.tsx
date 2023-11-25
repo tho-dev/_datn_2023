@@ -135,9 +135,23 @@ const Sku = ({
             </Button>
           </Flex>
           <Divider my="4" />
-          <Grid templateColumns="repeat(3, 1fr)" gap={4}>
+          <Grid
+            templateColumns={{
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
+              xl: `repeat(3, 1fr)`,
+            }}
+            gap={4}
+          >
             <GridItem>
-              <Text fontSize={"lg"} fontWeight={600} color={"#FE3464"}>
+              <Text
+                fontSize={{
+                  sm: "12px",
+                  xl: "18px",
+                }}
+                fontWeight={600}
+                color={"#FE3464"}
+              >
                 {formatNumber(`${product?.price}`)}
               </Text>
               <Flex pt={"1"} gap={2}>

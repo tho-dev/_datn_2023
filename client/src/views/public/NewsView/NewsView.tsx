@@ -4,20 +4,19 @@ import { Divider, Button } from "@chakra-ui/react";
 import { useGetAllPostQuery } from "~/redux/api/post";
 import AllNewsView from "./AllNewsView";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import LoadingPolytech from "~/components/LoadingPolytech";
 
 const NewsView = () => {
-  const { slug: params } = useParams();
   const [data, setData] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [category, setCategory] = useState("all");
 
   const { data: posts, isLoading } = useGetAllPostQuery({
     _order: "asc",
     _sort: "date",
     _page: currentPage,
     _limit: 5,
-    _type: params || "",
+    _type: category || "",
   });
 
   useEffect(() => {
@@ -32,15 +31,12 @@ const NewsView = () => {
       setCurrentPage(currentPage + 1);
     }
   };
-  // console.log("Data:", data);
-  console.log(data);
-
   if (isLoading) {
     return <LoadingPolytech />;
   }
   return (
     <Box>
-      <NewsCategory />
+      <NewsCategory category={category} setCategory={setCategory} />
       <Divider my="12" />
       <Grid
         my="10"

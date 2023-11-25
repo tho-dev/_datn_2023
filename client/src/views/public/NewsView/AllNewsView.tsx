@@ -17,7 +17,7 @@ const AllNewsView = ({ product }: Props) => {
 
   return (
     <Link
-      to={product?.slug}
+      to={`/noi-dung/${product?.slug}`}
       as={ReactRouterLink}
       w="full"
       overflow="hidden"

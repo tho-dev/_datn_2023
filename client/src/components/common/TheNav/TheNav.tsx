@@ -7,7 +7,7 @@ import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
 
 const TheNav = () => {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle, onClose } = useDisclosure();
   const { homeSettings } = useAppSelector(
     (state: RootState) => state.persistedReducer.global
   );
@@ -15,7 +15,10 @@ const TheNav = () => {
   return (
     <>
       <Flex
-        h="88px"
+        h={{
+          xl: "88px",
+          sm: "55px",
+        }}
         py="3"
         gap="6"
         position="relative"
@@ -41,6 +44,7 @@ const TheNav = () => {
               backgroundColor: "bg.gray",
             }}
             onClick={onToggle}
+            onBlur={onClose}
           >
             Danh mục
           </Button>

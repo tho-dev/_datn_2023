@@ -279,8 +279,6 @@ export async function getAllProductManager(req, res, next) {
 
     // hàm lấy ra các 1 sku của một sản phẩm
     const getSku = async (product, id) => {
-      console.log('product?.images', product?.images)
-
       const brand = await Brand.findOne({
         _id: product?.brand_id,
       });

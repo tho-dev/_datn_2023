@@ -1,30 +1,16 @@
-import { Box, Text, Link } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import { IPost } from "~/interface/post";
-import { Link as ReactRouterLink } from "react-router-dom";
-import { useState } from "react";
 
 type Props = {
   product?: IPost;
+  category?: string;
+  setCategory: any;
 };
 
-const AllCategory = ({ product }: Props) => {
-  const [clicked, setClicked] = useState(false);
-
-  const handleViewProduct = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-
-    if (!clicked) {
-      setClicked(true);
-
-      window.location.href = `${product?.slug}`;
-    }
-  };
-
+const AllCategory = ({ product, category, setCategory }: Props) => {
   return (
-    <Link
-      to={`tin-tuc/${product?.slug}`}
-      as={ReactRouterLink}
+    <Box
       h="full"
       role="group"
       cursor="pointer"
@@ -32,7 +18,7 @@ const AllCategory = ({ product }: Props) => {
       overflow="hidden"
       display="inline-flex"
       flexDir="column"
-      backgroundColor="bg.white"
+      backgroundColor={category === product?.slug ? "bg.blue" : "bg.white"}
       _hover={{
         transition: "all 0.3s ease-in",
         backgroundColor: "bg.blue",
@@ -40,9 +26,9 @@ const AllCategory = ({ product }: Props) => {
           color: "text.white",
         },
       }}
-      onClick={handleViewProduct}
+      onClick={() => setCategory(product?.slug)}
     >
-      <Box>
+      <Box w={"100%"}>
         <Image
           src={product?.thumbnail?.url}
           w="full"
@@ -51,9 +37,9 @@ const AllCategory = ({ product }: Props) => {
         />
       </Box>
       <Text color="text.black" p="3" fontSize="md" fontWeight="semibold">
-        {product?.name}
+        {product?.name == "all" ? "Tất cả" : product?.name}
       </Text>
-    </Link>
+    </Box>
   );
 };
 

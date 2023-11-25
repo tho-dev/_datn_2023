@@ -21,7 +21,7 @@ const ListThinkPro = ({
       gap="3"
       mt={mt}
       templateColumns={{
-        sm: "repeat(1, 1fr)",
+        sm: "repeat(2, 1fr)",
         md: "repeat(3, 1fr)",
         xl: `repeat(${columns}, 1fr)`,
       }}

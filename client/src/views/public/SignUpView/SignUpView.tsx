@@ -247,13 +247,13 @@ const SignUpView = () => {
             </Button>
           </Flex>
         </form>
-        <Box position="relative" py="10">
+        {/* <Box position="relative" py="10">
           <Divider />
           <AbsoluteCenter bg="white" px="4">
             Or
           </AbsoluteCenter>
-        </Box>
-        <Flex w="full" direction="column" gap="4">
+        </Box> */}
+        {/* <Flex w="full" direction="column" gap="4">
           <Button
             size="lager"
             leftIcon={<GoogleIcon boxSize="5" />}
@@ -278,7 +278,7 @@ const SignUpView = () => {
           >
             Đăng nhập bằng Facebook
           </Button>
-        </Flex>
+        </Flex> */}
       </Flex>
     </Center>
   );

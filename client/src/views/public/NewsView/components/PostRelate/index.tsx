@@ -8,21 +8,10 @@ type Props = {
 };
 
 const PostRelate = ({ product }: Props) => {
-  const [clicked, setClicked] = useState(false);
-
-  const handleViewProduct = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-
-    if (!clicked) {
-      setClicked(true);
-
-      window.location.href = product?.slug;
-    }
-  };
-
   return (
     <Link
       as={ReactRouterLink}
+      to={`/noi-dung/${product?.slug}`}
       w="full"
       rounded="xl"
       overflow="hidden"
@@ -31,7 +20,6 @@ const PostRelate = ({ product }: Props) => {
       _hover={{
         textDecoration: "none",
       }}
-      onClick={handleViewProduct}
     >
       <Box position="relative" w="full" h="full" paddingBottom="55%">
         <Box position="absolute" w="full" h="full">

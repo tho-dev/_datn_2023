@@ -40,7 +40,11 @@ const PromotionView = () => {
         rowGap="6"
         columnGap="4"
         rounded="xl"
-        templateColumns="repeat(5, 1fr)"
+        templateColumns={{
+          sm: "repeat(2, 1fr)",
+          md: "repeat(3, 1fr)",
+          xl: `repeat(5, 1fr)`,
+        }}
       >
         {data?.items?.map((item: any, index: number) => {
           return <CardThinkPro key={index} product={item} />;

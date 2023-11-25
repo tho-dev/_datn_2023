@@ -1,5 +1,5 @@
 import { Box, Flex, Link } from "@chakra-ui/layout";
-import { Collapse, Image } from "@chakra-ui/react";
+import { Collapse, Image, useToast } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import Search from "./components/Search";
 import { Button, SlideFade, useDisclosure, Avatar } from "@chakra-ui/react";
@@ -27,11 +27,19 @@ const TheHeader = () => {
   } = useAppSelector((state) => state.persistedReducer.global);
   const { data: data } = useGetCartQuery(cart_id);
   const { data: homeSettings } = useGetHomeSettingsQuery({});
-
+  const toast = useToast();
   const handleLogOut = () => {
     logoutUser(user)
       .unwrap()
       .then(() => {
+        toast({
+          title: "Hệ thống",
+          description: "Bạn đã đăng xuất",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
         dispatch(logout(false));
         navigate("/");
       });
@@ -44,7 +52,13 @@ const TheHeader = () => {
   }, [homeSettings]);
 
   return (
-    <Flex h="20" alignItems="center">
+    <Flex
+      h={{
+        xl: "20",
+        sm: "14",
+      }}
+      alignItems="center"
+    >
       {/* Logo */}
       <Link to="/" as={ReactRouterLink}>
         <Image
@@ -102,7 +116,7 @@ const TheHeader = () => {
           </Link>
 
           <Link
-            to="/tin-tuc/tin-tuc"
+            to="/tin-tuc"
             as={ReactRouterLink}
             _hover={{
               textDecoration: "none",
@@ -168,7 +182,10 @@ const TheHeader = () => {
               rounded="full"
               bgColor="red"
             >
-              {data?.data.products.length || 0}
+              {data?.data.products.reduce(
+                (acc: any, item: any) => acc + item.quantity,
+                0
+              ) || 0}
             </Box>
             <CartIcon size={4} strokeWidth={2} color="text.black" />
           </Box>

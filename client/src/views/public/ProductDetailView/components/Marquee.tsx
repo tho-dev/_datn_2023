@@ -72,11 +72,11 @@ const MarqueeReact = () => {
         as={"button"}
         mt={"3"}
         alignItems="center"
+        w={"100%"}
       >
-        <Marquee>
+        <Marquee style={{ width: "100%" }}>
           {dataFake.map((data, index: number) => {
             const Icon = data.icon;
-
             return (
               <Flex
                 alignItems={"center"}
@@ -96,15 +96,10 @@ const MarqueeReact = () => {
         <Flex
           w="9"
           h="9"
-          right="4"
-          top={"calc(50% - 24px)"}
-          translateY="-50%"
-          zIndex="5"
           rounded="full"
           cursor="pointer"
           alignItems="center"
           justifyContent="center"
-          className="btn-next"
         >
           <NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
         </Flex>

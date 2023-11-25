@@ -37,7 +37,6 @@ const ResetPasswordView = () => {
     (state: any) => state.persistedReducer?.user
   );
   const onSubmit = async (data: any) => {
-    console.log("submit", data);
     const result: any = await resetPassWord(data);
     if (result.data?.status === 200) {
       toast({
@@ -59,6 +58,7 @@ const ResetPasswordView = () => {
         isClosable: true,
         position: "top",
       });
+      navigate("/quen-mat-khau");
     }
     dispatch(resetForm(result));
   };

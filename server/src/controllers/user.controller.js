@@ -175,6 +175,9 @@ export async function updateUserPassword(req, res, next) {
     if (!user) {
       throw createError.NotFound("Không tìm thấy user");
     }
+    if (!user.verified) {
+      throw createError.NotFound("Tài khoản chưa được xác thực");
+    }
     const isMatchPassWord = await bcrypt.compare(password, user.password);
 
     if (!isMatchPassWord) {
@@ -212,17 +215,18 @@ export const sendOtp_resetPassword = async (req, res, next) => {
     const { email } = req.body;
     // Tìm người dùng trong cơ sở dữ liệu bằng email
     const user = await User.findOne({ email });
+    if (!user) {
+      throw createError.NotFound(
+        "Không tìm thấy người dùng với địa chỉ email này."
+      );
+    }
     const resetPassModel = await resetPassWordModel.findOne({
       user_id: user._id,
     });
     if (resetPassModel) {
       throw createError.BadRequest("Mã Otp vẫn còn hiệu lực vui lòng đợi 5p");
     }
-    if (!user) {
-      throw createError.NotFound(
-        "Không tìm thấy người dùng với địa chỉ email này."
-      );
-    }
+
     const opt_length = 6;
     const otp_code = randomstring.generate({
       length: opt_length,
