@@ -5,6 +5,8 @@ import {
   Button,
   Flex,
   Textarea,
+  Toast,
+  useToast,
 } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 // import { set, ref, onValue, remove, update } from "firebase/database";
@@ -14,6 +16,7 @@ import { db } from "~/firebase";
 import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
 import moment from "moment";
+import { useRef } from "react";
 
 type Props = {
   onClose: () => void;
@@ -28,6 +31,7 @@ const AddComment = ({ onClose, productId }: Props) => {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm();
+  const toast = useToast({});
 
   // user
   const { user, isLogin } = useAppSelector(
@@ -37,19 +41,52 @@ const AddComment = ({ onClose, productId }: Props) => {
   const now = moment();
   const dateTime = now.format("HH:mm DD/MM/YYYY");
 
+  // ref
+  const lastCommentTimeRef = useRef<any>(null);
+
   function onSubmit(values: any) {
     const uuid = uuidv4();
+    const nowTime = new Date().getTime();
+    if (lastCommentTimeRef.current === null) {
+      set(ref(db, "comments/" + uuid), {
+        id: uuid,
+        userId: user?._id,
+        userAvatar: user?.avatar,
+        userName: userFullName,
+        content: values.content,
+        dateTime,
+        productId: productId,
+      });
+      setValue("content", "");
+      lastCommentTimeRef.current = nowTime;
+    } else {
+      const timeDiff = nowTime - lastCommentTimeRef.current;
+      if (timeDiff >= 5 * 60 * 1000) {
+        set(ref(db, "comments/" + uuid), {
+          id: uuid,
+          userId: user?._id,
+          userAvatar: user?.avatar,
+          userName: userFullName,
+          content: values.content,
+          dateTime,
+          productId: productId,
+        });
+        setValue("content", "");
+        lastCommentTimeRef.current = nowTime;
+      } else {
+        toast({
+          title: "Vui lòng không bình luận liên tục",
+          duration: 1600,
+          position: "bottom-right",
+          status: "warning",
+          description: `Bạn cần đợi ${Math.floor(5 - timeDiff / (60 * 1000))} phút nữa trước khi gửi bình luận tiếp theo!`,
+        });
+      }
+    }
 
-    set(ref(db, "comments/" + uuid), {
-      id: uuid,
-      userId: user?._id,
-      userAvatar: user?.avatar,
-      userName: userFullName,
-      content: values.content,
-      dateTime,
-      productId: productId,
-    });
-    setValue("content", "");
+
+
+
   }
 
   return (

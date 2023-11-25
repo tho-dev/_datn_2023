@@ -516,7 +516,7 @@ export async function getSingleProduct(req, res, next) {
     const getSku = async (product, id) => {
       const sku = await Sku.findOne({
         product_id: id,
-      }).select("-assets -stock -created_at -updated_at");
+      }).select("-assets -created_at -updated_at");
 
       // lấy ra biến thể của sku
       const variants = await Variant.find({
