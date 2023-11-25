@@ -28,13 +28,7 @@ connect();
 // using middlewares
 app.use(
   cors({
-    origin: [
-      process.env.FE_URL,
-      process.env.BE_URL,
-      process.env.MOMO_URL,
-      "http://localhost:3000",
-      "http://192.168.1.10:3000",
-    ],
+    origin: true,
     credentials: true,
   })
 );

@@ -7,7 +7,7 @@ import { addCart } from "./redux/slices/cartSlice";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:8080" || "");
+export const socket = io(process.env.BE_URL || "");
 
 function App() {
   const [createCart] = useCreateCartMutation();

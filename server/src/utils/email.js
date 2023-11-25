@@ -40,7 +40,7 @@ export const sendVerificationEmail = async ({ _id, email }, res) => {
     },
   };
   let transporter = nodemailer.createTransport(config);
-  const currentUrl = "http://localhost:8080/api/";
+  const currentUrl = process.env.BE_URL;
 
   const uniqueString = uuidv4() + _id;
   const templatePath = path.join(__dirname, "./../views/verifyEmail.pug");
