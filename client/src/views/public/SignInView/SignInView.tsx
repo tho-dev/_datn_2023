@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import {
-  ArrowLeftCirleIcon,
-  CodeIcon,
-  GoogleIcon,
-  FbIcon,
-} from "~/components/common/Icons";
+import { ArrowLeftCirleIcon, CodeIcon } from "~/components/common/Icons";
 import {
   FormErrorMessage,
   FormControl,
@@ -19,8 +14,6 @@ import {
   Stack,
   Heading,
   Text,
-  Divider,
-  AbsoluteCenter,
   useToast,
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";

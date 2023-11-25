@@ -58,6 +58,16 @@ const ProductDetailView = () => {
   } = useGetBySlugQuery(slug as string);
 
   const handleAddToCart = async () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const data = {
       cart_id: cart_id,
       product: {
@@ -81,8 +91,7 @@ const ProductDetailView = () => {
             position: "top-right",
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           toast({
             title: "Hệ thống thông báo",
             description: `Lỗi khi thêm sản phẩm`,
@@ -106,8 +115,7 @@ const ProductDetailView = () => {
           position: "top-right",
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         toast({
           title: "Hệ thống thông báo",
           description: `Lỗi khi thêm sản phẩm`,
@@ -120,6 +128,16 @@ const ProductDetailView = () => {
   };
 
   const handleByNow = async () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const data = {
       cart_id: cart_id,
       product: {
@@ -181,10 +199,30 @@ const ProductDetailView = () => {
     }
   };
   const handleDercement = () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     if (quantity == 1) return;
     setQuantity(quantity - 1);
   };
   const handleIncement = () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     if (quantity == product.stock) return;
     setQuantity(quantity + 1);
   };
@@ -197,6 +235,8 @@ const ProductDetailView = () => {
     navigate("/404");
   }
   const month = new Date().getMonth() + 1;
+  console.log(product);
+
   return (
     <Box h={"full"}>
       <Breadcrumb mt={"5"}>

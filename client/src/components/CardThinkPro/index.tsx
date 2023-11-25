@@ -1,5 +1,12 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
-import { Button, Checkbox, Divider, Image } from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  IconButton,
+  Image,
+  Tooltip,
+} from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import {
@@ -8,7 +15,7 @@ import {
   remoteItems,
 } from "~/redux/slices/globalSlice";
 import { formatNumber } from "~/utils/fc";
-import { PlusIcon } from "../common/Icons";
+import { SoldOutIcon, PlusIcon } from "../common/Icons";
 import { useToast } from "@chakra-ui/react";
 
 type Props = {
@@ -22,7 +29,6 @@ const CardThinkPro = ({ product, mode = "home" }: Props) => {
   const { items, isCompare } = useAppSelector(
     (state) => state.persistedReducer.global
   );
-
   const handleViewProduct = () => {
     dispatch(addViewedItem(product));
   };
@@ -34,7 +40,7 @@ const CardThinkPro = ({ product, mode = "home" }: Props) => {
       overflow="hidden"
       rounded="xl"
       display="inline-block"
-      backgroundColor="bg.white"
+      backgroundColor={"bg.white"}
       _hover={{
         textDecoration: "none",
       }}
@@ -47,6 +53,22 @@ const CardThinkPro = ({ product, mode = "home" }: Props) => {
         position="relative"
         display="block"
       >
+        {product?.stock === 0 && (
+          <Tooltip label="Hết hàng">
+            <IconButton
+              size="lg"
+              icon={<SoldOutIcon size={6} color="black" />}
+              aria-label="icon"
+              position="absolute"
+              zIndex={9}
+              right={0}
+              w={8}
+              h={10}
+              bgColor={"none"}
+            />
+          </Tooltip>
+        )}
+
         <Box top="0" position="absolute" bgColor="bg.white">
           <Image w="full" h="full" objectFit="cover" src={product?.image} />
         </Box>

@@ -1,7 +1,6 @@
 import { Image } from "@chakra-ui/react";
 import { Box, Text, Link } from "@chakra-ui/layout";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { useState } from "react";
 
 type Props = {
   product?: any;
