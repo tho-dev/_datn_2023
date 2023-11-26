@@ -77,7 +77,6 @@ const SlugView = () => {
   } = useGetProducItemToBrandAndCategoryQuery(debouncedQuery, {
     skip: !debouncedQuery?._category,
   });
-  console.log(products);
 
   useEffect(() => {
     if (params) {

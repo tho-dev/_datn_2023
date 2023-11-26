@@ -36,7 +36,12 @@ const AllCategory = ({ product, category, setCategory }: Props) => {
           objectFit="cover"
         />
       </Box>
-      <Text color="text.black" p="3" fontSize="md" fontWeight="semibold">
+      <Text
+        color={category == product?.slug ? "text.white" : "text.black"}
+        p="3"
+        fontSize="md"
+        fontWeight="semibold"
+      >
         {product?.name == "all" ? "Tất cả" : product?.name}
       </Text>
     </Box>

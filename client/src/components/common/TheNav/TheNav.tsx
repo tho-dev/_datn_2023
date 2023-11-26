@@ -44,7 +44,11 @@ const TheNav = () => {
               backgroundColor: "bg.gray",
             }}
             onClick={onToggle}
-            onBlur={onClose}
+            onBlur={() =>
+              setTimeout(() => {
+                onClose();
+              }, 200)
+            }
           >
             Danh mục
           </Button>

@@ -235,7 +235,6 @@ const ProductDetailView = () => {
     navigate("/404");
   }
   const month = new Date().getMonth() + 1;
-  console.log(product);
 
   return (
     <Box h={"full"}>
