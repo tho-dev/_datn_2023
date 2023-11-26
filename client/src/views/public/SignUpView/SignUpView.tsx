@@ -53,7 +53,7 @@ const SignUpView = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
         navigate("/dang-nhap");
       })
@@ -61,10 +61,10 @@ const SignUpView = () => {
         toast({
           title: "Tạo tài khoản thất bại",
           description: err.data.message,
-          status: "success",
-          duration: 5000,
+          status: "error",
+          duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       });
   };
