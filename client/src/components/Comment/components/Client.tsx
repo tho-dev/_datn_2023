@@ -86,6 +86,15 @@ const Client = (props: Props) => {
                   <Text fontSize={"12px"} color={"gray.400"}>
                     {comment.dateTime}
                   </Text>
+                  {user.role === 'admin' && (
+                    <Button
+                      bg={"none"}
+                      color={"gray.500"}
+                      _hover={{ color: "black" }}
+                    >
+                      Phản hồi
+                    </Button>
+                  )}
                   {comment.userId == user?._id && (
                     <Button
                       bg={"none"}
