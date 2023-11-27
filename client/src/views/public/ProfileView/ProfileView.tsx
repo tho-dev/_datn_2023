@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Heading, Image, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import LoadingPolytech from "~/components/LoadingPolytech";
-import { CheckedIcon, ShoppingCartIcon, UserIcon } from "~/components/common/Icons";
+import { BellIcon, CheckedIcon, ShoppingCartIcon, UserIcon } from "~/components/common/Icons";
 import { useGetOneQuery } from "~/redux/api/user";
 import { useAppSelector } from "~/redux/hook/hook";
 import ChangePassword from "./components/ChangePassword";
@@ -139,7 +139,7 @@ const ProfileView = (props: Props) => {
 										fontWeight="semibold"
 										color="text.black"
 									>
-										Tài Khoản Của Tôi
+										Tài Khoản
 									</Text>
 								</Tab>
 								<Tab
@@ -194,6 +194,33 @@ const ProfileView = (props: Props) => {
 										color="text.black"
 									>
 										Đơn Mua
+									</Text>
+								</Tab>
+								<Tab
+									px="0"
+									fontSize="13px"
+									fontWeight="semibold"
+									display="inline-flex"
+									gap="2"
+								>
+									<Flex
+										w="6"
+										h="6"
+										bg="bg.bgEdit"
+										color="text.textEdit"
+										rounded="full"
+										alignItems="center"
+										justifyContent="center"
+										fontSize="10px"
+									>
+										<BellIcon size={4} />
+									</Flex>
+									<Text
+										fontSize="13px"
+										fontWeight="semibold"
+										color="text.black"
+									>
+										Thông Báo
 									</Text>
 								</Tab>
 							</TabList>

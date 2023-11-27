@@ -216,7 +216,7 @@ const TheHeader = () => {
 						>
 							<Avatar
 								name={user?.first_name + " " + user?.last_name}
-								src={user?.avatar}
+								src={user?.avatar?.url}
 								w="10"
 								h="10"
 								color="#12AFF0"
