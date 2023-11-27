@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 export const protectedRouter = () => {
   const user = JSON.parse(localStorage.getItem("persist:root") as string);
   if (user) {
@@ -16,8 +16,12 @@ export const protectedRouter = () => {
   return false;
 };
 
-const PrivateRoute = ({ component: Component, ...rest }: any) => {
-  return protectedRouter() ? <Outlet /> : <Navigate to="/dang-nhap" />;
+const PrivateRoute = (component: any) => {
+  return protectedRouter() ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/dang-nhap" /> || component
+  );
 };
 
 export default PrivateRoute;

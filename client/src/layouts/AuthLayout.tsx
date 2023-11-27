@@ -1,15 +1,17 @@
-import React from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import banner from "~/assets/images/email.png";
-import { Image } from "@chakra-ui/react";
 
-type Props = {};
-
-const AuthLayout = (props: Props) => {
+const AuthLayout = () => {
   return (
-    <Grid templateColumns="repeat(12, 1fr)" h="100vh">
+    <Grid
+      templateColumns="repeat(12, 1fr)"
+      h="100vh"
+      bgImage={banner}
+      bgPosition={"center"}
+      bgRepeat={"no-repeat"}
+      bgSize={"cover"}
+    >
       <GridItem
         w="100%"
         h="full"
@@ -23,7 +25,7 @@ const AuthLayout = (props: Props) => {
       >
         <Outlet />
       </GridItem>
-      <GridItem
+      {/* <GridItem
         w="100%"
         h="full"
         colSpan={{
@@ -36,7 +38,7 @@ const AuthLayout = (props: Props) => {
         bgColor="bg.gray"
       >
         <Image src={banner} h="100%" width="100%" objectFit={"cover"} />
-      </GridItem>
+      </GridItem> */}
     </Grid>
   );
 };

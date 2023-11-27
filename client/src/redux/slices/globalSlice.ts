@@ -37,9 +37,9 @@ const globalSlice = createSlice({
 			state.isLogin = true;
 			state.accessToken = action.payload.accessToken;
 		},
-		logout: (state) => {
+		logout: (state, action) => {
 			state.user = {};
-			state.isLogin = false;
+			state.isLogin = action.payload;
 			state.accessToken = "";
 		},
 		addViewedItem: (state, action: PayloadAction<any>) => {

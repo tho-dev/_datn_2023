@@ -23,13 +23,13 @@ type Props = {
   productId: string;
 };
 
-const AddComment = ({ onClose, productId }: Props) => {
+const AddComment = ({ productId }: Props) => {
   // handle form
   const {
     handleSubmit,
     register,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
   const toast = useToast({});
 

@@ -19,4 +19,5 @@ interface IProduct {
     deleted_at?: any;
     option_value?: any;
     colors?: any;
+    stock?: any
 }

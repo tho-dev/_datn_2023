@@ -1,28 +1,14 @@
-import { Box, Grid, GridItem, Text, Flex, Heading, Wrap, WrapItem, Link } from "@chakra-ui/layout";
+import { Box, Grid, GridItem, Text, Flex, Link } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import { IPost } from "~/interface/post";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
-import { addViewedItem } from "~/redux/slices/globalSlice";
 import { Link as ReactRouterLink } from "react-router-dom";
 import moment from "moment";
-
 
 type Props = {
   product?: IPost;
 };
 
 const AllNewsView = ({ product }: Props) => {
-  const dispatch = useAppDispatch();
-
-  const handleViewProduct = () => {
-    const productData = {
-      // productName: "LG Gram 14 2022",
-      // price: "19.999.000",
-    };
-    dispatch(addViewedItem(productData));
-  };
- 
-
   const now = moment();
   const diffInSeconds = now.diff(product?.created_at, "seconds");
   const diffInMinutes = Math.ceil(diffInSeconds / 60);
@@ -31,7 +17,7 @@ const AllNewsView = ({ product }: Props) => {
 
   return (
     <Link
-      to={product?.slug}
+      to={`/noi-dung/${product?.slug}`}
       as={ReactRouterLink}
       w="full"
       overflow="hidden"
@@ -52,7 +38,8 @@ const AllNewsView = ({ product }: Props) => {
           sm: "repeat(1, 1fr)",
           md: "repeat(1, 1fr)",
           xl: "repeat(5, 1fr)",
-        }}>
+        }}
+      >
         <GridItem colSpan={2}>
           <Box
             rounded="lg"
@@ -101,7 +88,9 @@ const AllNewsView = ({ product }: Props) => {
               }}
             >
               {product?.description && (
-                <div dangerouslySetInnerHTML={{ __html: product.description }} />
+                <div
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
               )}
             </Text>
             <Flex fontSize="sm">
@@ -110,40 +99,30 @@ const AllNewsView = ({ product }: Props) => {
               </Text>
               <Text mx={2}>|</Text>
               <Text fontWeight="medium" fontSize="13px">
-                {
-                  diffInSeconds <= 60 ? (
-                    <Text fontWeight="medium" fontSize="13px">
-                      {diffInSeconds} giây
-                    </Text>
-                  ) : (
-                    diffInMinutes <= 60 ? (
-                      <Text fontWeight="medium" fontSize="13px">
-                        {diffInMinutes} phút
-                      </Text>
-                    ) : (
-                      diffInHours <= 24 ? (
-                        <Text fontWeight="medium" fontSize="13px">
-                          {diffInHours} giờ
-                        </Text>
-                      ) : (
-                        <Text fontWeight="medium" fontSize="13px">
-                          {diffInDays} ngày
-                        </Text>
-                      )
-                    )
-                  )
-                }
+                {diffInSeconds <= 60 ? (
+                  <Text fontWeight="medium" fontSize="13px">
+                    {diffInSeconds} giây
+                  </Text>
+                ) : diffInMinutes <= 60 ? (
+                  <Text fontWeight="medium" fontSize="13px">
+                    {diffInMinutes} phút
+                  </Text>
+                ) : diffInHours <= 24 ? (
+                  <Text fontWeight="medium" fontSize="13px">
+                    {diffInHours} giờ
+                  </Text>
+                ) : (
+                  <Text fontWeight="medium" fontSize="13px">
+                    {diffInDays} ngày
+                  </Text>
+                )}
               </Text>
             </Flex>
           </Box>
         </GridItem>
       </Grid>
-
     </Link>
-
   );
-}
+};
 
-
-
-export default AllNewsView
+export default AllNewsView;

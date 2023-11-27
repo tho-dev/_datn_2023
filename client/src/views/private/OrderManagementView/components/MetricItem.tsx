@@ -1,6 +1,4 @@
-import { GridItem, Flex, Heading, Box, Text, Center } from "@chakra-ui/layout";
-import React from "react";
-import { CheckIcon, ArrowUpIcon } from "~/components/common/Icons";
+import { GridItem, Flex, Heading, Box, Text } from "@chakra-ui/layout";
 
 type Props = {
   heading: string;

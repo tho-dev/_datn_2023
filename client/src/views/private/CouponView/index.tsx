@@ -4,7 +4,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
-  Image,
   Input,
   Menu,
   MenuButton,
@@ -28,11 +27,6 @@ import {
   SearchIcon,
   TraskIcon,
 } from "~/components/common/Icons";
-import {
-  useDeletePromotionMutation,
-  useGetAllPromotionQuery,
-  useGetSinglePromotionQuery,
-} from "~/redux/api/promotion";
 import ActionCreatePromotion from "./components/ActionCreatePromotion";
 import ActionUpdatePromotion from "./components/ActionUpdatePromotion";
 import { useDebounce } from "@uidotdev/usehooks";
@@ -42,9 +36,7 @@ import {
   useGetSingleCouponQuery,
 } from "~/redux/api/coupon";
 
-type Props = {};
-
-const CouponView = (props: Props) => {
+const CouponView = () => {
   const toast = useToast();
   const columnHelper = createColumnHelper<any>();
 

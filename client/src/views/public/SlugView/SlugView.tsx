@@ -32,9 +32,8 @@ const SlugView = (props: Props) => {
 	const { slug: params } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const [checked, setChecked] = useState<string>("1");
 	const { isCompare } = useAppSelector((state: RootState) => state.persistedReducer.global);
-
+	const [checked, setChecked] = useState("1");
 	const [data, setData] = useState<any>([]);
 	const [query, setQuery] = useState<any>({
 		_page: 1,

@@ -125,25 +125,14 @@ export async function getAllProduct(req, res, next) {
         "-updated_at",
       ],
     };
-    const conditions = {};
-    if (_keyword) {
-      conditions.$or = [
-        { name: { $regex: new RegExp(_keyword, "i") } },
-        { SKU: { $regex: new RegExp(_keyword, "i") } },
-      ];
-    }
-    conditions.status = true;
-
     const { docs, ...paginate } = await Product.paginate(
       {
         $and: [
           { status: true },
           {
             $or: [
-              {
-                name: new RegExp(_keyword, "i"),
-                description: new RegExp(_keyword, "i"),
-              },
+              { name: { $regex: new RegExp(_keyword, "i") } },
+              { SKU: { $regex: new RegExp(_keyword, "i") } },
             ],
           },
           _category ? { category_id: _category } : {},
@@ -157,9 +146,16 @@ export async function getAllProduct(req, res, next) {
     const getSku = async (product, id) => {
       const sku = await Sku.findOne({
         product_id: id,
-      }).select("-assets -stock -created_at -updated_at");
-
+      }).select("-assets -created_at -updated_at");
+      // lấy ra tất cả số lượng của sản phẩm
+      const skus = await Sku.find({
+        product_id: id,
+      });
+      const stocks = skus.reduce((acc, sku) => {
+        return acc + sku.stock;
+      }, 0);
       // lấy ra biến thể của sku
+
       const variants = await Variant.find({
         sku_id: sku?._id,
       });
@@ -208,9 +204,9 @@ export async function getAllProduct(req, res, next) {
         image: sku?.image?.url,
         option_value: optionValue,
         colors,
+        stock: stocks,
       };
     };
-
     const data = await Promise.all(
       docs?.map((item) => getSku(item, item?._id))
     );
@@ -279,8 +275,6 @@ export async function getAllProductManager(req, res, next) {
 
     // hàm lấy ra các 1 sku của một sản phẩm
     const getSku = async (product, id) => {
-      console.log('product?.images', product?.images)
-
       const brand = await Brand.findOne({
         _id: product?.brand_id,
       });

@@ -21,9 +21,7 @@ import { addViewedItem, setKeywords } from "~/redux/slices/globalSlice";
 import { AppDispatch, RootState } from "~/redux/store";
 import { formatNumber } from "~/utils/fc";
 
-type Props = {};
-
-const Search = (props: Props) => {
+const Search = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>("");

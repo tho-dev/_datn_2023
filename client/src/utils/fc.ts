@@ -30,7 +30,7 @@ export function chuyenDoiSoDienThoai(soDienThoai: any) {
 export function chuyenDoiSoDienThoaiVe0(soDienThoai: any) {
 	soDienThoai = soDienThoai.toString();
 	// Kiểm tra xem số điện thoại có đúng định dạng "849" hay không
-	if (/^849\d{8}$/.test(soDienThoai) && soDienThoai) {
+	if (/^84\d{8}$/.test(soDienThoai) && soDienThoai) {
 		// Loại bỏ ký tự "84" ở đầu và trả về số điện thoại đã chuyển đổi
 		return "0" + soDienThoai.slice(2);
 	} else {

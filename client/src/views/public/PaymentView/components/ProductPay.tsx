@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Box, Flex, Heading } from "@chakra-ui/layout";
-import { Image, Text, Input, Button, IconButton } from "@chakra-ui/react";
+import { useState } from "react";
+import { Box, Flex } from "@chakra-ui/layout";
+import { Text, IconButton } from "@chakra-ui/react";
 import { ChevronDownIcon } from "~/components/common/Icons";
 import ItemProductPay from "./ItemProductPay";
 

@@ -12,9 +12,6 @@ import {
   Link,
   Stack,
   Heading,
-  Text,
-  Divider,
-  AbsoluteCenter,
   useToast,
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
@@ -23,11 +20,7 @@ import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { resetForm } from "~/redux/slices/userSlice";
 import { useResetPasswordMutation } from "~/redux/api/user";
 
-type Props = {};
-
-type State = {};
-
-const ResetPasswordView = (props: Props) => {
+const ResetPasswordView = () => {
   const {
     register,
     reset,
@@ -44,7 +37,6 @@ const ResetPasswordView = (props: Props) => {
     (state: any) => state.persistedReducer?.user
   );
   const onSubmit = async (data: any) => {
-    console.log("submit", data);
     const result: any = await resetPassWord(data);
     if (result.data?.status === 200) {
       toast({
@@ -66,6 +58,7 @@ const ResetPasswordView = (props: Props) => {
         isClosable: true,
         position: "top",
       });
+      navigate("/quen-mat-khau");
     }
     dispatch(resetForm(result));
   };

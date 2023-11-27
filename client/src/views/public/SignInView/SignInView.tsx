@@ -1,13 +1,7 @@
-import React, { useState } from "react";
-import { HelmetProvider, Helmet } from "react-helmet-async";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import {
-  ArrowLeftCirleIcon,
-  CodeIcon,
-  GoogleIcon,
-  FbIcon,
-} from "~/components/common/Icons";
+import { ArrowLeftCirleIcon, CodeIcon } from "~/components/common/Icons";
 import {
   FormErrorMessage,
   FormControl,
@@ -20,21 +14,17 @@ import {
   Stack,
   Heading,
   Text,
-  Divider,
-  AbsoluteCenter,
   useToast,
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { loginSchema } from "~/validate/user";
 import { useSigninMutation } from "~/redux/api/user";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { useAppDispatch } from "~/redux/hook/hook";
 import { login } from "~/redux/slices/globalSlice";
 import { useGetCartByUserIdMutation } from "~/redux/api/cart";
 import { addCart } from "~/redux/slices/cartSlice";
 
-type Props = {};
-
-const SignInView = (props: Props) => {
+const SignInView = () => {
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -64,7 +54,7 @@ const SignInView = (props: Props) => {
           status: "success",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
         if (cart_user.data.data) {
           dispatch(addCart(cart_user.data.data.cart_id));
@@ -80,7 +70,7 @@ const SignInView = (props: Props) => {
           status: "error",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       }
     } catch (error: any) {
@@ -184,19 +174,20 @@ const SignInView = (props: Props) => {
               mt="4"
               rounded="full"
               isLoading={loading}
+              loadingText={"Đang đăng nhập..."}
               _hover={{ bg: "red" }}
             >
               Đăng Nhập
             </Button>
           </Flex>
         </form>
-        <Box position="relative" py="10">
+        {/* <Box position="relative" py="10">
           <Divider />
-          <AbsoluteCenter bg="white" px="4">
+          <AbsoluteCenter bg="transparent" px="4">
             Or
           </AbsoluteCenter>
-        </Box>
-        <Flex w="full" direction="column" gap="4">
+        </Box> */}
+        {/* <Flex w="full" direction="column" gap="4">
           <Button
             size="lager"
             leftIcon={<GoogleIcon boxSize="5" />}
@@ -221,7 +212,7 @@ const SignInView = (props: Props) => {
           >
             Đăng nhập bằng Facebook
           </Button>
-        </Flex>
+        </Flex> */}
       </Flex>
     </Center>
   );

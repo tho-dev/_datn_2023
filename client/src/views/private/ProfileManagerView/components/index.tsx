@@ -1,5 +1,5 @@
 import { Flex, Text } from "@chakra-ui/layout";
-import { Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
   ColumnDef,
@@ -11,7 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import * as React from "react";
-import { ArrowDownAdminIcon, ArrowRightIcon } from "~/components/common/Icons";
+import { ArrowDownAdminIcon } from "~/components/common/Icons";
 
 export type TableThinkProProps<Data extends object> = {
   data: Data[];
@@ -166,7 +166,6 @@ export default function TableThink<Data extends object>({
           ))}
         </Tbody>
       </Table>
-      
     </>
   );
 }

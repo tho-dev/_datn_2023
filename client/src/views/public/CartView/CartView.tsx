@@ -1,5 +1,5 @@
 import { Box, Flex, Heading } from "@chakra-ui/layout";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
 import ItemCart from "./components/ItemCart";
@@ -13,19 +13,11 @@ import {
   useIncrementMutation,
   useRemoveMutation,
 } from "~/redux/api/cart";
-import {
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  FLex,
-  useToast,
-} from "@chakra-ui/react";
+import { Skeleton, useToast } from "@chakra-ui/react";
 import ReCAPTCHA from "react-google-recaptcha";
 import LoadingPolytech from "~/components/LoadingPolytech";
 
-type Props = {};
-
-const CartView = (props: Props) => {
+const CartView = () => {
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
   const { data, isLoading, isError, isFetching } = useGetCartQuery(cart_id);
 
@@ -59,7 +51,7 @@ const CartView = (props: Props) => {
     navigate("/thanh-toan");
   };
 
-  const onChange = (value: any) => {
+  const onChange = () => {
     setCheckCaptch(true);
   };
 

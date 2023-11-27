@@ -1,18 +1,12 @@
 import {
   Box,
   Button,
-  Checkbox,
-  CheckboxGroup,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Image,
   Input,
-  Text,
-  Textarea,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import banner from "~/assets/images/banner.jpeg";
@@ -40,7 +34,7 @@ const ActionUpdatePromotion = ({ onClose, promotion }: Props) => {
     };
     updateCoupon(new_data)
       .unwrap()
-      .then((data) => {
+      .then(() => {
         toast({
           title: "Thành công",
           duration: 1600,
@@ -49,7 +43,7 @@ const ActionUpdatePromotion = ({ onClose, promotion }: Props) => {
           description: "Tạo khuyến mãi thành công",
         });
       })
-      .catch((err) => {
+      .catch(() => {
         toast({
           title: "Có lỗi",
           duration: 1600,

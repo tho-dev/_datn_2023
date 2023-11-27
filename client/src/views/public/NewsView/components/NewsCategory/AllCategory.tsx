@@ -1,72 +1,51 @@
-import { Box, Text, Link } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
 import { IPost } from "~/interface/post";
-import { useAppDispatch } from "~/redux/hook/hook";
-import { Link as ReactRouterLink } from "react-router-dom";
-import { useState } from "react";
-
 
 type Props = {
-    product?: IPost;
+  product?: IPost;
+  category?: string;
+  setCategory: any;
 };
 
-const AllCategory = ({ product }: Props) => {
-    const dispatch = useAppDispatch();
-    const [clicked, setClicked] = useState(false);
+const AllCategory = ({ product, category, setCategory }: Props) => {
+  return (
+    <Box
+      h="full"
+      role="group"
+      cursor="pointer"
+      rounded="lg"
+      overflow="hidden"
+      display="inline-flex"
+      flexDir="column"
+      backgroundColor={category === product?.slug ? "bg.blue" : "bg.white"}
+      _hover={{
+        transition: "all 0.3s ease-in",
+        backgroundColor: "bg.blue",
+        "& > *": {
+          color: "text.white",
+        },
+      }}
+      onClick={() => setCategory(product?.slug)}
+    >
+      <Box w={"100%"}>
+        <Image
+          src={product?.thumbnail?.url}
+          w="full"
+          h="120px"
+          objectFit="cover"
+        />
+      </Box>
+      <Text
+        color={category == product?.slug ? "text.white" : "text.black"}
+        p="3"
+        fontSize="md"
+        fontWeight="semibold"
+      >
+        {product?.name == "all" ? "Tất cả" : product?.name}
+      </Text>
+    </Box>
+  );
+};
 
-    const handleViewProduct = (e: React.MouseEvent<HTMLAnchorElement>) => {
-        e.preventDefault();
-
-        if (!clicked) {
-            setClicked(true);
-
-            window.location.href = `${product?.slug}`
-        }
-    };
-
-
-    return (
-        <Link
-            to={`tin-tuc/${product?.slug}`}
-            as={ReactRouterLink}
-            h="full"
-            role="group"
-            cursor="pointer"
-            rounded="lg"
-            overflow="hidden"
-            display="inline-flex"
-            flexDir="column"
-            backgroundColor="bg.white"
-            _hover={{
-                transition: "all 0.3s ease-in",
-                backgroundColor: "bg.blue",
-                "& > *": {
-                    color: "text.white",
-                },
-            }}
-            onClick={handleViewProduct}
-
-        >
-            <Box>
-                <Image
-                    src={product?.thumbnail?.url}
-                    w="full"
-                    h="120px"
-                    objectFit="cover"
-                />
-            </Box>
-            <Text
-                color="text.black"
-                p="3"
-                fontSize="md"
-                fontWeight="semibold"
-            >
-                {product?.name}
-            </Text>
-        </Link>
-    );
-}
-
-
-
-export default AllCategory
+export default AllCategory;

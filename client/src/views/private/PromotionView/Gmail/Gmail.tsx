@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,12 +13,8 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { Link, Link as ReactRouterLink } from "react-router-dom";
-import {
-  useAddMutation,
-  useGetAllQuery,
-  useRemoveMutation,
-} from "~/redux/api/ads";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { useGetAllQuery, useRemoveMutation } from "~/redux/api/ads";
 import {
   PlusCircleIcon,
   SearchIcon,
@@ -29,9 +25,7 @@ import moment from "moment";
 import TableThinkPro from "~/components/TableThinkPro";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 
-type Props = {};
-
-const GmailView = (props: Props) => {
+const GmailView = () => {
   const [idJob, setIdJob] = useState("");
   const [search, setSearch] = useState("");
   const toast = useToast();

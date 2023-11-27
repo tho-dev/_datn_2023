@@ -1,5 +1,4 @@
-import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Box, Flex } from "@chakra-ui/layout";
 import { NavArrowLeflIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";

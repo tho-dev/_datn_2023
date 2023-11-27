@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Heading, Link } from "@chakra-ui/layout";
+import { Box, Divider, Flex, Heading } from "@chakra-ui/layout";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,7 +17,7 @@ import {
 } from "~/components/common/Icons";
 import { useAddToCartMutation, useByNowMutation } from "~/redux/api/cart";
 import { useGetBySlugQuery } from "~/redux/api/product";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { useAppSelector } from "~/redux/hook/hook";
 import Branch from "./components/Branch";
 import Configuration from "./components/Configuration";
 import Describe from "./components/Describe";
@@ -31,14 +31,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Link as ReactRouterLink } from "react-router-dom";
 import CardThinkPro from "~/components/CardThinkPro";
 import ViewedProduct from "~/components/ViewedThinkPro/ViewedProduct";
 import { CommentView } from "~/components/Comment";
 
-type Props = {};
-
-const ProductDetailView = (props: Props) => {
+const ProductDetailView = () => {
   const { slug } = useParams();
   const [quantity, setQuantity] = useState<number>(1);
   const toast = useToast();
@@ -52,7 +49,6 @@ const ProductDetailView = (props: Props) => {
   const user = useAppSelector((state) => state.persistedReducer.global.user);
   const cart_id = useAppSelector((state) => state.persistedReducer.cart.carts);
 
-  const dispatch = useAppDispatch();
   const [addToCart, { isLoading }] = useAddToCartMutation();
   const [byNow, { isLoading: loading }] = useByNowMutation();
   const {
@@ -62,6 +58,16 @@ const ProductDetailView = (props: Props) => {
   } = useGetBySlugQuery(slug as string);
 
   const handleAddToCart = async () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const data = {
       cart_id: cart_id,
       product: {
@@ -85,8 +91,7 @@ const ProductDetailView = (props: Props) => {
             position: "top-right",
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           toast({
             title: "Hệ thống thông báo",
             description: `Lỗi khi thêm sản phẩm`,
@@ -110,8 +115,7 @@ const ProductDetailView = (props: Props) => {
           position: "top-right",
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         toast({
           title: "Hệ thống thông báo",
           description: `Lỗi khi thêm sản phẩm`,
@@ -124,6 +128,16 @@ const ProductDetailView = (props: Props) => {
   };
 
   const handleByNow = async () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     const data = {
       cart_id: cart_id,
       product: {
@@ -148,7 +162,7 @@ const ProductDetailView = (props: Props) => {
           });
           navigate("/gio-hang");
         })
-        .catch((err) => {
+        .catch(() => {
           toast({
             title: "Hệ thống thông báo",
             description: `Lỗi khi thêm sản phẩm`,
@@ -172,7 +186,7 @@ const ProductDetailView = (props: Props) => {
           });
           navigate("/gio-hang");
         })
-        .catch((err) => {
+        .catch(() => {
           toast({
             title: "Hệ thống thông báo",
             description: `Lỗi khi thêm sản phẩm`,
@@ -185,10 +199,30 @@ const ProductDetailView = (props: Props) => {
     }
   };
   const handleDercement = () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     if (quantity == 1) return;
     setQuantity(quantity - 1);
   };
   const handleIncement = () => {
+    if (product?.data.stock === 0) {
+      return toast({
+        title: "Hệ thống thông báo",
+        description: `Sản phẩm đã hết hàng`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     if (quantity == product.stock) return;
     setQuantity(quantity + 1);
   };
@@ -201,6 +235,7 @@ const ProductDetailView = (props: Props) => {
     navigate("/404");
   }
   const month = new Date().getMonth() + 1;
+
   return (
     <Box h={"full"}>
       <Breadcrumb mt={"5"}>

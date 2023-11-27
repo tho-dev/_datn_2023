@@ -1,16 +1,28 @@
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/react";
-import React from "react";
-import { CartNotFoundIcon } from "~/components/common/Icons";
+import { Button, Image } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
+import emptybox from "~/assets/images/7486754.png";
 
-type Props = {};
-
-const NotData = (props: Props) => {
+const NotData = () => {
   return (
     <>
-      <Box textAlign={"center"}>
-        <CartNotFoundIcon />
+      <Flex
+        justifyContent={"center"}
+        alignItems="center"
+        flexDirection="column"
+      >
+        <Image
+          src={emptybox}
+          w={{
+            xl: "150px",
+            sm: "70px",
+          }}
+          h={{
+            xl: "150px",
+            sm: "70px",
+          }}
+          objectFit={"cover"}
+        />
         <Text
           fontSize={"18px"}
           lineHeight={"150%"}
@@ -22,7 +34,7 @@ const NotData = (props: Props) => {
         <Text fontSize={"14px"} lineHeight={"150%"}>
           Hãy thoải mái lựa sản phẩm bạn nhé.
         </Text>
-      </Box>
+      </Flex>
       <Flex justifyContent={"center"}>
         <Button
           my={"24px"}

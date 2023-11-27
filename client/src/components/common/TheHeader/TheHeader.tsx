@@ -1,22 +1,18 @@
 import { Box, Flex, Link } from "@chakra-ui/layout";
-import { Collapse, Image } from "@chakra-ui/react";
+import { Collapse, Image, useToast } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
-import logo from "~/assets/images/logo-thinkpro.svg";
 import Search from "./components/Search";
 import { Button, SlideFade, useDisclosure, Avatar } from "@chakra-ui/react";
-import { NewIcon, CartIcon, UserIcon, LogoutIcon, DashboardIcon, InfoIcon } from "../Icons";
+import { NewIcon, CartIcon, UserIcon, LogoutIcon, InfoIcon } from "../Icons";
 import Cart from "./components/Cart";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { useGetCartQuery } from "~/redux/api/cart";
 import { useLogoutUserMutation } from "~/redux/api/user";
-import { removeCart } from "~/redux/slices/cartSlice";
 import { logout, setHomeSetting } from "~/redux/slices/globalSlice";
 import { useGetHomeSettingsQuery } from "~/redux/api/general";
 import { useEffect } from "react";
 
-type Props = {};
-
-const TheHeader = (props: Props) => {
+const TheHeader = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { isOpen: isOpenUser, onToggle: onToggleUser } = useDisclosure();
 	const dispatch = useAppDispatch();
@@ -27,12 +23,20 @@ const TheHeader = (props: Props) => {
 	const { user, isLogin, homeSettings: homeSettingsStore } = useAppSelector((state) => state.persistedReducer.global);
 	const { data: data } = useGetCartQuery(cart_id);
 	const { data: homeSettings } = useGetHomeSettingsQuery({});
-
+	const toast = useToast();
 	const handleLogOut = () => {
 		logoutUser(user)
 			.unwrap()
 			.then(() => {
-				dispatch(logout());
+				toast({
+					title: "Hệ thống",
+					description: "Bạn đã đăng xuất",
+					status: "success",
+					duration: 2000,
+					isClosable: true,
+					position: "top-right",
+				});
+				dispatch(logout(false));
 				navigate("/");
 			});
 	};
@@ -45,7 +49,10 @@ const TheHeader = (props: Props) => {
 
 	return (
 		<Flex
-			h="20"
+			h={{
+				xl: "20",
+				sm: "14",
+			}}
 			alignItems="center"
 		>
 			{/* Logo */}
@@ -114,7 +121,7 @@ const TheHeader = (props: Props) => {
 					</Link>
 
 					<Link
-						to="/tin-tuc/tin-tuc"
+						to="/tin-tuc"
 						as={ReactRouterLink}
 						_hover={{
 							textDecoration: "none",
@@ -186,7 +193,7 @@ const TheHeader = (props: Props) => {
 							rounded="full"
 							bgColor="red"
 						>
-							{data?.data.products.length || 0}
+							{data?.data.products.reduce((acc: any, item: any) => acc + item.quantity, 0) || 0}
 						</Box>
 						<CartIcon
 							size={4}
@@ -207,22 +214,16 @@ const TheHeader = (props: Props) => {
 							cursor="pointer"
 							onClick={onToggleUser}
 						>
-							<Box
-								w="44px"
-								h="44px"
-								rounded="full"
-								overflow="hidden"
-								border="1px solid #eef1f6"
-							>
-								<Image
-									w="full"
-									h="full"
-									alt={user?.first_name + " " + user?.last_name}
-									src={user?.avatar?.url}
-									objectFit="contain"
-								/>
-							</Box>
-
+							<Avatar
+								name={user?.first_name + " " + user?.last_name}
+								src={user?.avatar}
+								w="10"
+								h="10"
+								color="#12AFF0"
+								fontSize="xs"
+								bgColor="#12AFF033"
+								border="1px solid #ccc"
+							/>
 							<Collapse
 								in={isOpenUser}
 								animateOpacity

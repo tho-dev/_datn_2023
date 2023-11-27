@@ -1,11 +1,4 @@
-import React, { useState, useRef } from "react";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
   Button,
   useDisclosure,
   Text,
@@ -16,7 +9,6 @@ import {
 import { NavArrowRightIcon, PhoneIcon } from "~/components/common/Icons";
 import DialogThinkPro from "~/components/DialogThinkPro";
 
-type Props = {};
 const address = [
   {
     id: 1,
@@ -31,7 +23,7 @@ const address = [
     ],
   },
 ];
-const Branch = (props: Props) => {
+const Branch = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box>

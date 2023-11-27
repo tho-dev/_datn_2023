@@ -1,14 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import {
-  Grid,
-  GridItem,
-  Flex,
-  Box,
-  Center,
-  Text,
-  Heading,
-} from "@chakra-ui/layout";
+import { Grid, Box } from "@chakra-ui/layout";
 import MetricItem from "./MetricItem";
 import {
   CheckIcon,
@@ -20,9 +12,7 @@ import { useGetAllTotalOrderQuery } from "~/redux/api/order";
 import { useDisclosure } from "@chakra-ui/react";
 import ModalOrder from "./ModalOrder";
 
-type Props = {};
-
-const Metrics = (props: Props) => {
+const Metrics = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [mode, setMode] = useState("");
   const [title, setTitle] = useState("");

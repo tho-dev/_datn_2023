@@ -22,7 +22,7 @@ const productApi = createApi({
 				url: `/product/${slug}`,
 				method: "GET",
 			}),
-			providesTags: (result, error, slug) => [{ type: "ProductTag", slug }],
+			providesTags: (slug) => [{ type: "ProductTag", slug }],
 		}),
 		compareProduct: builder.mutation({
 			query: (body) => ({

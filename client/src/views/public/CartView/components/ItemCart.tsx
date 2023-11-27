@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Box, Flex, HStack, Heading } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
 import { Image, Text, Input, Button } from "@chakra-ui/react";
-import ItemBonus from "./ItemBonus";
 import { CloseIcon, MinusIcon, PlusIcon } from "~/components/common/Icons";
 import { Link } from "react-router-dom";
 

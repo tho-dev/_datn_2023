@@ -1,14 +1,12 @@
-import { Box, Heading, Text, Flex, Image, Button } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Text, Flex, Image, Button } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import logo from "~/assets/images/logo-thinkpro.svg";
 import { usePaymentStatusMutation } from "~/redux/api/order";
 
-type Props = {};
-
-const ThankView = (props: Props) => {
+const ThankView = () => {
   let payment: any = {};
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [time, setTime] = useState<number>(5);
   const navigate = useNavigate();
   const [paymentStatus] = usePaymentStatusMutation();
@@ -23,7 +21,7 @@ const ThankView = (props: Props) => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const data = await paymentStatus(payment);
+        await paymentStatus(payment);
       } catch (error) {
         console.log(error);
       }

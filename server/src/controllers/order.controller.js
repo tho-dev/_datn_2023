@@ -945,6 +945,7 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
         [_sort]: _order == "desc" ? -1 : 1,
       },
       select: ["-deleted", "-deleted_at"],
+      populate: ["shipping_info", "coupon_id"],
     };
 
     const { docs, ...paginate } = await Order.paginate(conditions, options);
@@ -960,10 +961,18 @@ export const getOrderByPhoneNumber = async (req, res, next) => {
           const sku = await Sku.findOne({ _id: item.sku_id }).select(
             "name shared_url image"
           );
+          // lấy ra biến thể của sku
+          const variant = await Variant.find({
+            sku_id: item.sku_id._id,
+          }).populate(["option_value_id"]);
+          const option_value = variant?.map(
+            (item) => item?.toObject()?.option_value_id?.label
+          );
           const newSku = sku.toObject();
           return {
             ...item.toObject(),
             ...newSku,
+            option_value,
           };
         })
       );
@@ -1012,7 +1021,7 @@ export const getOrderByUserId = async (req, res, next) => {
         [_sort]: _order == "desc" ? -1 : 1,
       },
       select: ["-deleted", "-deleted_at"],
-      populate: "shipping_info",
+      populate: ["shipping_info", "coupon_id"],
     };
 
     const { docs, ...paginate } = await Order.paginate(conditions, options);
@@ -1030,11 +1039,19 @@ export const getOrderByUserId = async (req, res, next) => {
             const sku = await Sku.findOne({ _id: item.sku_id }).select(
               "name shared_url image"
             );
+            // lấy ra biến thể của sku
+            const variant = await Variant.find({
+              sku_id: item.sku_id._id,
+            }).populate(["option_value_id"]);
+            const option_value = variant?.map(
+              (item) => item?.toObject()?.option_value_id?.label
+            );
             const new_item = item.toObject();
             const new_sku = sku.toObject();
             return {
               ...new_item,
               ...new_sku,
+              option_value,
             };
           })
         );

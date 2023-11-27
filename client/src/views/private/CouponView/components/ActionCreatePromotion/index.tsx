@@ -1,22 +1,16 @@
 import {
   Box,
   Button,
-  Checkbox,
-  CheckboxGroup,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Image,
   Input,
-  Text,
-  Textarea,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { AppIcon, CloseSmallIcon } from "~/components/common/Icons";
+import { useForm } from "react-hook-form";
+import { CloseSmallIcon } from "~/components/common/Icons";
 import banner from "~/assets/images/banner.jpeg";
 import { useCreateCouponMutation } from "~/redux/api/coupon";
 
@@ -37,7 +31,7 @@ const ActionPromotion = ({ onClose }: Props) => {
   const onSubmit = (data: any) => {
     created(data)
       .unwrap()
-      .then((data) => {
+      .then(() => {
         toast({
           title: "Thành công",
           duration: 1600,
@@ -46,7 +40,7 @@ const ActionPromotion = ({ onClose }: Props) => {
           description: "Tạo khuyến mãi thành công",
         });
       })
-      .catch((err) => {
+      .catch(() => {
         toast({
           title: "Có lỗi",
           duration: 1600,

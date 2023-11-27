@@ -19,17 +19,14 @@ import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { sendOtpPasswordSchema } from "~/validate/user";
 import { useSendOtpResetPasswordMutation } from "~/redux/api/user";
 import { resetForm, resetPassword } from "~/redux/slices/userSlice";
-import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { useAppDispatch } from "~/redux/hook/hook";
 
-type Props = {};
-
-type State = {};
-
-const CreatePasswordView = (props: Props) => {
+const CreatePasswordView = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<any>({
     resolver: joiResolver(sendOtpPasswordSchema),
   });
@@ -49,6 +46,7 @@ const CreatePasswordView = (props: Props) => {
         isClosable: true,
         position: "top",
       });
+      navigate("/thiet-lap-mat-khau");
     } else {
       toast({
         title: "Thiết lập mật khẩu thất bại",
@@ -58,12 +56,13 @@ const CreatePasswordView = (props: Props) => {
         isClosable: true,
         position: "top",
       });
+      reset();
+      navigate("/quen-mat-khau");
     }
     dispatch(resetForm(result));
     dispatch(
       resetPassword({ result: result.data || result.error, email: data.email })
     );
-    navigate("/thiet-lap-mat-khau");
   };
   return (
     <Center h="full" px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}>
@@ -123,7 +122,9 @@ const CreatePasswordView = (props: Props) => {
               mt="4"
               rounded="full"
               isLoading={isLoading}
-              loadingText={isLoading ? "Đang thiết lập" : ""}
+              loadingText={!isLoading ? "Đang thiết lập" : ""}
+              bg={"bg.green"}
+              color={isLoading ? "black" : "white"}
             >
               Thiết lập lại mật khẩu
             </Button>

@@ -1,21 +1,17 @@
 import { Box } from "@chakra-ui/layout";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CheckPhone from "./components/CheckPhone";
 import ListOrder from "./components/ListOrder";
 import { useGetOrderByPhoneNumberMutation } from "~/redux/api/order";
 import { useToast } from "@chakra-ui/react";
-import LoadingPolytech from "~/components/LoadingPolytech";
 
-type Props = {};
-
-const HistoryOrderView = (props: Props) => {
+const HistoryOrderView = () => {
   const [checkPhone, setCheckPhone] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [dataOrder, setDataOrder] = useState([] as any);
   const [paginate, setPaginate] = useState({} as any);
   const [loading, setLoading] = useState(true);
-  const [getOrderByPhoneNumber, { isLoading }] =
-    useGetOrderByPhoneNumberMutation();
+  const [getOrderByPhoneNumber] = useGetOrderByPhoneNumberMutation();
   const toast = useToast();
   const [query, setQuery] = useState<any>({
     _page: 1,

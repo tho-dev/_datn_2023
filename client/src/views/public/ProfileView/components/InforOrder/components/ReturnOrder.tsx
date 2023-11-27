@@ -1,23 +1,13 @@
-import React from "react";
 import {
   Box,
-  Divider,
   Flex,
-  TabPanel,
-  Text,
-  Tag,
-  useDisclosure,
-  Heading,
   Button,
   FormControl,
   Input,
   FormErrorMessage,
   FormLabel,
   Textarea,
-  FormHelperText,
   useToast,
-  Grid,
-  GridItem,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { chuyenDoiSoDienThoai } from "~/utils/fc";
@@ -41,20 +31,22 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
   const onSubmitFormReturn = (data: any) => {
     const { address, content, shipping_address, phone_number, ...rest } = data;
     // check thời gian
-    // const currentDate = new Date();
-    // const targetTime = new Date(orderDetail?.updated_at);
+    console.log(address, content, shipping_address);
 
-    // targetTime.setDate(targetTime.getDate() + 1);
-    // if (currentDate > targetTime) {
-    //   return toast({
-    //     title: "Không thể hoàn đơn hàng",
-    //     description: "Liên hệ với bộ phận CSKH để được xử lý",
-    //     status: "error",
-    //     duration: 2000,
-    //     isClosable: true,
-    //     position: "top-right",
-    //   });
-    // }
+    const currentDate = new Date();
+    const targetTime = new Date(orderDetail?.updated_at);
+
+    targetTime.setDate(targetTime.getDate() + 1);
+    if (currentDate > targetTime) {
+      return toast({
+        title: "Không thể hoàn đơn hàng",
+        description: "Liên hệ với bộ phận CSKH để được xử lý",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
 
     const new_phone_number = chuyenDoiSoDienThoai(phone_number);
     const new_data = {

@@ -21,15 +21,15 @@ const OrderView = (props: Props) => {
 		_limit: 6,
 		_order: "desc",
 		_sort: "created_at",
-		status: "",
+		status: " ",
 		id: user._id,
 	});
 	const [id, setId] = useState("");
 	const [orderDetail, setOrderDetail] = useState({} as any);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { isOpen: isOpenReturn, onOpen: onOpenReturn, onClose: onCloseReturn } = useDisclosure();
-	const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure();
 
+	const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure();
 	const toast = useToast();
 	const { data, isLoading, isFetching, isError } = useGetOrderByUserIdQuery(query, {
 		skip: !user._id,

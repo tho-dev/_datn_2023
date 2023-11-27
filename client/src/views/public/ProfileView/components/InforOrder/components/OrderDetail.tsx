@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Divider,
   Flex,
-  TabPanel,
   Text,
-  Tag,
   useDisclosure,
-  Heading,
   Button,
   FormControl,
   Input,
@@ -16,8 +12,6 @@ import {
   Textarea,
   FormHelperText,
   useToast,
-  Grid,
-  GridItem,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
@@ -142,6 +136,8 @@ const OrderDetail = ({ orderDetail, onCloseDetail }: Props) => {
     if (orderDetail && orderDetail.shipping_method == "shipped") {
       const address = orderDetail?.shipping_info?.shipping_address.split(",");
       const [address_detail, ...rest] = address;
+      console.log(address_detail);
+
       setAddress(rest.join(","));
       setTransportFee(orderDetail?.shipping_info?.transportation_fee);
     }

@@ -1,12 +1,6 @@
 import { useForm } from "react-hook-form";
-import * as Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
-import {
-  ArrowLeftCirleIcon,
-  CodeIcon,
-  GoogleIcon,
-  FbIcon,
-} from "~/components/common/Icons";
+import { ArrowLeftCirleIcon, CodeIcon } from "~/components/common/Icons";
 import {
   FormErrorMessage,
   FormControl,
@@ -19,22 +13,15 @@ import {
   Stack,
   Heading,
   Text,
-  Divider,
-  AbsoluteCenter,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import {
-  Link as ReactRouterLink,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
+import { useState } from "react";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { registerSchema } from "~/validate/user";
 import { useToast } from "@chakra-ui/react";
 import { useSignupMutation } from "~/redux/api/user";
 import ReCAPTCHA from "react-google-recaptcha";
-type Props = {};
 
-const SignUpView = (props: Props) => {
+const SignUpView = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const [checkCaptch, setCheckCaptch] = useState(false);
@@ -45,7 +32,7 @@ const SignUpView = (props: Props) => {
   } = useForm<any>({
     resolver: joiResolver(registerSchema),
   });
-  const onChange = (value: any) => {
+  const onChange = () => {
     setCheckCaptch(true);
   };
   const [signup] = useSignupMutation();
@@ -253,13 +240,13 @@ const SignUpView = (props: Props) => {
             </Button>
           </Flex>
         </form>
-        <Box position="relative" py="10">
+        {/* <Box position="relative" py="10">
           <Divider />
           <AbsoluteCenter bg="white" px="4">
             Or
           </AbsoluteCenter>
-        </Box>
-        <Flex w="full" direction="column" gap="4">
+        </Box> */}
+        {/* <Flex w="full" direction="column" gap="4">
           <Button
             size="lager"
             leftIcon={<GoogleIcon boxSize="5" />}
@@ -284,7 +271,7 @@ const SignUpView = (props: Props) => {
           >
             Đăng nhập bằng Facebook
           </Button>
-        </Flex>
+        </Flex> */}
       </Flex>
     </Center>
   );

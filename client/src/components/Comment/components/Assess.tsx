@@ -1,7 +1,6 @@
 import { Box, Text, Flex } from "@chakra-ui/layout";
-import { Image, Divider } from "@chakra-ui/react";
 import { Grid, GridItem } from "@chakra-ui/layout";
-import { Star, Star_Half, StarNocolor } from "~/components/common/Icons";
+import { Star, Star_Half } from "~/components/common/Icons";
 
 const Assess = () => {
   return (

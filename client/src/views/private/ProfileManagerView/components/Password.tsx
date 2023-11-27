@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Text,
@@ -8,7 +8,6 @@ import {
   Grid,
   GridItem,
   Divider,
-  Flex,
   Button,
   useToast,
 } from "@chakra-ui/react";
@@ -26,7 +25,7 @@ const Password = ({ data }: Props) => {
   const [loading, setLoading] = useState(false);
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     handleSubmit,
   } = useForm();
   const toast = useToast();
@@ -38,7 +37,7 @@ const Password = ({ data }: Props) => {
     setLoading(true);
     updatePassword({ data: datapassword, id: data._id })
       .unwrap()
-      .then((data) => {
+      .then(() => {
         toast({
           title: "Thành công",
           duration: 1600,
@@ -46,7 +45,7 @@ const Password = ({ data }: Props) => {
           status: "success",
           description: "Cập nhật thành công",
         });
-        dispatch(logout());
+        dispatch(logout(false));
         navigate("/");
       })
       .catch((err) => {

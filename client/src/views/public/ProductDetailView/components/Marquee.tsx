@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -18,12 +18,10 @@ import Marquee from "react-fast-marquee";
 import {
   BellIcon,
   NavArrowRightIcon,
-  TimeIcon,
   EmailIcon,
   HeadphoneIcon,
   ClockIcon,
 } from "~/components/common/Icons";
-type Props = {};
 
 const dataFake = [
   {
@@ -61,9 +59,9 @@ const dataFake = [
       "Khách hàng bận bịu. Cán bộ, nhân viên ThinkPro càng phải phục vụ ngoài giờ để trải nghiệm của khách hàng được thông suốt.",
   },
 ];
-const MarqueeReact = (props: Props) => {
+const MarqueeReact = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [scrollBehavior, setScrollBehavior] = useState<any>("inside");
+  const [scrollBehavior] = useState<any>("inside");
   const btnRef = useRef(null);
   return (
     <>
@@ -74,11 +72,11 @@ const MarqueeReact = (props: Props) => {
         as={"button"}
         mt={"3"}
         alignItems="center"
+        w={"100%"}
       >
-        <Marquee>
+        <Marquee style={{ width: "100%" }}>
           {dataFake.map((data, index: number) => {
             const Icon = data.icon;
-
             return (
               <Flex
                 alignItems={"center"}
@@ -98,15 +96,10 @@ const MarqueeReact = (props: Props) => {
         <Flex
           w="9"
           h="9"
-          right="4"
-          top={"calc(50% - 24px)"}
-          translateY="-50%"
-          zIndex="5"
           rounded="full"
           cursor="pointer"
           alignItems="center"
           justifyContent="center"
-          className="btn-next"
         >
           <NavArrowRightIcon size={4} strokeWidth={3} color="text.black" />
         </Flex>

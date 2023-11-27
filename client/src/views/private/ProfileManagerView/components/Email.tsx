@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Text,
@@ -19,7 +18,7 @@ type Props = {
 const Email = ({ data }: Props) => {
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
   return (
     <Box

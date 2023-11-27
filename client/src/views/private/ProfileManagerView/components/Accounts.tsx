@@ -1,18 +1,4 @@
-import {
-  Box,
-  Text,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  Checkbox,
-  Select,
-  Button,
-  Switch,
-  Spacer,
-  Link,
-} from "@chakra-ui/react";
-import { FacebookIcon, GoogleIcon } from "~/components/common/Icons";
+import { Box, Text, Divider, Flex, Checkbox, Button } from "@chakra-ui/react";
 
 const Accounts = () => {
   return (
