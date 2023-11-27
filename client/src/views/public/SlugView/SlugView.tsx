@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useMemo } from "react";
 import {
 	Box,
 	Button,
-	CheckboxGroup,
 	Flex,
 	FormLabel,
 	Popover,
@@ -10,21 +8,23 @@ import {
 	PopoverHeader,
 	PopoverTrigger,
 	Radio,
+	RadioGroup,
 	Switch,
 	Text,
 } from "@chakra-ui/react";
-import Title from "./components/Title";
-import FilterProduct from "./components/Filter";
-import { useGetProducItemToBrandAndCategoryQuery, useGetFilterBrandAndCategoryQuery } from "~/redux/api/collection";
-import ListThinkPro from "~/components/ListThinkPro";
-import { ArrowUpIcon } from "~/components/common/Icons";
-import { useParams, useNavigate } from "react-router";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDebounce } from "@uidotdev/usehooks";
+import { useEffect, useState } from "react";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
+import ListThinkPro from "~/components/ListThinkPro";
 import LoadingPolytech from "~/components/LoadingPolytech";
+import { ArrowUpIcon } from "~/components/common/Icons";
+import { useGetFilterBrandAndCategoryQuery, useGetProducItemToBrandAndCategoryQuery } from "~/redux/api/collection";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { setIsCompare, setItems } from "~/redux/slices/globalSlice";
 import { RootState } from "~/redux/store";
+import FilterProduct from "./components/Filter";
+import Title from "./components/Title";
 
 type Props = {};
 
@@ -32,6 +32,7 @@ const SlugView = (props: Props) => {
 	const { slug: params } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const [checked, setChecked] = useState<string>("1");
 	const { isCompare } = useAppSelector((state: RootState) => state.persistedReducer.global);
 
 	const [data, setData] = useState<any>([]);
@@ -42,7 +43,7 @@ const SlugView = (props: Props) => {
 		_sort: "created_at",
 		_category: "",
 	});
-	const debouncedQuery = useDebounce(query, 600);
+	const debouncedQuery = useDebounce(query, 300);
 
 	const { control, register, reset, setValue, watch } = useForm<any>();
 	const { fields } = useFieldArray({
@@ -198,7 +199,10 @@ const SlugView = (props: Props) => {
 										flexDir="column"
 										gap="2"
 									>
-										<CheckboxGroup value={[1, 2, 3]}>
+										<RadioGroup
+											onChange={setChecked}
+											value={checked}
+										>
 											<Box w="full">
 												<Radio
 													defaultChecked
@@ -232,10 +236,10 @@ const SlugView = (props: Props) => {
 														})
 													}
 												>
-													<Text fontSize="sm">Giá thấp -&gt; cao</Text>
+													<Text fontSize="sm">Giá cao -&gt; thấp</Text>
 												</Radio>
 											</Box>
-										</CheckboxGroup>
+										</RadioGroup>
 									</Flex>
 								</PopoverHeader>
 							</PopoverContent>

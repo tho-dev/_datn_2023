@@ -1,9 +1,9 @@
+import { Input } from "@chakra-ui/input";
+import { Box, Flex, Image, Spinner, Text } from "@chakra-ui/react";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import DefaultAvatar from "~/assets/images/thumb.png";
-import { Input } from "@chakra-ui/input";
-import { uploadImage, removeFile } from "~/services/upload.service";
-import { Box, Flex, Image, Spinner, Text } from "@chakra-ui/react";
-import { CloseIcon, CloseSmallIcon, UploadImageIcon } from "../common/Icons";
+import { removeFile, uploadImage } from "~/services/upload.service";
+import { CloseSmallIcon, UploadImageIcon } from "../common/Icons";
 
 interface UploadImageProps {
 	getDataFn: (data: string) => void;

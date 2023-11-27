@@ -25,10 +25,17 @@ const storage = new CloudinaryStorage({
       width = 120;
       height = 120;
       folder = "brands";
+      url = ""
+    } else if (file.fieldname == "avatar") {
+      width = 100;
+      height = 100;
+      folder = "avatar";
+      url = ""
     } else if (file.fieldname == "category") {
       width = 120;
       height = 120;
       folder = "categories";
+      url = ''
     } else if (file.fieldname == "thumbnail") {
       width = 460;
       height = 460;

@@ -1,19 +1,14 @@
-import { Box, Button, Flex, Grid, GridItem, Heading, Text, useDisclosure, useToast } from "@chakra-ui/react";
-import { status_order } from "~/data";
-import ItemOrder from "./components/ItemOrder";
-import { useAppSelector } from "~/redux/hook/hook";
-import {
-	useCancelOrderMutation,
-	useConfirmDeliveredMutation,
-	useGetOrderByUserIdQuery,
-	useReturnOrderMutation,
-} from "~/redux/api/order";
+import { Box, Button, Flex, Grid, GridItem, Heading, Image, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import { chuyenDoiSoDienThoai } from "~/utils/fc";
-import DialogThinkPro from "~/components/DialogThinkPro";
-import ReturnOrder from "./components/ReturnOrder";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import DialogThinkPro from "~/components/DialogThinkPro";
+import { status_order } from "~/data";
+import { useCancelOrderMutation, useConfirmDeliveredMutation, useGetOrderByUserIdQuery } from "~/redux/api/order";
+import { useAppSelector } from "~/redux/hook/hook";
+import ItemOrder from "./components/ItemOrder";
 import OrderDetail from "./components/OrderDetail";
+import ReturnOrder from "./components/ReturnOrder";
+import not_data from "~/assets/images/not_data.svg";
 import LoadingPolytech from "~/components/LoadingPolytech";
 
 type Props = {};
@@ -33,20 +28,22 @@ const OrderView = (props: Props) => {
 	const [orderDetail, setOrderDetail] = useState({} as any);
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { isOpen: isOpenReturn, onOpen: onOpenReturn, onClose: onCloseReturn } = useDisclosure();
-
 	const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure();
+
 	const toast = useToast();
-	const { data, isLoading, isFetching, isError } = useGetOrderByUserIdQuery(query);
+	const { data, isLoading, isFetching, isError } = useGetOrderByUserIdQuery(query, {
+		skip: !user._id,
+	});
 
 	const [cancelOrder] = useCancelOrderMutation();
 	const [confirmDelivered] = useConfirmDeliveredMutation();
 
 	if (isLoading) {
-		return <Box>Loading...</Box>;
+		return <LoadingPolytech />;
 	}
 
 	const handleChangeStatus = (status_order: string) => {
-		setQuery({ status: status_order });
+		setQuery({ ...query, status: status_order });
 		setStatus(status_order);
 	};
 	// hoàn hàng
@@ -62,6 +59,7 @@ const OrderView = (props: Props) => {
 		onOpenCancel();
 		setOrderDetail(order);
 	};
+
 	const handleCancel = () => {
 		// check thời gian
 		// const currentDate = new Date();
@@ -113,6 +111,7 @@ const OrderView = (props: Props) => {
 				onCloseCancel();
 			});
 	};
+
 	// xác nhận đã nhận được hàng
 	const handleConfirmCompleted = (order: any) => {
 		confirmDelivered(order?._id)
@@ -143,35 +142,65 @@ const OrderView = (props: Props) => {
 		setOrderDetail(order);
 		onOpen();
 	};
+
 	return (
 		<Box
+			py="8"
+			px="6"
 			rounded="xl"
-			bgColor="bg.white"
+			borderWidth="1px"
+			borderColor="#eef1f6"
+			boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
 		>
 			<Flex
-				my="6"
-				gap={4}
+				gap={3}
+				flexWrap="wrap"
 			>
 				{status_order.map((item: any, index: number) => {
 					return (
 						<Button
-							fontSize="sm"
+							fontSize="xs"
 							fontWeight="semibold"
-							p={4}
 							key={index}
-							bgColor={status === item.value ? "gray" : "bg.gray"}
+							h="40px"
+							rounded="md"
+							bgColor={status === item.value ? "bg.bgEdit" : "bg.gray"}
 							onClick={() => handleChangeStatus(item.value)}
-							color={status === item.value ? "white" : "black"}
+							color={status === item.value ? "text.textEdit" : "black"}
 						>
 							{item.name}
 						</Button>
 					);
 				})}
 			</Flex>
+
 			{isFetching && <Box>fetching...</Box>}
 
 			{isError ? (
-				<Text>Không có đơn hàng nào</Text>
+				<Flex
+					my="6"
+					w="full"
+					alignItems="center"
+					justifyContent="center"
+				>
+					<Flex
+						flexDir="column"
+						alignItems="center"
+						justifyContent="center"
+					>
+						<Image
+							src={not_data}
+							alt="not found"
+						/>
+						<Text
+							mt="1"
+							fontSize="sm"
+							fontWeight="semibold"
+						>
+							Không có đơn hàng nào !!!
+						</Text>
+					</Flex>
+				</Flex>
 			) : (
 				<Grid
 					gridTemplateColumns={"repeat(1, 1fr)"}

@@ -25,7 +25,7 @@ const TheHeader = (props: Props) => {
 
 	const [logoutUser] = useLogoutUserMutation();
 	const { user, isLogin, homeSettings: homeSettingsStore } = useAppSelector((state) => state.persistedReducer.global);
-	const { data: data, isFetching, isLoading, isError } = useGetCartQuery(cart_id);
+	const { data: data } = useGetCartQuery(cart_id);
 	const { data: homeSettings } = useGetHomeSettingsQuery({});
 
 	const handleLogOut = () => {
@@ -207,16 +207,22 @@ const TheHeader = (props: Props) => {
 							cursor="pointer"
 							onClick={onToggleUser}
 						>
-							<Avatar
-								name={user?.first_name + " " + user?.last_name}
-								src={user?.avatar}
-								w="10"
-								h="10"
-								color="#12AFF0"
-								fontSize="xs"
-								bgColor="#12AFF033"
-								border="1px solid #ccc"
-							/>
+							<Box
+								w="44px"
+								h="44px"
+								rounded="full"
+								overflow="hidden"
+								border="1px solid #eef1f6"
+							>
+								<Image
+									w="full"
+									h="full"
+									alt={user?.first_name + " " + user?.last_name}
+									src={user?.avatar?.url}
+									objectFit="contain"
+								/>
+							</Box>
+
 							<Collapse
 								in={isOpenUser}
 								animateOpacity
