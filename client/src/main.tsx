@@ -21,12 +21,18 @@ import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 
 // cấu hình client state
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <ChakraProvider theme={customTheme} resetCSS={true}>
-    <CSSReset />
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-  </ChakraProvider>
+	<ChakraProvider
+		theme={customTheme}
+		resetCSS={true}
+	>
+		<CSSReset />
+		<Provider store={store}>
+			<PersistGate
+				loading={null}
+				persistor={persistor}
+			>
+				<App />
+			</PersistGate>
+		</Provider>
+	</ChakraProvider>
 );
