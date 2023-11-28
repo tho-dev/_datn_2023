@@ -15,8 +15,6 @@ const CompareView = () => {
     (state: RootState) => state.persistedReducer.global
   );
   const [compareProduct, { isLoading }] = useCompareProductMutation();
-  const { slug } = useParams();
-  console.log(slug);
 
   useEffect(() => {
     const fetchApi = async () => {

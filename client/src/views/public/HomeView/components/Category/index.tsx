@@ -33,11 +33,7 @@ const Category = ({ title, items }: Props) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []); // C
-  console.log(windowWidth);
-  if (windowWidth < 768) {
-    console.log("dùng màn slide");
-  }
+  }, []);
 
   return (
     <Box pt="12">
@@ -159,7 +155,7 @@ const Category = ({ title, items }: Props) => {
           </Box>
         ) : (
           <Grid gridTemplateColumns={"repeat(8,1fr)"}>
-            {items.map((item: any, index: number) => {
+            {items?.map((item: any, index: number) => {
               return (
                 <GridItem>
                   <Link

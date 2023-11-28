@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
-import { PlusCircleIcon, SearchIcon } from "~/components/common/Icons";
+import { FilterIcon, SearchIcon } from "~/components/common/Icons";
 import { useGetAllOrderQuery } from "~/redux/api/order";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import { checkOrderStatus, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
@@ -32,7 +32,7 @@ const OrderManagementView = () => {
     payment_status: "",
   } as any);
 
-  const { control, watch } = useForm();
+  const { control, watch, setValue } = useForm();
 
   const columnHelper = createColumnHelper<any>();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -184,6 +184,18 @@ const OrderManagementView = () => {
   const status = watch("status");
   const payment_method = watch("payment_method");
   const payment_status = watch("payment_status");
+  const handleFilterNews = () => {
+    setValue("status", "");
+    setValue("payment_method", "");
+    setValue("payment_status", "");
+    setDebouncedSearchTerm({
+      search: "",
+      date: "",
+      status: "",
+      payment_method: "",
+      payment_status: "",
+    });
+  };
 
   useEffect(() => {
     setDebouncedSearchTerm({
@@ -261,6 +273,7 @@ const OrderManagementView = () => {
 
           <Box display="inline-block">
             <Input
+              value={debouncedSearchTerm?.date}
               type="date"
               onChange={(e: any) => handleDate(e.target.value)}
             />
@@ -323,6 +336,7 @@ const OrderManagementView = () => {
               lineHeight="1.5"
               w="260px"
               placeholder="Tìm kiếm theo tên,mã,..."
+              value={debouncedSearchTerm?.search}
               onChange={(e) =>
                 setDebouncedSearchTerm({ search: e.target.value })
               }
@@ -331,14 +345,14 @@ const OrderManagementView = () => {
         </Flex>
         <Flex flex="1" justifyContent="flex-end">
           <Button
-            leftIcon={<PlusCircleIcon size={5} color="text.textSuccess" />}
+            leftIcon={<FilterIcon size={5} color="text.textSuccess" />}
             px="4"
             lineHeight="2"
             color="text.textSuccess"
             bgColor="bg.bgSuccess"
-            disabled
+            onClick={handleFilterNews}
           >
-            Tạo đơn
+            Làm mới
           </Button>
         </Flex>
       </Flex>

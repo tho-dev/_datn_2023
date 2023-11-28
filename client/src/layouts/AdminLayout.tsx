@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Flex, Box } from "@chakra-ui/layout";
 import Sidebar from "~/components/common/Sidebar";
 import TopBar from "~/components/common/TopBar";
@@ -8,13 +8,14 @@ import { useAppSelector } from "~/redux/hook/hook";
 import { useGetAllQuery } from "~/redux/api/notification";
 import { socket } from "~/App";
 import LoadingPolytech from "~/components/LoadingPolytech";
+import { useToast } from "@chakra-ui/react";
 
 const AdminLayout = () => {
   const [status, setStatus] = useState(null);
   const user = useAppSelector((state) => state.persistedReducer.global.user);
   const { data, isLoading, isFetching } = useGetAllQuery({ status: status });
   const [dataNotification, setDataNotification] = useState<any>([]);
-
+  const toast = useToast();
   useEffect(() => {
     if (data) {
       setDataNotification(data.data);
@@ -24,14 +25,28 @@ const AdminLayout = () => {
   useEffect(() => {
     socket.emit("joinRoom", "don-hang", user._id, user.role);
   }, []);
-
+  const listenerNotification = useCallback(
+    (notification: any) => {
+      const { roomName, ...rest } = notification;
+      setDataNotification([...data.data, rest]);
+      toast({
+        title: "Hệ thống",
+        description: rest.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    },
+    [data]
+  );
   useEffect(() => {
     if (data) {
-      socket.on("notification", (notification) => {
-        const { roomName, ...rest } = notification;
-        setDataNotification([...data.data, rest]);
-      });
+      socket.on("notification", listenerNotification);
     }
+    return () => {
+      socket.off("notification", listenerNotification);
+    };
   }, [socket, data]);
   const handleChangeStatusNoti = (status: any) => {
     setStatus(status);
