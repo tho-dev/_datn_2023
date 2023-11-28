@@ -180,7 +180,6 @@ const CommentView = ({ productId }: any) => {
   return (
     <>
       <Box
-        my="6"
         bg="white"
         w="100%"
         rounded="lg"
