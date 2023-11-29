@@ -5,6 +5,7 @@ import {
 	FormErrorMessage,
 	FormHelperText,
 	FormLabel,
+	Image,
 	Input,
 	Link,
 	Radio,
@@ -32,11 +33,14 @@ import ProductPay from "./components/ProductPay";
 import Transport from "./components/Transport";
 import LoadingPolytech from "~/components/LoadingPolytech";
 import CommonBox from "./components/CommonBox";
+import momo from "~/assets/images/momo.webp";
+import vnpay from "~/assets/images/vnpay.webp";
 
 const Payment = () => {
 	const [dataOrder, setDataOrder] = useState({} as any);
 	const [methodOrder, setMethodOrder] = React.useState("at_store");
 	const [methodPayment, setMethodPayment] = React.useState("tructiep");
+	const [payment, setPayment] = React.useState("MOMO");
 	const [address, setAddress] = React.useState("");
 	const [transportFee, setTransportFee] = useState(0);
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -143,10 +147,6 @@ const Payment = () => {
 
 	if (isLoading) {
 		return <LoadingPolytech />;
-	}
-
-	if (isError) {
-		return <Box>Error...</Box>;
 	}
 
 	return (
@@ -412,7 +412,7 @@ const Payment = () => {
 															fontSize="13px"
 															fontWeight="bold"
 														>
-															Thủ đô Hà Nội
+															Hà Nội
 														</Text>
 														<Text
 															fontSize="13px"
@@ -463,6 +463,7 @@ const Payment = () => {
 												size="sm"
 												value="tructiep"
 												fontSize={"12px"}
+												fontWeight="semibold"
 												{...register("payment_method")}
 											>
 												<Text
@@ -476,6 +477,7 @@ const Payment = () => {
 												size="sm"
 												value="online"
 												fontSize={"12px"}
+												fontWeight="semibold"
 												{...register("payment_method")}
 											>
 												<Text
@@ -488,6 +490,137 @@ const Payment = () => {
 										</Stack>
 									</RadioGroup>
 								</FormControl>
+
+								{methodPayment == "online" && (
+									<Flex
+										mt="4"
+										flexDir="column"
+									>
+										<Heading
+											mb="2"
+											fontSize="sm"
+											fontWeight="semibold"
+										>
+											Loại ví điện tử
+										</Heading>
+										<RadioGroup
+											onChange={setPayment}
+											value={payment}
+										>
+											<Flex
+												w="100%"
+												gap="6"
+											>
+												<Box
+													px="6"
+													flex="1"
+													bgColor="#F6F9FC"
+													rounded="lg"
+												>
+													<Radio
+														w="full"
+														value="MOMO"
+														size="sm"
+														fontSize={"12px"}
+														__css={{
+															"& > span": {
+																w: "-webkit-fit-content",
+															},
+														}}
+													>
+														<Flex
+															w="full"
+															px="3"
+															py="4"
+															gap="3"
+															rounded="md"
+															fontSize="sm"
+															color="text.black"
+														>
+															<Box flex="1">
+																<Text
+																	fontSize="13px"
+																	fontWeight="bold"
+																>
+																	MOMO
+																</Text>
+																<Text
+																	fontSize="13px"
+																	fontWeight="semibold"
+																>
+																	Thanh toán qua ví MOMO
+																</Text>
+															</Box>
+															<Box
+																w="9"
+																h="9"
+																rounded="md"
+																overflow="hidden"
+															>
+																<Image
+																	src={momo}
+																	objectFit="contain"
+																	w="full"
+																	h="full"
+																/>
+															</Box>
+														</Flex>
+													</Radio>
+												</Box>
+												<Box
+													flex="1"
+													px="6"
+													bgColor="#F6F9FC"
+													rounded="lg"
+												>
+													<Radio
+														value="VNPAY"
+														size="sm"
+														fontSize={"12px"}
+													>
+														<Flex
+															w="full"
+															px="3"
+															py="4"
+															gap="3"
+															rounded="md"
+															fontSize="sm"
+															color="text.black"
+														>
+															<Box flex="1">
+																<Text
+																	fontSize="13px"
+																	fontWeight="bold"
+																>
+																	VNPAY
+																</Text>
+																<Text
+																	fontSize="13px"
+																	fontWeight="semibold"
+																>
+																	Thanh toán qua ví VNPAY
+																</Text>
+															</Box>
+															<Box
+																w="9"
+																h="9"
+																rounded="md"
+																overflow="hidden"
+															>
+																<Image
+																	src={vnpay}
+																	objectFit="contain"
+																	w="full"
+																	h="full"
+																/>
+															</Box>
+														</Flex>
+													</Radio>
+												</Box>
+											</Flex>
+										</RadioGroup>
+									</Flex>
+								)}
 							</Box>
 						</CommonBox>
 
@@ -508,7 +641,7 @@ const Payment = () => {
 									color={voucher ? "text.textDelete" : "text.textEdit"}
 									bgColor={voucher ? "bg.bgDelete" : "bg.bgEdit"}
 								>
-									Kiểm tra
+									Áp dụng
 								</Button>
 							</Flex>
 						</CommonBox>

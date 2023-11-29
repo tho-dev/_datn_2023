@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import {
 	Box,
 	Button,
-	CheckboxGroup,
 	Flex,
 	FormLabel,
 	Popover,
@@ -19,10 +18,7 @@ import FilterProduct from "./components/Filter";
 import { useGetProducItemToBrandAndCategoryQuery, useGetFilterBrandAndCategoryQuery } from "~/redux/api/collection";
 import ListThinkPro from "~/components/ListThinkPro";
 import { ArrowUpIcon } from "~/components/common/Icons";
-import { useParams, useNavigate } from "react-router";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { useDebounce } from "@uidotdev/usehooks";
-import LoadingPolytech from "~/components/LoadingPolytech";
+import { useGetFilterBrandAndCategoryQuery, useGetProducItemToBrandAndCategoryQuery } from "~/redux/api/collection";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { setIsCompare, setItems } from "~/redux/slices/globalSlice";
 import { RootState } from "~/redux/store";
@@ -128,7 +124,7 @@ const SlugView = (props: Props) => {
 		dispatch(setIsCompare(e.target.checked as any));
 	};
 
-	if (isFetching) return <LoadingPolytech />;
+	if (isFetchingFilter) return <LoadingPolytech />;
 
 	if (isError) navigate("/404");
 
@@ -136,7 +132,10 @@ const SlugView = (props: Props) => {
 		<Box m="30px 0">
 			<Title filters={filters?.data} />
 
-			<Flex gap="4">
+			<Flex
+				gap="4"
+				flexWrap={"wrap"}
+			>
 				{fields?.map((item: any, index: number) => {
 					return (
 						<FilterProduct
@@ -166,12 +165,12 @@ const SlugView = (props: Props) => {
 						<Switch
 							size="md"
 							onChange={handleCompare}
+							isChecked={isCompare}
 						/>
 						<FormLabel
 							htmlFor="isChecked"
 							fontSize="sm"
 							marginTop={2}
-							defaultChecked={isCompare}
 						>
 							So sánh
 						</FormLabel>
@@ -207,8 +206,26 @@ const SlugView = (props: Props) => {
 												<Radio
 													defaultChecked
 													value="1"
+													onClick={() =>
+														setQuery({
+															...query,
+															_order: "desc",
+															_sort: "created_at",
+														})
+													}
 												>
-													<Text fontSize="sm">Nổi bật nhất</Text>
+													<Text
+														fontSize="sm"
+														onClick={() =>
+															setQuery({
+																...query,
+																_order: "desc",
+																_sort: "created_at",
+															})
+														}
+													>
+														Nổi bật nhất
+													</Text>
 												</Radio>
 											</Box>
 											<Box w="full">
@@ -222,7 +239,18 @@ const SlugView = (props: Props) => {
 														})
 													}
 												>
-													<Text fontSize="sm">Giá thấp -&gt; cao</Text>
+													<Text
+														fontSize="sm"
+														onClick={() =>
+															setQuery({
+																...query,
+																_order: "asc",
+																_sort: "price",
+															})
+														}
+													>
+														Giá thấp -&gt; cao
+													</Text>
 												</Radio>
 											</Box>
 											<Box w="full">
@@ -236,7 +264,18 @@ const SlugView = (props: Props) => {
 														})
 													}
 												>
-													<Text fontSize="sm">Giá cao -&gt; thấp</Text>
+													<Text
+														fontSize="sm"
+														onClick={() =>
+															setQuery({
+																...query,
+																_order: "desc",
+																_sort: "price",
+															})
+														}
+													>
+														Giá cao -&gt; thấp
+													</Text>
 												</Radio>
 											</Box>
 										</RadioGroup>

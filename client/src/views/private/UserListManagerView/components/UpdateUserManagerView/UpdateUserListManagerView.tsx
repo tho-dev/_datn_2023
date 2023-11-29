@@ -193,6 +193,7 @@ const UpdateUserListManagerView = () => {
                           {...register("first_name", {
                             required: "Không được để trống !!!",
                           })}
+                          defaultValue={data?.data.first_name}
                         />
                         <FormErrorMessage>
                           {(errors.first_name as any) &&
@@ -217,6 +218,7 @@ const UpdateUserListManagerView = () => {
                           {...register("last_name", {
                             required: "Không được để trống !!!",
                           })}
+                          defaultValue={data?.data.last_name}
                         />
                         <FormErrorMessage>
                           {(errors.last_name as any) &&
@@ -250,6 +252,7 @@ const UpdateUserListManagerView = () => {
                       {...register("email", {
                         required: "Không được để trống !!!",
                       })}
+                      defaultValue={data?.data.email}
                     />
                     <FormErrorMessage>
                       {(errors.email as any) && errors?.email?.message}
@@ -269,6 +272,7 @@ const UpdateUserListManagerView = () => {
                       {...register("phone", {
                         required: "Không được để trống !!!",
                       })}
+                      defaultValue={data?.data.phone}
                     />
                     <FormErrorMessage>
                       {(errors.phone as any) && errors?.phone?.message}
@@ -299,6 +303,8 @@ const UpdateUserListManagerView = () => {
                       {...register("password", {
                         required: "Không được để trống !!!",
                       })}
+                      defaultValue={data?.data.confirm_password}
+                      isReadOnly
                     />
                     <FormErrorMessage>
                       {(errors.password as any) && errors?.password?.message}
@@ -318,6 +324,8 @@ const UpdateUserListManagerView = () => {
                       {...register("confirm_password", {
                         required: "Không được để trống !!!",
                       })}
+                      isReadOnly
+                      defaultValue={data?.data.confirm_password}
                     />
                     <FormErrorMessage>
                       {(errors.confirm_password as any) &&
@@ -348,6 +356,7 @@ const UpdateUserListManagerView = () => {
                       {...register("role", {
                         required: "Không được để trống !!!",
                       })}
+                      defaultValue={data?.data.role}
                     />
                     <FormErrorMessage>
                       {(errors.role as any) && errors?.role?.message}
@@ -378,6 +387,7 @@ const UpdateUserListManagerView = () => {
                       {...register("location", {
                         required: "Không được để trống !!!",
                       })}
+                      defaultValue={data?.data.location}
                     />
                     <FormErrorMessage>
                       {(errors.location as any) && errors?.location?.message}

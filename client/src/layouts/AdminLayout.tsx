@@ -1,13 +1,13 @@
+import { Box, Flex } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
-import { Flex, Box } from "@chakra-ui/layout";
-import Sidebar from "~/components/common/Sidebar";
-import TopBar from "~/components/common/TopBar";
-import { HelmetProvider, Helmet } from "react-helmet-async";
-import PrivateRoute from "~/routes/protected";
-import { useAppSelector } from "~/redux/hook/hook";
-import { useGetAllQuery } from "~/redux/api/notification";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import { socket } from "~/App";
 import LoadingPolytech from "~/components/LoadingPolytech";
+import Sidebar from "~/components/common/Sidebar";
+import TopBar from "~/components/common/TopBar";
+import { useGetAllQuery } from "~/redux/api/notification";
+import { useAppSelector } from "~/redux/hook/hook";
+import PrivateRoute from "~/routes/protected";
 
 const AdminLayout = () => {
 	const [status, setStatus] = useState(null);
