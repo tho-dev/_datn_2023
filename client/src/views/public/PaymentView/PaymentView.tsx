@@ -1,6 +1,7 @@
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout";
 import {
   Button,
+  Image,
   Radio,
   RadioGroup,
   Text,
@@ -32,11 +33,14 @@ import Transport from "./components/Transport";
 import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 import { socket } from "~/App";
 import { useGetValueCouponMutation } from "~/redux/api/coupon";
+import momo from "~/assets/images/momo.jpg";
+import vnpay from "~/assets/images/vnpay.png";
 
 const Payment = () => {
   const [dataOrder, setDataOrder] = useState({} as any);
   const [methodOrder, setMethodOrder] = React.useState("at_store");
   const [methodPayment, setMethodPayment] = React.useState("tructiep");
+  const [payment, setPayment] = React.useState("MOMO");
   const [address, setAddress] = React.useState("");
   const [transportFee, setTransportFee] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -419,6 +423,89 @@ const Payment = () => {
                   </RadioGroup>
                 </FormControl>
               </Box>
+              {methodPayment == "online" && (
+                <Flex mt={"16px"}>
+                  <RadioGroup onChange={setPayment} value={payment}>
+                    <Flex
+                      gap={"26px"}
+                      justifyContent={"space-between"}
+                      w="100%"
+                    >
+                      <Box
+                        h="100px"
+                        rounded={"md"}
+                        overflow={"hidden"}
+                        bg={"#F6F9FC"}
+                        border="1px solid #ccc"
+                      >
+                        <Radio value="MOMO" fontSize={"12px"}>
+                          <Flex
+                            w={"100%"}
+                            h="100px"
+                            rounded="md"
+                            ml={2}
+                            justifyContent={"space-between"}
+                            alignItems={"center"}
+                            p="4"
+                          >
+                            <Box>
+                              <Text fontSize={"14px"} fontWeight="bold">
+                                Ví điện tử MOMO
+                              </Text>
+                              <Text fontSize={"12px"} fontWeight="semibold">
+                                Thanh toán qua ví Momo
+                              </Text>
+                            </Box>
+                            <Image
+                              src={momo}
+                              w={"100px"}
+                              height="100%"
+                              rounded={"md"}
+                              objectFit={"cover"}
+                            />
+                          </Flex>
+                        </Radio>
+                      </Box>
+                      <Box
+                        h="100px"
+                        rounded={"md"}
+                        overflow={"hidden"}
+                        bg="#F6F9FC"
+                        border="1px solid #ccc"
+                      >
+                        <Radio fontSize={"12px"} value="VNPAY">
+                          <Flex
+                            w={"100%"}
+                            h="100px"
+                            rounded="md"
+                            ml={2}
+                            justifyContent={"space-between"}
+                            alignItems={"center"}
+                            p="4"
+                          >
+                            <Box>
+                              <Text fontSize={"14px"} fontWeight="bold">
+                                Ví điện tử VNPAY
+                              </Text>
+                              <Text fontSize={"12px"} fontWeight="semibold">
+                                Thanh toán qua ví Vnpay
+                              </Text>
+                            </Box>
+                            <Image
+                              src={vnpay}
+                              w={"100px"}
+                              height="100%"
+                              rounded={"md"}
+                              objectFit={"cover"}
+                            />
+                          </Flex>
+                        </Radio>
+                      </Box>
+                    </Flex>
+                  </RadioGroup>
+                </Flex>
+              )}
+
               <Box my={4}>
                 <FormControl isInvalid={errors?.voucher as any}>
                   <FormLabel>Bạn đã có mã khuyến mãi ?</FormLabel>
@@ -500,6 +587,7 @@ const Payment = () => {
         onOpenOtp={onOpenOtp}
         onCloseOtp={onCloseOtp}
         dataOrder={dataOrder}
+        payment={payment}
       />
       <Transport
         isOpen={isOpen}

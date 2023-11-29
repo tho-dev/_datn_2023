@@ -28,9 +28,15 @@ type Props = {
   onOpenOtp: () => void;
   onCloseOtp: () => void;
   dataOrder: any;
+  payment: string;
 };
 
-const PopupCheckOtp = ({ isOpenOtp, onCloseOtp, dataOrder }: Props) => {
+const PopupCheckOtp = ({
+  isOpenOtp,
+  onCloseOtp,
+  dataOrder,
+  payment,
+}: Props) => {
   const [value, setValue] = React.useState("");
   const [checkOtp] = useCheckOtpMutation();
   const [create] = useCreateMutation();
@@ -61,7 +67,6 @@ const PopupCheckOtp = ({ isOpenOtp, onCloseOtp, dataOrder }: Props) => {
         create(dataOrder)
           .unwrap()
           .then((data) => {
-            // onCloseOtp();
             dispatch(resetOtp(false));
             dispatch(cartApi.util.invalidateTags(["Cart"]));
             addNoti({
@@ -76,7 +81,7 @@ const PopupCheckOtp = ({ isOpenOtp, onCloseOtp, dataOrder }: Props) => {
                 const new_data = { ...data?.data, roomName: "don-hang" };
                 socket.emit("sendNotification", new_data);
               });
-            if (payment_method == "online") {
+            if (payment_method == "online" && payment == "MOMO") {
               paymentMomo({
                 bill: dataOrder.total_amount,
                 orderId: data.data._id,
@@ -85,7 +90,11 @@ const PopupCheckOtp = ({ isOpenOtp, onCloseOtp, dataOrder }: Props) => {
                 .then((data) => {
                   window.location.assign(`${data.data.url}`);
                 });
-            } else {
+            }
+            if (payment_method == "online" && payment == "VNPAY") {
+              console.log("ở đây dùng VNPAY");
+            }
+            if (payment_method == "tructiep") {
               navigate("/thanks");
             }
           })

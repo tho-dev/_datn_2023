@@ -141,7 +141,7 @@ const SlugView = (props: Props) => {
     <Box m="30px 0">
       <Title filters={filters?.data} />
 
-      <Flex gap="4">
+      <Flex gap="4" flexWrap={"wrap"}>
         {fields?.map((item: any, index: number) => {
           return (
             <FilterProduct
