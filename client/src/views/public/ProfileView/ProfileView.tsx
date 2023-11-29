@@ -13,9 +13,7 @@ type Props = {};
 const ProfileView = (props: Props) => {
 	const { user } = useAppSelector((state) => state.persistedReducer.global);
 	const id = user._id;
-	const { data, isFetching } = useGetOneQuery(id, {
-		skip: !id,
-	});
+	const { data, isFetching } = useGetOneQuery(id);
 
 	if (isFetching) {
 		return <LoadingPolytech />;
