@@ -7,6 +7,7 @@ import { generalSchema } from "../validations/general"
 import moment from "moment/moment"
 import createError from "http-errors"
 import fetch from "node-fetch"
+import { Order } from "../models/order.model"
 
 export async function getGeneral(req, res, next) {
   try {
@@ -153,4 +154,30 @@ export async function homeSettings(req, res, next) {
   } catch (error) {
     next(error)
   }
+}
+export async function getAllMonth(req,res,next){
+    try {
+      const arr =[];
+      for (let i=0; i<13;i++){
+        const startOfMonth = moment(`2023-${i}-01`, "YYYY-MM-DD").startOf(
+          "month"
+        );
+        const endOfMonth = moment(`2023-${i}-01`, "YYYY-MM-DD").endOf("month");
+        const orders = await Order.find({
+          created_at:{
+            $gte: startOfMonth,
+            $lt: endOfMonth,
+          },
+          "payment.status": true,
+        })
+        const totalAmount = await orders.map((item) => item.bill);
+        arr.push(totalAmount);
+      }
+      return res.status(200).json({
+        message: "Thành công",
+        arr,
+      });
+    } catch (error) {
+      next(error)
+    }
 }
