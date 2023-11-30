@@ -168,7 +168,7 @@ export async function getAllMonth(req,res,next){
             $gte: startOfMonth,
             $lt: endOfMonth,
           },
-          "payment.status": true,
+          "status": 'delivered',
         })
         const totalAmount = await orders.map((item) => item.bill);
         arr.push(totalAmount);
