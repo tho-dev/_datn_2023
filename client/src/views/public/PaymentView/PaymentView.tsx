@@ -24,11 +24,9 @@ import {
   FormErrorMessage,
   FormHelperText,
   Input,
-  Link,
   Textarea,
 } from "@chakra-ui/react";
-import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { NavArrowRightIcon } from "~/components/common/Icons";
 import Transport from "./components/Transport";
 import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 import { socket } from "~/App";

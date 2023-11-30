@@ -26,9 +26,7 @@ import ReturnOrder from "./components/ReturnOrder";
 import not_data from "~/assets/images/not_data.svg";
 import LoadingPolytech from "~/components/LoadingPolytech";
 
-type Props = {};
-
-const OrderView = (props: Props) => {
+const OrderView = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
   const [status, setStatus] = useState("");
   const [query, setQuery] = useState<any>({
@@ -54,12 +52,9 @@ const OrderView = (props: Props) => {
     onClose: onCloseCancel,
   } = useDisclosure();
   const toast = useToast();
-  const { data, isLoading, isFetching, isError } = useGetOrderByUserIdQuery(
-    query,
-    {
-      skip: !user._id,
-    }
-  );
+  const { data, isLoading, isError } = useGetOrderByUserIdQuery(query, {
+    skip: !user._id,
+  });
 
   const [cancelOrder] = useCancelOrderMutation();
   const [confirmDelivered] = useConfirmDeliveredMutation();
@@ -103,8 +98,7 @@ const OrderView = (props: Props) => {
     // }
     if (orderDetail?.status !== "processing") {
       return toast({
-        title: "Hệ thống",
-        description: "Bạn không thể huỷ đơn hàng",
+        title: "Bạn không thể huỷ đơn hàng",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -113,24 +107,22 @@ const OrderView = (props: Props) => {
     }
     cancelOrder({ id: orderDetail._id })
       .unwrap()
-      .then((data: any) => {
+      .then(() => {
         toast({
-          title: "Hệ thống",
-          description: "Huỷ đơn hàng thành công",
+          title: "Huỷ đơn hàng thành công",
           status: "success",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       })
-      .catch((error: any) => {
+      .catch(() => {
         toast({
-          title: "Hệ thống",
-          description: "Huỷ đơn hàng thất bại",
+          title: "Huỷ đơn hàng thất bại",
           status: "error",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       })
       .finally(() => {
@@ -144,8 +136,7 @@ const OrderView = (props: Props) => {
       .unwrap()
       .then((data) => {
         toast({
-          title: "Hệ thống",
-          description: data.message,
+          title: data.message,
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -154,8 +145,7 @@ const OrderView = (props: Props) => {
       })
       .catch((error) => {
         toast({
-          title: "Hệ thống",
-          description: error.data.errors.message,
+          title: error.data.errors.message,
           status: "error",
           duration: 2000,
           isClosable: true,

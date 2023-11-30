@@ -5,7 +5,6 @@ import {
   Button,
   Flex,
   Textarea,
-  Toast,
   useToast,
 } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
@@ -79,14 +78,12 @@ const AddComment = ({ productId }: Props) => {
           duration: 1600,
           position: "bottom-right",
           status: "warning",
-          description: `Bạn cần đợi ${Math.floor(5 - timeDiff / (60 * 1000))} phút nữa trước khi gửi bình luận tiếp theo!`,
+          description: `Bạn cần đợi ${Math.floor(
+            5 - timeDiff / (60 * 1000)
+          )} phút nữa trước khi gửi bình luận tiếp theo!`,
         });
       }
     }
-
-
-
-
   }
 
   return (

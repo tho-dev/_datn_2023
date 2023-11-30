@@ -29,9 +29,7 @@ import { RootState } from "~/redux/store";
 import FilterProduct from "./components/Filter";
 import Title from "./components/Title";
 
-type Props = {};
-
-const SlugView = (props: Props) => {
+const SlugView = () => {
   const { slug: params } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -49,7 +47,7 @@ const SlugView = (props: Props) => {
   });
   const debouncedQuery = useDebounce(query, 300);
 
-  const { control, register, reset, setValue, watch } = useForm<any>();
+  const { control, register, setValue, watch } = useForm<any>();
   const { fields } = useFieldArray({
     control,
     name: "filters",

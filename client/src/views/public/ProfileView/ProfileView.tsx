@@ -25,9 +25,7 @@ import Info from "./components/Info";
 import { InforOrder } from "./components/InforOrder";
 import premium from "~/assets/images/premium.svg";
 
-type Props = {};
-
-const ProfileView = (props: Props) => {
+const ProfileView = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
   const id = user._id;
   const { data, isFetching } = useGetOneQuery(id, {

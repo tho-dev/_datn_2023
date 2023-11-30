@@ -173,6 +173,7 @@ const Category = ({ title, items }: Props) => {
                       textDecoration: "none",
                       backgroundColor: "bg.gray",
                     }}
+                    key={index}
                   >
                     <Box>
                       <Image

@@ -8,28 +8,28 @@ import { useGetOneQuery } from "~/redux/api/user";
 import LoadingPolytech from "~/components/LoadingPolytech";
 
 const ProfileManagerView = () => {
-	const { user } = useAppSelector((state) => state.persistedReducer.global);
-	const id = user._id;
-	const { data, isFetching, isError } = useGetOneQuery(id, {
-		skip: !id,
-	});
+  const { user } = useAppSelector((state) => state.persistedReducer.global);
+  const id = user._id;
+  const { data, isFetching } = useGetOneQuery(id, {
+    skip: !id,
+  });
 
-	if (isFetching) {
-		return <LoadingPolytech />;
-	}
+  if (isFetching) {
+    return <LoadingPolytech />;
+  }
 
-	return (
-		<Box>
-			{/* Information */}
-			<Information data={data.data} />
-			{/* Email */}
-			<Email data={data.data} />
-			{/* Change your password */}
-			<Password data={data.data} />
-			{/* Accounts */}
-			<Accounts />
-		</Box>
-	);
+  return (
+    <Box>
+      {/* Information */}
+      <Information data={data.data} />
+      {/* Email */}
+      <Email data={data.data} />
+      {/* Change your password */}
+      <Password data={data.data} />
+      {/* Accounts */}
+      <Accounts />
+    </Box>
+  );
 };
 
 export default ProfileManagerView;

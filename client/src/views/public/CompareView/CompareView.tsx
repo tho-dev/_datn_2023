@@ -3,7 +3,7 @@ import ListCardCompare from "./components/ListCardCompare";
 import ListTableCompare from "./components/ListTableCompare";
 import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useCompareProductMutation } from "~/redux/api/product";
 import LoadingPolytech from "~/components/LoadingPolytech";
