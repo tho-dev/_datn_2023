@@ -70,7 +70,6 @@ const ListOrder = ({
     control,
     formState: { errors },
   } = useForm();
-  console.log(watch("images.url"));
 
   const [orderDetail, setOrderDetail] = useState({} as any);
 
@@ -150,8 +149,7 @@ const ListOrder = ({
   const onSubmitFormReturn = (data: any) => {
     if (data?.images.length > 3) {
       return toast({
-        title: "Hệ thống thông báo",
-        description: "Tối đa 3 ảnh sản phẩm",
+        title: "Tối đa 3 ảnh sản phẩm",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -175,6 +173,7 @@ const ListOrder = ({
       ...data,
       order_id: orderDetail._id,
     };
+
     returnOrder(new_data)
       .unwrap()
       .then((data) => {
@@ -510,6 +509,7 @@ const ListOrder = ({
                   {...register("customer_name", {
                     required: "Trường bắt buộc nhập",
                   })}
+                  isReadOnly
                 />
                 <FormErrorMessage>
                   {(errors.customer_name as any) &&

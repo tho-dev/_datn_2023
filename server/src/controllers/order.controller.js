@@ -1402,6 +1402,12 @@ export const getReturnedOrder = async (req, res, next) => {
 export const confirm_returnedOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const returns = await Returned.findById(id);
+    if (!returns) throw createError.BadRequest("Không tìm thấy đơn hàng");
+    if (returns.is_confirm) {
+      throw createError.BadRequest("Đơn hàng đã được xác nhận");
+    }
+
     // update return
     const returned = await Returned.findByIdAndUpdate(
       id,
@@ -1412,7 +1418,7 @@ export const confirm_returnedOrder = async (req, res, next) => {
       },
       { new: true }
     );
-    if (!returned) throw createError.BadRequest("Không tìm thấy đơn hàng");
+
     // update order
     const order = await Order.findByIdAndUpdate(
       returned.order_id,

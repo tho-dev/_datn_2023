@@ -33,7 +33,7 @@ const CommentView = ({ productId }: any) => {
     handleSubmit,
     register,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
   const toast = useToast({});
 
@@ -57,7 +57,7 @@ const CommentView = ({ productId }: any) => {
       set(ref(db, "comments/" + uuid), {
         id: uuid,
         userId: user?._id,
-        userAvatar: user?.avatar,
+        userAvatar: user?.avatar.url,
         userName: userFullName,
         content: values.content,
         dateTime,
@@ -72,7 +72,7 @@ const CommentView = ({ productId }: any) => {
         set(ref(db, "comments/" + uuid), {
           id: uuid,
           userId: user?._id,
-          userAvatar: user?.avatar,
+          userAvatar: user?.avatar.url,
           userName: userFullName,
           content: values.content,
           dateTime,

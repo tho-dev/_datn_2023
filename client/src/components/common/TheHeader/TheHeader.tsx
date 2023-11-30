@@ -11,6 +11,7 @@ import { useLogoutUserMutation } from "~/redux/api/user";
 import { logout, setHomeSetting } from "~/redux/slices/globalSlice";
 import { useGetHomeSettingsQuery } from "~/redux/api/general";
 import { useEffect } from "react";
+import { removeCart } from "~/redux/slices/cartSlice";
 
 const TheHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,14 +34,14 @@ const TheHeader = () => {
       .unwrap()
       .then(() => {
         toast({
-          title: "Hệ thống",
-          description: "Bạn đã đăng xuất",
+          title: "Bạn đã đăng xuất",
           status: "success",
           duration: 2000,
           isClosable: true,
           position: "top-right",
         });
         dispatch(logout(false));
+        dispatch(removeCart(""));
         navigate("/");
       });
   };

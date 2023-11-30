@@ -25,6 +25,7 @@ import {
 import { useUpdateNotiMutation } from "~/redux/api/notification";
 import { useLogoutUserMutation } from "~/redux/api/user";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { removeCart } from "~/redux/slices/cartSlice";
 import { logout } from "~/redux/slices/globalSlice";
 
 type Props = {
@@ -46,20 +47,19 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
       .unwrap()
       .then(() => {
         toast({
-          title: "Thành công",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "success",
           description: "Đã đăng xuất",
         });
         dispatch(logout(false));
+        dispatch(removeCart(""));
         navigate("/");
       })
       .catch((err) =>
         toast({
-          title: "Thất bại",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "error",
           description: err.data.errors.message,
         })
@@ -72,6 +72,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
         console.log(data);
       });
   };
+
   return (
     <Flex
       w={{
@@ -120,41 +121,6 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 					color="#809FB8"
 				/> */}
       </Flex>
-      {/* <Flex
-        w="full"
-        h="full"
-        px="4"
-        maxW={{
-          sm: "160px",
-          md: "160px",
-          lg: "360px",
-          xl: "360px",
-          "2xl": "360px",
-        }}
-        maxH="48px"
-        alignItems="center"
-        rounded="md"
-        backgroundColor="bg.admin1"
-        display={{
-          sm: "flex",
-          md: "flex",
-          lg: "flex",
-          xl: "flex",
-          "2xl": "flex",
-        }}
-      >
-        <Flex as="span" mt="1">
-          <SearchAdminIcon size={6} />
-        </Flex>
-        <Input
-          h="full"
-          border="none"
-          bgColor="transparent"
-          px="0"
-          pl="1"
-          placeholder="Tìm kiếm ..."
-        />
-      </Flex> */}
       <Flex gap="5" alignItems="center" justifyContent="center">
         <Popover>
           <PopoverTrigger>
@@ -252,7 +218,11 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
                           bgColor: "gray.200",
                         }}
                       >
-                        <Avatar src="https://bit.ly/dan-abramov" size={"sm"} />
+                        <Avatar
+                          src={user.avatar.url}
+                          size={"sm"}
+                          name="admin"
+                        />
                         <Flex flexDirection={"column"}>
                           <Text fontSize={"14px"} fontWeight="semibold">
                             Hệ thống
@@ -287,8 +257,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
           cursor="pointer"
         >
           <Avatar
-            name="ThinkPro"
-            src={user.avatar}
+            name="admin"
+            src={user?.avatar.url}
             w="10"
             h="10"
             color="#12AFF0"

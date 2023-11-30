@@ -49,8 +49,7 @@ const SignInView = () => {
         const user_id = result.data.data._id;
         const cart_user: any = await getCartByUserId(user_id);
         toast({
-          title: "Đăng nhập thành công",
-          description: result.data.message,
+          title: result.data.message,
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -63,10 +62,8 @@ const SignInView = () => {
         setLoading(false);
         navigate("/");
       } else {
-        console.log(result);
         toast({
-          title: "Đăng nhập thất bại",
-          description: result.error.data.errors.message,
+          title: result.error.data.errors.message,
           status: "error",
           duration: 2000,
           isClosable: true,

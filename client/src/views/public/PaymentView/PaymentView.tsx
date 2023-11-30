@@ -185,7 +185,7 @@ const Payment = () => {
             w={{ md: "80%", base: "full" }}
           >
             <Text fontSize={"20px"} fontWeight={600} as={"h3"}>
-              Phương Thức Nhận Hàng
+              Phương thức nhận hàng
             </Text>
 
             <Box py={"16px"} borderBottom={"1px solid #E6E8EA"}>
@@ -214,14 +214,6 @@ const Payment = () => {
               </RadioGroup>
             </Box>
             <Box mt={"12px"}>
-              <Text
-                mb={"16px"}
-                fontSize={"16px"}
-                lineHeight={"150%"}
-                fontWeight={600}
-              >
-                Thông tin người nhận
-              </Text>
               {/* tên người nhận và số điện thoại */}
               <Flex gap={"16px"}>
                 <FormControl isInvalid={errors.customer_name as any}>
@@ -369,28 +361,6 @@ const Payment = () => {
                           Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh Văn
                           Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam
                         </Text>
-                        <Flex
-                          mt="2"
-                          alignItems="flex-end"
-                          justifyContent="space-between"
-                        >
-                          <Box fontSize="xs">
-                            <Text fontWeight="semibold" color="#f93920">
-                              Đã đóng cửa, hẹn bạn 09:00 ngày mai
-                            </Text>
-                            <Text fontWeight="medium">09:00 - 21:00</Text>
-                          </Box>
-                          <Link
-                            as={ReactRouterLink}
-                            fontSize="xs"
-                            color="text.blue"
-                            fontWeight="bold"
-                            textDecoration="none"
-                          >
-                            Chỉ đường
-                            <ArrowRightUpIcon size={4} />
-                          </Link>
-                        </Flex>
                       </Box>
                     </Radio>
                   </Stack>
