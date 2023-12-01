@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  CheckboxGroup,
   Flex,
   FormLabel,
   Popover,
@@ -59,13 +58,12 @@ const SlugView = () => {
     name: "filters",
   });
 
-  const { data: filters, isFetching: isFetchingFilter } =
-    useGetFilterBrandAndCategoryQuery(
-      {
-        _slug: debouncedQuery?._category,
-      },
-      { skip: !debouncedQuery?._category }
-    );
+  const { data: filters } = useGetFilterBrandAndCategoryQuery(
+    {
+      _slug: debouncedQuery?._category,
+    },
+    { skip: !debouncedQuery?._category }
+  );
 
   const {
     data: products,

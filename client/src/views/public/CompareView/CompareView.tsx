@@ -14,7 +14,7 @@ const CompareView = () => {
   const { items } = useAppSelector(
     (state: RootState) => state.persistedReducer.global
   );
-  const [compareProduct, { isLoading }] = useCompareProductMutation();
+  const [compareProduct, { isLoading, isError }] = useCompareProductMutation();
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -31,7 +31,9 @@ const CompareView = () => {
   if (isLoading) {
     return <LoadingPolytech />;
   }
-
+  if (isError) {
+    return navigate("/");
+  }
   return (
     <Box py="6">
       <ListCardCompare items={items} />
