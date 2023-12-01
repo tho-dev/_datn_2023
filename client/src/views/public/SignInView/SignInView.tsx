@@ -3,18 +3,18 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { ArrowLeftCirleIcon, CodeIcon } from "~/components/common/Icons";
 import {
-  FormErrorMessage,
-  FormControl,
-  Input,
-  Button,
-  Center,
-  Box,
-  Flex,
-  Link,
-  Stack,
-  Heading,
-  Text,
-  useToast,
+	FormErrorMessage,
+	FormControl,
+	Input,
+	Button,
+	Center,
+	Box,
+	Flex,
+	Link,
+	Stack,
+	Heading,
+	Text,
+	useToast,
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { loginSchema } from "~/validate/user";
@@ -25,169 +25,218 @@ import { useGetCartByUserIdMutation } from "~/redux/api/cart";
 import { addCart } from "~/redux/slices/cartSlice";
 
 const SignInView = () => {
-  const [loading, setLoading] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<any>({
-    resolver: joiResolver(loginSchema),
-  });
-  const navigate = useNavigate();
-  const toast = useToast();
+	const [loading, setLoading] = useState(false);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<any>({
+		resolver: joiResolver(loginSchema),
+	});
+	const navigate = useNavigate();
+	const toast = useToast();
 
-  const dispatch = useAppDispatch();
+	const dispatch = useAppDispatch();
 
-  const [signin] = useSigninMutation();
-  const [getCartByUserId] = useGetCartByUserIdMutation();
+	const [signin] = useSigninMutation();
+	const [getCartByUserId] = useGetCartByUserIdMutation();
 
-  const onSubmit = async (data: any) => {
-    try {
-      setLoading(true);
-      const result: any = await signin(data);
-      if (result.data?.status === 200) {
-        const user_id = result.data.data._id;
-        const cart_user: any = await getCartByUserId(user_id);
-        toast({
-          title: "Đăng nhập thành công",
-          description: result.data.message,
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-          position: "top-right",
-        });
-        if (cart_user.data.data) {
-          dispatch(addCart(cart_user.data.data.cart_id));
-        }
-        dispatch(login(result.data));
-        setLoading(false);
-        navigate("/");
-      } else {
-        console.log(result);
-        toast({
-          title: "Đăng nhập thất bại",
-          description: result.error.data.errors.message,
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-          position: "top-right",
-        });
-      }
-    } catch (error: any) {
-      console.log(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+	const onSubmit = async (data: any) => {
+		try {
+			setLoading(true);
+			const result: any = await signin(data);
+			if (result.data?.status === 200) {
+				const user_id = result.data.data._id;
+				const cart_user: any = await getCartByUserId(user_id);
+				toast({
+					title: "Đăng nhập thành công",
+					description: result.data.message,
+					status: "success",
+					duration: 2000,
+					isClosable: true,
+					position: "top-right",
+				});
+				if (cart_user.data.data) {
+					dispatch(addCart(cart_user.data.data.cart_id));
+				}
+				dispatch(login(result.data));
+				setLoading(false);
+				navigate("/");
+			} else {
+				console.log(result);
+				toast({
+					title: "Đăng nhập thất bại",
+					description: result.error.data.errors.message,
+					status: "error",
+					duration: 2000,
+					isClosable: true,
+					position: "top-right",
+				});
+			}
+		} catch (error: any) {
+			console.log(error.message);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-  return (
-    <Center h="full" px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}>
-      <Flex w="460px" h="full" direction="column" pt="8">
-        <Box>
-          <Link as={ReactRouterLink} to="/">
-            <ArrowLeftCirleIcon boxSize="10" />
-          </Link>
-        </Box>
-        <Stack direction="row" gap="0" pt="8" pb="12">
-          <Heading as="h3" color="primary.font" size="lg" fontWeight="semibold">
-            Poly
-          </Heading>
-          <Heading
-            as="h3"
-            size="lg"
-            color="text.200"
-            fontWeight="semibold"
-            position="relative"
-          >
-            Tech
-            <CodeIcon boxSize="5" position="absolute" color="primary.font" />
-          </Heading>
-        </Stack>
-        <Stack direction="column" gap="0" pb="12">
-          <Heading as="h3" size="lg">
-            Đăng Nhập
-          </Heading>
-          <Stack direction="row" pt="2">
-            <Text fontSize="sm" fontWeight="medium">
-              Bạn chưa có tài khoản?
-            </Text>
-            <Link
-              as={ReactRouterLink}
-              to="/dang-ky"
-              _hover={{
-                textDecoration: "none",
-              }}
-            >
-              <Text fontSize="sm" fontWeight="medium" color="primary.font">
-                Đăng Ký
-              </Text>
-            </Link>
-          </Stack>
-          <Link
-            as={ReactRouterLink}
-            to="/quen-mat-khau"
-            _hover={{
-              textDecoration: "none",
-            }}
-          >
-            <Text fontSize="sm" fontWeight="medium" color="blue">
-              Quên mật khẩu?
-            </Text>
-          </Link>
-        </Stack>
-        <form
-          style={{
-            width: "100%",
-          }}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <Flex direction="column" gap="4">
-            <FormControl isInvalid={errors.email as any}>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Email"
-                size="lager"
-                {...register("email")}
-              />
-              <FormErrorMessage>
-                {(errors.email as any) && (errors?.email?.message as any)}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={errors.password as any}>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                size="lager"
-                {...register("password")}
-              />
-              <FormErrorMessage>
-                {(errors.password as any) && (errors?.password?.message as any)}
-              </FormErrorMessage>
-            </FormControl>
+	return (
+		<Center
+			h="full"
+			px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}
+		>
+			<Flex
+				w="460px"
+				h="full"
+				direction="column"
+				pt="8"
+			>
+				<Box>
+					<Link
+						as={ReactRouterLink}
+						to="/"
+					>
+						<ArrowLeftCirleIcon boxSize="10" />
+					</Link>
+				</Box>
+				<Stack
+					direction="row"
+					gap="0"
+					pt="8"
+					pb="12"
+				>
+					<Heading
+						as="h3"
+						color="primary.font"
+						size="lg"
+						fontWeight="semibold"
+					>
+						Poly
+					</Heading>
+					<Heading
+						as="h3"
+						size="lg"
+						color="text.200"
+						fontWeight="semibold"
+						position="relative"
+					>
+						Tech
+						<CodeIcon
+							boxSize="5"
+							position="absolute"
+							color="primary.font"
+						/>
+					</Heading>
+				</Stack>
+				<Stack
+					direction="column"
+					gap="0"
+					pb="12"
+				>
+					<Heading
+						as="h3"
+						size="lg"
+					>
+						Đăng Nhập
+					</Heading>
+					<Stack
+						direction="row"
+						pt="2"
+					>
+						<Text
+							fontSize="sm"
+							fontWeight="medium"
+						>
+							Bạn chưa có tài khoản?
+						</Text>
+						<Link
+							as={ReactRouterLink}
+							to="/dang-ky"
+							_hover={{
+								textDecoration: "none",
+							}}
+						>
+							<Text
+								fontSize="sm"
+								fontWeight="medium"
+								color="primary.font"
+							>
+								Đăng Ký
+							</Text>
+						</Link>
+					</Stack>
+					<Link
+						as={ReactRouterLink}
+						to="/quen-mat-khau"
+						_hover={{
+							textDecoration: "none",
+						}}
+					>
+						<Text
+							fontSize="sm"
+							fontWeight="medium"
+							color="blue"
+						>
+							Quên mật khẩu?
+						</Text>
+					</Link>
+				</Stack>
+				<form
+					style={{
+						width: "100%",
+					}}
+					onSubmit={handleSubmit(onSubmit)}
+				>
+					<Flex
+						direction="column"
+						gap="4"
+					>
+						<FormControl isInvalid={errors.email as any}>
+							<Input
+								id="email"
+								type="email"
+								placeholder="Email"
+								size="lager"
+								{...register("email")}
+							/>
+							<FormErrorMessage>
+								{(errors.email as any) && (errors?.email?.message as any)}
+							</FormErrorMessage>
+						</FormControl>
+						<FormControl isInvalid={errors.password as any}>
+							<Input
+								id="password"
+								type="password"
+								placeholder="Password"
+								size="lager"
+								{...register("password")}
+							/>
+							<FormErrorMessage>
+								{(errors.password as any) && (errors?.password?.message as any)}
+							</FormErrorMessage>
+						</FormControl>
 
-            <Button
-              size="lager"
-              type="submit"
-              w="full"
-              mt="4"
-              rounded="full"
-              isLoading={loading}
-              loadingText={"Đang đăng nhập..."}
-              _hover={{ bg: "red" }}
-            >
-              Đăng Nhập
-            </Button>
-          </Flex>
-        </form>
-        {/* <Box position="relative" py="10">
+						<Button
+							size="lager"
+							type="submit"
+							w="full"
+							mt="4"
+							rounded="full"
+							isLoading={loading}
+							loadingText={"Đang đăng nhập..."}
+							_hover={{ bg: "red" }}
+						>
+							Đăng Nhập
+						</Button>
+					</Flex>
+				</form>
+				{/* <Box position="relative" py="10">
           <Divider />
           <AbsoluteCenter bg="transparent" px="4">
             Or
           </AbsoluteCenter>
         </Box> */}
-        {/* <Flex w="full" direction="column" gap="4">
+				{/* <Flex w="full" direction="column" gap="4">
           <Button
             size="lager"
             leftIcon={<GoogleIcon boxSize="5" />}
@@ -213,9 +262,9 @@ const SignInView = () => {
             Đăng nhập bằng Facebook
           </Button>
         </Flex> */}
-      </Flex>
-    </Center>
-  );
+			</Flex>
+		</Center>
+	);
 };
 
 export default SignInView;

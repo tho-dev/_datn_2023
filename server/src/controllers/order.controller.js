@@ -540,6 +540,7 @@ export const updateStatus = async (req, res, next) => {
     next(error);
   }
 };
+
 //cập nhật sản phẩm và thông tin khách hàng trong hoá đơn
 export const update_info_customer = async (req, res, next) => {
   try {

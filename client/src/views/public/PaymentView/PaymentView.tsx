@@ -304,12 +304,6 @@ const Payment = () => {
 										mt={"16px"}
 									>
 										<FormControl isInvalid={errors?.shipping_address as any}>
-											<FormLabel
-												fontSize="sm"
-												fontWeight="semibold"
-											>
-												Khu vực
-											</FormLabel>
 											<Box
 												h="48px"
 												px="3"
@@ -352,12 +346,6 @@ const Payment = () => {
 											</FormErrorMessage>
 										</FormControl>
 										<FormControl isInvalid={errors?.address as any}>
-											<FormLabel
-												fontSize="13px"
-												fontWeight="semibold"
-											>
-												Địa chỉ nhận hàng
-											</FormLabel>
 											<Input
 												type="text"
 												placeholder="Địa chỉ nhận hàng"
@@ -381,12 +369,6 @@ const Payment = () => {
 								) : (
 									<Box mt={"16px"}>
 										<FormControl isInvalid={errors?.storeAddress as any}>
-											<FormLabel
-												fontSize="sm"
-												fontWeight="semibold"
-											>
-												Địa chỉ cửa hàng
-											</FormLabel>
 											<Stack
 												direction="column"
 												gap={"16px"}
@@ -496,13 +478,6 @@ const Payment = () => {
 										mt="4"
 										flexDir="column"
 									>
-										<Heading
-											mb="2"
-											fontSize="sm"
-											fontWeight="semibold"
-										>
-											Loại ví điện tử
-										</Heading>
 										<RadioGroup
 											onChange={setPayment}
 											value={payment}
@@ -552,8 +527,8 @@ const Payment = () => {
 																</Text>
 															</Box>
 															<Box
-																w="9"
-																h="9"
+																w="10"
+																h="10"
 																rounded="md"
 																overflow="hidden"
 															>
@@ -602,8 +577,8 @@ const Payment = () => {
 																</Text>
 															</Box>
 															<Box
-																w="9"
-																h="9"
+																w="10"
+																h="10"
 																rounded="md"
 																overflow="hidden"
 															>
@@ -638,10 +613,10 @@ const Payment = () => {
 								<Button
 									type="button"
 									onClick={() => checkvoucher(voucher)}
-									color={voucher ? "text.textDelete" : "text.textEdit"}
-									bgColor={voucher ? "bg.bgDelete" : "bg.bgEdit"}
+									color={voucher ? "text.textDelete" : "text.white"}
+									bgColor={voucher ? "bg.bgDelete" : "bg.red"}
 								>
-									Áp dụng
+									Áp Dụng
 								</Button>
 							</Flex>
 						</CommonBox>

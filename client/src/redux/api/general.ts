@@ -1,5 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQuery } from "~/utils/fc";
+import { baseQuery, objectToUrlParams } from "~/utils/fc";
 
 const generalApi = createApi({
 	reducerPath: "general",
@@ -21,9 +21,23 @@ const generalApi = createApi({
 		getHomeSettings: build.query({
 			query: () => "/home-settings",
 		}),
+		getDashboard: build.query({
+			query: () => "/dashboard",
+			transformResponse: (res: any) => res?.data,
+		}),
+		getRevenueStatistics: build.query({
+			query: ({ period }) => `/revenue-statistics?${objectToUrlParams({ period })}`,
+			transformResponse: (res: any) => res?.data,
+		}),
 	}),
 });
 
-export const { useGetGeneralQuery, useUpdateGeneralMutation, useGetHomeSettingsQuery } = generalApi;
+export const {
+	useGetGeneralQuery,
+	useUpdateGeneralMutation,
+	useGetHomeSettingsQuery,
+	useGetDashboardQuery,
+	useGetRevenueStatisticsQuery,
+} = generalApi;
 
 export default generalApi;

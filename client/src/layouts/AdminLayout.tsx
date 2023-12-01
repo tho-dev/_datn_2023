@@ -44,7 +44,7 @@ const AdminLayout = () => {
 	return (
 		<HelmetProvider>
 			<Helmet>
-				<title>ThinkPro | CMS</title>
+				<title>Polytech | CMS</title>
 			</Helmet>
 			<Flex
 				w="full"
@@ -79,8 +79,7 @@ const AdminLayout = () => {
 					<Box
 						w="full"
 						minH="100vh"
-						pl="6"
-						pr="8"
+						px="8"
 						pt="6"
 						bgColor="#ffffff"
 					>

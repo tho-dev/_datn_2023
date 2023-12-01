@@ -1,19 +1,17 @@
-import { Box, Flex, Heading } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
+import { Image } from "@chakra-ui/react";
 import { useState } from "react";
+import logo from "~/assets/images/admin_logo.svg";
 import {
 	AddIcon,
-	CartIcon,
 	DashboardIcon,
 	NewsFeedIcon,
-	OrderIcon,
 	ProfileIcon,
 	SettingsIcon,
 	ShoppingCartIcon,
 	WalletIcon,
 } from "~/components/common/Icons";
 import NavItem from "./components/NavItem";
-import { Image } from "@chakra-ui/react";
-import logo from "~/assets/images/admin_logo.svg";
 
 const MENU = [
 	{
@@ -99,7 +97,12 @@ const Sidebar = () => {
 			position="fixed"
 			zIndex="999"
 			overflow="hidden"
-			bgColor="#0bcbe01a"
+			bgColor="#ffffff"
+			borderRightWidth="1px"
+			borderColor="#e9ecee"
+			borderStyle="dashed"
+			// borderTopRightRadius="32px"
+			// borderBottomRightRadius="32px"
 		>
 			<Box
 				w="full"
@@ -108,12 +111,13 @@ const Sidebar = () => {
 				<Flex
 					w="full"
 					h="full"
-					maxH="96px"
+					maxH="86px"
 					alignItems="center"
 					justifyContent="center"
-					bgColor="rgb(11 203 224)"
-					borderBottomWidth="1px"
-					borderColor="#ffffff"
+					bgColor="#ffffff"
+					// borderBottomWidth="1px"
+					borderColor="#e9ecee"
+					borderStyle="dashed"
 				>
 					<Image
 						src={logo}
@@ -128,8 +132,7 @@ const Sidebar = () => {
 					gap="1"
 					flexDir="column"
 					mx="4"
-					mt="12"
-					mb="8"
+					my="6"
 				>
 					{MENU?.map((item: any, index: number) => (
 						<NavItem

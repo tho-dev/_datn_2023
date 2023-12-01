@@ -24,7 +24,8 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
 				to={item?.children?.length > 0 ? "/" : item?.to}
 				py="4"
 				px="4"
-				rounded="lg"
+				maxH="44px"
+				rounded="8px"
 				display="flex"
 				alignItems="center"
 				transition="all 0.25s ease"
@@ -44,6 +45,7 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
 					handleClick(index as any);
 					item?.children?.length > 0 && onToggle();
 				}}
+				bgColor={isCheck ? "bg.bgPro" : "transparent"}
 			>
 				<Flex
 					gap="3"
@@ -58,14 +60,14 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
 					>
 						<Icon
 							size="5"
-							color="rgb(11 203 224)"
+							color={isCheck ? "#0bcbe0" : "#637381"}
 						/>
 					</Flex>
 					<Text
 						fontSize="13px"
 						lineHeight="0.5"
-						fontWeight="normal"
-						color="rgb(11 203 224)"
+						fontWeight="semibold"
+						color={isCheck ? "#0bcbe0" : "#637381"}
 						display={{
 							sm: "none",
 							md: "none",
@@ -94,9 +96,9 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
 						}}
 					>
 						<ChevronDownIcon
-							size={5}
+							size={4}
 							strokeWidth={1}
-							color="rgb(11 203 224)"
+							color="#637381"
 						/>
 					</Flex>
 				)}
@@ -109,7 +111,7 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
 					gap="1"
 					px="2"
 					py="1"
-					rounded="lg"
+					rounded="8px"
 					flexDir="column"
 					bgColor="#ffffff"
 				>
@@ -120,25 +122,31 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
 							key={index}
 							gap="3"
 							py="3"
-							px="6"
+							px="4"
+							maxH="9"
 							w="full"
 							display="flex"
 							alignItems="center"
 							justifyContent="space-between"
 							fontSize="13px"
-							fontWeight="medium"
-							color="rgb(11 203 224)"
+							fontWeight="semibold"
+							color="#637381"
 							_hover={{
 								textDecor: "none",
 							}}
 						>
 							<Box
-								w="1"
-								h="1"
+								w="3px"
+								h="3px"
 								rounded="full"
-								bgColor="rgb(11 203 224)"
+								bgColor="#637381"
 							/>
-							<Text flex="1">{item?.title}</Text>
+							<Text
+								flex="1"
+								ml="2"
+							>
+								{item?.title}
+							</Text>
 						</Link>
 					))}
 				</Flex>

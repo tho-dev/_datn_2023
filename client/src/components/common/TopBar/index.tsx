@@ -92,8 +92,9 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 			pl="6"
 			pr="8"
 			transition="all 0.25s ease"
+			borderStyle="dashed"
 			borderBottomWidth="1px"
-			borderColor="bg.admin1"
+			borderColor="#e9ecee"
 			backgroundColor="bg.white"
 			position="fixed"
 			top="0"
@@ -115,7 +116,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 				}}
 			></Flex>
 			<Flex
-				gap="5"
+				gap="2"
 				alignItems="center"
 				justifyContent="center"
 			>
@@ -252,9 +253,6 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 						</PopoverBody>
 					</PopoverContent>
 				</Popover>
-				<Box h="8">
-					<Divider orientation="vertical" />
-				</Box>
 				<Flex
 					gap="4"
 					px="4"
@@ -264,17 +262,17 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 					position="relative"
 					rounded="md"
 					onClick={onToggle}
-					_hover={{ bg: "bg.gray" }}
+					// _hover={{ bg: "bg.gray" }}
 					cursor="pointer"
 				>
 					<Avatar
-						name="ThinkPro"
-						src={user.avatar}
+						name="Polytech"
+						src={user?.avatar?.url}
 						w="10"
 						h="10"
-						color="#12AFF0"
 						fontSize="xs"
-						bgColor="#12AFF033"
+						border="1px solid #e9ecee"
+						p="1"
 					/>
 					<Box
 						color="text.black"
@@ -284,14 +282,16 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 							as="h3"
 							fontWeight="semibold"
 							lineHeight="1.2"
+							fontSize="13px"
 						>
 							{user.first_name + " " + user.last_name}
 						</Text>
 						<Text
 							as="h5"
-							fontSize="xs"
+							fontSize="12px"
 							lineHeight="1.2"
 							textTransform="capitalize"
+							fontWeight="semibold"
 						>
 							{user?.role}
 						</Text>
@@ -301,7 +301,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 						alignItems="center"
 						justifyContent="center"
 					>
-						<Flex as="span">
+						{/* <Flex as="span">
 							<CheveronUpIcon
 								size={4}
 								color="bg.admin2"
@@ -312,7 +312,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 								size={4}
 								color="bg.admin2"
 							/>
-						</Flex>
+						</Flex> */}
 					</Flex>
 
 					<Collapse
@@ -342,7 +342,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 							<Button
 								as={ReactRouterLink}
 								to="profile"
-								fontSize="sm"
+								fontSize="13px"
+								h="40px"
 								fontWeight="semibold"
 								display="flex"
 								justifyContent="flex-start"
@@ -360,7 +361,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 							<Button
 								as={ReactRouterLink}
 								to="/"
-								fontSize="sm"
+								fontSize="13px"
+								h="40px"
 								fontWeight="semibold"
 								display="flex"
 								justifyContent="flex-start"
@@ -378,7 +380,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 							<Button
 								bg="none"
 								color="black"
-								fontSize="sm"
+								fontSize="13px"
+								h="40px"
 								fontWeight="semibold"
 								display="flex"
 								justifyContent="flex-start"

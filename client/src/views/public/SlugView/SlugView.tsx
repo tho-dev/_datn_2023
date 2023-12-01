@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import {
 	Box,
 	Button,
+	CheckboxGroup,
 	Flex,
 	FormLabel,
 	Popover,
@@ -18,7 +19,10 @@ import FilterProduct from "./components/Filter";
 import { useGetProducItemToBrandAndCategoryQuery, useGetFilterBrandAndCategoryQuery } from "~/redux/api/collection";
 import ListThinkPro from "~/components/ListThinkPro";
 import { ArrowUpIcon } from "~/components/common/Icons";
-import { useGetFilterBrandAndCategoryQuery, useGetProducItemToBrandAndCategoryQuery } from "~/redux/api/collection";
+import { useParams, useNavigate } from "react-router";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
+import LoadingPolytech from "~/components/LoadingPolytech";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { setIsCompare, setItems } from "~/redux/slices/globalSlice";
 import { RootState } from "~/redux/store";
@@ -124,7 +128,7 @@ const SlugView = (props: Props) => {
 		dispatch(setIsCompare(e.target.checked as any));
 	};
 
-	if (isFetchingFilter) return <LoadingPolytech />;
+	if (isFetching) return <LoadingPolytech />;
 
 	if (isError) navigate("/404");
 
