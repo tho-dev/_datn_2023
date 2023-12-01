@@ -57,7 +57,16 @@ const Sku = ({
       navigate(`/${new_data[0].shared_url}`);
     }
   };
-
+  const handleCopySku = () => {
+    navigator.clipboard.writeText(product?.SKU);
+    toast({
+      title: "Đã sao chép vào bộ nhớ tạm",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+      position: "top-right",
+    });
+  };
   return (
     <>
       <Box bgColor={"white"} rounded={"6px"} p="6" mt="4">
@@ -68,7 +77,13 @@ const Sku = ({
           fontWeight="medium"
         >
           SKU: {product?.SKU}
-          <CopyIcon size={4} ml="2" color="text.blue" cursor="pointer" />
+          <CopyIcon
+            size={4}
+            ml="2"
+            color="text.blue"
+            cursor="pointer"
+            onClick={handleCopySku}
+          />
         </Text>
         <Text fontSize={"md"} fontWeight={600} rounded={"6px"} mt="2">
           {product?.name}

@@ -10,8 +10,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { chuyenDoiSoDienThoai } from "~/utils/fc";
 import { useReturnOrderMutation } from "~/redux/api/order";
+import Media from "~/views/private/ProductManagerView/components/AddProductMangerView/components/Media";
 
 type Props = {
   orderDetail: any;
@@ -24,15 +24,25 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
+    getValues,
+    control,
   } = useForm();
 
   const toast = useToast();
   const [returnOrder] = useReturnOrderMutation();
   const onSubmitFormReturn = (data: any) => {
-    const { address, content, shipping_address, phone_number, ...rest } = data;
+    if (data?.images.length > 3) {
+      return toast({
+        title: "Tối đa 3 ảnh sản phẩm",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     // check thời gian
-    console.log(address, content, shipping_address);
-
     const currentDate = new Date();
     const targetTime = new Date(orderDetail?.updated_at);
 
@@ -48,12 +58,11 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
       });
     }
 
-    const new_phone_number = chuyenDoiSoDienThoai(phone_number);
     const new_data = {
-      ...rest,
-      phone_number: new_phone_number,
+      ...data,
       order_id: id,
     };
+
     returnOrder(new_data)
       .unwrap()
       .then((data) => {
@@ -104,6 +113,7 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
                 {...register("customer_name", {
                   required: "Trường bắt buộc nhập",
                 })}
+                isReadOnly
               />
               <FormErrorMessage>
                 {(errors.customer_name as any) &&
@@ -124,6 +134,7 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
                 {...register("phone_number", {
                   required: "Trường bắt buộc nhập",
                 })}
+                isReadOnly
               />
               <FormErrorMessage>
                 {(errors.phone_number as any) &&
@@ -144,6 +155,16 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
               />
             </FormControl>
           </Flex>
+          <Box>
+            <Media
+              register={register}
+              watch={watch}
+              getValues={getValues}
+              setValue={setValue}
+              errors={errors}
+              control={control}
+            />
+          </Box>
         </Box>
         <Flex py={"5"} px={"5"} justifyContent="flex-end" gap={6}>
           <Button

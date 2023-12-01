@@ -1,4 +1,4 @@
-import { Divider, Flex, Grid, GridItem, Stack } from "@chakra-ui/layout";
+import { Flex, Grid, GridItem, Stack } from "@chakra-ui/layout";
 import {
   Button,
   FormControl,
@@ -8,9 +8,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { CheckedIcon } from "~/components/common/Icons";
 import { useUpdatePassWordMutation } from "~/redux/api/user";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "~/redux/hook/hook";
 import { logout } from "~/redux/slices/globalSlice";
 
@@ -58,7 +58,7 @@ const ChangePassword = ({ user }: Props) => {
           isClosable: true,
           position: "bottom-right",
         });
-        dispatch(logout(false));
+        dispatch(logout(false as any));
         navigate("/");
       })
       .catch((error) => {
@@ -75,7 +75,16 @@ const ChangePassword = ({ user }: Props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex gap="4" mt="6" flexDir="column">
+      <Flex
+        gap="4"
+        flexDir="column"
+        py="8"
+        px="6"
+        rounded="xl"
+        borderWidth="1px"
+        borderColor="#eef1f6"
+        boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
+      >
         <Grid
           templateColumns={{
             sm: "repeat(1, 1fr)",
@@ -85,13 +94,11 @@ const ChangePassword = ({ user }: Props) => {
           gap={4}
           alignItems="center"
         >
-          <GridItem colSpan={1}>
-            <FormLabel fontWeight="semibold" htmlFor="password" fontSize="sm">
-              Mật khẩu
-            </FormLabel>
-          </GridItem>
-          <GridItem colSpan={4}>
+          <GridItem colSpan={6}>
             <FormControl isInvalid={errors.password as any}>
+              <FormLabel fontWeight="semibold" htmlFor="password" fontSize="sm">
+                Mật khẩu
+              </FormLabel>
               <Input
                 type="password"
                 id="password"
@@ -99,7 +106,7 @@ const ChangePassword = ({ user }: Props) => {
                 {...register("password", {
                   required: "Vui lòng điền thông tin",
                 })}
-                borderColor={errors?.password ? "border.error" : ""}
+                borderColor={errors?.password ? "border.error" : "#e9ebec"}
               />
               <FormErrorMessage>
                 {errors?.password && (errors.password.message as any)}
@@ -116,17 +123,15 @@ const ChangePassword = ({ user }: Props) => {
           gap={4}
           alignItems="center"
         >
-          <GridItem colSpan={1}>
-            <FormLabel
-              fontSize="sm"
-              htmlFor="new_password"
-              fontWeight="semibold"
-            >
-              Mật khẩu mới
-            </FormLabel>
-          </GridItem>
-          <GridItem colSpan={4}>
+          <GridItem colSpan={6}>
             <FormControl isInvalid={errors.new_password as any}>
+              <FormLabel
+                fontSize="sm"
+                htmlFor="new_password"
+                fontWeight="semibold"
+              >
+                Mật khẩu mới
+              </FormLabel>
               <Input
                 id="new_password"
                 type="password"
@@ -134,7 +139,7 @@ const ChangePassword = ({ user }: Props) => {
                 {...register("new_password", {
                   required: "Vui lòng điền thông tin",
                 })}
-                borderColor={errors?.new_password ? "border.error" : ""}
+                borderColor={errors?.new_password ? "border.error" : "#e9ebec"}
               />
               <FormErrorMessage>
                 {errors?.new_password && (errors.new_password.message as any)}
@@ -151,17 +156,15 @@ const ChangePassword = ({ user }: Props) => {
           gap={4}
           alignItems="center"
         >
-          <GridItem colSpan={1}>
-            <FormLabel
-              fontSize="sm"
-              htmlFor="confirm_password"
-              fontWeight="semibold"
-            >
-              Xác nhận mật khẩu mới
-            </FormLabel>
-          </GridItem>
           <GridItem colSpan={4}>
             <FormControl isInvalid={errors.confirm_password as any}>
+              <FormLabel
+                fontSize="sm"
+                htmlFor="confirm_password"
+                fontWeight="semibold"
+              >
+                Xác nhận mật khẩu mới
+              </FormLabel>
               <Input
                 type="password"
                 id="confirm_password"
@@ -169,7 +172,9 @@ const ChangePassword = ({ user }: Props) => {
                 {...register("confirm_password", {
                   required: "Vui lòng điền thông tin",
                 })}
-                borderColor={errors?.confirm_password ? "border.error" : ""}
+                borderColor={
+                  errors?.confirm_password ? "border.error" : "#e9ebec"
+                }
               />
               <FormErrorMessage>
                 {errors?.confirm_password &&
@@ -178,19 +183,18 @@ const ChangePassword = ({ user }: Props) => {
             </FormControl>
           </GridItem>
         </Grid>
+
+        <Stack direction="row" spacing={4} mt="2">
+          <Button
+            leftIcon={<CheckedIcon size={4} />}
+            type="submit"
+            bg="bg.bgEdit"
+            color="text.textEdit"
+          >
+            Thay đổi
+          </Button>
+        </Stack>
       </Flex>
-      <Divider my="6" />
-      <Stack direction="row" spacing={4}>
-        <Button
-          colorScheme="blue"
-          leftIcon={<CheckedIcon size={5} />}
-          variant="solid"
-          type="submit"
-          size="medium"
-        >
-          Lưu lại
-        </Button>
-      </Stack>
     </form>
   );
 };

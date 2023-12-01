@@ -60,9 +60,8 @@ const ProductDetailView = () => {
   const handleAddToCart = async () => {
     if (product?.data.stock === 0) {
       return toast({
-        title: "Hệ thống thông báo",
-        description: `Sản phẩm đã hết hàng`,
-        status: "error",
+        title: `Sản phẩm đã hết hàng`,
+        status: "warning",
         duration: 2000,
         isClosable: true,
         position: "top-right",
@@ -83,8 +82,7 @@ const ProductDetailView = () => {
         .unwrap()
         .then(() => {
           toast({
-            title: "Hệ thống thông báo",
-            description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+            title: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -93,8 +91,7 @@ const ProductDetailView = () => {
         })
         .catch(() => {
           toast({
-            title: "Hệ thống thông báo",
-            description: `Lỗi khi thêm sản phẩm`,
+            title: `Lỗi khi thêm sản phẩm`,
             status: "error",
             duration: 2000,
             isClosable: true,
@@ -107,8 +104,7 @@ const ProductDetailView = () => {
       .unwrap()
       .then(() => {
         toast({
-          title: "Hệ thống thông báo",
-          description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+          title: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -117,8 +113,7 @@ const ProductDetailView = () => {
       })
       .catch(() => {
         toast({
-          title: "Hệ thống thông báo",
-          description: `Lỗi khi thêm sản phẩm`,
+          title: `Lỗi khi thêm sản phẩm`,
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -130,9 +125,8 @@ const ProductDetailView = () => {
   const handleByNow = async () => {
     if (product?.data.stock === 0) {
       return toast({
-        title: "Hệ thống thông báo",
-        description: `Sản phẩm đã hết hàng`,
-        status: "error",
+        title: `Sản phẩm đã hết hàng`,
+        status: "warning",
         duration: 2000,
         isClosable: true,
         position: "top-right",
@@ -153,8 +147,7 @@ const ProductDetailView = () => {
         .unwrap()
         .then(() => {
           toast({
-            title: "Hệ thống thông báo",
-            description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+            title: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -164,8 +157,7 @@ const ProductDetailView = () => {
         })
         .catch(() => {
           toast({
-            title: "Hệ thống thông báo",
-            description: `Lỗi khi thêm sản phẩm`,
+            title: `Lỗi khi thêm sản phẩm`,
             status: "error",
             duration: 2000,
             isClosable: true,
@@ -177,8 +169,7 @@ const ProductDetailView = () => {
         .unwrap()
         .then(() => {
           toast({
-            title: "Hệ thống thông báo",
-            description: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
+            title: `Thêm ${quantity} sản phẩm vào giỏ hàng thành công`,
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -188,8 +179,7 @@ const ProductDetailView = () => {
         })
         .catch(() => {
           toast({
-            title: "Hệ thống thông báo",
-            description: `Lỗi khi thêm sản phẩm`,
+            title: `Lỗi khi thêm sản phẩm`,
             status: "error",
             duration: 2000,
             isClosable: true,
@@ -201,8 +191,7 @@ const ProductDetailView = () => {
   const handleDercement = () => {
     if (product?.data.stock === 0) {
       return toast({
-        title: "Hệ thống thông báo",
-        description: `Sản phẩm đã hết hàng`,
+        title: `Sản phẩm đã hết hàng`,
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -215,8 +204,7 @@ const ProductDetailView = () => {
   const handleIncement = () => {
     if (product?.data.stock === 0) {
       return toast({
-        title: "Hệ thống thông báo",
-        description: `Sản phẩm đã hết hàng`,
+        title: `Sản phẩm đã hết hàng`,
         status: "error",
         duration: 2000,
         isClosable: true,

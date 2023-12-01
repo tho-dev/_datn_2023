@@ -1,5 +1,6 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { Box, Center, Flex, Text } from "@chakra-ui/layout";
-import { Table, Tbody, Td, Th, Thead, Tr, Spinner } from "@chakra-ui/react";
+import { Table, Tbody, Td, Th, Thead, Tr, Skeleton } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
   ColumnDef,
@@ -74,9 +75,9 @@ export default function TableThinkPro<Data extends object>({
   ]);
 
   return (
-    <Box borderWidth="1px" borderColor="border.primary" rounded="xl">
+    <Box borderWidth="1px" borderColor="#F1F4F9" rounded="xl">
       <Table>
-        <Thead rounded="md" overflow="hidden" h="48px">
+        <Thead rounded="md" overflow="hidden" h="52px">
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr bgColor="#F1F4F9" key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -93,6 +94,7 @@ export default function TableThinkPro<Data extends object>({
                     borderBottom="none"
                     px="2"
                     fontSize="xs"
+                    fontWeight="semibold"
                     _first={{
                       paddingLeft: 5,
                       borderTopLeftRadius: "12px",
@@ -104,9 +106,9 @@ export default function TableThinkPro<Data extends object>({
                     w="max-content"
                   >
                     <Flex
-                      justifyContent="space-around"
-                      alignItems="center"
-                      w="inherit"
+                      justifyContent="space-between"
+                      alignItems="flex-end"
+                      w="auto"
                       gap="8"
                     >
                       <Text as="span" fontSize="xs">
@@ -126,7 +128,6 @@ export default function TableThinkPro<Data extends object>({
                         ) == "Action" || (
                           <Flex
                             as="span"
-                            flexDir="column"
                             alignItems="center"
                             justifyContent="center"
                             display="inline-flex"
@@ -134,18 +135,10 @@ export default function TableThinkPro<Data extends object>({
                             float="right"
                           >
                             <ArrowDownAdminIcon
-                              aria-label="sorted descending"
-                              size={3}
-                              color="bg.admin2"
-                              cursor="pointer"
-                              transform="rotate(-180deg)"
-                            />
-                            <ArrowDownAdminIcon
                               aria-label="sorted ascending"
-                              size={3}
+                              size={5}
                               color="bg.admin2"
                               cursor="pointer"
-                              mt="-5px"
                             />
                           </Flex>
                         )}
@@ -157,68 +150,75 @@ export default function TableThinkPro<Data extends object>({
           ))}
         </Thead>
         <Tbody h={loading ? "9" : "auto"} position="relative">
-          {!loading ? (
-            table.getRowModel()?.rows?.map((row) => (
-              <Tr key={row?.id}>
-                {row.getVisibleCells().map((cell) => {
-                  const meta: any = cell.column.columnDef.meta;
-                  return (
-                    <Td
-                      key={cell.id}
-                      isNumeric={meta?.isNumeric}
-                      fontSize="13px"
-                      py="3"
-                      px="3"
-                      textAlign="start"
-                      borderBottomWidth="1px"
-                      borderStyle="solid"
-                      borderColor="border.primary"
-                      style={{
-                        textAlign: "start",
-                      }}
-                      _first={{
-                        paddingLeft: 5,
-                      }}
-                      _last={{
-                        paddingRight: 5,
-                      }}
-                      w="inherit"
-                      maxW="320px"
-                      fontWeight="medium"
-                    >
-                      <motion.div
-                        layout
-                        animate={{
-                          opacity: 1,
+          {!loading
+            ? table.getRowModel()?.rows?.map((row) => (
+                <Tr key={row?.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    const meta: any = cell.column.columnDef.meta;
+                    return (
+                      <Td
+                        key={cell.id}
+                        isNumeric={meta?.isNumeric}
+                        fontSize="13px"
+                        py="3"
+                        px="3"
+                        textAlign="start"
+                        borderBottomWidth="1px"
+                        borderStyle="solid"
+                        borderColor="#F1F4F9"
+                        style={{
+                          textAlign: "start",
                         }}
-                        initial={{
-                          opacity: 0,
+                        _first={{
+                          paddingLeft: 5,
                         }}
-                        transition={{
-                          duration: 0.25,
+                        _last={{
+                          paddingRight: 5,
                         }}
+                        w="inherit"
+                        maxW="320px"
+                        fontWeight="medium"
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </motion.div>
-                    </Td>
+                        <motion.div
+                          layout
+                          animate={{
+                            opacity: 1,
+                          }}
+                          initial={{
+                            opacity: 0,
+                          }}
+                          transition={{
+                            duration: 0.25,
+                          }}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </motion.div>
+                      </Td>
+                    );
+                  })}
+                </Tr>
+                // eslint-disable-next-line no-mixed-spaces-and-tabs
+              ))
+            : Array(10)
+                .fill(0)
+                .map((u) => {
+                  return (
+                    <Tr key={u}>
+                      {Array(20)
+                        .fill(0)
+                        .map((i, k) => {
+                          return (
+                            <Td key={k} px={i} py="2" rounded="none">
+                              <Skeleton w="full" h="8" rounded="none" />
+                            </Td>
+                          );
+                        })}
+                    </Tr>
                   );
                 })}
-              </Tr>
-            ))
-          ) : (
-            <Flex
-              w="full"
-              py="4"
-              justifyContent="center"
-              alignItems="center"
-              position="absolute"
-            >
-              <Spinner />
-            </Flex>
-          )}
         </Tbody>
       </Table>
       {!loading && (

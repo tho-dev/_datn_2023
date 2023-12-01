@@ -15,8 +15,6 @@ const MainLayout = () => {
   const { items } = useAppSelector(
     (state: RootState) => state.persistedReducer.global
   );
-  console.log(items);
-
   useEffect(() => {
     window.scrollTo(0, 0);
     setCheckRouter(pathname.includes("so-sanh"));
@@ -30,6 +28,7 @@ const MainLayout = () => {
           <Box
             w="full"
             maxW={{
+              sm: "414px",
               md: "768px",
               xl: "1200px",
             }}
@@ -60,6 +59,7 @@ const MainLayout = () => {
           <Box
             w="full"
             maxW={{
+              sm: "414px",
               md: "768px",
               xl: "1200px",
             }}
@@ -84,6 +84,7 @@ const MainLayout = () => {
           <Box
             w="full"
             maxW={{
+              sm: "414px",
               md: "768px",
               xl: "1200px",
             }}
@@ -104,6 +105,7 @@ const MainLayout = () => {
           <Box
             w="full"
             maxW={{
+              sm: "414px",
               md: "768px",
               xl: "1200px",
             }}

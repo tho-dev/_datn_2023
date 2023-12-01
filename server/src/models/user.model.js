@@ -47,7 +47,8 @@ const userSchema = new Schema(
       default: false,
     },
     avatar: {
-      type: String,
+      id: String,
+      url: String
     },
     deleted_at: {
       type: Date,

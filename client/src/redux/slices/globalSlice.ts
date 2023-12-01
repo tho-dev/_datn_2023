@@ -32,7 +32,7 @@ const globalSlice = createSlice({
 	name: "global",
 	initialState,
 	reducers: {
-		login: (state, action: PayloadAction<{ data: any; accessToken: string }>) => {
+		login: (state: any, action: PayloadAction<{ data: any; accessToken: string }>) => {
 			state.user = action.payload.data;
 			state.isLogin = true;
 			state.accessToken = action.payload.accessToken;
@@ -81,6 +81,10 @@ const globalSlice = createSlice({
 			state.items = state.items.filter((item: any) => item.id != action.payload.id);
 		},
 		setKeywords: (state, action) => {
+			const data = state.keywords.find((item: any) => item === action.payload)
+			if (data) {
+				return;
+			}
 			state.keywords = [...state.keywords, action.payload];
 		},
 	},

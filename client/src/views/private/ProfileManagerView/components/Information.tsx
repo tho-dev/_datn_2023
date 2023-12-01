@@ -69,8 +69,9 @@ const Information = ({ data }: Props) => {
             <Image
               borderRadius="full"
               boxSize="150px"
-              src={data?.avatar}
+              src={data?.avatar.url}
               alt="Dan Abramov"
+              objectFit={"cover"}
             />
           </Flex>
           <Box>
@@ -213,7 +214,7 @@ const Information = ({ data }: Props) => {
                   id="phone"
                   placeholder="(+84)XXX XXX XXX"
                   size="lager"
-                  defaultValue={`+84${data?.phone}`}
+                  defaultValue={`+${data?.phone}`}
                   {...register("phone", {
                     required: "Không được để trống !!!",
                   })}

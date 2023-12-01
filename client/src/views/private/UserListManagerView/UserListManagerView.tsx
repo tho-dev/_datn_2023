@@ -53,48 +53,48 @@ const UserListManagerView = () => {
   const handleUpdateRole = (e: any, id: any) => {
     const data = { role: e.target.value };
     if (user.role === "admin" && e.target.value === "manager") {
-      return alert("Bạn không đủ quyền");
+      return toast({
+        title: "Bạn không đủ quyền",
+        duration: 1600,
+        position: "top-right",
+        status: "warning",
+      });
     }
     update({ data, id })
       .unwrap()
       .then(() => {
         toast({
-          title: "Thành công",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "success",
-          description: "Vai trò đã được cập nhật",
+          title: "Vai trò đã được cập nhật",
         });
       })
       .catch((err) => {
         toast({
-          title: "Thất bại",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "error",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
         });
       });
   };
   const handleDelete = () => {
     deleteUser(idUser)
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         toast({
-          title: "Thành công",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "success",
-          description: "Đã xoá user",
+          title: "Đã xoá user",
         });
       })
       .catch((err) => {
         toast({
-          title: "Thất bại",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "error",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
         });
       })
       .finally(() => {
@@ -105,11 +105,10 @@ const UserListManagerView = () => {
     if (idUser == user._id) {
       onCloseBlock();
       return toast({
-        title: "Thất bại",
         duration: 1600,
-        position: "bottom-right",
+        position: "top-right",
         status: "warning",
-        description: "Bạn không thể chặn chính mình",
+        title: "Bạn không thể chặn chính mình",
       });
     }
     const data = { is_block: true };
@@ -117,20 +116,18 @@ const UserListManagerView = () => {
       .unwrap()
       .then(() => {
         toast({
-          title: "Thành công",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "success",
-          description: "Bạn đã chặn thành công user",
+          title: "Bạn đã chặn thành công user",
         });
       })
       .catch((err) => {
         toast({
-          title: "Thất bại",
           duration: 1600,
-          position: "bottom-right",
+          position: "top-right",
           status: "error",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
         });
       })
       .finally(() => {
@@ -157,7 +154,7 @@ const UserListManagerView = () => {
     columnHelper.accessor("avatar", {
       cell: (data) => (
         <Image
-          src={data.getValue()}
+          src={data.getValue()?.url}
           w="64px"
           h="64px"
           objectFit="contain"

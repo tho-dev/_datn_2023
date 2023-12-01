@@ -489,8 +489,8 @@ export async function collectionProducts(req, res, next) {
           $in:
             filters.brand.length > 1
               ? filters.brand
-                  .filter((i) => i != brand?.slug)
-                  .map((slug) => new RegExp(slug, "i"))
+                .filter((i) => i != brand?.slug)
+                .map((slug) => new RegExp(slug, "i"))
               : filters.brand.map((slug) => new RegExp(slug, "i")),
         },
       });

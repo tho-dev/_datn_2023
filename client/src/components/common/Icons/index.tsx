@@ -1293,7 +1293,7 @@ export const ArrowDownAdminIcon = ({
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <path d="M12 17a1.72 1.72 0 0 1-1.33-.64l-4.21-5.1a2.1 2.1 0 0 1-.26-2.21A1.76 1.76 0 0 1 7.79 8h8.42a1.76 1.76 0 0 1 1.59 1.05 2.101 2.101 0 0 1-.26 2.21l-4.21 5.1A1.72 1.72 0 0 1 12 17Z" />
+    <path d="M9.6 15.6a.6.6 0 0 1 .6-.6h3.6a.599.599 0 1 1 0 1.2h-3.6a.6.6 0 0 1-.6-.6ZM7.2 12a.6.6 0 0 1 .6-.6h8.4a.599.599 0 1 1 0 1.2H7.8a.6.6 0 0 1-.6-.6ZM4.8 8.4a.6.6 0 0 1 .6-.6h13.2a.6.6 0 1 1 0 1.2H5.4a.6.6 0 0 1-.6-.6Z" />
   </Icon>
 );
 
@@ -1551,30 +1551,6 @@ export const Annotation = ({
     {...props}
   >
     <path d="M7 8h10M7 12h4m1 8-4-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3l-4 4Z" />
-  </Icon>
-);
-export const CopyIcon = ({
-  size = 35,
-  strokeWidth = 1.5,
-  color = "currentColor",
-  ...props
-}) => (
-  <Icon
-    width={size}
-    height={size}
-    fill="none"
-    stroke={color}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth={strokeWidth}
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path d="M4.75 6.75a2 2 0 0 1 2-2h10.5a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-2.625l-2.625 3-2.625-3H6.75a2 2 0 0 1-2-2v-7.5Z" />
-    <path d="M9.5 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
-    <path d="M12.5 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
-    <path d="M15.5 11a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
   </Icon>
 );
 export const Thumbs = ({
@@ -2296,5 +2272,27 @@ export const SoldOutIcon = ({
     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
     <path d="M3.27 6.96 12 12.01l8.73-5.05"></path>
     <path d="M12 22.08V12"></path>
+  </Icon>
+);
+export const CopyIcon = ({
+  size = 47,
+  strokeWidth = 1,
+  color = "#000000",
+  ...props
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+    <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
   </Icon>
 );

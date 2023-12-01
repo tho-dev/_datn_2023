@@ -155,9 +155,11 @@ export async function updateUser(req, res, next) {
       req.body,
       { new: true }
     );
+
     if (!user_updated) {
       throw createError.BadRequest("Cập nhật thất bại");
     }
+
     return res.json({
       status: 200,
       message: "Cập nhật Thành công",

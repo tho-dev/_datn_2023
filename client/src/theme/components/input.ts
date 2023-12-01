@@ -8,7 +8,7 @@ const baseStyle = definePartsStyle({});
 const small = defineStyle({
 	w: "full",
 	px: "4",
-	h: "48px",
+	h: "44px",
 	fontSize: "sm",
 	_placeholder: {
 		fontSize: "13px",
@@ -18,7 +18,7 @@ const small = defineStyle({
 const medium = defineStyle({
 	w: "full",
 	px: "4",
-	h: "48px",
+	h: "44px",
 	fontSize: "sm",
 	_placeholder: {
 		fontSize: "13px",
@@ -28,7 +28,7 @@ const medium = defineStyle({
 const lager = defineStyle({
 	w: "full",
 	px: "4",
-	h: "48px",
+	h: "44px",
 	fontSize: "sm",
 	_placeholder: {
 		fontSize: "13px",
@@ -46,7 +46,7 @@ const primary = definePartsStyle({
 		color: "text.black",
 		fontWeight: "500",
 		lineHeight: 1.5,
-		borderRadius: "8px",
+		borderRadius: "6px",
 		border: "1px solid",
 		borderColor: "border.primary",
 		_focusVisible: {

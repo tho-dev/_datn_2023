@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  CheckboxGroup,
   Flex,
   FormLabel,
-  Grid,
   Popover,
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
   Radio,
+  RadioGroup,
   Switch,
   Text,
 } from "@chakra-ui/react";
@@ -37,7 +36,7 @@ const SlugView = () => {
   const { isCompare } = useAppSelector(
     (state: RootState) => state.persistedReducer.global
   );
-
+  const [checked, setChecked] = useState("1");
   const [data, setData] = useState<any>([]);
   const [query, setQuery] = useState<any>({
     _page: 1,
@@ -46,7 +45,7 @@ const SlugView = () => {
     _sort: "created_at",
     _category: "",
   });
-  const debouncedQuery = useDebounce(query, 600);
+  const debouncedQuery = useDebounce(query, 300);
 
   const { control, register, setValue, watch } = useForm<any>();
   const { fields } = useFieldArray({
@@ -59,11 +58,7 @@ const SlugView = () => {
     name: "filters",
   });
 
-  const {
-    data: filters,
-    isFetching: isFetchingFilter,
-    isLoading: isLoadingFilter,
-  } = useGetFilterBrandAndCategoryQuery(
+  const { data: filters } = useGetFilterBrandAndCategoryQuery(
     {
       _slug: debouncedQuery?._category,
     },
@@ -134,10 +129,8 @@ const SlugView = () => {
   const handleCompare = (e: any) => {
     dispatch(setIsCompare(e.target.checked as any));
   };
-  if (isLoadingFilter) {
-    return <LoadingPolytech />;
-  }
-  if (isFetchingFilter) return <LoadingPolytech />;
+
+  if (isFetching) return <LoadingPolytech />;
 
   if (isError) navigate("/404");
 
@@ -145,18 +138,7 @@ const SlugView = () => {
     <Box m="30px 0">
       <Title filters={filters?.data} />
 
-      <Grid
-        gap="4"
-        templateColumns={{
-          sm: "repeat(2, 1fr)",
-          md: "repeat(3, 1fr)",
-          xl: `repeat(4, 1fr)`,
-        }}
-        w={{
-          sm: "100%",
-          xl: "70%",
-        }}
-      >
+      <Flex gap="4" flexWrap={"wrap"}>
         {fields?.map((item: any, index: number) => {
           return (
             <FilterProduct
@@ -171,7 +153,7 @@ const SlugView = () => {
             />
           );
         })}
-      </Grid>
+      </Flex>
 
       <Box m="30px 0">
         <Flex w="100%" justifyContent="space-between" m="30px 0">
@@ -200,10 +182,31 @@ const SlugView = () => {
               <PopoverContent maxW="200px">
                 <PopoverHeader fontWeight="medium">
                   <Flex maxW="200px" flexDir="column" gap="2">
-                    <CheckboxGroup value={[1, 2, 3]}>
+                    <RadioGroup onChange={setChecked} value={checked}>
                       <Box w="full">
-                        <Radio defaultChecked value="1">
-                          <Text fontSize="sm">Nổi bật nhất</Text>
+                        <Radio
+                          defaultChecked
+                          value="1"
+                          onClick={() =>
+                            setQuery({
+                              ...query,
+                              _order: "desc",
+                              _sort: "created_at",
+                            })
+                          }
+                        >
+                          <Text
+                            fontSize="sm"
+                            onClick={() =>
+                              setQuery({
+                                ...query,
+                                _order: "desc",
+                                _sort: "created_at",
+                              })
+                            }
+                          >
+                            Nổi bật nhất
+                          </Text>
                         </Radio>
                       </Box>
                       <Box w="full">
@@ -217,7 +220,18 @@ const SlugView = () => {
                             })
                           }
                         >
-                          <Text fontSize="sm">Giá thấp -&gt; cao</Text>
+                          <Text
+                            fontSize="sm"
+                            onClick={() =>
+                              setQuery({
+                                ...query,
+                                _order: "asc",
+                                _sort: "price",
+                              })
+                            }
+                          >
+                            Giá thấp -&gt; cao
+                          </Text>
                         </Radio>
                       </Box>
                       <Box w="full">
@@ -231,10 +245,21 @@ const SlugView = () => {
                             })
                           }
                         >
-                          <Text fontSize="sm">Giá thấp -&gt; cao</Text>
+                          <Text
+                            fontSize="sm"
+                            onClick={() =>
+                              setQuery({
+                                ...query,
+                                _order: "desc",
+                                _sort: "price",
+                              })
+                            }
+                          >
+                            Giá cao -&gt; thấp
+                          </Text>
                         </Radio>
                       </Box>
-                    </CheckboxGroup>
+                    </RadioGroup>
                   </Flex>
                 </PopoverHeader>
               </PopoverContent>

@@ -44,29 +44,45 @@ const ThankView = () => {
   return (
     <Flex
       width="100%"
-      height="100vh"
       justifyContent="center"
       alignItems="center"
       bgColor="white"
+      my="12"
+      rounded="2xl"
     >
       <Flex
         width="100%"
-        height="700px"
+        height="480px"
         flexDirection="column"
         alignItems="center"
+        justifyContent="center"
         padding={8}
         gap={4}
       >
-        <Image src={logo} w="700px" h="64px" objectFit="contain" />
-        <Text fontSize={60} fontWeight="bold" textTransform="capitalize">
+        <Flex
+          w="160px"
+          display="inline-flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Image src={logo} objectFit="contain" aspectRatio="16/9" />
+        </Flex>
+        <Text fontSize="36px" fontWeight="bold" textTransform="capitalize">
           Thank You !
         </Text>
-        <Text fontSize={20} fontWeight="semibold">
+        <Text fontSize={18} fontWeight="semibold">
           Đơn hàng đã đặt thành công, bạn sẽ được chuyển đến trang chủ sau{" "}
           {time}
         </Text>
         <Link to="/">
-          <Button bg="bg.green"> Chuyển đến ngay</Button>
+          <Button
+            bg="bg.bgEdit"
+            color="text.textEdit"
+            rounded="full"
+            fontWeight="bold"
+          >
+            Chuyển đến ngay
+          </Button>
         </Link>
       </Flex>
     </Flex>

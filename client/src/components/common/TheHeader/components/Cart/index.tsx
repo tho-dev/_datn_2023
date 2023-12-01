@@ -1,7 +1,6 @@
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Box, Flex, Text, Link } from "@chakra-ui/layout";
 import { Image } from "@chakra-ui/react";
-import { CartNotFoundIcon } from "~/components/common/Icons";
 import emptybox from "~/assets/images/7486754.png";
 
 type Props = {

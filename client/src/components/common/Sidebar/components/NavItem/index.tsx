@@ -1,4 +1,4 @@
-import { NavLink as ReactRouterLink, useLocation } from "react-router-dom";
+import { NavLink as ReactRouterLink } from "react-router-dom";
 import { Link, Collapse, useDisclosure } from "@chakra-ui/react";
 import { Flex, Box, Text } from "@chakra-ui/layout";
 import { ChevronDownIcon } from "~/components/common/Icons";
@@ -11,7 +11,6 @@ type Props = {
 };
 
 const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
-  const location = useLocation();
   const { isOpen, onToggle } = useDisclosure();
   const Icon = item?.icon;
 
@@ -24,7 +23,8 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
         to={item?.children?.length > 0 ? "/" : item?.to}
         py="4"
         px="4"
-        rounded="md"
+        maxH="44px"
+        rounded="8px"
         display="flex"
         alignItems="center"
         transition="all 0.25s ease"
@@ -36,15 +36,15 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
           xl: "space-between",
           "2xl": "space-between",
         }}
-        bgColor={isCheck ? "#12AFF033" : "transparent"}
+        group="role"
         _hover={{
           textDecor: "none",
-          backgroundColor: "#12AFF033",
         }}
         onClick={() => {
           handleClick(index as any);
           item?.children?.length > 0 && onToggle();
         }}
+        bgColor={isCheck ? "bg.bgPro" : "transparent"}
       >
         <Flex
           gap="3"
@@ -53,13 +53,13 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
           justifyContent="space-between"
         >
           <Flex as="span" justifyContent="center" alignItems="center">
-            <Icon size="5" color={"#809FB8"} />
+            <Icon size="5" color={isCheck ? "#0bcbe0" : "#637381"} />
           </Flex>
           <Text
             fontSize="13px"
             lineHeight="0.5"
-            fontWeight="medium"
-            color={"#809FB8"}
+            fontWeight="semibold"
+            color={isCheck ? "#0bcbe0" : "#637381"}
             display={{
               sm: "none",
               md: "none",
@@ -87,16 +87,19 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
               "2xl": "flex",
             }}
           >
-            <ChevronDownIcon
-              size={5}
-              strokeWidth={0.5}
-              color={location.pathname == item?.to ? "#12AFF0" : "#809FB8"}
-            />
+            <ChevronDownIcon size={4} strokeWidth={1} color="#637381" />
           </Flex>
         )}
       </CheckComponent>
       <Collapse in={isOpen} animateOpacity>
-        <Flex gap="1" flexDir="column">
+        <Flex
+          gap="1"
+          px="2"
+          py="1"
+          rounded="8px"
+          flexDir="column"
+          bgColor="#ffffff"
+        >
           {item?.children?.map((item: any, index: number) => (
             <Link
               as={ReactRouterLink}
@@ -104,20 +107,23 @@ const NavItem = ({ item, index, isCheck, handleClick }: Props) => {
               key={index}
               gap="3"
               py="3"
-              px="6"
+              px="4"
+              maxH="9"
               w="full"
               display="flex"
               alignItems="center"
               justifyContent="space-between"
               fontSize="13px"
-              fontWeight="medium"
-              color="text.admin2"
+              fontWeight="semibold"
+              color="#637381"
               _hover={{
                 textDecor: "none",
               }}
             >
-              <Box w="1" h="1" rounded="full" bgColor="bg.admin2" />
-              <Text flex="1">{item?.title}</Text>
+              <Box w="3px" h="3px" rounded="full" bgColor="#637381" />
+              <Text flex="1" ml="2">
+                {item?.title}
+              </Text>
             </Link>
           ))}
         </Flex>

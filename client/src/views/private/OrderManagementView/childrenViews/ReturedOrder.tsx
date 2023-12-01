@@ -25,10 +25,21 @@ import {
   useGetReturnOrderQuery,
 } from "~/redux/api/order";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import { chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
+import DialogThinkPro from "~/components/DialogThinkPro";
+import ReturedOrderDetail from "./ReturedOrderDetail";
 
 const ReturedOrder = () => {
   const { control, watch } = useForm();
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const {
+    isOpen: isOpenDialog,
+    onClose: onCloseDialog,
+    onOpen: onOpenDialog,
+  } = useDisclosure();
+
+  const [returnDetail, setReturedDetail] = useState({} as any);
   const toast = useToast();
   const columnHelper = createColumnHelper<any>();
   const [idReturned, setIdReturned] = useState("");
@@ -69,7 +80,7 @@ const ReturedOrder = () => {
     columnHelper.accessor("phone_number", {
       cell: (info) => (
         <Text fontWeight="medium" fontSize="13px">
-          {`+${info.getValue()}`}
+          {chuyenDoiSoDienThoaiVe0(info.getValue())}
         </Text>
       ),
       header: "Số điện thoại",
@@ -92,8 +103,8 @@ const ReturedOrder = () => {
       ),
       header: "Phản hồi",
     }),
-    columnHelper.accessor("_id", {
-      cell: (info) => {
+    columnHelper.accessor("action", {
+      cell: ({ row }) => {
         return (
           <Menu>
             <MenuButton
@@ -121,9 +132,12 @@ const ReturedOrder = () => {
             <MenuList>
               <MenuItem>Xóa</MenuItem>
               <MenuItem
-                onClick={() => handleOpenModelReturned(info.getValue())}
+                onClick={() => handleOpenModelReturned(row?.original?._id)}
               >
                 Xác nhận
+              </MenuItem>
+              <MenuItem onClick={() => handleOpenDialog(row?.original)}>
+                Chi tiết
               </MenuItem>
             </MenuList>
           </Menu>
@@ -132,40 +146,46 @@ const ReturedOrder = () => {
       header: "Action",
     }),
   ];
+
+  const handleOpenDialog = (data: any) => {
+    setReturedDetail(data);
+    onOpenDialog();
+  };
   const handleOpenModelReturned = (id: string) => {
     setIdReturned(id);
     onOpen();
   };
+
   const handleReturnedOrder = () => {
     confirmReturnOrder(idReturned)
       .unwrap()
       .then((data) => {
         toast({
-          title: "Thành công",
           duration: 1600,
           position: "top-right",
           status: "success",
-          description: data.message,
+          title: data.message,
         });
       })
       .catch((err) => {
         toast({
-          title: "Thất bại",
           duration: 1600,
           position: "top-right",
           status: "error",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
         });
       })
       .finally(() => {
         onClose();
       });
   };
+
   const verified = watch("is_confirm") || "";
 
   const handleDate = (data: any) => {
     setFilter({ date: data });
   };
+
   useEffect(() => {
     setFilter({
       is_confirm: verified.value,
@@ -270,6 +290,22 @@ const ReturedOrder = () => {
         content="Bạn có chắc chắn muốn xác thực yêu cầu hoàn hàng này?"
         handleClick={handleReturnedOrder}
       />
+      <DialogThinkPro
+        isOpen={isOpenDialog}
+        onClose={onCloseDialog}
+        isCentered
+        size="2xl"
+        title={
+          <Heading fontSize="xl">
+            Chi tiết đơn hàng: {returnDetail?.order_id}
+          </Heading>
+        }
+      >
+        <ReturedOrderDetail
+          returnDetail={returnDetail}
+          handleOpenModelReturned={handleOpenModelReturned}
+        />
+      </DialogThinkPro>
     </Box>
   );
 };

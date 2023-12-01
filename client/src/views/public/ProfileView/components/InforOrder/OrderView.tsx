@@ -5,23 +5,26 @@ import {
   Grid,
   GridItem,
   Heading,
+  Image,
   Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useState } from "react";
+import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import DialogThinkPro from "~/components/DialogThinkPro";
 import { status_order } from "~/data";
-import ItemOrder from "./components/ItemOrder";
-import { useAppSelector } from "~/redux/hook/hook";
 import {
   useCancelOrderMutation,
   useConfirmDeliveredMutation,
   useGetOrderByUserIdQuery,
 } from "~/redux/api/order";
-import { useState } from "react";
-import DialogThinkPro from "~/components/DialogThinkPro";
-import ReturnOrder from "./components/ReturnOrder";
-import ConfirmThinkPro from "~/components/ConfirmThinkPro";
+import { useAppSelector } from "~/redux/hook/hook";
+import ItemOrder from "./components/ItemOrder";
 import OrderDetail from "./components/OrderDetail";
+import ReturnOrder from "./components/ReturnOrder";
+import not_data from "~/assets/images/not_data.svg";
+import LoadingPolytech from "~/components/LoadingPolytech";
 
 const OrderView = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
@@ -49,18 +52,19 @@ const OrderView = () => {
     onClose: onCloseCancel,
   } = useDisclosure();
   const toast = useToast();
-  const { data, isLoading, isFetching, isError } =
-    useGetOrderByUserIdQuery(query);
+  const { data, isLoading, isError } = useGetOrderByUserIdQuery(query, {
+    skip: !user._id,
+  });
 
   const [cancelOrder] = useCancelOrderMutation();
   const [confirmDelivered] = useConfirmDeliveredMutation();
 
   if (isLoading) {
-    return <Box>Loading...</Box>;
+    return <LoadingPolytech />;
   }
 
   const handleChangeStatus = (status_order: string) => {
-    setQuery({ status: status_order });
+    setQuery({ ...query, status: status_order });
     setStatus(status_order);
   };
   // hoàn hàng
@@ -76,25 +80,25 @@ const OrderView = () => {
     onOpenCancel();
     setOrderDetail(order);
   };
+
   const handleCancel = () => {
     // check thời gian
-    const currentDate = new Date();
-    const targetTime = new Date(orderDetail.created_at);
-    targetTime.setMinutes(targetTime.getMinutes() + 15);
-    if (currentDate > targetTime) {
-      return toast({
-        title: "Không thể huỷ đơn hàng",
-        description: "Liên hệ với bộ phận CSKH để được xử lý",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "top-right",
-      });
-    }
+    // const currentDate = new Date();
+    // const targetTime = new Date(orderDetail.created_at);
+    // targetTime.setMinutes(targetTime.getMinutes() + 15);
+    // if (currentDate > targetTime) {
+    //   return toast({
+    //     title: "Không thể huỷ đơn hàng",
+    //     description: "Liên hệ với bộ phận CSKH để được xử lý",
+    //     status: "error",
+    //     duration: 2000,
+    //     isClosable: true,
+    //     position: "top-right",
+    //   });
+    // }
     if (orderDetail?.status !== "processing") {
       return toast({
-        title: "Hệ thống",
-        description: "Bạn không thể huỷ đơn hàng",
+        title: "Bạn không thể huỷ đơn hàng",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -105,36 +109,34 @@ const OrderView = () => {
       .unwrap()
       .then(() => {
         toast({
-          title: "Hệ thống",
-          description: "Huỷ đơn hàng thành công",
+          title: "Huỷ đơn hàng thành công",
           status: "success",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       })
       .catch(() => {
         toast({
-          title: "Hệ thống",
-          description: "Huỷ đơn hàng thất bại",
+          title: "Huỷ đơn hàng thất bại",
           status: "error",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       })
       .finally(() => {
         onCloseCancel();
       });
   };
+
   // xác nhận đã nhận được hàng
   const handleConfirmCompleted = (order: any) => {
     confirmDelivered(order?._id)
       .unwrap()
       .then((data) => {
         toast({
-          title: "Hệ thống",
-          description: data.message,
+          title: data.message,
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -143,8 +145,7 @@ const OrderView = () => {
       })
       .catch((error) => {
         toast({
-          title: "Hệ thống",
-          description: error.data.errors.message,
+          title: error.data.errors.message,
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -157,31 +158,46 @@ const OrderView = () => {
     setOrderDetail(order);
     onOpen();
   };
+
   return (
-    <Box rounded="xl" bgColor="bg.white">
-      <Flex my="6" gap={4}>
+    <Box
+      py="8"
+      px="6"
+      rounded="xl"
+      borderWidth="1px"
+      borderColor="#eef1f6"
+      boxShadow="0 0.375rem 0.75rem rgba(140,152,164,.075)"
+    >
+      <Flex gap={3} flexWrap="wrap">
         {status_order.map((item: any, index: number) => {
           return (
             <Button
-              fontSize="sm"
+              fontSize="xs"
               fontWeight="semibold"
-              p={4}
               key={index}
-              bgColor={status === item.value ? "gray" : "bg.gray"}
+              h="40px"
+              rounded="md"
+              bgColor={status === item.value ? "bg.bgEdit" : "bg.gray"}
               onClick={() => handleChangeStatus(item.value)}
-              color={status === item.value ? "white" : "black"}
+              color={status === item.value ? "text.textEdit" : "black"}
             >
               {item.name}
             </Button>
           );
         })}
       </Flex>
-      {isFetching && <Box>fetching...</Box>}
 
       {isError ? (
-        <Text>Không có đơn hàng nào</Text>
+        <Flex my="6" w="full" alignItems="center" justifyContent="center">
+          <Flex flexDir="column" alignItems="center" justifyContent="center">
+            <Image src={not_data} alt="not found" />
+            <Text mt="1" fontSize="sm" fontWeight="semibold">
+              Không có đơn hàng nào !!!
+            </Text>
+          </Flex>
+        </Flex>
       ) : (
-        <Grid gridTemplateColumns={"repeat(2, 1fr)"} gap={4} w={"100%"}>
+        <Grid gridTemplateColumns={"repeat(1, 1fr)"} gap={4} w={"100%"}>
           {data?.data.items.map((item: any, index: number) => {
             return (
               <GridItem>

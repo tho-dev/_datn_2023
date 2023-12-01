@@ -3,7 +3,7 @@ import ListCardCompare from "./components/ListCardCompare";
 import ListTableCompare from "./components/ListTableCompare";
 import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useCompareProductMutation } from "~/redux/api/product";
 import LoadingPolytech from "~/components/LoadingPolytech";
@@ -14,9 +14,7 @@ const CompareView = () => {
   const { items } = useAppSelector(
     (state: RootState) => state.persistedReducer.global
   );
-  const [compareProduct, { isLoading }] = useCompareProductMutation();
-  const { slug } = useParams();
-  console.log(slug);
+  const [compareProduct, { isLoading, isError }] = useCompareProductMutation();
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -33,7 +31,9 @@ const CompareView = () => {
   if (isLoading) {
     return <LoadingPolytech />;
   }
-
+  if (isError) {
+    return navigate("/");
+  }
   return (
     <Box py="6">
       <ListCardCompare items={items} />

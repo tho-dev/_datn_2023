@@ -11,13 +11,13 @@ const small = defineStyle({
 
 const medium = defineStyle({
 	px: "4",
-	h: "42px",
+	h: "44px",
 	fontSize: "sm",
 });
 
 const lager = defineStyle({
 	px: "4",
-	h: "46px",
+	h: "44px",
 	fontSize: "sm",
 });
 

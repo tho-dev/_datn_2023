@@ -1,62 +1,98 @@
-import { Box, Flex, Text } from "@chakra-ui/layout";
-import { ArrowUpIcon } from "~/components/common/Icons";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
+import CommonBox from "../CommonBox";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 type Props = {
-  title: string;
+  categories: any;
 };
-export const data = {
-  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)",
-      ],
-      borderWidth: 1,
+
+const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  layout: {},
+  scales: {
+    x: {
+      grid: {
+        display: false,
+      },
     },
-  ],
+    y: {
+      title: {
+        display: true,
+        text: "Số lượng sản phẩm",
+      },
+      ticks: {
+        // forces step size to be 50 units
+        stepSize: 50,
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+      position: "right" as const,
+      labels: {
+        usePointStyle: true,
+        font: {
+          size: 10,
+        },
+      },
+    },
+    title: {
+      position: "bottom" as const,
+      display: true,
+      text: "3. Thống kê sản phẩm theo từng loại danh mục",
+    },
+    tooltip: {
+      enabled: true,
+    },
+    datalabels: {
+      formatter: (value: any) => {
+        return value;
+      },
+    },
+  },
 };
 
-const TopCategory = ({ title }: Props) => {
-  return (
-    <Box width="33%" border="1px solid #f1f4f9" rounded="md">
-      <Flex
-        justifyContent="space-between"
-        borderBottom="1px solid #f1f4f9"
-        p="4"
-      >
-        <Text fontSize="18" fontWeight="bold">
-          {title}
-        </Text>
-        <Flex alignItems="center">
-          <Text mr="2">Repost</Text>
-          <ArrowUpIcon size={4} color="black" />
-        </Flex>
-      </Flex>
+const TopBrand = ({ categories }: Props) => {
+  const data = {
+    labels: categories?.labels,
+    datasets: [
+      {
+        label: "#san-pham",
+        data: categories?.values,
+        // backgroundColor: brands?.colors,
+        borderColor: "#0bcbe0",
+        backgroundColor: "#0bcbe0",
+        pointBorderColor: "#0bcbe0",
+        // borderWidth: 1,
+        borderRadius: 2,
+      },
+    ],
+  };
 
-      <Box my="2">
-        <Doughnut data={data} />
-      </Box>
-    </Box>
+  return (
+    <CommonBox>
+      <Bar data={data} width={700} height={300} options={options as any} />
+    </CommonBox>
   );
 };
 
-export default TopCategory;
+export default TopBrand;

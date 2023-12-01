@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Flex, Text } from "@chakra-ui/layout";
 import { Button, Image } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import emptybox from "~/assets/images/7486754.png";

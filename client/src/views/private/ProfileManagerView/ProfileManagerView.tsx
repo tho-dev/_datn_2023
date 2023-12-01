@@ -5,17 +5,19 @@ import Email from "./components/Email";
 import Password from "./components/Password";
 import { useAppSelector } from "~/redux/hook/hook";
 import { useGetOneQuery } from "~/redux/api/user";
+import LoadingPolytech from "~/components/LoadingPolytech";
 
 const ProfileManagerView = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
   const id = user._id;
-  const { data, isLoading, isError } = useGetOneQuery(id);
-  if (isLoading) {
-    return <Box>Loading....</Box>;
+  const { data, isFetching } = useGetOneQuery(id, {
+    skip: !id,
+  });
+
+  if (isFetching) {
+    return <LoadingPolytech />;
   }
-  if (isError) {
-    return <Box>Loading....</Box>;
-  }
+
   return (
     <Box>
       {/* Information */}

@@ -1,42 +1,46 @@
 import { Box, Flex, Heading, Stack } from "@chakra-ui/layout";
 import {
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Image,
+  Input,
+  Link,
   Radio,
   RadioGroup,
   Text,
+  Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
-import PaySummary from "./components/PaySummary";
-import ProductPay from "./components/ProductPay";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { useAppSelector } from "~/redux/hook/hook";
-import { useGetCartQuery } from "~/redux/api/cart";
-import PopupCheckOtp from "./components/PopupCheckOtp";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-  Link,
-  Textarea,
-} from "@chakra-ui/react";
-import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { Link as ReactRouterLink } from "react-router-dom";
-import Transport from "./components/Transport";
-import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
 import { socket } from "~/App";
+import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
+import { useGetCartQuery } from "~/redux/api/cart";
 import { useGetValueCouponMutation } from "~/redux/api/coupon";
+import { useAppSelector } from "~/redux/hook/hook";
+import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
+import PaySummary from "./components/PaySummary";
+import PopupCheckOtp from "./components/PopupCheckOtp";
+import ProductPay from "./components/ProductPay";
+import Transport from "./components/Transport";
+import LoadingPolytech from "~/components/LoadingPolytech";
+import CommonBox from "./components/CommonBox";
+import momo from "~/assets/images/momo.webp";
+import vnpay from "~/assets/images/vnpay.webp";
 
 const Payment = () => {
   const [dataOrder, setDataOrder] = useState({} as any);
   const [methodOrder, setMethodOrder] = React.useState("at_store");
   const [methodPayment, setMethodPayment] = React.useState("tructiep");
+  const [payment, setPayment] = React.useState("MOMO");
   const [address, setAddress] = React.useState("");
   const [transportFee, setTransportFee] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -51,7 +55,7 @@ const Payment = () => {
   const { user, isLogin } = useAppSelector(
     (state) => state.persistedReducer.global
   );
-  const { data, isLoading, isError } = useGetCartQuery(cart_id);
+  const { data, isLoading } = useGetCartQuery(cart_id);
   const [getValueCoupon] = useGetValueCouponMutation();
   useEffect(() => {
     socket.emit(
@@ -96,8 +100,7 @@ const Payment = () => {
       .then((data) => {
         setVourcher_value(data?.data);
         toast({
-          title: "Hệ thống thông báo",
-          description: "Áp dụng voucher thành công",
+          title: "Áp dụng voucher thành công",
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -107,8 +110,7 @@ const Payment = () => {
       .catch((err) => {
         setVourcher_value(0);
         toast({
-          title: "Hệ thống thông báo",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -146,6 +148,7 @@ const Payment = () => {
         });
     }
   }, [methodOrder]);
+
   useEffect(() => {
     if (!voucher) {
       setVourcher_value(0);
@@ -153,17 +156,15 @@ const Payment = () => {
   }, [voucher]);
 
   if (isLoading) {
-    return <Box>Loading...</Box>;
+    return <LoadingPolytech />;
   }
-  if (isError) {
-    return <Box>Error...</Box>;
-  }
+
   return (
     <HelmetProvider>
       <Helmet>
-        <title>ThinkPro | Thanh toán</title>
+        <title>Polytech | Thanh toán</title>
       </Helmet>
-      <Heading pt={"4"} fontSize={"20px"}>
+      <Heading pt={"4"} fontSize={"xl"}>
         Thanh Toán
       </Heading>
       <form onSubmit={handleSubmit(submitForm)}>
@@ -172,229 +173,245 @@ const Payment = () => {
           flexDirection={{ base: "column", md: "row" }}
           my={"5"}
           w={"full"}
+          rounded="2xl"
         >
-          <Box
-            backgroundColor={"white"}
-            borderRadius={"md"}
-            p={"24px"}
+          <Flex
+            rounded="xl"
+            px="6"
+            py="8"
             mr={"5"}
-            w={{ md: "80%", base: "full" }}
+            gap="6"
+            flexDir="column"
+            backgroundColor={"white"}
+            w={{ md: "70%", base: "full" }}
           >
-            <Text fontSize={"20px"} fontWeight={600} as={"h3"}>
-              Phương Thức Nhận Hàng
-            </Text>
-
-            <Box py={"16px"} borderBottom={"1px solid #E6E8EA"}>
-              <RadioGroup
-                onChange={(value) => {
-                  setMethodOrder(value);
-                  if (value === "at_store") {
-                    setTransportFee(0);
-                  }
-                }}
-                value={methodOrder}
-                isDisabled={data.data.products.length === 0}
-              >
-                <Stack direction="row" gap={"24px"}>
-                  <Radio
-                    value="at_store"
-                    checked
-                    {...register("shipping_method")}
-                  >
-                    Tại cửa Hàng
-                  </Radio>
-                  <Radio value="shipped" {...register("shipping_method")}>
-                    Giao Tận nơi
-                  </Radio>
-                </Stack>
-              </RadioGroup>
-            </Box>
-            <Box mt={"12px"}>
-              <Text
-                mb={"16px"}
-                fontSize={"16px"}
-                lineHeight={"150%"}
-                fontWeight={600}
-              >
-                Thông tin người nhận
-              </Text>
-              {/* tên người nhận và số điện thoại */}
-              <Flex gap={"16px"}>
-                <FormControl isInvalid={errors.customer_name as any}>
-                  <FormLabel>Tên người nhận</FormLabel>
-                  <Input
-                    type="text"
-                    border={"none"}
-                    p={"8px 12px"}
-                    placeholder="Nhập họ và tên"
-                    bg={"#F6F9FC"}
-                    borderRadius={"6px"}
-                    fontSize={"14px"}
-                    {...register("customer_name", {
-                      required: "Trường bắt buộc nhập",
-                    })}
-                    defaultValue={
-                      (isLogin && user.first_name + " " + user.last_name) || ""
-                    }
-                    isDisabled={data.data.products.length === 0}
-                  />
-                  <FormErrorMessage>
-                    {" "}
-                    {(errors.customer_name as any) &&
-                      (errors?.customer_name?.message as any)}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={errors.phone_number as any}>
-                  <FormLabel>Số điện thoại</FormLabel>
-                  <Input
-                    type="number"
-                    border={"none"}
-                    p={"8px 12px"}
-                    placeholder="Nhập số điện thoại"
-                    bg={"#F6F9FC"}
-                    borderRadius={"6px"}
-                    fontSize={"14px"}
-                    {...register("phone_number", {
-                      required: "Trường bắt buộc nhập",
-                    })}
-                    isDisabled={data.data.products.length === 0}
-                    defaultValue={
-                      (isLogin &&
-                        `${chuyenDoiSoDienThoaiVe0(user.phone.toString())}`) ||
-                      ""
-                    }
-                  />
-                  <FormErrorMessage>
-                    {" "}
-                    {(errors.phone_number as any) &&
-                      (errors?.phone_number?.message as any)}
-                  </FormErrorMessage>
-                </FormControl>
-              </Flex>
-              {/* khu vực và địa chỉ nhận hàng */}
-              {methodOrder == "shipped" && (
-                <Flex gap={"16px"} mt={"16px"}>
-                  <FormControl isInvalid={errors?.shipping_address as any}>
-                    <FormLabel>Khu Vực</FormLabel>
-                    <Box
-                      border={"none"}
-                      bg={"#F6F9FC"}
-                      borderRadius={"6px"}
-                      fontSize={"14px"}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      cursor="pointer"
-                      onClick={onOpen}
-                    >
-                      <Input
-                        type="text"
-                        cursor="pointer"
-                        p={"12px 12px"}
-                        w="90%"
-                        placeholder="Chọn địa chỉ giao hàng"
-                        h="100%"
-                        border="none"
-                        bg="transparent"
-                        readOnly={true}
-                        {...register("shipping_address", {
-                          required: "Trường bắt buộc nhập",
-                        })}
-                        value={address}
-                        onClick={handleChooseAdress}
-                        isDisabled={data.data.products.length === 0}
-                      />
-                      <NavArrowRightIcon
-                        size={4}
-                        strokeWidth={2}
-                        color="text.black"
-                      />
-                    </Box>
-                    <FormErrorMessage>
-                      {(errors?.shipping_address as any) &&
-                        (errors?.shipping_address?.message as any)}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={errors?.address as any}>
-                    <FormLabel>Địa chỉ nhận hàng</FormLabel>
+            <CommonBox title="Thông Tin Người Nhận">
+              <Flex gap="4" flexDir="column">
+                <Flex gap="4">
+                  <FormControl isInvalid={errors.customer_name as any}>
+                    <FormLabel fontSize="sm" fontWeight="semibold">
+                      Người nhận
+                    </FormLabel>
                     <Input
                       type="text"
-                      border={"none"}
-                      p={"8px 12px"}
-                      placeholder="Địa chỉ nhận hàng"
-                      bg={"#F6F9FC"}
-                      borderRadius={"6px"}
-                      fontSize={"14px"}
-                      {...register("address", {
+                      fontSize="13px"
+                      placeholder="Nhập họ và tên"
+                      {...register("customer_name", {
                         required: "Trường bắt buộc nhập",
                       })}
+                      defaultValue={
+                        (isLogin && user.first_name + " " + user.last_name) ||
+                        ""
+                      }
                       isDisabled={data.data.products.length === 0}
                     />
                     <FormErrorMessage>
-                      {(errors?.address as any) &&
-                        (errors?.address?.message as any)}
+                      {(errors.customer_name as any) &&
+                        (errors?.customer_name?.message as any)}
                     </FormErrorMessage>
-                    <FormHelperText fontSize="12px" fontWeight="semibold">
-                      Có thể là số nhà, tên đường, tòa nhà. VD: Số 53 Thái Hà
-                    </FormHelperText>
+                  </FormControl>
+                  <FormControl isInvalid={errors.phone_number as any}>
+                    <FormLabel fontSize="sm" fontWeight="semibold">
+                      SĐT
+                    </FormLabel>
+                    <Input
+                      type="number"
+                      fontSize="13px"
+                      placeholder="Nhập số điện thoại"
+                      {...register("phone_number", {
+                        required: "Trường bắt buộc nhập",
+                      })}
+                      isDisabled={data.data.products.length === 0}
+                      defaultValue={
+                        (isLogin &&
+                          `${chuyenDoiSoDienThoaiVe0(
+                            user.phone.toString()
+                          )}`) ||
+                        ""
+                      }
+                    />
+                    <FormErrorMessage>
+                      {(errors.phone_number as any) &&
+                        (errors?.phone_number?.message as any)}
+                    </FormErrorMessage>
                   </FormControl>
                 </Flex>
-              )}
+                <FormControl isInvalid={errors?.note as any} w="full">
+                  <FormLabel fontSize="sm" fontWeight="semibold">
+                    Ghi chú
+                  </FormLabel>
+                  <Textarea
+                    placeholder="Nhập ghi chú"
+                    fontSize={"14px"}
+                    {...register("content")}
+                    isDisabled={data.data.products.length === 0}
+                  />
+                </FormControl>
+              </Flex>
+            </CommonBox>
 
-              <Box mt={"16px"}>
-                <FormControl isInvalid={errors?.storeAddress as any}>
-                  <FormLabel>Địa chỉ cửa hàng</FormLabel>
-                  <Stack
-                    direction="column"
-                    gap={"16px"}
-                    bg={"#F6F9FC"}
-                    borderRadius={"6px"}
-                    px={"8px"}
-                  >
+            <CommonBox title="Phương Thức Nhận Hàng">
+              <Flex flexDir="column">
+                <RadioGroup
+                  onChange={(value) => {
+                    setMethodOrder(value);
+                    if (value === "at_store") {
+                      setTransportFee(0);
+                    }
+                  }}
+                  value={methodOrder}
+                  isDisabled={data.data.products.length === 0}
+                >
+                  <Stack direction="row" gap={"24px"}>
                     <Radio
-                      isChecked
-                      fontSize={"12px"}
-                      {...register("shop_address")}
-                      value={shopAdress.trim()}
-                      isDisabled={data.data.products.length === 0}
+                      size="sm"
+                      fontSize="13px"
+                      fontWeight="semibold"
+                      value="at_store"
+                      checked
+                      {...register("shipping_method")}
                     >
-                      <Box p="4" rounded="md" fontSize="sm" color="text.black">
-                        <Text fontWeight="semibold">Thủ đô Hà Nội</Text>
-                        <Text>
-                          {" "}
-                          Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh Văn
-                          Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam
-                        </Text>
-                        <Flex
-                          mt="2"
-                          alignItems="flex-end"
-                          justifyContent="space-between"
-                        >
-                          <Box fontSize="xs">
-                            <Text fontWeight="semibold" color="#f93920">
-                              Đã đóng cửa, hẹn bạn 09:00 ngày mai
-                            </Text>
-                            <Text fontWeight="medium">09:00 - 21:00</Text>
-                          </Box>
-                          <Link
-                            as={ReactRouterLink}
-                            fontSize="xs"
-                            color="text.blue"
-                            fontWeight="bold"
-                            textDecoration="none"
-                          >
-                            Chỉ đường
-                            <ArrowRightUpIcon size={4} />
-                          </Link>
-                        </Flex>
-                      </Box>
+                      <Text fontSize="sm" fontWeight="semibold">
+                        Tại cửa hàng
+                      </Text>
+                    </Radio>
+                    <Radio
+                      size="sm"
+                      fontSize="13px"
+                      fontWeight="semibold"
+                      value="shipped"
+                      {...register("shipping_method")}
+                    >
+                      <Text fontSize="sm" fontWeight="semibold">
+                        Giao tận nơi
+                      </Text>
                     </Radio>
                   </Stack>
-                </FormControl>
-              </Box>
-              <Box mt={"16px"}>
+                </RadioGroup>
+
+                {/* khu vực và địa chỉ nhận hàng */}
+                {methodOrder == "shipped" ? (
+                  <Flex gap={"16px"} mt={"16px"}>
+                    <FormControl isInvalid={errors?.shipping_address as any}>
+                      <Box
+                        h="48px"
+                        px="3"
+                        py="2"
+                        borderRadius={"8px"}
+                        fontSize={"13px"}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        cursor="pointer"
+                        border="1px solid #e9ebec"
+                        onClick={onOpen}
+                      >
+                        <Input
+                          type="text"
+                          cursor="pointer"
+                          px="0"
+                          w="90%"
+                          placeholder="Chọn địa chỉ giao hàng"
+                          h="100%"
+                          border="none"
+                          bgColor="transparent"
+                          readOnly={true}
+                          {...register("shipping_address", {
+                            required: "Trường bắt buộc nhập",
+                          })}
+                          value={address}
+                          onClick={handleChooseAdress}
+                          isDisabled={data.data.products.length === 0}
+                        />
+                        <NavArrowRightIcon
+                          size={4}
+                          strokeWidth={2}
+                          color="text.black"
+                        />
+                      </Box>
+                      <FormErrorMessage>
+                        {(errors?.shipping_address as any) &&
+                          (errors?.shipping_address?.message as any)}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={errors?.address as any}>
+                      <Input
+                        type="text"
+                        placeholder="Địa chỉ nhận hàng"
+                        fontSize={"13px"}
+                        {...register("address", {
+                          required: "Trường bắt buộc nhập",
+                        })}
+                        isDisabled={data.data.products.length === 0}
+                      />
+                      <FormErrorMessage>
+                        {(errors?.address as any) &&
+                          (errors?.address?.message as any)}
+                      </FormErrorMessage>
+                      <FormHelperText fontSize="12px" fontWeight="semibold">
+                        Có thể là số nhà, tên đường, tòa nhà. VD: Số 53 Thái Hà
+                      </FormHelperText>
+                    </FormControl>
+                  </Flex>
+                ) : (
+                  <Box mt={"16px"}>
+                    <FormControl isInvalid={errors?.storeAddress as any}>
+                      <Stack
+                        direction="column"
+                        gap={"16px"}
+                        bg={"#F6F9FC"}
+                        px="6"
+                        rounded="lg"
+                      >
+                        <Radio
+                          isChecked
+                          size="sm"
+                          fontSize={"12px"}
+                          {...register("shop_address")}
+                          value={shopAdress.trim()}
+                          isDisabled={data.data.products.length === 0}
+                        >
+                          <Box
+                            p="4"
+                            rounded="md"
+                            fontSize="sm"
+                            color="text.black"
+                          >
+                            <Text fontSize="13px" fontWeight="bold">
+                              Hà Nội
+                            </Text>
+                            <Text fontSize="13px" fontWeight="semibold">
+                              Tòa nhà FPT Polytechnic, Cổng số 2, 13 P. Trịnh
+                              Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội
+                            </Text>
+                            <Flex
+                              mt="2"
+                              alignItems="flex-end"
+                              justifyContent="space-between"
+                            >
+                              <Link
+                                as={ReactRouterLink}
+                                fontSize="xs"
+                                color="text.blue"
+                                fontWeight="bold"
+                                textDecoration="none"
+                              >
+                                Chỉ đường
+                                <ArrowRightUpIcon size={4} />
+                              </Link>
+                            </Flex>
+                          </Box>
+                        </Radio>
+                      </Stack>
+                    </FormControl>
+                  </Box>
+                )}
+              </Flex>
+            </CommonBox>
+
+            <CommonBox title="Phương Thức Thanh Toán">
+              <Box>
                 <FormControl isInvalid={errors?.payment as any}>
-                  <FormLabel>Chọn phương thức thanh toán</FormLabel>
                   <RadioGroup
                     onChange={setMethodPayment}
                     value={methodPayment}
@@ -402,71 +419,133 @@ const Payment = () => {
                   >
                     <Stack direction="row" gap={"16px"} spacing={4}>
                       <Radio
+                        size="sm"
                         value="tructiep"
                         fontSize={"12px"}
+                        fontWeight="semibold"
                         {...register("payment_method")}
                       >
-                        Thanh toán khi nhận hàng
+                        <Text fontSize="sm" fontWeight="semibold">
+                          Thanh toán khi nhận hàng
+                        </Text>
                       </Radio>
                       <Radio
+                        size="sm"
                         value="online"
                         fontSize={"12px"}
+                        fontWeight="semibold"
                         {...register("payment_method")}
                       >
-                        Thanh toán online
+                        <Text fontSize="sm" fontWeight="semibold">
+                          Thanh toán online
+                        </Text>
                       </Radio>
                     </Stack>
                   </RadioGroup>
                 </FormControl>
-              </Box>
-              <Box my={4}>
-                <FormControl isInvalid={errors?.voucher as any}>
-                  <FormLabel>Bạn đã có mã khuyến mãi ?</FormLabel>
-                  <Flex alignItems={"center"} gap={4}>
-                    <Input
-                      type="text"
-                      border={"none"}
-                      p={"8px 12px"}
-                      placeholder="Nhập voucher vào đây"
-                      bg={"#F6F9FC"}
-                      borderRadius={"6px"}
-                      fontSize={"14px"}
-                      {...register("voucher")}
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => checkvoucher(voucher)}
-                      bgColor={voucher ? "bg.red" : "bg.darkGray"}
-                    >
-                      Kiểm tra
-                    </Button>
-                  </Flex>
-                </FormControl>
-              </Box>
 
-              <Flex mt={"16px"}>
-                <FormControl isInvalid={errors?.note as any}>
-                  <FormLabel>Ghi chú</FormLabel>
-                  <Textarea
-                    placeholder="Nhập ghi chú"
-                    bg={"#F6F9FC"}
-                    borderRadius={"6px"}
-                    fontSize={"14px"}
-                    {...register("content")}
-                    border={"none"}
-                    isDisabled={data.data.products.length === 0}
-                  />
-                </FormControl>
+                {methodPayment == "online" && (
+                  <Flex mt="4" flexDir="column">
+                    <RadioGroup onChange={setPayment} value={payment}>
+                      <Flex w="100%" gap="6">
+                        <Box px="6" flex="1" bgColor="#F6F9FC" rounded="lg">
+                          <Radio
+                            w="full"
+                            value="MOMO"
+                            size="sm"
+                            fontSize={"12px"}
+                            __css={{
+                              "& > span": {
+                                w: "-webkit-fit-content",
+                              },
+                            }}
+                          >
+                            <Flex
+                              w="full"
+                              px="3"
+                              py="4"
+                              gap="3"
+                              rounded="md"
+                              fontSize="sm"
+                              color="text.black"
+                            >
+                              <Box flex="1">
+                                <Text fontSize="13px" fontWeight="bold">
+                                  MOMO
+                                </Text>
+                                <Text fontSize="13px" fontWeight="semibold">
+                                  Thanh toán qua ví MOMO
+                                </Text>
+                              </Box>
+                              <Box w="10" h="10" rounded="md" overflow="hidden">
+                                <Image
+                                  src={momo}
+                                  objectFit="contain"
+                                  w="full"
+                                  h="full"
+                                />
+                              </Box>
+                            </Flex>
+                          </Radio>
+                        </Box>
+                        <Box flex="1" px="6" bgColor="#F6F9FC" rounded="lg">
+                          <Radio value="VNPAY" size="sm" fontSize={"12px"}>
+                            <Flex
+                              w="full"
+                              px="3"
+                              py="4"
+                              gap="3"
+                              rounded="md"
+                              fontSize="sm"
+                              color="text.black"
+                            >
+                              <Box flex="1">
+                                <Text fontSize="13px" fontWeight="bold">
+                                  VNPAY
+                                </Text>
+                                <Text fontSize="13px" fontWeight="semibold">
+                                  Thanh toán qua ví VNPAY
+                                </Text>
+                              </Box>
+                              <Box w="10" h="10" rounded="md" overflow="hidden">
+                                <Image
+                                  src={vnpay}
+                                  objectFit="contain"
+                                  w="full"
+                                  h="full"
+                                />
+                              </Box>
+                            </Flex>
+                          </Radio>
+                        </Box>
+                      </Flex>
+                    </RadioGroup>
+                  </Flex>
+                )}
+              </Box>
+            </CommonBox>
+
+            <CommonBox title="Voucher">
+              <Flex alignItems={"center"} gap={4}>
+                <Input
+                  type="text"
+                  placeholder="Nhập voucher vào đây"
+                  fontSize={"13px"}
+                  {...register("voucher")}
+                />
+                <Button
+                  type="button"
+                  onClick={() => checkvoucher(voucher)}
+                  color={voucher ? "text.textDelete" : "text.white"}
+                  bgColor={voucher ? "bg.bgDelete" : "bg.red"}
+                >
+                  Áp Dụng
+                </Button>
               </Flex>
-            </Box>
-          </Box>
-          <Box w={{ md: "40%", base: "full" }} h={"full"}>
-            <Box
-              backgroundColor={"white"}
-              borderRadius={"md"}
-              py={"5"}
-              px={"5"}
-            >
+            </CommonBox>
+          </Flex>
+          <Box rounded="xl" w={{ md: "30%", base: "full" }} h={"full"}>
+            <Box backgroundColor={"white"} rounded={"xl"} py={"8"} px={"6"}>
               <PaySummary
                 data={data.data}
                 transport_fee={transportFee}
@@ -474,10 +553,8 @@ const Payment = () => {
               />
               <Button
                 w={"full"}
-                fontSize={"16px"}
-                fontWeight={"600 "}
+                fontWeight={"600"}
                 type="submit"
-                _hover={{ bgColor: "red" }}
                 isDisabled={data.data.products.length === 0}
               >
                 Mua Ngay
@@ -485,9 +562,9 @@ const Payment = () => {
             </Box>
             <Box
               backgroundColor={"white"}
-              borderRadius={"md"}
-              py={"5"}
-              px={"5"}
+              rounded={"xl"}
+              py={"8"}
+              px={"6"}
               mt={"16px"}
             >
               <ProductPay products={data.data.products} />

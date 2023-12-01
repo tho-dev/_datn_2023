@@ -1,13 +1,12 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import banner from "~/assets/images/email.png";
 
 const AuthLayout = () => {
   return (
     <Grid
       templateColumns="repeat(12, 1fr)"
       h="100vh"
-      bgImage={banner}
+      // bgImage={banner}
       bgPosition={"center"}
       bgRepeat={"no-repeat"}
       bgSize={"cover"}
@@ -25,7 +24,7 @@ const AuthLayout = () => {
       >
         <Outlet />
       </GridItem>
-      {/* <GridItem
+      <GridItem
         w="100%"
         h="full"
         colSpan={{
@@ -35,10 +34,23 @@ const AuthLayout = () => {
           xl: 7,
           "2xl": 7,
         }}
-        bgColor="bg.gray"
+        bgColor="bg.red"
+        borderTopLeftRadius="100px"
+        borderBottomLeftRadius="100px"
       >
-        <Image src={banner} h="100%" width="100%" objectFit={"cover"} />
-      </GridItem> */}
+        <Flex w="full" h="full" alignItems="center" justifyContent="center">
+          <Text
+            fontSize="xl"
+            fontWeight="medium"
+            color="#ffffff"
+            maxW="540px"
+            textAlign="center"
+          >
+            Polytech - Laptop, Phím cơ, Bàn nâng hạ, Ghế công thái học, PS5,
+            Nintendo - Dịch vụ Tận tâm. ✔✔✔
+          </Text>
+        </Flex>
+      </GridItem>
     </Grid>
   );
 };
