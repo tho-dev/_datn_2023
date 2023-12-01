@@ -242,7 +242,8 @@ const TheHeader = () => {
                     <Button
                       as={ReactRouterLink}
                       to="/admin"
-                      fontSize="sm"
+                      fontSize="13px"
+                      h="40px"
                       fontWeight="semibold"
                       display="flex"
                       justifyContent="flex-start"
@@ -261,7 +262,8 @@ const TheHeader = () => {
                   <Button
                     as={ReactRouterLink}
                     to="/thong-tin"
-                    fontSize="sm"
+                    fontSize="13px"
+                    h="40px"
                     fontWeight="semibold"
                     display="flex"
                     justifyContent="flex-start"
@@ -280,7 +282,8 @@ const TheHeader = () => {
                   <Button
                     bg="none"
                     color="black"
-                    fontSize="sm"
+                    fontSize="13px"
+                    h="40px"
                     fontWeight="semibold"
                     display="flex"
                     justifyContent="flex-start"

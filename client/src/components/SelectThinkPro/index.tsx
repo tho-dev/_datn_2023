@@ -42,7 +42,7 @@ const OptionComponent = {
 			<chakraComponents.Option {...props}>
 				<Text
 					as="div"
-					fontSize="13px"
+					fontSize="12px"
 					fontWeight="medium"
 					px="2"
 					py="1"
@@ -61,7 +61,7 @@ const OptionComponent = {
 				w="full"
 				display="flex"
 				fontSize="sm"
-				h="48px"
+				h="42px"
 			>
 				{children}
 			</Text>

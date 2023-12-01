@@ -5,7 +5,7 @@ export const Button = defineStyleConfig({
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: "8px",
+		borderRadius: "6px",
 		border: "none",
 		color: "white",
 		fontWeight: 500,
@@ -19,17 +19,17 @@ export const Button = defineStyleConfig({
 		small: {
 			fontSize: "13px",
 			px: "24px",
-			height: "48px",
+			height: "44px",
 		},
 		medium: {
-			fontSize: "14px",
+			fontSize: "13px",
 			px: "24px",
-			height: "48px",
+			height: "44px",
 		},
 		lager: {
-			fontSize: "14px",
+			fontSize: "13px",
 			px: "24px",
-			height: "48px",
+			height: "44px",
 		},
 	},
 	// Styles for the visual style variations

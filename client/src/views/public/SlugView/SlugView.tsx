@@ -1,6 +1,8 @@
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Box,
   Button,
+  CheckboxGroup,
   Flex,
   FormLabel,
   Popover,
@@ -12,22 +14,21 @@ import {
   Switch,
   Text,
 } from "@chakra-ui/react";
-import { useDebounce } from "@uidotdev/usehooks";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { useNavigate, useParams } from "react-router";
-import ListThinkPro from "~/components/ListThinkPro";
-import LoadingPolytech from "~/components/LoadingPolytech";
-import { ArrowUpIcon } from "~/components/common/Icons";
+import Title from "./components/Title";
+import FilterProduct from "./components/Filter";
 import {
-  useGetFilterBrandAndCategoryQuery,
   useGetProducItemToBrandAndCategoryQuery,
+  useGetFilterBrandAndCategoryQuery,
 } from "~/redux/api/collection";
+import ListThinkPro from "~/components/ListThinkPro";
+import { ArrowUpIcon } from "~/components/common/Icons";
+import { useParams, useNavigate } from "react-router";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useDebounce } from "@uidotdev/usehooks";
+import LoadingPolytech from "~/components/LoadingPolytech";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { setIsCompare, setItems } from "~/redux/slices/globalSlice";
 import { RootState } from "~/redux/store";
-import FilterProduct from "./components/Filter";
-import Title from "./components/Title";
 
 const SlugView = () => {
   const { slug: params } = useParams();
@@ -131,7 +132,7 @@ const SlugView = () => {
     dispatch(setIsCompare(e.target.checked as any));
   };
 
-  if (isFetchingFilter) return <LoadingPolytech />;
+  if (isFetching) return <LoadingPolytech />;
 
   if (isError) navigate("/404");
 

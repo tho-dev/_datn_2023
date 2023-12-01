@@ -314,7 +314,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
               <Button
                 as={ReactRouterLink}
                 to="profile"
-                fontSize="sm"
+                fontSize="13px"
+                h="40px"
                 fontWeight="semibold"
                 display="flex"
                 justifyContent="flex-start"
@@ -332,7 +333,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
               <Button
                 as={ReactRouterLink}
                 to="/"
-                fontSize="sm"
+                fontSize="13px"
+                h="40px"
                 fontWeight="semibold"
                 display="flex"
                 justifyContent="flex-start"
@@ -350,7 +352,8 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
               <Button
                 bg="none"
                 color="black"
-                fontSize="sm"
+                fontSize="13px"
+                h="40px"
                 fontWeight="semibold"
                 display="flex"
                 justifyContent="flex-start"

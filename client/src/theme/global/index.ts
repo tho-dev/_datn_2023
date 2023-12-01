@@ -31,6 +31,7 @@ const GlobalStyles = {
 			textWarning: "#f1be46",
 			textEv: "#7c6bff",
 			textEn: "#4cabd4",
+			textPro: "#0bcbe0",
 		},
 		// màu background
 		bg: {
@@ -51,6 +52,7 @@ const GlobalStyles = {
 			bgWarning: "#fcf2da",
 			bgEv: "#e5e1ff",
 			bgEn: "#d2edf6",
+			bgPro: "#e6fafc",
 		},
 		border: {
 			primary: "#e9ebec",

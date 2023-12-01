@@ -241,7 +241,12 @@ const ListOrder = ({
   return (
     <Box p="4" rounded="md">
       <Flex justifyContent="space-between">
-        <Heading py="4" color="text.black" fontSize="xl">
+        <Heading
+          py="4"
+          color="text.black"
+          fontSize="2xl"
+          textTransform="uppercase"
+        >
           Đơn hàng của bạn : {formatPhoneNumberPlus(phoneNumber)}
         </Heading>
         <Flex
@@ -293,7 +298,7 @@ const ListOrder = ({
         </Flex>
       </Flex>
 
-      <Grid gridTemplateColumns="repeat(2,1fr)" gap={4} w="100%" my={6}>
+      <Grid gridTemplateColumns="repeat(1,1fr)" gap={4} w="100%" my={6}>
         {dataOrder?.length > 0 ? (
           dataOrder.map((item) => {
             const targetTime = new Date(item?.created_at);
@@ -304,8 +309,8 @@ const ListOrder = ({
                   <Flex justifyContent="space-between" p="2">
                     <Text fontSize="14px" fontWeight={"bold"}>
                       Mã đơn hàng:{" "}
-                      <Text as={"span"} fontSize="12px">
-                        POLYTECH{item?._id}
+                      <Text as={"span"} fontSize="14px">
+                        #{item?._id}
                       </Text>
                     </Text>
                     <Text
@@ -336,23 +341,15 @@ const ListOrder = ({
                       >
                         <Box>
                           <Text as={"p"} fontSize={"14px"} fontWeight={"bold"}>
-                            Tên khách hàng : {item?.customer_name}
+                            Khách hàng : {item?.customer_name}
                           </Text>
-                          <Text
-                            as={"p"}
-                            fontSize={"12px"}
-                            fontWeight={"semibold"}
-                          >
+                          <Text as={"p"} fontSize={"14px"} fontWeight={"bold"}>
                             Ngày đặt :{" "}
                             {moment(item?.created_at).format(
                               "DD-MM-YYYY hh:mm"
                             )}
                           </Text>
-                          <Text
-                            as={"p"}
-                            fontSize={"12px"}
-                            fontWeight={"semibold"}
-                          >
+                          <Text as={"p"} fontSize={"14px"} fontWeight={"bold"}>
                             Thanh toán :{" "}
                             {item?.payment_status == "unpaid"
                               ? "Chưa thanh toán "
@@ -361,9 +358,8 @@ const ListOrder = ({
                           <Box>
                             <Text
                               as={"p"}
-                              fontSize={"12px"}
-                              my={"2"}
-                              fontWeight={"semibold"}
+                              fontSize={"14px"}
+                              fontWeight={"bold"}
                             >
                               Ghi chú :{" "}
                               {item?.content.length > 0
@@ -372,11 +368,14 @@ const ListOrder = ({
                             </Text>
                           </Box>
                         </Box>
-                        <Box>
-                          <Text fontSize={"40px"} fontWeight={"bold"}>
-                            {item?.orders.length}
-                          </Text>
-                        </Box>
+                        {/* <Box>
+													<Text
+														fontSize={"40px"}
+														fontWeight={"bold"}
+													>
+														{item?.orders.length}
+													</Text>
+												</Box> */}
                       </Flex>
                     </Flex>
                   </Box>
@@ -445,13 +444,8 @@ const ListOrder = ({
                     <Box>
                       <Text fontSize="14px" fontWeight="bold">
                         Thành tiền:{" "}
-                        <Text
-                          as={"span"}
-                          fontSize="14px"
-                          fontWeight={"bold"}
-                          color={"text.red"}
-                        >
-                          {item?.total_amount.toLocaleString()}đ
+                        <Text as={"span"} fontSize="14px" color={"text.red"}>
+                          {item?.total_amount.toLocaleString()} VND
                         </Text>
                       </Text>
                     </Box>
