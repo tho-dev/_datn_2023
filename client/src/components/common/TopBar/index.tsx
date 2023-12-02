@@ -41,6 +41,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
   const dispatch = useAppDispatch();
   const [logoutUser] = useLogoutUserMutation();
   const [updateNoti] = useUpdateNotiMutation();
+  console.log(user);
 
   const handleLogoutUser = () => {
     logoutUser("")
@@ -219,7 +220,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
                         }}
                       >
                         <Avatar
-                          src={user.avatar.url}
+                          src={user?.avatar.url || user?.avatar}
                           size={"sm"}
                           name="admin"
                         />
@@ -258,7 +259,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
         >
           <Avatar
             name="admin"
-            src={user?.avatar.url}
+            src={user?.avatar.url || user?.avatar}
             w="10"
             h="10"
             color="#12AFF0"

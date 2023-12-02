@@ -5,6 +5,7 @@ import CustomRadio from "./CustomRadio";
 import { formatNumber } from "~/utils/fc";
 import { useNavigate } from "react-router";
 import { useToast } from "@chakra-ui/react";
+import clipboardCopy from "clipboard-copy";
 type Props = {
   product: any;
   handleDercement: () => void;
@@ -58,14 +59,19 @@ const Sku = ({
     }
   };
   const handleCopySku = () => {
-    navigator.clipboard.writeText(product?.SKU);
-    toast({
-      title: "Đã sao chép vào bộ nhớ tạm",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-      position: "top-right",
-    });
+    clipboardCopy(product?.SKU)
+      .then(() => {
+        toast({
+          title: "Đã sao chép vào bộ nhớ tạm",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      })
+      .catch((err) => {
+        console.error("Lỗi khi copy văn bản:", err);
+      });
   };
   return (
     <>

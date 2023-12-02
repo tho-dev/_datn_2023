@@ -33,8 +33,8 @@ import ProductPay from "./components/ProductPay";
 import Transport from "./components/Transport";
 import LoadingPolytech from "~/components/LoadingPolytech";
 import CommonBox from "./components/CommonBox";
-import momo from "~/assets/images/momo.webp";
-import vnpay from "~/assets/images/vnpay.webp";
+import momo from "~/assets/images/momo.png";
+import vnpay from "~/assets/images/vnpay.png";
 
 const Payment = () => {
   const [dataOrder, setDataOrder] = useState({} as any);

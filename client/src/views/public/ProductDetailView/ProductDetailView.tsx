@@ -223,18 +223,37 @@ const ProductDetailView = () => {
     navigate("/404");
   }
   const month = new Date().getMonth() + 1;
+  console.log(product.data);
 
   return (
     <Box h={"full"}>
       <Breadcrumb mt={"5"}>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/" textDecoration={"none"} fontSize={"12px"}>
+          <BreadcrumbLink
+            href="/"
+            textDecoration={"none"}
+            fontSize={"14px"}
+            fontWeight={"semibold"}
+          >
             Trang chủ
           </BreadcrumbLink>
         </BreadcrumbItem>
-
         <BreadcrumbItem>
-          <BreadcrumbLink textDecoration={"none"} fontSize={"12px"}>
+          <BreadcrumbLink
+            href={`/${product?.data.category.slug}`}
+            textDecoration={"none"}
+            fontSize={"14px"}
+            fontWeight={"semibold"}
+          >
+            {product?.data.category.name}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            textDecoration={"none"}
+            fontSize={"14px"}
+            fontWeight={"semibold"}
+          >
             {product?.data.name}
           </BreadcrumbLink>
         </BreadcrumbItem>

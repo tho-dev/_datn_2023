@@ -150,75 +150,76 @@ export default function TableThinkPro<Data extends object>({
           ))}
         </Thead>
         <Tbody h={loading ? "9" : "auto"} position="relative">
-          {!loading
-            ? table.getRowModel()?.rows?.map((row) => (
-                <Tr key={row?.id}>
-                  {row.getVisibleCells().map((cell) => {
-                    const meta: any = cell.column.columnDef.meta;
-                    return (
-                      <Td
-                        key={cell.id}
-                        isNumeric={meta?.isNumeric}
-                        fontSize="13px"
-                        py="3"
-                        px="3"
-                        textAlign="start"
-                        borderBottomWidth="1px"
-                        borderStyle="solid"
-                        borderColor="#F1F4F9"
-                        style={{
-                          textAlign: "start",
-                        }}
-                        _first={{
-                          paddingLeft: 5,
-                        }}
-                        _last={{
-                          paddingRight: 5,
-                        }}
-                        w="inherit"
-                        maxW="320px"
-                        fontWeight="medium"
-                      >
-                        <motion.div
-                          layout
-                          animate={{
-                            opacity: 1,
-                          }}
-                          initial={{
-                            opacity: 0,
-                          }}
-                          transition={{
-                            duration: 0.25,
-                          }}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </motion.div>
-                      </Td>
-                    );
-                  })}
-                </Tr>
-                // eslint-disable-next-line no-mixed-spaces-and-tabs
-              ))
-            : Array(10)
-                .fill(0)
-                .map((u) => {
+          {!loading &&
+            table.getRowModel()?.rows?.map((row) => (
+              <Tr key={row?.id}>
+                {row.getVisibleCells().map((cell) => {
+                  const meta: any = cell.column.columnDef.meta;
                   return (
-                    <Tr key={u}>
-                      {Array(20)
-                        .fill(0)
-                        .map((i, k) => {
-                          return (
-                            <Td key={k} px={i} py="2" rounded="none">
-                              <Skeleton w="full" h="8" rounded="none" />
-                            </Td>
-                          );
-                        })}
-                    </Tr>
+                    <Td
+                      key={cell.id}
+                      isNumeric={meta?.isNumeric}
+                      fontSize="13px"
+                      py="3"
+                      px="3"
+                      textAlign="start"
+                      borderBottomWidth="1px"
+                      borderStyle="solid"
+                      borderColor="#F1F4F9"
+                      style={{
+                        textAlign: "start",
+                      }}
+                      _first={{
+                        paddingLeft: 5,
+                      }}
+                      _last={{
+                        paddingRight: 5,
+                      }}
+                      w="inherit"
+                      maxW="320px"
+                      fontWeight="medium"
+                    >
+                      <motion.div
+                        layout
+                        animate={{
+                          opacity: 1,
+                        }}
+                        initial={{
+                          opacity: 0,
+                        }}
+                        transition={{
+                          duration: 0.25,
+                        }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </motion.div>
+                    </Td>
                   );
                 })}
+              </Tr>
+              // eslint-disable-next-line no-mixed-spaces-and-tabs
+            ))}
+          {loading &&
+            Array(10)
+              .fill(0)
+              .map((u) => {
+                return (
+                  <Tr key={u}>
+                    {Array(20)
+                      .fill(0)
+                      .map((i, k) => {
+                        return (
+                          <Td key={k} px={i} py="2" rounded="none">
+                            <Skeleton w="full" h="8" rounded="none" />
+                          </Td>
+                        );
+                      })}
+                  </Tr>
+                );
+              })}
         </Tbody>
       </Table>
       {!loading && (

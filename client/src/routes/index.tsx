@@ -36,7 +36,6 @@ import { SettingView } from "~/views/private/SettingView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
-import { CompareView } from "~/views/public/CompareView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import { HistoryOrderView } from "~/views/public/HistoryOrderView";
 import { Payment } from "~/views/public/PaymentView";
@@ -51,6 +50,7 @@ import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
 import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
 import UpdateOrder from "~/views/private/OrderManagementView/updateOrder/UpdateOrder";
 import ReturedOrder from "~/views/private/OrderManagementView/childrenViews/ReturedOrder";
+import { CompareView } from "~/views/public/CompareView";
 
 const routes: RouteObject[] = [
   {
