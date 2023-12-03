@@ -35,7 +35,7 @@ const SignUpView = () => {
   const onChange = () => {
     setCheckCaptch(true);
   };
-  const [signup] = useSignupMutation();
+  const [signup, { isLoading }] = useSignupMutation();
   const onSubmit = async (data: any) => {
     if (!checkCaptch) return;
     const avatar =
@@ -48,8 +48,7 @@ const SignUpView = () => {
       .unwrap()
       .then((data) => {
         toast({
-          title: "Tạo tài khoản thành công",
-          description: data.message,
+          title: data.message,
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -59,8 +58,7 @@ const SignUpView = () => {
       })
       .catch((err) => {
         toast({
-          title: "Tạo tài khoản thất bại",
-          description: err.data.message,
+          title: err.data.message,
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -235,43 +233,19 @@ const SignUpView = () => {
               sitekey={process.env.GOOGLE_SITE_KEY as string}
               onChange={onChange}
             />
-            <Button size="lager" type="submit" w="full" mt="4" rounded="full">
+            <Button
+              size="lager"
+              type="submit"
+              w="full"
+              mt="4"
+              rounded="full"
+              loadingText="Đang tải..."
+              isLoading={isLoading}
+            >
               Đăng Ký
             </Button>
           </Flex>
         </form>
-        {/* <Box position="relative" py="10">
-          <Divider />
-          <AbsoluteCenter bg="white" px="4">
-            Or
-          </AbsoluteCenter>
-        </Box> */}
-        {/* <Flex w="full" direction="column" gap="4">
-          <Button
-            size="lager"
-            leftIcon={<GoogleIcon boxSize="5" />}
-            w="full"
-            bgColor="white"
-            color="text.200"
-            rounded="full"
-            border="1px solid"
-            borderColor="text.300"
-          >
-            Đăng nhập bằng Google
-          </Button>
-          <Button
-            size="lager"
-            leftIcon={<FbIcon boxSize="5" />}
-            w="full"
-            bgColor="white"
-            rounded="full"
-            color="text.200"
-            border="1px solid"
-            borderColor="text.300"
-          >
-            Đăng nhập bằng Facebook
-          </Button>
-        </Flex> */}
       </Flex>
     </Center>
   );

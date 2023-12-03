@@ -57,7 +57,7 @@ const CommentView = ({ productId }: any) => {
       set(ref(db, "comments/" + uuid), {
         id: uuid,
         userId: user?._id,
-        userAvatar: user?.avatar.url,
+        userAvatar: user?.avatar.url || user?.avatar,
         userName: userFullName,
         content: values.content,
         dateTime,
@@ -72,7 +72,7 @@ const CommentView = ({ productId }: any) => {
         set(ref(db, "comments/" + uuid), {
           id: uuid,
           userId: user?._id,
-          userAvatar: user?.avatar.url,
+          userAvatar: user?.avatar.url || user?.avatar,
           userName: userFullName,
           content: values.content,
           dateTime,
@@ -126,7 +126,7 @@ const CommentView = ({ productId }: any) => {
     const newReply = {
       id: uuid,
       userId: user?._id,
-      userAvatar: user?.avatar,
+      userAvatar: user?.avatar.url || user?.avatar,
       userName: userFullName,
       content: values.content,
       dateTime,
