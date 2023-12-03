@@ -1,5 +1,6 @@
 import { Box, Flex } from "@chakra-ui/layout";
 import { Text } from "@chakra-ui/react";
+import { formatNumber } from "~/utils/fc";
 
 type Props = {
 	data: any;
@@ -36,7 +37,7 @@ const PaySummary = ({ data, transport_fee, voucher_value }: Props) => {
 					lineHeight={"18px"}
 					fontWeight={600}
 				>
-					{data?.total_money.toLocaleString()}đ
+					{formatNumber(`${data?.total_money}`)}đ
 				</Box>
 			</Flex>
 			<Flex
@@ -58,7 +59,7 @@ const PaySummary = ({ data, transport_fee, voucher_value }: Props) => {
 					lineHeight={"18px"}
 					fontWeight={600}
 				>
-					{transport_fee?.toLocaleString()}đ
+					{formatNumber(`${transport_fee}`)}đ
 				</Box>
 			</Flex>
 			<Flex
@@ -81,7 +82,7 @@ const PaySummary = ({ data, transport_fee, voucher_value }: Props) => {
 					lineHeight={"18px"}
 					fontWeight={600}
 				>
-					{voucher_value?.toLocaleString()}đ
+					{formatNumber(`${voucher_value}`)}đ
 				</Box>
 			</Flex>
 			<Flex
@@ -102,7 +103,7 @@ const PaySummary = ({ data, transport_fee, voucher_value }: Props) => {
 					color={"#FE3464"}
 					fontWeight={"semibold"}
 				>
-					{(data.total_money + transport_fee - voucher_value)?.toLocaleString()}đ
+					{formatNumber(`${data.total_money + transport_fee - voucher_value}`)}đ
 				</Box>
 			</Flex>
 		</Box>

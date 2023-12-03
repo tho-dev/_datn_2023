@@ -1,5 +1,6 @@
 import { Box, Flex } from "@chakra-ui/layout";
 import { Image, Text } from "@chakra-ui/react";
+import { formatNumber } from "~/utils/fc";
 
 type Props = {
 	product: any;
@@ -34,6 +35,12 @@ const ItemProductPay = ({ product }: Props) => {
 							as={"p"}
 							fontSize={"xs"}
 							fontWeight="bold"
+							css={{
+								display: "-webkit-box",
+								WebkitLineClamp: 1,
+								WebkitBoxOrient: "vertical",
+								overflow: "hidden",
+							}}
 						>
 							{product?.name}
 						</Text>
@@ -60,7 +67,7 @@ const ItemProductPay = ({ product }: Props) => {
 									color={"text.red"}
 									fontWeight={"semibold"}
 								>
-									{product.price.toLocaleString()}
+									{formatNumber(`${product.price}`)}
 								</Text>
 								<Text
 									as={"p"}

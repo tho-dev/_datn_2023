@@ -18,21 +18,24 @@ import "@fontsource/quicksand/700.css";
 // custom them chakra ui
 import customTheme from "~/theme";
 import { ChakraProvider, CSSReset } from "@chakra-ui/react";
+import { HelmetProvider } from "react-helmet-async";
 
 // cấu hình client state
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<ChakraProvider
-		theme={customTheme}
-		resetCSS={true}
-	>
-		<CSSReset />
-		<Provider store={store}>
-			<PersistGate
-				loading={null}
-				persistor={persistor}
-			>
-				<App />
-			</PersistGate>
-		</Provider>
-	</ChakraProvider>
+	<HelmetProvider>
+		<ChakraProvider
+			theme={customTheme}
+			resetCSS={true}
+		>
+			<CSSReset />
+			<Provider store={store}>
+				<PersistGate
+					loading={null}
+					persistor={persistor}
+				>
+					<App />
+				</PersistGate>
+			</Provider>
+		</ChakraProvider>
+	</HelmetProvider>
 );

@@ -9,44 +9,36 @@ import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
 
 const HomeView = () => {
-  const { homeSettings } = useAppSelector(
-    (state: RootState) => state.persistedReducer.global
-  );
+	const { homeSettings } = useAppSelector((state: RootState) => state.persistedReducer.global);
 
-  return (
-    <HelmetProvider>
-      <Helmet>
-        <title>
-          PolyTech - Laptop, Phím cơ, Bàn nâng hạ, Ghế công thái học, PS5,
-          Nintendo - Dịch vụ Tận tâm
-        </title>
-      </Helmet>
-      <Box py="30px">
-        {/* Banner */}
-        <Banner banner={homeSettings?.general} />
+	return (
+		<>
+			<Box py="30px">
+				{/* Banner */}
+				<Banner banner={homeSettings?.general} />
 
-        <DiscountSection title="Khuyến mãi" />
+				<DiscountSection title="Khuyến mãi" />
 
-        {/* Danh mục */}
-        <Category
-          title={homeSettings?.category?.title}
-          items={homeSettings?.category?.items}
-        />
+				{/* Danh mục */}
+				<Category
+					title={homeSettings?.category?.title}
+					items={homeSettings?.category?.items}
+				/>
 
-        {/* USP */}
-        <USP
-          title="Chọn PolyTech?"
-          text="Chọn sự Thoải mái, An tâm vì sự Tận tâm"
-        />
+				{/* USP */}
+				<USP
+					title="Chọn PolyTech?"
+					text="Chọn sự Thoải mái, An tâm vì sự Tận tâm"
+				/>
 
-        {/* Hàng gợi ý */}
-        <SuggestionProduct
-          title={homeSettings?.suggestion?.title}
-          items={homeSettings?.suggestion?.tags}
-        />
-      </Box>
-    </HelmetProvider>
-  );
+				{/* Hàng gợi ý */}
+				<SuggestionProduct
+					title={homeSettings?.suggestion?.title}
+					items={homeSettings?.suggestion?.tags}
+				/>
+			</Box>
+		</>
+	);
 };
 
 export default HomeView;

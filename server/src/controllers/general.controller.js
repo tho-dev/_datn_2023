@@ -5,6 +5,7 @@ import { Promotion } from "../models/promotion.model"
 import { Product } from '../models/product.model'
 import { generalSchema } from "../validations/general"
 import { Order } from "../models/order.model"
+import User from "../models/user.model"
 import moment from "moment/moment"
 import createError from "http-errors"
 import fetch from "node-fetch"
@@ -12,18 +13,54 @@ import fetch from "node-fetch"
 
 export async function getDashboard(req, res, next) {
   try {
-
-    // radom color
-    const dynamicColors = () => {
-      var r = Math.floor(Math.random() * 255);
-      var g = Math.floor(Math.random() * 255);
-      var b = Math.floor(Math.random() * 255);
-      return "rgba(" + r + "," + g + "," + b + "," + 0.5 + ")";
-    };
+    const status = [
+      {
+        value: "processing",
+        label: "Chờ xác nhận",
+        color: "#fcf2da",
+        border: "#fab529"
+      },
+      {
+        value: 'pendingComplete',
+        label: "Chờ hoàn thành",
+        color: "#aee2d1",
+        border: "#27bc80"
+      },
+      {
+        value: "returned",
+        label: "Đã hoàn hàng",
+        color: "#ffe8e0",
+        border: "#f36c49"
+      },
+      {
+        value: "confirmed",
+        label: "Đã xác nhận",
+        color: "#aee2d1",
+        border: "#27bc80"
+      },
+      {
+        value: "delivering",
+        label: "Đang vận chuyển",
+        color: "#d8f8fa",
+        border: "#16aecd",
+      },
+      {
+        value: "cancelled",
+        label: "Đã hủy đơn",
+        color: "#fcdae2",
+        border: "#ef476f"
+      },
+      {
+        value: "delivered",
+        label: "Đã hoàn thành",
+        color: "#aee2d1",
+        border: "#27bc80"
+      }
+    ]
 
     // thống kê sản phẩm theo danh mục
     const categories = await Category.find({
-      parent_id: null,
+      // parent_id: null,
       type: 'category_brand'
     })
     const dataCategory = await Promise.all(categories.map(async (category) => {
@@ -42,6 +79,7 @@ export async function getDashboard(req, res, next) {
     // thống kê thương hiệu theo danh mục
     const dataBrand = await Promise.all(categories.map(async (category) => {
       const count = await Brand.find({
+        parent_id: null,
         category_id: category?._id,
       })
 
@@ -51,9 +89,153 @@ export async function getDashboard(req, res, next) {
       }
     }))
 
+    // thống kê đơn hàng theo status
+    const quantityOrderStatus = await Promise.all(status.map(async (_x) => {
+      const doc = await Order.find({
+        status: _x.value
+      })
+
+      return {
+        label: _x.label,
+        value: doc?.length,
+        color: _x.color,
+        border: _x.border
+      }
+    }))
+
+    // thống kê các số
+    const products = await Product.find({})
+    const orders = await Order.find({})
+    const users = await User.find({})
+    const revenues = await Order.aggregate([
+      {
+        $match: {
+          payment_status: 'paid',
+        },
+      },
+      {
+        $lookup: {
+          from: 'order_details',
+          localField: '_id',
+          foreignField: 'order_id',
+          as: 'products', // Tên của trường mới chứa dữ liệu kết hợp
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%d-%m-%Y',
+              date: '$created_at',
+            },
+          },
+          order: { $sum: 1 },
+          quantity: {
+            $sum: {
+              $sum: {
+                $map: {
+                  input: "$products",
+                  as: "product",
+                  in: { $sum: "$$product.quantity" }
+                }
+              }
+            }
+          },
+          profit: {
+            $sum: {
+              $sum: {
+                $map: {
+                  input: "$products",
+                  as: "product",
+                  in: { $subtract: ["$$product.price_before_discount", "$$product.price"] }
+                }
+              }
+            }
+          },
+          sales: { $sum: '$total_amount' }, // Tổng tiền lượng cho mỗi ngày
+        },
+      },
+      {
+        $sort: {
+          _id: 1, // Sắp xếp theo ngày tăng dần
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Loại bỏ trường _id
+          period: '$_id', // Đổi tên trường _id thành created_at
+          order: 1, // số lượng đơn hàng
+          profit: 1, // lượng nhuận
+          quantity: 1, // số lượng sản phẩm
+          sales: 1, // doanh thu
+        },
+      },
+    ]);
+
+    // top 3 khách hàng có mua hàng nhiều nhất
+    const customers = await Order.aggregate([
+      {
+        $match: {
+          user_id: { $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: "$user_id",
+          orders: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $sort: {
+          orders: -1
+        }
+      },
+      {
+        $limit: 3 // Chỉ lấy top 3 người có đơn hàng nhiều nhất
+      },
+      {
+        $project: {
+          _id: 1,
+          user: { $arrayElemAt: ["$user", 0] },
+          orders: 1,
+        },
+      },
+    ]);
+    const data_3 = await Promise.all(customers.map(async (x) => {
+      let result = []
+      for (let i = 1; i <= 12; i++) {
+        const startOfMonth = moment(`2023-${i}-01`, "YYYY-MM-DD").startOf("month");
+        const endOfMonth = moment(`2023-${i}-01`, "YYYY-MM-DD").endOf("month");
+        const quantity = await Order.find({
+          user_id: x._id,
+          created_at: {
+            $gte: startOfMonth,
+            $lt: endOfMonth,
+          },
+        })
+
+        result.push({
+          month: i,
+          quantity: quantity?.length
+        })
+      }
+
+      return {
+        user: x.user,
+        data: result
+      };
+    }));
 
 
-    // ////
+    // custom data
     const data_1 = dataCategory.reduce((acc, cur, index) => {
       acc.labels.push(cur.label);
       acc.values.push(cur.value);
@@ -72,13 +254,22 @@ export async function getDashboard(req, res, next) {
       values: [],
     })
 
-
     return res.json({
       status: 200,
       message: "Thành công",
       data: {
         categories: data_1,
-        brands: data_2
+        brands: data_2,
+        orders: quantityOrderStatus,
+        array: {
+          users: users?.length,
+          orders: orders?.length,
+          products: products?.length,
+          revenues: revenues?.reduce((acc, cur) => {
+            return acc += cur.sales
+          }, 0)
+        },
+        top_3_one_chap_order: data_3,
       }
     })
   } catch (error) {

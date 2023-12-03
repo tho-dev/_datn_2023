@@ -34,7 +34,7 @@ const notificationSchema = new Schema(
     },
   },
   {
-    collection: "Notification",
+    collection: "notifications",
     timestamps: false,
     versionKey: false,
   }

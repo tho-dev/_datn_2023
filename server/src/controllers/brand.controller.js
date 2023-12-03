@@ -5,7 +5,6 @@ import brandSchema from "../validations/brand.validations";
 import Category from "../models/category.model"
 
 
-
 // Hàm đệ quy để xây dựng danh sách thương hiệu con (sub_brands)
 function nestedBrands(input, parentId) {
 	const output = [];
@@ -60,6 +59,7 @@ export async function getAllBrand(req, res, next) {
 		}, options);
 
 		const result = [];
+
 
 		for (const brand of docs) {
 			const { category_id, ...ass } = brand.toObject()

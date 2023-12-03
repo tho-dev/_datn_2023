@@ -1,15 +1,17 @@
 import { Box, Image, Flex, Heading, Text, Button } from "@chakra-ui/react";
 import { ArrowRightIcon, CloseSmallIcon } from "~/components/common/Icons";
 import { formatNumber } from "~/utils/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "~/redux/hook/hook";
 import { remoteItems } from "~/redux/slices/globalSlice";
 
 type Props = {
 	item: any;
+	length: any;
 };
 
-const CardCompare = ({ item }: Props) => {
+const CardCompare = ({ item, length }: Props) => {
+	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
 	return (
@@ -102,13 +104,17 @@ const CardCompare = ({ item }: Props) => {
 						bgColor="bg.gray"
 						fontWeight="semibold"
 						rightIcon={<CloseSmallIcon size={5} />}
-						onClick={() =>
-							dispatch(
-								remoteItems({
-									id: item?.id,
-								})
-							)
-						}
+						onClick={() => {
+							if (length == 1) {
+								navigate(`/${item?.shared_url}`);
+							} else {
+								dispatch(
+									remoteItems({
+										id: item?.id,
+									})
+								);
+							}
+						}}
 					>
 						Xoá
 					</Button>
