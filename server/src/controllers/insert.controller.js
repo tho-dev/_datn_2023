@@ -308,7 +308,7 @@ export async function insertProduct(req, res, next) {
 				const arraySkus = Array(variants?.length).fill({
 					...product.toObject(),
 					product_id: product_id,
-					stock: 0,
+					stock: 100,
 					is_avaiable: true,
 					assets: [],
 					image: {},

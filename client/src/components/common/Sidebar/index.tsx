@@ -81,7 +81,6 @@ const Sidebar = () => {
 	return (
 		<Flex
 			w="full"
-			h="full"
 			maxWidth={{
 				sm: "86px",
 				md: "86px",
@@ -89,7 +88,8 @@ const Sidebar = () => {
 				xl: "260px",
 				"2xl": "260px",
 			}}
-			maxH="100vh"
+			h="100vh"
+			maxH="full"
 			overflowY="auto"
 			transition="all 0.25s ease"
 			flexDir="column"

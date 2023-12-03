@@ -28,9 +28,8 @@ export function chuyenDoiSoDienThoai(soDienThoai: any) {
 	}
 }
 export function chuyenDoiSoDienThoaiVe0(soDienThoai: any) {
-
 	soDienThoai = soDienThoai.toString();
-	return soDienThoai.replace(/^84/, '0')
+	return soDienThoai.replace(/^84/, "0");
 	// if (/^84\d{8}$/.test(soDienThoai)) {
 	// 	return "0" + soDienThoai.slice(2);
 	// } else {
@@ -49,6 +48,7 @@ export function formatPhoneNumberPlus(phoneNumber: string) {
 	}
 	return phoneNumber;
 }
+
 export const objectToUrlParams = (obj: { [key: string]: any }) => {
 	const params = [];
 
@@ -197,4 +197,14 @@ export const checkOrderStatus = (status: string) => {
 				background: "#0abb871a",
 			};
 	}
+};
+
+export const formatMoney = (number: any) => {
+	if (number >= Math.pow(10, 6)) {
+		number = Math.round((number / Math.pow(10, 6)) * 10) / 10 + "M";
+	} else if (number >= Math.pow(10, 3) && number < Math.pow(10, 6)) {
+		number = Math.round((number / Math.pow(10, 3)) * 10) / 10 + "K";
+	}
+
+	return number;
 };

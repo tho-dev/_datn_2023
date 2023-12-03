@@ -7,122 +7,144 @@ import { TheFooter } from "~/components/common/TheFooter";
 import CompareThinkPro from "~/components/CompareThinkPro";
 import { useAppSelector } from "~/redux/hook/hook";
 import { RootState } from "~/redux/store";
+import { Helmet } from "react-helmet";
 
 const MainLayout = () => {
-  const { pathname } = useLocation();
-  const [checkRouter, setCheckRouter] = useState(false);
+	const { pathname } = useLocation();
+	const [checkRouter, setCheckRouter] = useState(false);
 
-  const { items } = useAppSelector(
-    (state: RootState) => state.persistedReducer.global
-  );
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    setCheckRouter(pathname.includes("so-sanh"));
-  }, [pathname]);
+	const { items } = useAppSelector((state: RootState) => state.persistedReducer.global);
+	useEffect(() => {
+		window.scrollTo(0, 0);
+		setCheckRouter(pathname.includes("so-sanh"));
+	}, [pathname]);
 
-  return (
-    <Box w="full" position="relative">
-      {/* Header */}
-      <Box w="full" as="header" backgroundColor="bg.white">
-        <Center>
-          <Box
-            w="full"
-            maxW={{
-              sm: "414px",
-              md: "768px",
-              xl: "1200px",
-            }}
-            px={{
-              sm: 4,
-              md: 6,
-              xl: 0,
-            }}
-          >
-            <TheHeader />
-          </Box>
-        </Center>
-      </Box>
+	return (
+		<>
+			<Helmet>
+				<title data-react-helmet="true">
+					PolyTech - Laptop, Phím cơ, Bàn nâng hạ, Ghế công thái học, PS5, Nintendo - Dịch vụ Tận tâm
+				</title>
+			</Helmet>
+			<Box
+				w="full"
+				position="relative"
+			>
+				{/* Header */}
+				<Box
+					w="full"
+					as="header"
+					backgroundColor="bg.white"
+				>
+					<Center>
+						<Box
+							w="full"
+							maxW={{
+								sm: "414px",
+								md: "768px",
+								xl: "1200px",
+							}}
+							px={{
+								sm: 4,
+								md: 6,
+								xl: 0,
+							}}
+						>
+							<TheHeader />
+						</Box>
+					</Center>
+				</Box>
 
-      {/* Nav */}
-      <Box
-        w="full"
-        as="nav"
-        position="sticky"
-        top="0"
-        zIndex="90"
-        borderStyle="solid"
-        borderTopWidth="1px"
-        borderColor="#f0f2f4"
-        backgroundColor="bg.white"
-      >
-        <Center>
-          <Box
-            w="full"
-            maxW={{
-              sm: "414px",
-              md: "768px",
-              xl: "1200px",
-            }}
-            px={{
-              sm: 4,
-              md: 6,
-              xl: 0,
-            }}
-          >
-            <TheNav />
-          </Box>
-        </Center>
-      </Box>
+				{/* Nav */}
+				<Box
+					w="full"
+					as="nav"
+					position="sticky"
+					top="0"
+					zIndex="90"
+					borderStyle="solid"
+					borderTopWidth="1px"
+					borderColor="#f0f2f4"
+					backgroundColor="bg.white"
+				>
+					<Center>
+						<Box
+							w="full"
+							maxW={{
+								sm: "414px",
+								md: "768px",
+								xl: "1200px",
+							}}
+							px={{
+								sm: 4,
+								md: 6,
+								xl: 0,
+							}}
+						>
+							<TheNav />
+						</Box>
+					</Center>
+				</Box>
 
-      {/* Main */}
-      <Box
-        w="full"
-        as="main"
-        backgroundColor={checkRouter ? "bg.white" : "bg.gray"}
-      >
-        <Center>
-          <Box
-            w="full"
-            maxW={{
-              sm: "414px",
-              md: "768px",
-              xl: "1200px",
-            }}
-            px={{
-              sm: 4,
-              md: 6,
-              xl: 0,
-            }}
-          >
-            <Outlet />
-          </Box>
-        </Center>
-      </Box>
+				{/* Main */}
+				<Box
+					w="full"
+					as="main"
+					backgroundColor={checkRouter ? "bg.white" : "bg.gray"}
+				>
+					<Center>
+						<Box
+							w="full"
+							maxW={{
+								sm: "414px",
+								md: "768px",
+								xl: "1200px",
+							}}
+							px={{
+								sm: 4,
+								md: 6,
+								xl: 0,
+							}}
+						>
+							<Outlet />
+						</Box>
+					</Center>
+				</Box>
 
-      {/* Footer */}
-      <Box w="full" as="footer" backgroundColor="bg.white">
-        <Center>
-          <Box
-            w="full"
-            maxW={{
-              sm: "414px",
-              md: "768px",
-              xl: "1200px",
-            }}
-          >
-            <TheFooter />
-          </Box>
-        </Center>
-      </Box>
+				{/* Footer */}
+				<Box
+					w="full"
+					as="footer"
+					backgroundColor="bg.white"
+				>
+					<Center>
+						<Box
+							w="full"
+							maxW={{
+								sm: "414px",
+								md: "768px",
+								xl: "1200px",
+							}}
+						>
+							<TheFooter />
+						</Box>
+					</Center>
+				</Box>
 
-      {/* so sanh san pham */}
-      {items?.length > 0 && (
-        <Box position="fixed" bottom="0" width="full" zIndex="90">
-          <CompareThinkPro items={items} />
-        </Box>
-      )}
-    </Box>
-  );
+				{/* so sanh san pham */}
+				{items?.length > 0 && (
+					<Box
+						position="fixed"
+						bottom="0"
+						width="full"
+						zIndex="90"
+					>
+						<CompareThinkPro items={items} />
+					</Box>
+				)}
+			</Box>
+		</>
+	);
 };
 
 export default MainLayout;
