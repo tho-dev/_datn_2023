@@ -173,6 +173,7 @@ export async function updateUser(req, res, next) {
 export async function updateUserPassword(req, res, next) {
   try {
     const { password, new_password, new_confirm_password } = req.body;
+    console.log(req.body);
     const user = await User.findOne({ _id: req.params.id });
     if (!user) {
       throw createError.NotFound("Không tìm thấy user");
