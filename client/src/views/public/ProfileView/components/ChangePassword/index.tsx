@@ -42,6 +42,8 @@ const ChangePassword = ({ user }: Props) => {
       });
       return;
     }
+    console.log(data);
+
     updatePassWord({
       id: user._id,
       password: data.password,
@@ -51,24 +53,22 @@ const ChangePassword = ({ user }: Props) => {
       .unwrap()
       .then((data) => {
         toast({
-          title: "Hệ thống thông báo",
-          description: data.message,
+          title: data.message,
           status: "success",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
         dispatch(logout(false as any));
         navigate("/");
       })
       .catch((error) => {
         toast({
-          title: "Hệ thống thông báo",
-          description: error.data.message,
+          title: error.data.message,
           status: "error",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       });
   };

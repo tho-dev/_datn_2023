@@ -149,7 +149,7 @@ export default function TableThinkPro<Data extends object>({
             </Tr>
           ))}
         </Thead>
-        <Tbody h={loading ? "9" : "auto"} position="relative">
+        <Tbody position="relative">
           {!loading &&
             table.getRowModel()?.rows?.map((row) => (
               <Tr key={row?.id}>
@@ -202,6 +202,7 @@ export default function TableThinkPro<Data extends object>({
               </Tr>
               // eslint-disable-next-line no-mixed-spaces-and-tabs
             ))}
+
           {loading &&
             Array(10)
               .fill(0)

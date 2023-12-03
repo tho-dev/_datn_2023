@@ -1,98 +1,105 @@
+import { Box, Flex } from "@chakra-ui/layout";
 import CommonBox from "../CommonBox";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { useState } from "react";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 type Props = {
-  categories: any;
+	values: any;
 };
 
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  layout: {},
-  scales: {
-    x: {
-      grid: {
-        display: false,
-      },
-    },
-    y: {
-      title: {
-        display: true,
-        text: "Số lượng sản phẩm",
-      },
-      ticks: {
-        // forces step size to be 50 units
-        stepSize: 50,
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      display: false,
-      position: "right" as const,
-      labels: {
-        usePointStyle: true,
-        font: {
-          size: 10,
-        },
-      },
-    },
-    title: {
-      position: "bottom" as const,
-      display: true,
-      text: "3. Thống kê sản phẩm theo từng loại danh mục",
-    },
-    tooltip: {
-      enabled: true,
-    },
-    datalabels: {
-      formatter: (value: any) => {
-        return value;
-      },
-    },
-  },
+const TopCategory = ({ values }: Props) => {
+	const options = {
+		responsive: true,
+		maintainAspectRatio: false,
+		layout: {},
+		scales: {
+			x: {
+				beginAtZero: true,
+				border: {
+					display: false,
+				},
+				grid: {
+					display: false,
+				},
+			},
+			y: {
+				beginAtZero: true,
+				border: {
+					display: false,
+				},
+				grid: {
+					display: true,
+					step: 50,
+				},
+			},
+		},
+		interaction: {
+			mode: "index",
+		},
+		plugins: {
+			legend: {
+				display: true,
+				position: "top" as const,
+				labels: {
+					usePointStyle: true,
+					font: {
+						size: 11,
+					},
+				},
+			},
+			title: {
+				position: "bottom" as const,
+				display: true,
+				text: "2. Thống kê sản phẩm & thương hiệu",
+			},
+		},
+	};
+
+	const data = {
+		labels: values?.categories?.labels,
+		datasets: [
+			{
+				label: "Sản phẩm",
+				data: values?.categories?.values,
+				borderColor: "#1ab17a",
+				backgroundColor: "#1ab17a",
+				pointBorderColor: "#1ab17a",
+				pointBorderWidth: 0,
+				pointColor: "#1ab17a",
+				borderRadius: 4,
+				// fill: true,
+			},
+			{
+				label: "Thương hiệu",
+				data: values?.brands?.values,
+				tension: 0.5,
+				borderColor: "#f8b11b",
+				backgroundColor: "#f8b11b",
+				pointBorderColor: "#f8b11b",
+				pointColor: "#f8b11b",
+				// fill: true,
+			},
+		],
+	};
+
+	return (
+		<CommonBox>
+			<Box
+				w="full"
+				mt="4"
+			>
+				<Bar
+					data={data}
+					width={700}
+					height={360}
+					options={options as any}
+				/>
+			</Box>
+		</CommonBox>
+	);
 };
 
-const TopBrand = ({ categories }: Props) => {
-  const data = {
-    labels: categories?.labels,
-    datasets: [
-      {
-        label: "#san-pham",
-        data: categories?.values,
-        // backgroundColor: brands?.colors,
-        borderColor: "#0bcbe0",
-        backgroundColor: "#0bcbe0",
-        pointBorderColor: "#0bcbe0",
-        // borderWidth: 1,
-        borderRadius: 2,
-      },
-    ],
-  };
-
-  return (
-    <CommonBox>
-      <Bar data={data} width={700} height={300} options={options as any} />
-    </CommonBox>
-  );
-};
-
-export default TopBrand;
+export default TopCategory;

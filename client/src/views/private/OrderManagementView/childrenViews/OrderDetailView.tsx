@@ -207,26 +207,30 @@ const OrderDetailView = () => {
               Hoàn thành đơn
             </Button>
           )}
-
-          {data?.data.shipping_method === "at_store" ? (
-            <Button
-              onClick={() => onPDFOpen()}
-              bg="bg.bgEdit"
-              color="text.textEdit"
-            >
-              In HĐ thanh toán
-            </Button>
-          ) : (
-            <Button
-              onClick={handlePrinOrder}
-              loadingText="Đang tải..."
-              isLoading={isLoadingPrint}
-              bg="bg.bgEdit"
-              color="text.textEdit"
-            >
-              In vận đơn
-            </Button>
-          )}
+          {data?.data.shipping_method === "at_store" &&
+            (data?.data.status == "confirmed" ||
+              data?.data.status == "processing") && (
+              <Button
+                onClick={() => onPDFOpen()}
+                bg="bg.bgEdit"
+                color="text.textEdit"
+              >
+                In HĐ thanh toán
+              </Button>
+            )}
+          {data?.data.shipping_method === "shipped" &&
+            (data?.data.status == "confirmed" ||
+              data?.data.status == "processing") && (
+              <Button
+                onClick={handlePrinOrder}
+                loadingText="Đang tải..."
+                isLoading={isLoadingPrint}
+                bg="bg.bgEdit"
+                color="text.textEdit"
+              >
+                In vận đơn
+              </Button>
+            )}
           {data?.data.status == "processing" ||
             (data?.data.status == "confirmed" && (
               <Button

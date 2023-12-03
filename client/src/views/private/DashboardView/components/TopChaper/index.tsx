@@ -23,22 +23,27 @@ const options = {
 	maintainAspectRatio: false,
 	scales: {
 		x: {
+			beginAtZero: true,
+			border: {
+				display: false,
+			},
 			grid: {
 				display: false,
 			},
 		},
 		y: {
-			title: {
+			beginAtZero: true,
+			border: {
 				display: false,
-				text: "Số lượng sản phẩm",
 			},
-			ticks: {
-				// forces step size to be 50 units
-				stepSize: 50,
+			grid: {
+				display: true,
 			},
 		},
 	},
-
+	interaction: {
+		mode: "index",
+	},
 	plugins: {
 		legend: {
 			// display: false,
@@ -66,11 +71,11 @@ const TopChaper = ({ data: values }: Props) => {
 				data: values?.categories?.values,
 				tension: 0.5,
 				borderWidth: 2,
-				borderColor: "#ef476f",
-				backgroundColor: "#ef476f",
-				pointBorderColor: "#ef476f",
+				borderColor: "#1ab17a",
+				backgroundColor: "#1ab17a",
+				pointBorderColor: "#1ab17a",
 				pointBorderWidth: 0.5,
-				pointColor: "#ef476f",
+				pointColor: "#1ab17a",
 				// fill: true,
 			},
 			{
@@ -78,11 +83,11 @@ const TopChaper = ({ data: values }: Props) => {
 				data: values?.brands?.values,
 				tension: 0.5,
 				borderWidth: 2,
-				borderColor: "#f1be46",
-				backgroundColor: "#f1be46",
-				pointBorderColor: "#f1be46",
+				borderColor: "#f8b11b",
+				backgroundColor: "#f8b11b",
+				pointBorderColor: "#f8b11b",
 				pointBorderWidth: 0.5,
-				pointColor: "#f1be46",
+				pointColor: "#f8b11b",
 				// fill: true,
 			},
 		],
@@ -92,7 +97,7 @@ const TopChaper = ({ data: values }: Props) => {
 		<CommonBox>
 			<Line
 				data={data}
-				width={1400}
+				width={600}
 				height={360}
 				options={options as any}
 			/>
