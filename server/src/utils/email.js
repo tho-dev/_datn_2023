@@ -46,7 +46,7 @@ export const sendVerificationEmail = async ({ _id, email }, res) => {
   const templatePath = path.join(__dirname, "./../views/verifyEmail.pug");
 
   const templateEmail = pug.renderFile(templatePath, {
-    url: `${currentUrl + "user/verify/" + _id + "/" + uniqueString}`,
+    url: `${currentUrl + "/user/verify/" + _id + "/" + uniqueString}`,
   });
 
   const mailOptions = {

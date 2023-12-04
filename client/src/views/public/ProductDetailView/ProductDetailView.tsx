@@ -212,6 +212,15 @@ const ProductDetailView = () => {
       });
     }
     if (quantity == product.stock) return;
+    if (quantity > 1) {
+      return toast({
+        title: `Tối đa 2 sản phẩm`,
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     setQuantity(quantity + 1);
   };
 
@@ -223,7 +232,6 @@ const ProductDetailView = () => {
     navigate("/404");
   }
   const month = new Date().getMonth() + 1;
-  console.log(product.data);
 
   return (
     <Box h={"full"}>
