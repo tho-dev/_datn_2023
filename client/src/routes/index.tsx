@@ -51,6 +51,7 @@ import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
 import UpdateOrder from "~/views/private/OrderManagementView/updateOrder/UpdateOrder";
 import ReturedOrder from "~/views/private/OrderManagementView/childrenViews/ReturedOrder";
 import { CompareView } from "~/views/public/CompareView";
+import PrivateLayout from "~/layouts/PrivateLayout";
 
 const routes: RouteObject[] = [
   {
@@ -145,7 +146,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "/admin",
-        element: <AdminLayout />,
+        element: (
+          <PrivateLayout>
+            <AdminLayout />
+          </PrivateLayout>
+        ),
         children: [
           {
             index: true,
@@ -263,10 +268,5 @@ const routes: RouteObject[] = [
     ],
   },
 ];
-
-routes.push({
-  path: "/admin",
-  element: <NotFoundView />,
-});
 
 export default routes;

@@ -10,17 +10,14 @@ import {
   useGetRevenueStatisticsQuery,
 } from "~/redux/api/general";
 import { formatMoney } from "~/utils/fc";
-import TopRevenue from "./components/TopRevenue";
-import TopOrders from "./components/TopOrders";
 import TopCategory from "./components/TopCategory";
-import LoadingPolytech from "~/components/LoadingPolytech";
-import { useAppSelector } from "~/redux/hook/hook";
+import TopComparsion from "./components/TopComparison";
+import TopRevenue from "./components/TopRevenue";
 
 const DashboardView = () => {
-  const { user } = useAppSelector((state) => state.persistedReducer.global);
-  const { data, isLoading } = useGetDashboardQuery({});
+  const { data } = useGetDashboardQuery({});
   const [query, setQuery] = useState({
-    period: "week",
+    period: "this-day",
   });
 
   const { data: revenues } = useGetRevenueStatisticsQuery(query);
@@ -31,7 +28,7 @@ const DashboardView = () => {
   return (
     <Box w="full" h="full" pb="60px">
       <Heading my="6" fontSize="2xl" fontWeight="bold">
-        Hi, Welcome back {user?.first_name + " " + user?.last_name}👋
+        Hi, Welcome back 👋
       </Heading>
 
       <Flex gap="48px" my="10">
@@ -88,11 +85,10 @@ const DashboardView = () => {
           </Flex>
         </Box>
       </Flex>
-
       <Flex gap="6" h="500px">
-        <Box flex="2">
+        <Box flex="1">
           <TopRevenue
-            revenues={revenues}
+            values={revenues}
             handleClick={(x: string) =>
               setQuery({
                 period: x,
@@ -100,10 +96,17 @@ const DashboardView = () => {
             }
           />
         </Box>
-        <Box flex="1">{data && <TopOrders orders={data?.orders} />}</Box>
       </Flex>
 
       <Flex mt="6" h="420px" gap="6">
+        <Box flex="1">
+          {data?.top_5_one_chap_comparison && (
+            <TopComparsion data={data?.top_5_one_chap_comparison} />
+          )}
+        </Box>
+      </Flex>
+
+      <Flex mt="14" h="420px" gap="6">
         <Box flex="1">
           <TopCategory values={data} />
         </Box>

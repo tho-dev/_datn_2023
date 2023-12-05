@@ -14,6 +14,7 @@ import {
   Sku,
   Variant,
 } from "../models/product.model";
+import { Comparison } from "../models/product.model";
 import { Demand, DemandValue } from "../models/demand.model";
 import { sortOptions } from "../utils/fc";
 import createError from "http-errors";
@@ -34,8 +35,39 @@ export async function compareProduct(req, res, next) {
       })
     );
 
-    const groupMap = new Map();
+    // tính số lần đc so sánh
+    const result = await Promise.all(data?.map(async (doc, index) => {
+      const today = moment().startOf('day');
 
+      // Tìm bản ghi thống kê cho sản phẩm
+      let comparisonRecord = await Comparison.findOne({ product_id: doc.product_id });
+
+      if (comparisonRecord) {
+        // Kiểm tra xem đã có thống kê cho ngày hôm nay chưa
+        const todayComparison = comparisonRecord.comparisons.find(entry => moment(entry.date).isSame(today, 'day'));
+
+        if (todayComparison) {
+          // Nếu đã có, tăng giá trị count lên 1
+          todayComparison.count += 1;
+        } else {
+          // Nếu chưa có, thêm một bản ghi mới cho ngày hôm nay
+          comparisonRecord.comparisons.push({ count: 1, date: Date.now() });
+        }
+
+        await comparisonRecord.save();
+      } else {
+        // Nếu chưa tồn tại, tạo một bản ghi mới
+        await Comparison.create({
+          product_id: doc.product_id,
+          comparisons: [{ count: 1, date: Date.now() }],
+        });
+      }
+    }))
+
+    // console.log('result', result)
+
+
+    const groupMap = new Map();
     for (const item of data) {
       // Duyệt qua mảng attributes trong mỗi item
       for (const attribute of item.attributes) {
@@ -83,9 +115,6 @@ export async function compareProduct(req, res, next) {
       message: "Thành công",
       status: 200,
       data: resultArray,
-      abc: data?.map((a) => ({
-        attributes: a.attributes,
-      })),
     });
   } catch (error) {
     next(error);
@@ -259,11 +288,11 @@ export async function getAllProductManager(req, res, next) {
         $and: [
           _name
             ? {
-                $or: [
-                  { name: new RegExp(_name, "i") },
-                  { description: new RegExp(_name, "i") },
-                ],
-              }
+              $or: [
+                { name: new RegExp(_name, "i") },
+                { description: new RegExp(_name, "i") },
+              ],
+            }
             : {},
           _brand ? { brand_id: _brand } : {},
           _category ? { category_id: _category } : {},

@@ -3,41 +3,38 @@ import CommonBox from "../CommonBox";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useState } from "react";
+import TopOrders from "../TopOrders";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 type Props = {
-	revenues: any;
+	values: any;
 	handleClick: (x: string) => void;
 };
 
 const days = [
 	{
-		label: "7 Ngày",
+		label: "Hôm nay",
+		value: "this-day",
+	},
+	{
+		label: "Tuần trước",
 		value: "week",
 	},
 	{
-		label: "30 Ngày",
+		label: "Tháng này",
+		value: "this-month",
+	},
+	{
+		label: "Tháng trước",
 		value: "month",
-	},
-	{
-		label: "180 Ngày",
-		value: "3-months-ago",
-	},
-	{
-		label: "260 Ngày",
-		value: "6-months-age",
-	},
-	{
-		label: "365 Ngày",
-		value: "year",
 	},
 ];
 
-const TopRevenue = ({ revenues, handleClick }: Props) => {
+const TopRevenue = ({ values, handleClick }: Props) => {
 	const [active, setActive] = useState(0);
-	const orders = revenues?.map((x: any) => x.order);
-	const quantity = revenues?.map((x: any) => x.quantity);
+	const orders = values?.revenues?.map((x: any) => x.order);
+	const quantity = values?.revenues?.map((x: any) => x.quantity);
 
 	const options = {
 		responsive: true,
@@ -93,11 +90,11 @@ const TopRevenue = ({ revenues, handleClick }: Props) => {
 			tooltip: {
 				callbacks: {
 					beforeTitle: function (context: any) {
-						const count = quantity[context[0]?.dataIndex];
+						const count = orders[context[0]?.dataIndex];
 						return `Đơn hàng: ${count}`;
 					},
 					title: function (context: any) {
-						const count = orders[context[0]?.dataIndex];
+						const count = quantity[context[0]?.dataIndex];
 						return `Đã bán: ${count}`;
 					},
 				},
@@ -111,11 +108,11 @@ const TopRevenue = ({ revenues, handleClick }: Props) => {
 	};
 
 	const data = {
-		labels: revenues?.map((x: any) => x.period),
+		labels: values?.revenues?.map((x: any) => x.period),
 		datasets: [
 			{
 				label: "Doanh thu",
-				data: revenues?.map((x: any) => x.sales),
+				data: values?.revenues?.map((x: any) => x.sales),
 				// backgroundColor: brands?.colors,
 				// tension: 0.5,
 				// borderWidth: 2,
@@ -130,7 +127,7 @@ const TopRevenue = ({ revenues, handleClick }: Props) => {
 			},
 			{
 				label: "Lợi nhuận",
-				data: revenues?.map((x: any) => x.profit),
+				data: values?.revenues?.map((x: any) => x.profit),
 				// backgroundColor: brands?.colors,
 				// tension: 0.5,
 				// borderWidth: 1,
@@ -172,17 +169,20 @@ const TopRevenue = ({ revenues, handleClick }: Props) => {
 					);
 				})}
 			</Flex>
-			<Box
-				w="full"
+			<Flex
 				mt="4"
+				gap="12"
 			>
-				<Bar
-					data={data}
-					width={700}
-					height={360}
-					options={options as any}
-				/>
-			</Box>
+				<Box flex="1">
+					<Bar
+						data={data}
+						width={600}
+						height={360}
+						options={options as any}
+					/>
+				</Box>
+				<Box w="400px">{values?.order_status && <TopOrders orders={values?.order_status || []} />}</Box>
+			</Flex>
 		</CommonBox>
 	);
 };

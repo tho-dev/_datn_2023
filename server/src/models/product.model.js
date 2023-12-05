@@ -320,6 +320,25 @@ const productSchema = new Schema(
   }
 );
 
+// lưu so sánh sản phẩm
+const comparisonSchema = new Schema(
+  {
+    product_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product'
+    },
+    comparisons: [{
+      count: { type: Number, default: 1 },
+      date: { type: Date, default: Date.now },
+    }]
+  },
+  {
+    collection: "comparisons",
+    timestamps: false,
+    versionKey: false,
+  }
+)
+
 // plugins
 plugins.forEach((item) =>
   productSchema.plugin(item, { overrideMethods: true })
@@ -360,5 +379,6 @@ const Option = model('Option', optionSchema)
 const OptionValue = model('OptionValue', optionValueSchema)
 const Sku = model('Sku', skuSchema)
 const Variant = model('Variant', variantSchema)
+const Comparison = model('Comparison', comparisonSchema)
 
-export { Product, Option, OptionValue, Sku, Variant };
+export { Product, Option, OptionValue, Sku, Variant, Comparison };

@@ -18,7 +18,7 @@ const HomeView = () => {
         {/* Banner */}
         <Banner banner={homeSettings?.general} />
 
-        <DiscountSection title="Khuyến mãi" />
+        <DiscountSection title="Sản phẩm nổi bật 🤩🤩🤩" />
 
         {/* Danh mục */}
         <Category
