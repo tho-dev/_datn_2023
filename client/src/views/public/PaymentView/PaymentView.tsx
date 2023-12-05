@@ -222,13 +222,7 @@ const Payment = () => {
                         required: "Trường bắt buộc nhập",
                       })}
                       isDisabled={data.data.products.length === 0}
-                      defaultValue={
-                        (isLogin &&
-                          `${chuyenDoiSoDienThoaiVe0(
-                            user.phone.toString()
-                          )}`) ||
-                        ""
-                      }
+                      defaultValue={(isLogin && `0${user.phone}`) || 0}
                     />
                     <FormErrorMessage>
                       {(errors.phone_number as any) &&
@@ -489,7 +483,12 @@ const Payment = () => {
                           </Radio>
                         </Box>
                         <Box flex="1" px="6" bgColor="#F6F9FC" rounded="lg">
-                          <Radio value="VNPAY" size="sm" fontSize={"12px"}>
+                          <Radio
+                            value="VNPAY"
+                            size="sm"
+                            fontSize={"12px"}
+                            isReadOnly
+                          >
                             <Flex
                               w="full"
                               px="3"
@@ -577,6 +576,7 @@ const Payment = () => {
         onOpenOtp={onOpenOtp}
         onCloseOtp={onCloseOtp}
         dataOrder={dataOrder}
+        payment={payment}
       />
       <Transport
         isOpen={isOpen}

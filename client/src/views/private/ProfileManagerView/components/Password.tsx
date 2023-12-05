@@ -35,26 +35,28 @@ const Password = ({ data }: Props) => {
 
   const handleUpdatePassword = (datapassword: any) => {
     setLoading(true);
-    updatePassword({ data: datapassword, id: data._id })
+    const new_data = {
+      ...datapassword,
+      id: data._id,
+    };
+    updatePassword(new_data)
       .unwrap()
       .then(() => {
         toast({
-          title: "Thành công",
           duration: 1600,
           position: "bottom-right",
           status: "success",
-          description: "Cập nhật thành công",
+          title: "Cập nhật thành công",
         });
         dispatch(logout(false));
         navigate("/");
       })
       .catch((err) => {
         toast({
-          title: "Thất bại",
           duration: 1600,
           position: "bottom-right",
           status: "error",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
         });
       })
       .finally(() => {

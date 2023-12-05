@@ -3,7 +3,6 @@ import UserVerification from "../models/user-verifi-cation.model";
 import RefreshToken from "../models/refresh-token.model";
 import { userSchema } from "../validations";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import path from "path";
 import { sendEmail, sendVerificationEmail } from "../utils/email";
 import { loginShema } from "../validations/auth";
