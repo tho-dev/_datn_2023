@@ -228,13 +228,31 @@ const ProductDetailView = () => {
     <Box h={"full"}>
       <Breadcrumb mt={"5"}>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/" textDecoration={"none"} fontSize={"12px"}>
+          <BreadcrumbLink
+            href="/"
+            textDecoration={"none"}
+            fontSize={"14px"}
+            fontWeight={"semibold"}
+          >
             Trang chủ
           </BreadcrumbLink>
         </BreadcrumbItem>
-
         <BreadcrumbItem>
-          <BreadcrumbLink textDecoration={"none"} fontSize={"12px"}>
+          <BreadcrumbLink
+            textDecoration={"none"}
+            fontSize={"14px"}
+            href={`/${product?.data.category.slug}`}
+            fontWeight={"semibold"}
+          >
+            {product?.data.category.name}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            textDecoration={"none"}
+            fontSize={"14px"}
+            fontWeight={"semibold"}
+          >
             {product?.data.name}
           </BreadcrumbLink>
         </BreadcrumbItem>
