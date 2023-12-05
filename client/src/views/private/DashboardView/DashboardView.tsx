@@ -21,9 +21,6 @@ const DashboardView = () => {
   });
 
   const { data: revenues } = useGetRevenueStatisticsQuery(query);
-  if (isLoading) {
-    return <LoadingPolytech />;
-  }
 
   return (
     <Box w="full" h="full" pb="60px">
