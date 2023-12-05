@@ -7,15 +7,14 @@ import image_message from "~/assets/images/ic_glass_message.png";
 import image_user from "~/assets/images/ic_glass_users.png";
 import { useGetDashboardQuery, useGetRevenueStatisticsQuery } from "~/redux/api/general";
 import { formatMoney } from "~/utils/fc";
-import TopChaper from "./components/TopChaper";
-import TopRevenue from "./components/TopRevenue";
-import TopOrders from "./components/TopOrders";
 import TopCategory from "./components/TopCategory";
+import TopComparsion from "./components/TopComparison";
+import TopRevenue from "./components/TopRevenue";
 
 const DashboardView = () => {
 	const { data } = useGetDashboardQuery({});
 	const [query, setQuery] = useState({
-		period: "week",
+		period: "this-day",
 	});
 
 	const { data: revenues } = useGetRevenueStatisticsQuery(query);
@@ -33,78 +32,6 @@ const DashboardView = () => {
 			>
 				Hi, Welcome back 👋
 			</Heading>
-			{/* <Flex gap="6">
-				<Box
-					flex="1"
-					px="10"
-					py="8"
-					h="320px"
-					maxH="full"
-					rounded="2xl"
-					display="flex"
-					justifyContent="flex-start"
-					alignItems="center"
-					bgColor="#0bcbe01a"
-					gap="6"
-				>
-					<Box flex="1">
-						<Heading
-							fontSize="xl"
-							color="rgb(11 203 224)"
-							fontWeight="semibold"
-						>
-							Hi, Welcome back 👋
-						</Heading>
-						<Text
-							mt="4"
-							fontSize="sm"
-							color="rgb(11 203 224)"
-							fontWeight="medium"
-						>
-							Polytech - Laptop, Phím cơ, Bàn nâng hạ, Ghế công thái học, PS5, Nintendo - Dịch vụ Tận tâm.
-							<br />
-							<Text
-								as="span"
-								mt="1"
-								display="inline-block"
-							>
-								Chuỗi cửa hàng chuyên Máy tính xách tay (Laptop), Bàn phím cơ, Bàn ghế Công thái học,
-								Máy chơi game, PS5, Nintendo - Dịch vụ Tận tâm, đội ngũ tư vấn được đào tạo kỹ lưỡng, có
-								chuyên môn.
-							</Text>
-						</Text>
-					</Box>
-					<Box
-						w="full"
-						maxW="460px"
-						h="full"
-						position="relative"
-					>
-						<Image
-							src={welcome_back}
-							w="full"
-							h="full"
-							objectFit="contain"
-						/>
-
-						<Box
-							position="absolute"
-							top="0"
-							right="0"
-							w="60%"
-							h="full"
-						>
-							<Image
-								w="full"
-								h="full"
-								src="https://minimals.cc/assets/illustrations/characters/character_2.png"
-								objectFit="contain"
-								aspectRatio="16/9"
-							/>
-						</Box>
-					</Box>
-				</Box>
-			</Flex> */}
 
 			<Flex
 				gap="48px"
@@ -235,14 +162,13 @@ const DashboardView = () => {
 					</Flex>
 				</Box>
 			</Flex>
-
 			<Flex
 				gap="6"
 				h="500px"
 			>
-				<Box flex="2">
+				<Box flex="1">
 					<TopRevenue
-						revenues={revenues}
+						values={revenues}
 						handleClick={(x: string) =>
 							setQuery({
 								period: x,
@@ -250,7 +176,6 @@ const DashboardView = () => {
 						}
 					/>
 				</Box>
-				<Box flex="1">{data && <TopOrders orders={data?.orders} />}</Box>
 			</Flex>
 
 			<Flex
@@ -259,11 +184,18 @@ const DashboardView = () => {
 				gap="6"
 			>
 				<Box flex="1">
+					{data?.top_5_one_chap_comparison && <TopComparsion data={data?.top_5_one_chap_comparison} />}
+				</Box>
+			</Flex>
+
+			<Flex
+				mt="14"
+				h="420px"
+				gap="6"
+			>
+				<Box flex="1">
 					<TopCategory values={data} />
 				</Box>
-				{/* <Box flex="2">
-					<TopChaper data={data} />
-				</Box> */}
 			</Flex>
 		</Box>
 	);

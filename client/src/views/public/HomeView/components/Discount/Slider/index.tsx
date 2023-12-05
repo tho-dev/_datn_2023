@@ -20,16 +20,16 @@ const Slider = ({ title }: PropTypes) => {
 
 	return (
 		<Box
-			px="9"
-			mb={12}
+			px="6"
+			py="6"
 		>
-			<Heading
+			{/* <Heading
 				as="h2"
 				fontSize="28px"
 				mb={6}
 			>
 				{title}
-			</Heading>
+			</Heading> */}
 			<Flex position="relative">
 				<Swiper
 					modules={[Navigation]}
@@ -85,7 +85,7 @@ const Slider = ({ title }: PropTypes) => {
 										>
 											{item?.name}
 										</Text>
-										<Flex color="text.darkPink">
+										{/* <Flex color="text.darkPink">
 											<Box
 												fontSize="xs"
 												px={2}
@@ -108,7 +108,7 @@ const Slider = ({ title }: PropTypes) => {
 											>
 												{`Chỉ từ ${formatNumber(`${item?.min_sale_price}`)}đ`}
 											</Box>
-										</Flex>
+										</Flex> */}
 										<Text
 											mt="2"
 											color="text.black"

@@ -1,8 +1,6 @@
-import { Box } from "@chakra-ui/layout";
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import CommonBox from "../CommonBox";
-import { formatMoney } from "~/utils/fc";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -11,6 +9,14 @@ type Props = {
 };
 
 const TopOrders = ({ orders }: Props) => {
+	const [values, setValues] = useState(orders);
+
+	useEffect(() => {
+		if (orders) {
+			setValues(orders);
+		}
+	}, [orders]);
+
 	// custom plugins
 	const progressBar = {
 		id: "progressBar",
@@ -26,7 +32,7 @@ const TopOrders = ({ orders }: Props) => {
 			const barHeight =
 				(height / y.ticks.length) * data.datasets[0].barPercentage * data.datasets[0].categoryPercentage;
 
-			data.datasets[0].data.forEach((datapoint: any, index: number) => {
+			values.forEach((_x: any, index: number) => {
 				// label text
 				const fontSizeLabel = 12;
 				ctx.font = `${fontSizeLabel}px sans-serif`;
@@ -41,7 +47,7 @@ const TopOrders = ({ orders }: Props) => {
 				ctx.fillStyle = "#333333";
 				ctx.textAlign = "right";
 				ctx.textBaseline = "middle";
-				ctx.fillText(formatMoney(datapoint), right, y.getPixelForValue(index) - fontSizeValue - 5);
+				ctx.fillText("", right, y.getPixelForValue(index) - fontSizeValue - 5);
 
 				ctx.beginPath();
 				ctx.fillStyle = data.datasets[0].borderColor[index];
@@ -103,37 +109,30 @@ const TopOrders = ({ orders }: Props) => {
 	};
 
 	const data = {
-		labels: orders?.map((x: any) => x.label),
+		labels: values?.map((x: any) => x.label),
 		datasets: [
 			{
 				label: "#Số lượng",
-				data: orders?.map((x: any) => x.value),
-				borderColor: orders?.map((x: any) => x.color),
-				backgroundColor: orders?.map((x: any) => x.border),
+				data: values?.map((x: any) => x.value),
+				borderColor: values?.map((x: any) => x.color),
+				backgroundColor: values?.map((x: any) => x.border),
 				borderWidth: 0,
 				borderRadius: 4,
 				borderSkipped: false,
 				barPercentage: 0.3,
-				categoryPercentage: 0.8,
+				categoryPercentage: 1,
 			},
 		],
 	};
 
 	return (
-		<CommonBox>
-			<Box
-				w="full"
-				mt="4"
-			>
-				<Bar
-					data={data}
-					width={460}
-					height={400}
-					options={options as any}
-					plugins={[progressBar]}
-				/>
-			</Box>
-		</CommonBox>
+		<Bar
+			data={data}
+			width={400}
+			height={360}
+			options={options as any}
+			plugins={[progressBar]}
+		/>
 	);
 };
 

@@ -24,7 +24,7 @@ const MENU = [
 		to: "/admin/khuyen-mai",
 		icon: WalletIcon,
 		children: [
-			{ title: "Danh sách khuyến mãi", to: "/admin/khuyen-mai" },
+			{ title: "Sản phẩm nổi bật", to: "/admin/khuyen-mai" },
 			{ title: "Danh sách voucher", to: "/admin/coupon" },
 			{ title: "Chiến dịch quảng cáo", to: "/admin/khuyen-mai/gmail" },
 		],
