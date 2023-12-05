@@ -13,15 +13,18 @@ import { formatMoney } from "~/utils/fc";
 import TopCategory from "./components/TopCategory";
 import TopComparsion from "./components/TopComparison";
 import TopRevenue from "./components/TopRevenue";
+import LoadingPolytech from "~/components/LoadingPolytech";
 
 const DashboardView = () => {
-  const { data } = useGetDashboardQuery({});
+  const { data, isLoading } = useGetDashboardQuery({});
   const [query, setQuery] = useState({
     period: "this-day",
   });
 
   const { data: revenues } = useGetRevenueStatisticsQuery(query);
-
+  if (isLoading) {
+    return <LoadingPolytech />;
+  }
   return (
     <Box w="full" h="full" pb="60px">
       <Heading my="6" fontSize="2xl" fontWeight="bold">

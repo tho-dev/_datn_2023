@@ -22,19 +22,19 @@ import { HelmetProvider } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { socket } from "~/App";
+import momo from "~/assets/images/momo.png";
+import vnpay from "~/assets/images/vnpay.png";
+import LoadingPolytech from "~/components/LoadingPolytech";
 import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { useGetCartQuery } from "~/redux/api/cart";
 import { useGetValueCouponMutation } from "~/redux/api/coupon";
 import { useAppSelector } from "~/redux/hook/hook";
-import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
+import { chuyenDoiSoDienThoai } from "~/utils/fc";
+import CommonBox from "./components/CommonBox";
 import PaySummary from "./components/PaySummary";
 import PopupCheckOtp from "./components/PopupCheckOtp";
 import ProductPay from "./components/ProductPay";
 import Transport from "./components/Transport";
-import LoadingPolytech from "~/components/LoadingPolytech";
-import CommonBox from "./components/CommonBox";
-import momo from "~/assets/images/momo.png";
-import vnpay from "~/assets/images/vnpay.png";
 
 const Payment = () => {
   const [dataOrder, setDataOrder] = useState({} as any);

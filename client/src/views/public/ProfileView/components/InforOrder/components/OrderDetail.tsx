@@ -31,6 +31,7 @@ const OrderDetail = ({ orderDetail, onCloseDetail }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const [updateinfoCustomer, { isLoading }] = useUpdateinfoCustomerMutation();
@@ -43,11 +44,10 @@ const OrderDetail = ({ orderDetail, onCloseDetail }: Props) => {
   const onSubmitForm = (data: any) => {
     if (orderDetail.status !== "processing") {
       return toast({
-        title: "Hệ thống thông báo",
         duration: 1600,
         position: "top-right",
         status: "warning",
-        description: `Không thể cập nhật đơn hàng đã ${orderDetail.status}`,
+        title: `Không thể cập nhật đơn hàng đã ${orderDetail.status}`,
       });
     }
     const phone_number = chuyenDoiSoDienThoai(data.phone_number);
@@ -66,22 +66,20 @@ const OrderDetail = ({ orderDetail, onCloseDetail }: Props) => {
 
     updateinfoCustomer(new_data)
       .unwrap()
-      .then((data) => {
+      .then((data: any) => {
         toast({
-          title: "Thành công",
           duration: 1600,
           position: "top-right",
           status: "success",
-          description: data.message,
+          title: data.message,
         });
       })
       .catch((error) => {
         toast({
-          title: "Thất bại",
           duration: 1600,
           position: "top-right",
           status: "error",
-          description: error.data.errors.message,
+          title: error.data.errors.message,
         });
       })
       .finally(() => {
@@ -133,15 +131,25 @@ const OrderDetail = ({ orderDetail, onCloseDetail }: Props) => {
     }),
   ];
   useEffect(() => {
+    if (orderDetail) {
+      const new_data = {
+        ...orderDetail,
+        phone_number: chuyenDoiSoDienThoaiVe0(orderDetail?.phone_number),
+      };
+      reset(new_data);
+    }
+  }, [orderDetail, reset]);
+
+  useEffect(() => {
     if (orderDetail && orderDetail.shipping_method == "shipped") {
       const address = orderDetail?.shipping_info?.shipping_address.split(",");
       const [address_detail, ...rest] = address;
       console.log(address_detail);
-
       setAddress(rest.join(","));
       setTransportFee(orderDetail?.shipping_info?.transportation_fee);
     }
   }, [orderDetail]);
+
   const handleChooseAdress = (data: any) => {
     const checkData = data.every((select: any) => select !== undefined);
     if (checkData) {
@@ -202,13 +210,9 @@ const OrderDetail = ({ orderDetail, onCloseDetail }: Props) => {
                   bg={"#F6F9FC"}
                   borderRadius={"6px"}
                   fontSize={"14px"}
-                  isReadOnly
                   {...register("phone_number", {
                     required: "Trường bắt buộc nhập",
                   })}
-                  defaultValue={chuyenDoiSoDienThoaiVe0(
-                    orderDetail?.phone_number
-                  )}
                 />
                 <FormErrorMessage>
                   {(errors.phone_number as any) &&
@@ -245,7 +249,7 @@ const OrderDetail = ({ orderDetail, onCloseDetail }: Props) => {
                       bg="transparent"
                       readOnly={true}
                       {...register("shipping_address")}
-                      value={address}
+                      defaultValue={address}
                     />
                     <NavArrowRightIcon
                       size={4}

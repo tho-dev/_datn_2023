@@ -35,11 +35,11 @@ const TopOrders = ({ orders }: Props) => {
   // custom plugins
   const progressBar = {
     id: "progressBar",
-    beforeDatasetsDraw(chart: any, args: any, pluginOptions: any) {
+    beforeDatasetsDraw(chart: any) {
       const {
         ctx,
-        chartArea: { top, bottom, left, right, width, height },
-        scales: { x, y },
+        chartArea: { left, right, width, height },
+        scales: { y },
       } = chart;
 
       ctx.save();

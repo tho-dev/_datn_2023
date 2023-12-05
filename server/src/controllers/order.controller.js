@@ -549,9 +549,10 @@ export const update_info_customer = async (req, res, next) => {
       customer_name,
       phone_number,
       content,
-      shippingAddress,
+      shipping_address,
       transportation_fee,
     } = req.body;
+    console.log(shipping_address);
     const order = await Order.findById(id).populate({
       path: "shipping_info",
     });
@@ -566,16 +567,10 @@ export const update_info_customer = async (req, res, next) => {
       throw createError.BadRequest("Không thể sửa đơn hàng");
     }
     if (order.shipping_method === "shipped") {
-      await Shipping.findByIdAndUpdate(
-        { _id: order.shipping_info._id },
-        {
-          $set: {
-            shipping_address: shippingAddress,
-            transportation_fee,
-          },
-        },
-        { new: true }
-      );
+      const shipping = await Shipping.findById(order.shipping_info._id);
+      shipping.shipping_address = shipping_address;
+      shipping.transportation_fee = transportation_fee;
+      await shipping.save();
     }
     const updated_order = await Order.findByIdAndUpdate(
       id,
