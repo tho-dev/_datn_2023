@@ -8,21 +8,21 @@ const adsApi = createApi({
 	endpoints: (builder) => ({
 		getAll: builder.query({
 			query: (query) => ({
-				url: `/ads?${objectToUrlParams(query)}`,
+				url: `/mail?${objectToUrlParams(query)}`,
 				method: "GET",
 			}),
 			providesTags: ["Ads"],
 		}),
 		getOne: builder.query({
 			query: (id) => ({
-				url: `/ads/${id}`,
+				url: `/mail/${id}`,
 				method: "GET",
 			}),
 			providesTags: ["Ads"],
 		}),
 		add: builder.mutation<any, any>({
 			query: (data) => ({
-				url: `/ads`,
+				url: `/mail`,
 				method: "POST",
 				body: data,
 			}),
@@ -30,7 +30,7 @@ const adsApi = createApi({
 		}),
 		remove: builder.mutation<any, any>({
 			query: (jobId) => ({
-				url: `/ads/${jobId}`,
+				url: `/mail/${jobId}`,
 				method: "DELETE",
 			}),
 			invalidatesTags: ["Ads"],
