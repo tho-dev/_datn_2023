@@ -22,6 +22,9 @@ import querystring from "query-string";
 import TextFlow from "textflow.js";
 import { getAuthToken } from "../utils/token";
 import jwt from "jsonwebtoken";
+import xl from "excel4node";
+import { checkStatusOrder } from "../utils/fc";
+
 TextFlow.useKey(process.env.SMS_API);
 
 export const createOrder = async (req, res, next) => {
@@ -227,6 +230,7 @@ export const getAll = async (req, res, next) => {
     if (payment_method) {
       conditions["payment_method.partnerCode"] = payment_method;
     }
+
     const options = {
       page: _page,
       limit: _limit,
@@ -235,6 +239,7 @@ export const getAll = async (req, res, next) => {
       },
       select: ["-deleted", "-deleted_at"],
     };
+
     const { docs, ...paginate } = await Order.paginate(conditions, options);
 
     const new_docs = await Promise.all(
@@ -251,6 +256,7 @@ export const getAll = async (req, res, next) => {
     if (!docs) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
+
     return res.json({
       status: 200,
       message: "Lấy toàn bộ sản phẩm thành công",
@@ -259,6 +265,112 @@ export const getAll = async (req, res, next) => {
         paginate,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const exportExcel = async (req, res, next) => {
+  try {
+    const {
+      search,
+      status,
+      date,
+      payment_method,
+      payment_status,
+    } = req.query;
+    const conditions = {};
+    if (search) {
+      conditions.$or = [
+        { customer_name: { $regex: new RegExp(search, "i") } },
+        {
+          _id: mongoose.Types.ObjectId.isValid(search)
+            ? new mongoose.Types.ObjectId(search)
+            : null,
+        },
+      ];
+    }
+
+    if (status) {
+      conditions.status = status;
+    }
+    if (payment_status) {
+      conditions.payment_status = payment_status;
+    }
+
+    if (date) {
+      const targetMoment = moment(date);
+      const yearToSearch = targetMoment.year();
+      const monthToSearch = targetMoment.month();
+      const dayToSearch = targetMoment.date();
+
+      conditions.created_at = {
+        $gte: new Date(yearToSearch, monthToSearch, dayToSearch),
+        $lt: new Date(yearToSearch, monthToSearch, dayToSearch + 1),
+      };
+    }
+
+    if (payment_method) {
+      conditions["payment_method.partnerCode"] = payment_method;
+    }
+
+
+    const docs = await Order.find(conditions);
+
+    const new_docs = await Promise.all(
+      docs.map(async (item) => {
+        const order_details = await Order_Detail.find({ order_id: item._id });
+        const orders = item.toObject();
+        return {
+          ...orders,
+          products: order_details,
+        };
+      })
+    );
+
+    const customsData = new_docs.map((_x) => {
+      // thời gian và tình trạng đơn hàng
+      const status = _x?.status_detail?.reduce((acc, cur, i) => {
+        const text = checkStatusOrder(cur.status)
+        return { ...acc, [text]: `Thời gian: ${moment(cur.created_at).format("DD-MM-YYYY HH:MM:SS")}` };
+      }, {});
+
+      return {
+        'ID': _x._id,
+        'Tên khách hàng': _x.customer_name,
+        'SĐT': _x.phone_number,
+        'user_id': _x.user_id || 'Khách vãng lai',
+        'Địa chỉ': _x.shop_address,
+        'Hóa đơn': _x.total_amount,
+        'Ghi chú đơn hàng': _x.content,
+        'Phương thức nhận hàng': _x.shipping_method == 'at_store' ? 'Tại cửa hàng' : 'Online',
+        'Phương thức thanh toán': _x.payment_method.orderInfo,
+        'Trạng thái thanh toán': _x.payment_status == 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán',
+        ...status,
+      };
+    })
+
+    var wb = new xl.Workbook();
+    // Add Worksheets to the workbook
+    var ws = wb.addWorksheet('Sheet 1');
+
+    const headers = Object.keys(customsData[0]);
+    headers.forEach((header, index) => {
+      ws.cell(1, index + 1).string(header);
+    });
+
+    // Populate the worksheet with data
+    customsData.forEach((doc, rowIndex) => {
+      const values = Object.values(doc);
+      values.forEach((value, colIndex) => {
+        ws.cell(rowIndex + 2, colIndex + 1).string(`${value}`);
+      });
+    });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader("Content-Disposition", "attachment; filename=" + "file_orders.xlsx");
+    wb.write('file_orders.xlsx', res);
+
   } catch (error) {
     next(error);
   }
@@ -683,6 +795,7 @@ export const addOneProduct_order = async (req, res, next) => {
     next(error);
   }
 };
+
 export const deleteProduct_order = async (req, res, next) => {
   try {
     const { order_id, sku_id } = req.body;

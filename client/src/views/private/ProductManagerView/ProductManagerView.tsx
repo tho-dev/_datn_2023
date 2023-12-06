@@ -18,9 +18,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
-import { AirplayIcon, EditIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
+import { AirplayIcon, EditIcon, ExcelIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
 import { useGetAllProductQuery } from "~/redux/api/product";
-import { formatNumber } from "~/utils/fc";
+import { formatNumber, objectToUrlParams } from "~/utils/fc";
 import moment from "moment/moment";
 import SelectThinkPro from "~/components/SelectThinkPro";
 import { useForm, useWatch } from "react-hook-form";
@@ -123,6 +123,28 @@ const ProductManagerView = () => {
 			setCategoriesFilter(categoriesFilter);
 		}
 	}, [categories]);
+
+	const handleDownloadExcel = async () => {
+		const customQuery = {
+			_name: nameForm,
+			_category: categoryForm?.value,
+			_brand: brandForm?.value,
+			_status: JSON.parse(statusForm?.value || ""),
+		};
+
+		fetch(process.env.VITE_API_URL + `/product/export-excel?${objectToUrlParams(customQuery)}`)
+			.then((response) => response.blob())
+			.then((blob) => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = "file_products.xlsx";
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			})
+			.catch((error) => console.error("Lỗi tải xuống tệp:", error));
+	};
 
 	const columns = [
 		columnHelper.accessor("#", {
@@ -386,7 +408,7 @@ const ProductManagerView = () => {
 					gap="4"
 					w="70%"
 				>
-					<Box flex="1">
+					<Box display="inline-block">
 						<SelectThinkPro
 							control={control}
 							name="category"
@@ -396,7 +418,7 @@ const ProductManagerView = () => {
 						/>
 					</Box>
 
-					<Box flex="1">
+					<Box display="inline-block">
 						<SelectThinkPro
 							control={control}
 							name="brand"
@@ -406,7 +428,7 @@ const ProductManagerView = () => {
 						/>
 					</Box>
 
-					<Box flex="1">
+					<Box display="inline-block">
 						<SelectThinkPro
 							control={control}
 							name="status"
@@ -426,7 +448,7 @@ const ProductManagerView = () => {
 					</Box>
 
 					<Flex
-						flex="2"
+						flex="1"
 						px="4"
 						rounded="8px"
 						alignItems="center"
@@ -458,8 +480,20 @@ const ProductManagerView = () => {
 				</Flex>
 				<Flex
 					w="30%"
+					gap="3"
+					alignItems="center"
 					justifyContent="flex-end"
 				>
+					<Box
+						cursor="pointer"
+						display="inline-block"
+						onClick={handleDownloadExcel}
+					>
+						<ExcelIcon
+							size={10}
+							color="#1f7342"
+						/>
+					</Box>
 					<Button
 						as={ReactRouterLink}
 						to="/admin/san-pham/add"

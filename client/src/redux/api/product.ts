@@ -41,6 +41,9 @@ const productApi = createApi({
 		getAllProductManager: builder.query({
 			query: (query: TQuery) => `/product?${objectToUrlParams(query)}`,
 		}),
+		exportExcel: builder.query({
+			query: (query: any) => `/product/export-excel?${objectToUrlParams(query)}`,
+		}),
 		getAllProduct: builder.query({
 			query: (query: TQuery) => `/product/manager?${objectToUrlParams(query)}`,
 		}),

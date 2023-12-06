@@ -23,13 +23,15 @@ import {
 	deteleVariant,
 	getSingleVariant,
 	updateVariant,
-	compareProduct
+	compareProduct,
+	exportExcel
 } from "../controllers/product.controller";
 
 const router = express.Router();
 
-// api product 
+// api product
 
+router.get('/export-excel', exportExcel)
 router.get('/manager', getAllProductManager)
 router.get('/manager/:id', getProductById)
 router.get('/', getAllProduct)

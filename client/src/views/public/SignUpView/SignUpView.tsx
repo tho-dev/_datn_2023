@@ -38,12 +38,16 @@ const SignUpView = () => {
   const [signup, { isLoading }] = useSignupMutation();
   const onSubmit = async (data: any) => {
     if (!checkCaptch) return;
-    const avatar =
-      "https://i.pinimg.com/222x/90/9e/9e/909e9e27ae77ca7da531375be6c05ac5.jpg";
+    const avatar = {
+      url: "https://res.cloudinary.com/do7pjthoe/image/upload/v1701579842/polytech/avatar/tqqg4vbznsswpxufl8wj.jpg",
+      id: "polytech/avatar/tqqg4vbznsswpxufl8wj",
+    };
+
     const newData = {
       ...data,
       avatar,
     };
+
     signup(newData)
       .unwrap()
       .then((data) => {
@@ -52,7 +56,7 @@ const SignUpView = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
-          position: "top-right",
+          position: "bottom-right",
         });
         navigate("/dang-nhap");
       })
@@ -62,7 +66,7 @@ const SignUpView = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
-          position: "top-right",
+          position: "bottom-right",
         });
       });
   };
@@ -225,7 +229,7 @@ const SignUpView = () => {
                 {...register("confirm_password")}
               />
               <FormErrorMessage>
-                {(errors.confirm_password as any) &&
+                {(errors.confirm_password as unknown) &&
                   (errors?.confirm_password?.message as any)}
               </FormErrorMessage>
             </FormControl>
