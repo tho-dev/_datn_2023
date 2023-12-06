@@ -358,7 +358,6 @@ const OrderManagementView = () => {
 					</Box>
 
 					<Flex
-						flex="1"
 						px="4"
 						rounded="8px"
 						alignItems="center"
@@ -382,7 +381,7 @@ const OrderManagementView = () => {
 							fontSize="15"
 							fontWeight="medium"
 							lineHeight="1.5"
-							w="260px"
+							w="200px"
 							placeholder="Tìm kiếm theo tên,mã,..."
 							value={debouncedSearchTerm?.search}
 							onChange={(e) => setDebouncedSearchTerm({ search: e.target.value })}
@@ -391,6 +390,7 @@ const OrderManagementView = () => {
 				</Flex>
 				<Flex
 					flex="1"
+					gap="4"
 					alignItems="center"
 					justifyContent="flex-end"
 				>
@@ -404,7 +404,7 @@ const OrderManagementView = () => {
 							color="#1f7342"
 						/>
 					</Box>
-					{/* <Button
+					<Button
 						leftIcon={
 							<FilterIcon
 								size={5}
@@ -418,7 +418,7 @@ const OrderManagementView = () => {
 						onClick={handleFilterNews}
 					>
 						Làm mới
-					</Button> */}
+					</Button>
 				</Flex>
 			</Flex>
 
