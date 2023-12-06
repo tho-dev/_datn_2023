@@ -9,6 +9,7 @@ import createError from "http-errors";
 import { connect } from "./config/database.config.js";
 import { connectRedis } from "./config/redis.config.js";
 import { checkStatusOrder } from "./config/checkStatusOrder.js";
+import path from "path";
 
 dotenv.config();
 
@@ -38,6 +39,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

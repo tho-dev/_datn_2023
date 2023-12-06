@@ -19,6 +19,7 @@ import { Demand, DemandValue } from "../models/demand.model";
 import { sortOptions } from "../utils/fc";
 import createError from "http-errors";
 import fetch from "node-fetch";
+import xl from "excel4node";
 
 // so sánh sản phẩm
 export async function compareProduct(req, res, next) {
@@ -349,6 +350,109 @@ export async function getAllProductManager(req, res, next) {
         paginate,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function exportExcel(req, res, next) {
+  try {
+    const {
+      _name = "",
+      _category = "",
+      _brand = "",
+      _status = "",
+    } = req.query;
+
+    const docs = await Product.find(
+      {
+        $and: [
+          _name
+            ? {
+              $or: [
+                { name: new RegExp(_name, "i") },
+                { description: new RegExp(_name, "i") },
+              ],
+            }
+            : {},
+          _brand ? { brand_id: _brand } : {},
+          _category ? { category_id: _category } : {},
+          _status ? { status: JSON.parse(_status) } : {},
+        ],
+      },
+    ).sort({ created_at: 1 }).select('-attributes -description -specs -deleted -deleted_at -created_at -updated_at ');
+
+    // hàm lấy ra các 1 sku của một sản phẩm
+    const getSku = async (product, id) => {
+      const brand = await Brand.findOne({
+        _id: product?.brand_id,
+      });
+
+      const category = await Category.findOne({
+        _id: product?.category_id,
+      });
+
+      // lấy ra các options
+      const options = await Option.find({
+        product_id: id,
+      });
+
+      // lấy ra option màu
+      const option = options?.find(
+        (option) => option.name == "mau" || option.name == "color"
+      );
+      const colors = await OptionValue.find({
+        option_id: option?._id,
+      }).select("-_id value label");
+
+      return {
+        ...product?.toObject(),
+        image: product?.images?.[0]?.url,
+        brand: brand?.name,
+        category: category?.name,
+        colors,
+      };
+    };
+
+    const data = await Promise.all(
+      docs?.map((item) => getSku(item, item?._id))
+    );
+
+    const customsData = data.map((_x) => {
+      return {
+        'Sản phẩm': _x.name,
+        'Giá nhập': _x.price,
+        'Giá bán': _x.price_before_discount,
+        'Ảnh': _x?.images?.[0]?.url,
+        'Thương hiệu': _x?.brand,
+        'Danh mục': _x.category,
+        'Màu sắc': _x.colors.join(','),
+        'Đường dẫn': _x.shared_url,
+        'Slug': _x.slug,
+        'SKU': _x.SKU,
+      }
+    })
+
+    var wb = new xl.Workbook();
+    // Add Worksheets to the workbook
+    var ws = wb.addWorksheet('Sheet 1');
+
+    const headers = Object.keys(customsData[0]);
+    headers.forEach((header, index) => {
+      ws.cell(1, index + 1).string(header);
+    });
+
+    // Populate the worksheet with data
+    customsData.forEach((doc, rowIndex) => {
+      const values = Object.values(doc);
+      values.forEach((value, colIndex) => {
+        ws.cell(rowIndex + 2, colIndex + 1).string(`${value}`);
+      });
+    });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader("Content-Disposition", "attachment; filename=" + "file_products.xlsx");
+    wb.write('file_products.xlsx', res);
   } catch (error) {
     next(error);
   }

@@ -5,6 +5,7 @@ import {
   createOrder,
   getAll,
   getOne,
+  exportExcel,
   cancelOrder,
   updateStatus,
   update_info_customer,
@@ -47,6 +48,7 @@ router.put(
   deleteProduct_order
 );
 
+router.get("/export-excel", exportExcel)
 router.post("/send-otp", sendOtpCode);
 router.post("/payment-status", updatePaymentStatus);
 router.post("/verify-otp", verifyOtpCode);
