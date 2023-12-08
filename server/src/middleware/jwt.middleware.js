@@ -12,7 +12,7 @@ export async function signAccessToken(user) {
       role: user.role,
     };
     const options = {
-      expiresIn: "3h",
+      expiresIn: "30d",
     };
     const token = jwt.sign(
       payload,

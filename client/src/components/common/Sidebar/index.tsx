@@ -68,10 +68,7 @@ const MENU = [
 		title: "Cấu hình",
 		to: "/admin/cau-hinh",
 		icon: SettingsIcon,
-		children: [
-			{ title: "Chung", to: "/admin/cau-hinh" },
-			{ title: "Ngôn ngữ", to: "/admin/ngon-ngu" },
-		],
+		children: [{ title: "Chung", to: "/admin/cau-hinh" }],
 	},
 ];
 

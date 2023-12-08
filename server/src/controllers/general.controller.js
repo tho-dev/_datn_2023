@@ -56,6 +56,8 @@ export async function getDashboard(req, res, next) {
         $gt: startOfPeriod.toDate(),
         $lt: endOfPeriod.toDate(),
       },
+      payment_status: "paid",
+      status: "delivered",
     });
     const users = await User.find({});
     const revenues = await Order.aggregate([
@@ -66,6 +68,7 @@ export async function getDashboard(req, res, next) {
             $lt: endOfPeriod.toDate(),
           },
           payment_status: "paid",
+          status: "delivered",
         },
       },
       {
