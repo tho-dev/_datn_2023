@@ -12,6 +12,7 @@ import {
 	MenuItem,
 	MenuList,
 	useDisclosure,
+	useToast,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
@@ -19,7 +20,7 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
 import { AirplayIcon, EditIcon, ExcelIcon, PlusCircleIcon, SearchIcon, TraskIcon } from "~/components/common/Icons";
-import { useGetAllProductQuery } from "~/redux/api/product";
+import { useGetAllProductQuery, useDeleteProductMutation } from "~/redux/api/product";
 import { formatNumber, objectToUrlParams } from "~/utils/fc";
 import moment from "moment/moment";
 import SelectThinkPro from "~/components/SelectThinkPro";
@@ -29,6 +30,8 @@ import { useGetAllBrandsQuery } from "~/redux/api/brand";
 import { useDebounce } from "@uidotdev/usehooks";
 
 const ProductManagerView = () => {
+	const toast = useToast();
+	const [id, setID] = useState<any>(null);
 	const [brandsFilter, setBrandsFilter] = useState<any>([]);
 	const [categoriesFilter, setCategoriesFilter] = useState<any>([]);
 
@@ -68,7 +71,7 @@ const ProductManagerView = () => {
 		return {
 			_page: 1,
 			_limit: 20,
-			_order: "desc",
+			_order: "asc",
 			_sort: "created_at",
 			_name: nameForm,
 			_category: categoryForm?.value,
@@ -90,13 +93,16 @@ const ProductManagerView = () => {
 			skip: !categoryForm?.value,
 		}
 	);
+
 	const { data: categories } = useGetAllCategoryQuery({
 		_limit: 30,
 		_page: 1,
 		_sort: "created_at",
-		_order: "desc",
+		_order: "asc",
 		_type: "category_brand",
 	});
+
+	const [deleteProduct] = useDeleteProductMutation();
 
 	useEffect(() => {
 		if (brands) {
@@ -144,6 +150,29 @@ const ProductManagerView = () => {
 				document.body.removeChild(a);
 			})
 			.catch((error) => console.error("Lỗi tải xuống tệp:", error));
+	};
+
+	const handleDeleteProduct = async () => {
+		try {
+			await deleteProduct({ product_id: id } as any).unwrap();
+			toast({
+				title: "Thành công",
+				duration: 1600,
+				position: "top-right",
+				status: "success",
+				description: "Xóa sản phẩm thành công",
+			});
+		} catch (error: any) {
+			toast({
+				title: "Có lỗi",
+				duration: 1600,
+				position: "top-right",
+				status: "error",
+				description: JSON.stringify(error?.data?.errors),
+			});
+		}
+
+		onCloseConfirm();
 	};
 
 	const columns = [
@@ -323,18 +352,19 @@ const ProductManagerView = () => {
 							<MenuItem
 								py="2"
 								icon={<TraskIcon size={4} />}
-								onClick={() => {
+								onClick={async () => {
+									setID(row?.original?._id);
 									onOpenConfirm();
 								}}
 							>
 								Xóa
 							</MenuItem>
-							<MenuItem
+							{/* <MenuItem
 								py="2"
 								icon={<AirplayIcon size={4} />}
 							>
 								Preview
-							</MenuItem>
+							</MenuItem> */}
 							<MenuItem
 								as={ReactRouterLink}
 								to={`/admin/san-pham/${row?.original?._id}/update`}
@@ -524,7 +554,7 @@ const ProductManagerView = () => {
 			<ConfirmThinkPro
 				isOpen={isOpenConfirm}
 				onClose={onCloseConfirm}
-				// handleClick={handleDeleteProduct}
+				handleClick={handleDeleteProduct}
 			/>
 		</Box>
 	);

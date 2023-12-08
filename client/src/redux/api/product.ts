@@ -11,7 +11,7 @@ type TQuery = {
 
 const productApi = createApi({
 	reducerPath: "product",
-	tagTypes: ["ProductTag", "ProductSingleTag", "ProductVariantTag", "VariantSingleTag"],
+	tagTypes: ["ProductTag", "ProductSingleTag", "ProductVariantTag", "VariantSingleTag", "ProductManager"],
 	baseQuery: baseQuery,
 	endpoints: (builder) => ({
 		getSearch: builder.query({
@@ -40,12 +40,20 @@ const productApi = createApi({
 		}),
 		getAllProductManager: builder.query({
 			query: (query: TQuery) => `/product?${objectToUrlParams(query)}`,
+			providesTags: ["ProductManager"],
 		}),
 		exportExcel: builder.query({
 			query: (query: any) => `/product/export-excel?${objectToUrlParams(query)}`,
 		}),
 		getAllProduct: builder.query({
 			query: (query: TQuery) => `/product/manager?${objectToUrlParams(query)}`,
+		}),
+		deleteProduct: builder.mutation<any, number>({
+			query: ({ product_id }: any) => ({
+				url: `/product/${product_id}`,
+				method: "DELETE",
+			}),
+			invalidatesTags: ["ProductManager"],
 		}),
 		getProductById: builder.query({
 			query: ({ id }: { id: string }) => ({
@@ -118,6 +126,7 @@ export const {
 	useCompareProductMutation,
 	useGetSearchQuery,
 	useGetAllProductManagerQuery,
+	useDeleteProductMutation,
 } = productApi;
 export const productReducer = productApi.reducer;
 export default productApi;

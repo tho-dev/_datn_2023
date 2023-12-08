@@ -24,7 +24,8 @@ import {
 	getSingleVariant,
 	updateVariant,
 	compareProduct,
-	exportExcel
+	exportExcel,
+	deleteProduct
 } from "../controllers/product.controller";
 
 const router = express.Router();
@@ -39,6 +40,7 @@ router.get('/:slug', getSingleProduct)
 router.post("/", [verifyAccessToken, checkPermission], createProduct)
 router.post("/compare", compareProduct)
 router.put("/:id", [verifyAccessToken, checkPermission], updateProduct)
+router.delete("/:id", [verifyAccessToken, checkPermission], deleteProduct)
 
 // api variant
 router.get("/:product_id/variants/:sku_id", getSingleVariant)

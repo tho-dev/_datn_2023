@@ -279,8 +279,8 @@ export async function getAllProductManager(req, res, next) {
         "-specs",
         "-deleted",
         "-deleted_at",
-        "-created_at",
-        "-updated_at",
+        // "-created_at",
+        // "-updated_at",
       ],
     };
 
@@ -985,6 +985,31 @@ export async function updateProduct(req, res, next) {
     });
   } catch (error) {
     next(error);
+  }
+}
+
+export async function deleteProduct(req, res, next) {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      throw createError.NotFound("Không tìm thấy");
+    }
+
+    // cách xóa mềm
+    await product.delete();
+    product.deleted_at = moment(new Date()).toISOString();
+    await product.save();
+
+    return res.json({
+      status: 200,
+      message: "Thành công",
+      data: product,
+    });
+
+  } catch (error) {
+    next(error)
   }
 }
 
