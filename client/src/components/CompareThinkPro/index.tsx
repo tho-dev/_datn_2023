@@ -21,6 +21,10 @@ const Compare = ({ items }: Props) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const toast = useToast();
+  const deleteAll = () => {
+    dispatch(setItems([]));
+    navigate("/");
+  };
   return (
     <Box height="80px" bgColor="bg.white" width="100%">
       <Center>
@@ -88,7 +92,7 @@ const Compare = ({ items }: Props) => {
               backgroundColor="bg.gray"
               fontWeight="semibold"
               rounded="md"
-              onClick={() => dispatch(setItems([]))}
+              onClick={deleteAll}
             >
               Xoá tất cả
             </Button>
@@ -106,8 +110,7 @@ const Compare = ({ items }: Props) => {
                   navigate(`/so-sanh/${slugs.join("-vs-")}`);
                 } else {
                   toast({
-                    title: "Hệ thống thông báo",
-                    description: "Số lượng sản phẩm phải lớn hơn 1",
+                    title: "Số lượng sản phẩm phải lớn hơn 1",
                     status: "warning",
                     duration: 2000,
                     isClosable: true,

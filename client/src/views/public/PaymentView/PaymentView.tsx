@@ -85,7 +85,7 @@ const Payment = () => {
     const new_data = {
       ...order_infor,
       cart_id: cart_id,
-      total_amount: data.data.total_money + transportFee,
+      total_amount: data.data.total_money + transportFee - voucher_value,
       phone_number: compare_phone_number,
       transportation_fee: transportFee,
     };
