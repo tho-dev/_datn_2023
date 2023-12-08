@@ -1402,7 +1402,7 @@ export async function saveVariant(req, res, next) {
     const { product_id } = req.params;
 
     const product = await Product.findById(product_id).select(
-      "-_id name SKU slug shared_url price price_before_discount price_discount_percent"
+      "-_id name SKU slug shared_url price price_before_discount price_discount_percent price_import"
     );
 
     // Xóa tất cả sku trước khi đăng ký

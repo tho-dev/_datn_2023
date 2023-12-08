@@ -73,8 +73,8 @@ const TopComparsion = ({ data: values }: Props) => {
 	const colors = ["#1ab17a", "#16afcc", "#f5724f"];
 
 	const data = {
-		labels: values[0].data.map((_x: any) => `Tháng ${_x.month}`),
-		datasets: values.map((_x: any, index: number) => {
+		labels: values?.[0]?.data?.map((_x: any) => `Tháng ${_x.month}`),
+		datasets: values?.map((_x: any, index: number) => {
 			return {
 				label: _x.product.name,
 				data: _x.data.map((_y: any) => _y.quantity),

@@ -149,6 +149,7 @@ const AddProductMangerView = () => {
 			is_avaiable: data?.is_avaiable ? Boolean(data?.is_avaiable) : false,
 			status: data?.status ? Boolean(data?.status) : false,
 			price: Number(data?.price),
+			price_import: Number(data?.price_import),
 			price_before_discount: Number(data?.price_before_discount),
 			brand_id: data?.brand_id?.value,
 			category_id: data?.category_id?.value,
@@ -373,13 +374,54 @@ const AddProductMangerView = () => {
 										flexDir="column"
 										gap="4"
 									>
+										<FormControl isInvalid={errors?.price_import as any}>
+											<FormLabel
+												htmlFor="price_import"
+												fontSize="sm"
+												fontWeight="semibold"
+											>
+												Giá nhập
+											</FormLabel>
+											<Flex
+												alignItems="center"
+												justifyContent="space-between"
+												borderWidth="1px"
+												rounded="8px"
+												px="4"
+												borderColor={errors?.price_import && "border.error"}
+											>
+												<Input
+													id="price_import"
+													{...register("price_import", {
+														required: "Không được để trống",
+														pattern: {
+															value: /^\d+$/,
+															message: "Vui lòng nhập số",
+														},
+													})}
+													border="none"
+													placeholder="20.000.000"
+													px="0"
+												/>
+												<Text
+													color="#8c98a4"
+													fontSize="13px"
+													fontWeight="medium"
+												>
+													VNĐ
+												</Text>
+											</Flex>
+											<FormErrorMessage>
+												{(errors?.price_import as any) && errors?.price_import?.message}
+											</FormErrorMessage>
+										</FormControl>
 										<FormControl isInvalid={errors?.price as any}>
 											<FormLabel
 												htmlFor="price"
 												fontSize="sm"
 												fontWeight="semibold"
 											>
-												Giá bán
+												Giá khuyến mãi
 											</FormLabel>
 											<Flex
 												alignItems="center"
@@ -420,7 +462,7 @@ const AddProductMangerView = () => {
 												fontSize="sm"
 												fontWeight="semibold"
 											>
-												Giá nhập
+												Giá bán
 											</FormLabel>
 											<Flex
 												alignItems="center"

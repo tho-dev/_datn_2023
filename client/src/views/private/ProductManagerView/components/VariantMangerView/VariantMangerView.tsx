@@ -27,6 +27,7 @@ import {
 } from "~/redux/api/product";
 import CommonBox from "./components/CommonBox";
 import Media from "./components/Media";
+import image from "~/assets/images/image.png";
 
 const AddProductMangerView = () => {
 	const toast = useToast();
@@ -169,7 +170,7 @@ const AddProductMangerView = () => {
 												src={
 													product?.data?.images?.[0]?.url
 														? product?.data?.images?.[0]?.url
-														: "https://res.cloudinary.com/dctvtsnuk/image/upload/v1697604038/ezcx9lttgrinnzmrl9ti.png"
+														: image
 												}
 												w="full"
 												h="full"
@@ -244,11 +245,7 @@ const AddProductMangerView = () => {
 														borderStyle="dashed"
 													>
 														<Image
-															src={
-																variant?.image?.url
-																	? variant?.image?.url
-																	: "https://res.cloudinary.com/dctvtsnuk/image/upload/v1697604038/ezcx9lttgrinnzmrl9ti.png"
-															}
+															src={variant?.image?.url ? variant?.image?.url : image}
 															w="full"
 															h="full"
 															objectFit="contain"
@@ -372,13 +369,54 @@ const AddProductMangerView = () => {
 								</CommonBox>
 								<CommonBox title="Chi Tiết Biến Thể">
 									<Flex gap="4">
+										<FormControl isInvalid={errors?.price_import as any}>
+											<FormLabel
+												htmlFor="price_import"
+												fontSize="sm"
+												fontWeight="semibold"
+											>
+												Giá nhập
+											</FormLabel>
+											<Flex
+												alignItems="center"
+												justifyContent="space-between"
+												borderWidth="1px"
+												rounded="8px"
+												px="4"
+												borderColor={errors?.price_import && "border.error"}
+											>
+												<Input
+													id="price_import"
+													{...register("price_import", {
+														required: "Không được để trống",
+														pattern: {
+															value: /^\d+$/,
+															message: "Vui lòng nhập số",
+														},
+													})}
+													border="none"
+													placeholder="20.000.000"
+													px="0"
+												/>
+												<Text
+													color="#8c98a4"
+													fontSize="13px"
+													fontWeight="medium"
+												>
+													VNĐ
+												</Text>
+											</Flex>
+											<FormErrorMessage>
+												{(errors?.price_import as any) && errors?.price_import?.message}
+											</FormErrorMessage>
+										</FormControl>
 										<FormControl isInvalid={errors?.price as any}>
 											<FormLabel
 												htmlFor="price"
 												fontSize="sm"
 												fontWeight="semibold"
 											>
-												Giá nhập
+												Giá khuyến mãi
 											</FormLabel>
 											<Flex
 												alignItems="center"

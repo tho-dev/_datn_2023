@@ -103,7 +103,7 @@ export async function getDashboard(req, res, next) {
                 $map: {
                   input: "$products",
                   as: "product",
-                  in: { $subtract: ["$$product.price_before_discount", "$$product.price"] }
+                  in: { $subtract: ["$$product.price", "$$product.price_import"] }
                 }
               }
             }
@@ -426,7 +426,7 @@ export async function revenueStatistics(req, res, next) {
                 $map: {
                   input: "$products",
                   as: "product",
-                  in: { $subtract: ["$$product.price_before_discount", "$$product.price"] }
+                  in: { $subtract: ["$$product.price_import", "$$product.price"] }
                 }
               }
             }

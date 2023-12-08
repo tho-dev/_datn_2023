@@ -158,6 +158,7 @@ export async function insertProduct(req, res, next) {
 						"url": "https://res.cloudinary.com/dctvtsnuk/image/upload/v1698172337/thinkpro/products/bnqdc0obrf6vxtldbzrg.jpg"
 					}),
 					price: price || 1000000,
+					price_import: price * 0.9 || 1000000 * 0.9,
 					price_before_discount: price_before_discount || 1000000,
 					specs,
 					has_gift,
@@ -230,7 +231,7 @@ export async function insertProduct(req, res, next) {
 				// api tự động đăng ký các biến thế
 
 				const product = await Product.findById(product_id)
-					.select("-_id name slug shared_url price price_before_discount price_discount_percent")
+					.select("-_id name slug shared_url price price_import price_before_discount price_discount_percent")
 
 				// Xóa tất cả sku trước khi đăng ký
 				// + TH1: khi thêm bớt options -> tính toán lại biến thể
@@ -308,7 +309,7 @@ export async function insertProduct(req, res, next) {
 				const arraySkus = Array(variants?.length).fill({
 					...product.toObject(),
 					product_id: product_id,
-					stock: 100,
+					stock: 200,
 					is_avaiable: true,
 					assets: [],
 					image: {},
