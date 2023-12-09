@@ -2,18 +2,13 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Outlet } from "react-router";
-import { socket } from "~/App";
 import LoadingPolytech from "~/components/LoadingPolytech";
 import Sidebar from "~/components/common/Sidebar";
 import TopBar from "~/components/common/TopBar";
 import { useGetAllQuery } from "~/redux/api/notification";
-import { useAppSelector } from "~/redux/hook/hook";
 
 const AdminLayout = () => {
   const [status, setStatus] = useState(null);
-  const user = useAppSelector(
-    (state: any) => state.persistedReducer.global.user
-  );
   const { data, isLoading } = useGetAllQuery({ status: status });
   const [dataNotification, setDataNotification] = useState<any>([]);
 
@@ -22,19 +17,6 @@ const AdminLayout = () => {
       setDataNotification(data.data);
     }
   }, [data]);
-
-  useEffect(() => {
-    socket.emit("joinRoom", "don-hang", user._id, user.role);
-  }, []);
-
-  useEffect(() => {
-    if (data) {
-      socket.on("notification", (notification) => {
-        const { roomName, ...rest } = notification;
-        setDataNotification([...data.data, rest]);
-      });
-    }
-  }, [socket, data]);
   const handleChangeStatusNoti = (status: any) => {
     setStatus(status);
   };

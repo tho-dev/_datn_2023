@@ -21,7 +21,6 @@ import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { socket } from "~/App";
 import momo from "~/assets/images/momo.png";
 import vnpay from "~/assets/images/vnpay.png";
 import LoadingPolytech from "~/components/LoadingPolytech";
@@ -57,14 +56,6 @@ const Payment = () => {
   );
   const { data, isLoading } = useGetCartQuery(cart_id);
   const [getValueCoupon] = useGetValueCouponMutation();
-  useEffect(() => {
-    socket.emit(
-      "joinRoom",
-      "don-hang",
-      user._id ?? "123",
-      user.role ?? "customer"
-    );
-  }, []);
   const shopAdress =
     "13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam";
   const {
@@ -85,7 +76,7 @@ const Payment = () => {
     const new_data = {
       ...order_infor,
       cart_id: cart_id,
-      total_amount: data.data.total_money + transportFee - voucher_value,
+      total_amount: data?.data.total_money + transportFee - voucher_value,
       phone_number: compare_phone_number,
       transportation_fee: transportFee,
     };

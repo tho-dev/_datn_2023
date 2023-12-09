@@ -20,7 +20,6 @@ import { useNavigate } from "react-router";
 import Time from "./Time";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { resetOtp, setCheckOtp } from "~/redux/slices/globalSlice";
-import { socket } from "~/App";
 import { useAddNotiMutation } from "~/redux/api/notification";
 import cartApi from "~/redux/api/cart";
 type Props = {
@@ -76,12 +75,7 @@ const PopupCheckOtp = ({
               status: false,
               message: "Một đơn hàng đã được đặt",
               link: "don-hang",
-            })
-              .unwrap()
-              .then((data) => {
-                const new_data = { ...data?.data, roomName: "don-hang" };
-                socket.emit("sendNotification", new_data);
-              });
+            });
             if (payment_method == "online" && payment == "MOMO") {
               paymentMomo({
                 bill: dataOrder.total_amount,
