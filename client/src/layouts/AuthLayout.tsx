@@ -34,7 +34,10 @@ const AuthLayout = () => {
           xl: 7,
           "2xl": 7,
         }}
-        bgColor="bg.red"
+        bgColor={{
+          xl: "bg.red",
+          sm: "bg.white",
+        }}
         borderTopLeftRadius="100px"
         borderBottomLeftRadius="100px"
       >

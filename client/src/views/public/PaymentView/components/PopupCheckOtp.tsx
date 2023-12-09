@@ -101,8 +101,7 @@ const PopupCheckOtp = ({
           .catch((err) => {
             dispatch(resetOtp(false));
             toast({
-              title: "Đơn hàng",
-              description: err.data.errors.message,
+              title: err.data.errors.message,
               status: "error",
               duration: 2000,
               isClosable: true,
@@ -118,8 +117,7 @@ const PopupCheckOtp = ({
       .catch((err) => {
         setLoading(false);
         toast({
-          title: "OTP",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -133,8 +131,7 @@ const PopupCheckOtp = ({
       sendOtp({ phone_number: dataOrder.phone_number })
         .then(() => {
           toast({
-            title: "Thanh Toán",
-            description: "Gửi mã OTP thành công",
+            title: "Mã OTP đã gửi đến bạn",
             status: "success",
             duration: 2000,
             isClosable: true,
@@ -143,8 +140,7 @@ const PopupCheckOtp = ({
         })
         .catch(() => {
           toast({
-            title: "Thanh Toán",
-            description: "Gửi mã OTP thất bại",
+            title: "Gửi mã OTP thất bại",
             status: "error",
             duration: 2000,
             isClosable: true,
@@ -159,8 +155,7 @@ const PopupCheckOtp = ({
       .then(() => {
         dispatch(setCheckOtp(60));
         toast({
-          title: "Thanh Toán",
-          description: "Đã gửi lại mã OTP",
+          title: "Đã gửi lại mã OTP",
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -169,8 +164,7 @@ const PopupCheckOtp = ({
       })
       .catch(() => {
         toast({
-          title: "Thanh Toán",
-          description: "Gửi lại mã OTP thất bại",
+          title: "Gửi lại mã OTP thất bại",
           status: "error",
           duration: 2000,
           isClosable: true,

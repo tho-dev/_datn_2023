@@ -38,14 +38,12 @@ const SignUpView = () => {
   const [signup, { isLoading }] = useSignupMutation();
   const onSubmit = async (data: any) => {
     if (!checkCaptch) return;
-    const avatar = {
-      url: "https://res.cloudinary.com/do7pjthoe/image/upload/v1701579842/polytech/avatar/tqqg4vbznsswpxufl8wj.jpg",
-      id: "polytech/avatar/tqqg4vbznsswpxufl8wj",
-    };
-
     const newData = {
       ...data,
-      avatar,
+      avatar: {
+        url: "https://res.cloudinary.com/do7pjthoe/image/upload/v1701579842/polytech/avatar/tqqg4vbznsswpxufl8wj.jpg",
+        id: "polytech/avatar/tqqg4vbznsswpxufl8wj",
+      },
     };
 
     signup(newData)
@@ -56,17 +54,17 @@ const SignUpView = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
         navigate("/dang-nhap");
       })
       .catch((err) => {
         toast({
-          title: err.data.message,
+          title: err.data.errors.message,
           status: "success",
           duration: 5000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       });
   };

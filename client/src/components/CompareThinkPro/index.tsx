@@ -9,7 +9,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAppDispatch } from "~/redux/hook/hook";
-import { remoteItems, setItems } from "~/redux/slices/globalSlice";
+import {
+  remoteItems,
+  setIsCompare,
+  setItems,
+} from "~/redux/slices/globalSlice";
 import { ArrowRightIcon, CloseSmallIcon } from "../common/Icons";
 import { useNavigate } from "react-router";
 
@@ -23,7 +27,7 @@ const Compare = ({ items }: Props) => {
   const toast = useToast();
   const deleteAll = () => {
     dispatch(setItems([]));
-    navigate("/");
+    dispatch(setIsCompare(false as any));
   };
   return (
     <Box height="80px" bgColor="bg.white" width="100%">
