@@ -27,6 +27,10 @@ export const userSchema = joi.object({
   phone: joi.number().required(),
   location: joi.string(),
   role: joi.string().default("customer"),
+  avatar: joi.object({
+    id: joi.string().required(),
+    url: joi.string().required(),
+  }),
 });
 
 export const postSchema = joi.object({
