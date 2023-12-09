@@ -111,13 +111,14 @@ export const createOrder = async (req, res, next) => {
       },
       user_id,
       coupon_id,
-      total_amount: total_amount + transportation_fee - coupon_value,
+      total_amount: total_amount,
     });
     const add_product_item = async (product) => {
       const new_item = await Order_Detail.create({
         order_id: new_order._id,
         sku_id: product.sku_id,
         price: product.price,
+        price_import: product.price_import,
         quantity: product.quantity,
         price_before_discount: product.price_before_discount,
         price_discount_percent: product.price_discount_percent,
@@ -272,13 +273,7 @@ export const getAll = async (req, res, next) => {
 
 export const exportExcel = async (req, res, next) => {
   try {
-    const {
-      search,
-      status,
-      date,
-      payment_method,
-      payment_status,
-    } = req.query;
+    const { search, status, date, payment_method, payment_status } = req.query;
     const conditions = {};
     if (search) {
       conditions.$or = [
@@ -314,7 +309,6 @@ export const exportExcel = async (req, res, next) => {
       conditions["payment_method.partnerCode"] = payment_method;
     }
 
-
     const docs = await Order.find(conditions);
 
     const new_docs = await Promise.all(
@@ -331,28 +325,35 @@ export const exportExcel = async (req, res, next) => {
     const customsData = new_docs.map((_x) => {
       // thời gian và tình trạng đơn hàng
       const status = _x?.status_detail?.reduce((acc, cur, i) => {
-        const text = checkStatusOrder(cur.status)
-        return { ...acc, [text]: `Thời gian: ${moment(cur.created_at).format("DD-MM-YYYY HH:MM:SS")}` };
+        const text = checkStatusOrder(cur.status);
+        return {
+          ...acc,
+          [text]: `Thời gian: ${moment(cur.created_at).format(
+            "DD-MM-YYYY HH:MM:SS"
+          )}`,
+        };
       }, {});
 
       return {
-        'ID': _x._id,
-        'Tên khách hàng': _x.customer_name,
-        'SĐT': _x.phone_number,
-        'user_id': _x.user_id || 'Khách vãng lai',
-        'Địa chỉ': _x.shop_address,
-        'Hóa đơn': _x.total_amount,
-        'Ghi chú đơn hàng': _x.content,
-        'Phương thức nhận hàng': _x.shipping_method == 'at_store' ? 'Tại cửa hàng' : 'Online',
-        'Phương thức thanh toán': _x.payment_method.orderInfo,
-        'Trạng thái thanh toán': _x.payment_status == 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán',
+        ID: _x._id,
+        "Tên khách hàng": _x.customer_name,
+        SĐT: _x.phone_number,
+        user_id: _x.user_id || "Khách vãng lai",
+        "Địa chỉ": _x.shop_address,
+        "Hóa đơn": _x.total_amount,
+        "Ghi chú đơn hàng": _x.content,
+        "Phương thức nhận hàng":
+          _x.shipping_method == "at_store" ? "Tại cửa hàng" : "Online",
+        "Phương thức thanh toán": _x.payment_method.orderInfo,
+        "Trạng thái thanh toán":
+          _x.payment_status == "paid" ? "Đã thanh toán" : "Chưa thanh toán",
         ...status,
       };
-    })
+    });
 
     var wb = new xl.Workbook();
     // Add Worksheets to the workbook
-    var ws = wb.addWorksheet('Sheet 1');
+    var ws = wb.addWorksheet("Sheet 1");
 
     const headers = Object.keys(customsData[0]);
     headers.forEach((header, index) => {
@@ -367,10 +368,15 @@ export const exportExcel = async (req, res, next) => {
       });
     });
 
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader("Content-Disposition", "attachment; filename=" + "file_orders.xlsx");
-    wb.write('file_orders.xlsx', res);
-
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=" + "file_orders.xlsx"
+    );
+    wb.write("file_orders.xlsx", res);
   } catch (error) {
     next(error);
   }

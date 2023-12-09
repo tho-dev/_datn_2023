@@ -56,8 +56,6 @@ export async function getDashboard(req, res, next) {
         $gt: startOfPeriod.toDate(),
         $lt: endOfPeriod.toDate(),
       },
-      payment_status: "paid",
-      status: "delivered",
     });
     const users = await User.find({});
     const revenues = await Order.aggregate([
@@ -415,6 +413,7 @@ export async function revenueStatistics(req, res, next) {
             $lt: endOfPeriod.toDate(),
           },
           payment_status: "paid",
+          status: "delivered",
         },
       },
       {
@@ -452,7 +451,7 @@ export async function revenueStatistics(req, res, next) {
                   input: "$products",
                   as: "product",
                   in: {
-                    $subtract: ["$$product.price_import", "$$product.price"],
+                    $subtract: ["$$product.price", "$$product.price_import"],
                   },
                 },
               },

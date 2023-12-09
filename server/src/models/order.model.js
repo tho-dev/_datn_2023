@@ -27,6 +27,10 @@ const orderItemSchema = new Schema(
       type: Number,
       default: 0,
     },
+    price_import: {
+      type: Number,
+      default: 0,
+    },
     price_discount_percent: {
       type: Number,
       default: 0,

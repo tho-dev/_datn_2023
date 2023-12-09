@@ -22,6 +22,7 @@ const cartSchema = new Schema(
         },
         quantity: Number,
         price: { type: Number, required: true },
+        price_import: { type: Number, required: true },
         price_before_discount: {
           type: Number,
           default: 0,
