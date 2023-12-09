@@ -256,10 +256,10 @@ export async function getDashboard(req, res, next) {
 
       return {
         product: {
-          name: product.name,
-          image: product.images?.[0]?.url,
-          price: product.price,
-          price_before_discount: product.price_before_discount,
+          name: product?.name,
+          image: product?.images?.[0]?.url,
+          price: product?.price,
+          price_before_discount: product?.price_before_discount,
         },
         data: result
       };
