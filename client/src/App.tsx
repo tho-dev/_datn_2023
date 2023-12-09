@@ -5,10 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useCreateCartMutation } from "./redux/api/cart";
 import { addCart } from "./redux/slices/cartSlice";
 import { useEffect } from "react";
-import { io } from "socket.io-client";
 import { HelmetProvider } from "react-helmet-async";
-
-// export const socket = io(process.env.BE_URL || "");
 
 function App() {
   const [createCart] = useCreateCartMutation();
