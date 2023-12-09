@@ -106,10 +106,7 @@ export async function getDashboard(req, res, next) {
                   input: "$products",
                   as: "product",
                   in: {
-                    $subtract: [
-                      "$$product.price_before_discount",
-                      "$$product.price",
-                    ],
+                    $subtract: ["$$product.price", "$$product.price_import"],
                   },
                 },
               },
@@ -455,10 +452,7 @@ export async function revenueStatistics(req, res, next) {
                   input: "$products",
                   as: "product",
                   in: {
-                    $subtract: [
-                      "$$product.price_before_discount",
-                      "$$product.price",
-                    ],
+                    $subtract: ["$$product.price_import", "$$product.price"],
                   },
                 },
               },

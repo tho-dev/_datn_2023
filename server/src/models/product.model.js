@@ -111,6 +111,9 @@ const skuSchema = new Schema(
     price_discount_percent: {
       type: Number,
     },
+    price_import: {
+      type: Number
+    },
     stock: {
       type: Number,
       default: 0,
@@ -244,6 +247,9 @@ const productSchema = new Schema(
     },
     price_discount_percent: {
       type: Number,
+    },
+    price_import: {
+      type: Number
     },
     has_gift: {
       // check xem có khuyến mãi không
