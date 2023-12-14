@@ -65,40 +65,39 @@ const OrderDetailView = () => {
   }
 
   const handleCancelOrder = (id: string) => {
-    if (
-      data?.data.status !== "processing" ||
-      data?.data.status !== "confirmed"
-    ) {
+    if (data?.data.status == "processing" || data?.data.status == "confirmed") {
+      cancelOrder({ id })
+        .unwrap()
+        .then((data: any) => {
+          toast({
+            title: `${data.message}`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        })
+        .catch((error) => {
+          toast({
+            title: `${error.data.errors.message}`,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
+        })
+        .finally(() => {
+          onClose();
+        });
+    } else {
       return toast({
-        title: "Hệ thống thông báo",
-        description: `Không thể huỷ đơn hàng ${data?.data.status}`,
+        title: `Không thể huỷ đơn hàng ${data?.data.status}`,
         status: "warning",
         duration: 3000,
         isClosable: true,
         position: "top-right",
       });
     }
-    cancelOrder({ id })
-      .unwrap()
-      .then((data: any) => {
-        toast({
-          title: "Hệ thống thông báo",
-          description: `${data.data.message}`,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => {
-        toast({
-          title: "Hệ thống thông báo",
-          description: `${error.data.errors.message}`,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      });
-    onClose();
   };
   const handlePrinOrder = async () => {
     if (
@@ -111,11 +110,11 @@ const OrderDetailView = () => {
       return;
     }
     toast({
-      title: "Hệ thống thông báo",
-      description: `Không thể thực hiện in đơn đã huỷ`,
+      title: `Không thể thực hiện in đơn đã huỷ`,
       status: "error",
       duration: 3000,
       isClosable: true,
+      position: "top-right",
     });
   };
 
@@ -135,22 +134,21 @@ const OrderDetailView = () => {
     updateStatusOrder({ status: orderStatus, id: id })
       .unwrap()
       .then((data) => {
-        console.log(data);
         toast({
-          title: "Hệ thống thông báo",
-          description: `${data.message}`,
+          title: `${data.message}`,
           status: "success",
           duration: 3000,
           isClosable: true,
+          position: "top-right",
         });
       })
       .catch((err) => {
         toast({
-          title: "Hệ thống thông báo",
-          description: `${err.data.errors.message}`,
+          title: `${err.data.data || err.data.errors.message}`,
           status: "error",
           duration: 3000,
           isClosable: true,
+          position: "top-right",
         });
       })
       .finally(() => {
