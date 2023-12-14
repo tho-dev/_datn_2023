@@ -447,7 +447,7 @@ const UpdateOrder = () => {
                 Tổng hoá đơn
               </Text>
               <Text fontSize="14px" fontWeight="semibold">
-                {(data?.data?.total_amount + transportFee).toLocaleString()}đ
+                {data?.data?.total_amount.toLocaleString()}đ
               </Text>
             </Flex>
           </Box>
