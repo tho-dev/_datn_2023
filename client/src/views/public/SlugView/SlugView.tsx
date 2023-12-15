@@ -24,7 +24,6 @@ import { ArrowUpIcon } from "~/components/common/Icons";
 import { useParams, useNavigate } from "react-router";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useDebounce } from "@uidotdev/usehooks";
-import LoadingPolytech from "~/components/LoadingPolytech";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { setIsCompare, setItems } from "~/redux/slices/globalSlice";
 import { RootState } from "~/redux/store";
