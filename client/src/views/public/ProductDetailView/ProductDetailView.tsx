@@ -53,8 +53,8 @@ const ProductDetailView = () => {
   const [byNow, { isLoading: loading }] = useByNowMutation();
   const {
     data: product,
+    isLoading: loadingProduct,
     isError,
-    isFetching,
   } = useGetBySlugQuery(slug as string);
 
   const handleAddToCart = async () => {
@@ -226,7 +226,7 @@ const ProductDetailView = () => {
     setQuantity(quantity + 1);
   };
 
-  if (isFetching) {
+  if (loadingProduct) {
     return <LoadingPolytech />;
   }
 

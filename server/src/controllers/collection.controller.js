@@ -115,17 +115,17 @@ export async function filterBrandAndCategory(req, res, next) {
       };
 
       // bộ lọc khuyến mãi
-      const promotionFilter = {
-        name: "promotion",
-        type: "switch",
-        label: "Có khuyến mại",
-        options: [
-          {
-            label: "Có",
-            value: "",
-          },
-        ],
-      };
+      // const promotionFilter = {
+      //   name: "promotion",
+      //   type: "switch",
+      //   label: "Có khuyến mại",
+      //   options: [
+      //     {
+      //       label: "Có",
+      //       value: "",
+      //     },
+      //   ],
+      // };
 
       // bộ lọc thương hiệu
       const brandFilter = {
@@ -166,7 +166,7 @@ export async function filterBrandAndCategory(req, res, next) {
           brandFilter,
           optionFilterPrice,
           demandFilter,
-          promotionFilter,
+          // promotionFilter,
         ],
         seo_data: {},
       };
@@ -208,17 +208,17 @@ export async function filterBrandAndCategory(req, res, next) {
       };
 
       // bộ lọc khuyến mãi
-      const promotionFilter = {
-        name: "promotion",
-        type: "switch",
-        label: "Có khuyến mại",
-        options: [
-          {
-            label: "Có",
-            value: "",
-          },
-        ],
-      };
+      // const promotionFilter = {
+      //   name: "promotion",
+      //   type: "switch",
+      //   label: "Có khuyến mại",
+      //   options: [
+      //     {
+      //       label: "Có",
+      //       value: "",
+      //     },
+      //   ],
+      // };
 
       // bộ lọc thương hiệu
       const brandFilter = {
@@ -273,7 +273,7 @@ export async function filterBrandAndCategory(req, res, next) {
           brandFilter,
           demandFilter,
           optionFilterPrice,
-          promotionFilter,
+          // promotionFilter,
         ],
         seo_data: {},
       };
@@ -489,8 +489,8 @@ export async function collectionProducts(req, res, next) {
           $in:
             filters.brand.length > 1
               ? filters.brand
-                .filter((i) => i != brand?.slug)
-                .map((slug) => new RegExp(slug, "i"))
+                  .filter((i) => i != brand?.slug)
+                  .map((slug) => new RegExp(slug, "i"))
               : filters.brand.map((slug) => new RegExp(slug, "i")),
         },
       });
