@@ -372,90 +372,93 @@ const ProductDetailView = () => {
       <CommentView productId={product?.data._id} />
 
       {/* Sản phẩm liên quan */}
-      <Heading fontSize="18px" fontWeight="bold" mb="4">
-        Sản phẩm liên quan
-      </Heading>
-      {product?.data?.related_products?.length > 0 && (
-        <Box my="6" px="6" py="8" bgColor="bg.white" rounded="lg">
-          <Flex position="relative">
-            <Swiper
-              modules={[Navigation]}
-              speed={400}
-              spaceBetween={16}
-              loop={true}
-              navigation={{
-                nextEl: ".discount__btn-next",
-                prevEl: ".discount__btn-prev",
-              }}
-              breakpoints={{
-                0: {
-                  slidesPerView: 1,
-                },
-                768: {
-                  slidesPerView: 3,
-                },
-                1200: {
-                  slidesPerView: 5,
-                },
-              }}
-            >
-              {product?.data?.related_products?.map(
-                (item: any, index: number) => {
-                  return (
-                    <SwiperSlide key={index}>
-                      <Box
-                        w="full"
-                        h="full"
-                        overflow="hidden"
-                        rounded="lg"
-                        borderWidth="1px"
-                        borderColor="border.primary"
-                      >
-                        <CardThinkPro product={item} />
-                      </Box>
-                    </SwiperSlide>
-                  );
-                }
-              )}
-            </Swiper>
-            <Flex
-              w="9"
-              h="9"
-              position="absolute"
-              left="-4"
-              top={"calc(50% - 24px)"}
-              translateY="-50%"
-              zIndex="5"
-              rounded="full"
-              cursor="pointer"
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="bg.bgEdit"
-              className="discount__btn-prev"
-            >
-              <NavArrowLeflIcon size={4} color="text.textEdit" />
+      <Box my={6}>
+        <Heading fontSize="18px" fontWeight="bold" mb="4">
+          Sản phẩm liên quan
+        </Heading>
+        {product?.data?.related_products?.length >= 5 ? (
+          <Box my="6" px="6" py="8" bgColor="bg.white" rounded="lg">
+            <Flex position="relative">
+              <Swiper
+                modules={[Navigation]}
+                speed={400}
+                spaceBetween={16}
+                loop={true}
+                navigation={{
+                  nextEl: ".discount__btn-next",
+                  prevEl: ".discount__btn-prev",
+                }}
+                breakpoints={{
+                  0: {
+                    slidesPerView: 1,
+                  },
+                  768: {
+                    slidesPerView: 3,
+                  },
+                  1200: {
+                    slidesPerView: 5,
+                  },
+                }}
+              >
+                {product?.data?.related_products?.map(
+                  (item: any, index: number) => {
+                    return (
+                      <SwiperSlide key={index}>
+                        <Box
+                          w="full"
+                          h="full"
+                          overflow="hidden"
+                          rounded="lg"
+                          borderWidth="1px"
+                          borderColor="border.primary"
+                        >
+                          <CardThinkPro product={item} />
+                        </Box>
+                      </SwiperSlide>
+                    );
+                  }
+                )}
+              </Swiper>
+              <Flex
+                w="9"
+                h="9"
+                position="absolute"
+                left="-4"
+                top={"calc(50% - 24px)"}
+                translateY="-50%"
+                zIndex="5"
+                rounded="full"
+                cursor="pointer"
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="bg.bgEdit"
+                className="discount__btn-prev"
+              >
+                <NavArrowLeflIcon size={4} color="text.textEdit" />
+              </Flex>
+              <Flex
+                w="9"
+                h="9"
+                position="absolute"
+                right="-4"
+                top={"calc(50% - 24px)"}
+                translateY="-50%"
+                zIndex="5"
+                rounded="full"
+                cursor="pointer"
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="bg.bgEdit"
+                className="discount__btn-next"
+              >
+                <NavArrowRightIcon size={4} color="text.textEdit" />
+              </Flex>
             </Flex>
-            <Flex
-              w="9"
-              h="9"
-              position="absolute"
-              right="-4"
-              top={"calc(50% - 24px)"}
-              translateY="-50%"
-              zIndex="5"
-              rounded="full"
-              cursor="pointer"
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="bg.bgEdit"
-              className="discount__btn-next"
-            >
-              <NavArrowRightIcon size={4} color="text.textEdit" />
-            </Flex>
-          </Flex>
-        </Box>
-      )}
-
+          </Box>
+        ) : (
+          <ListThinkPro data={product?.data?.related_products} />
+        )}
+      </Box>
       {/* Sản phẩm đã xem */}
       <Box pb={10}>
         <Text fontSize={"18px"} fontWeight={"bold"} my={4}>
