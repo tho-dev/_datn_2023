@@ -54,6 +54,7 @@ const ProductDetailView = () => {
   const {
     data: product,
     isLoading: loadingProduct,
+    isFetching,
     isError,
   } = useGetBySlugQuery(slug as string);
 
@@ -227,6 +228,9 @@ const ProductDetailView = () => {
   };
 
   if (loadingProduct) {
+    return <LoadingPolytech />;
+  }
+  if (isFetching) {
     return <LoadingPolytech />;
   }
 

@@ -8,7 +8,7 @@ export async function checkStatusOrder(next) {
     const job = schedule.scheduleJob("35 19 * * *", async function () {
       console.log("Đã đến thời điểm kiểm tra trạng thái đơn hàng.");
       const orders = await Order.find({ status: "pendingComplete" });
-      if (!orders) {
+      if (orders.length === 0) {
         return;
       }
       await Promise.all(
@@ -18,7 +18,7 @@ export async function checkStatusOrder(next) {
           const update_date = moment(item.updated_at)
             .add(2, "days")
             .format("YYYY-MM-DD");
-          if (currentTime === update_date) {
+          if (currentTime >= update_date) {
             await Order.findByIdAndUpdate(item._id, {
               $set: {
                 status: "delivered",
