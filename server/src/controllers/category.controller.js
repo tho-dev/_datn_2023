@@ -132,13 +132,18 @@ export async function removeCategory(req, res, next) {
       slug: 'khong-xac-dinh'
     })
 
+    const not_brand = await Brand.findOne({
+      slug: 'khong-xac-dinh'
+    })
+
     await Promise.all(products.map(async (product) => {
-      product.category_id = not._id
+      product.category_id = not?._id
+      product.brand_id = not_brand?._id
       await product.save()
     }))
 
     await Promise.all(brands.map(async (brand) => {
-      brand.category_id = not._id
+      brand.category_id = not?._id
       await brand.save()
     }))
 
