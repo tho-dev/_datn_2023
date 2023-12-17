@@ -73,6 +73,7 @@ const ProductDetailView = () => {
         sku_id: product.data._id,
         quantity,
         price: product.data.price,
+        price_import: product.data.price_import ?? 0,
         price_before_discount: product.data.price_before_discount ?? 0,
         price_discount_percent: product.data.price_discount_percent ?? 0,
       },
@@ -138,6 +139,7 @@ const ProductDetailView = () => {
         sku_id: product.data._id,
         quantity,
         price: product.data.price,
+        price_import: product.data.price_import ?? 0,
         price_before_discount: product.data.price_before_discount ?? 0,
         price_discount_percent: product.data.price_discount_percent ?? 0,
       },
@@ -212,6 +214,15 @@ const ProductDetailView = () => {
       });
     }
     if (quantity == product.stock) return;
+    if (quantity > 1) {
+      return toast({
+        title: `Tối đa 2 sản phẩm`,
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
     setQuantity(quantity + 1);
   };
 
@@ -239,9 +250,9 @@ const ProductDetailView = () => {
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbLink
+            href={`/${product?.data.category.slug}`}
             textDecoration={"none"}
             fontSize={"14px"}
-            href={`/${product?.data.category.slug}`}
             fontWeight={"semibold"}
           >
             {product?.data.category.name}

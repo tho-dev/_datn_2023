@@ -50,7 +50,6 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
     if (currentDate > targetTime) {
       return toast({
         title: "Không thể hoàn đơn hàng",
-        description: "Liên hệ với bộ phận CSKH để được xử lý",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -67,22 +66,20 @@ const ReturnOrder = ({ orderDetail, id, onCloseReturn }: Props) => {
       .unwrap()
       .then((data) => {
         toast({
-          title: "Hệ thống",
-          description: data.message,
+          title: data.message,
           status: "success",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       })
       .catch((err) => {
         toast({
-          title: "Hệ thống",
-          description: err.data.errors.message,
+          title: err.data.errors.message,
           status: "error",
           duration: 2000,
           isClosable: true,
-          position: "bottom-right",
+          position: "top-right",
         });
       })
       .finally(() => {

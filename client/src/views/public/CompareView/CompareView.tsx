@@ -9,35 +9,37 @@ import { useCompareProductMutation } from "~/redux/api/product";
 import LoadingPolytech from "~/components/LoadingPolytech";
 
 const CompareView = (): ReactElement => {
-	const navigate = useNavigate();
-	const [products, setProducts] = useState([]);
-	const { items } = useAppSelector((state: RootState) => state.persistedReducer.global);
-	const [compareProduct, { isLoading, isError }] = useCompareProductMutation();
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const { items } = useAppSelector(
+    (state: RootState) => state.persistedReducer.global
+  );
+  const [compareProduct, { isLoading, isError }] = useCompareProductMutation();
 
-	useEffect(() => {
-		const fetchApi = async () => {
-			const slugs = items?.map((item: any) => item?.slug);
-			const response = await compareProduct({ slugs: slugs }).unwrap();
-			setProducts(response?.data);
-			navigate(`/so-sanh/${slugs.join("-vs-")}`);
-		};
+  useEffect(() => {
+    const fetchApi = async () => {
+      const slugs = items?.map((item: any) => item?.slug);
+      const response = await compareProduct({ slugs: slugs }).unwrap();
+      setProducts(response?.data);
+      navigate(`/so-sanh/${slugs.join("-vs-")}`);
+    };
 
-		fetchApi();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [items]);
+    fetchApi();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
 
-	if (isLoading) {
-		return <LoadingPolytech />;
-	}
-	if (isError) {
-		return navigate("/") as any;
-	}
-	return (
-		<Box py="6">
-			<ListCardCompare items={items} />
-			<ListTableCompare products={products} />
-		</Box>
-	);
+  if (isLoading) {
+    return <LoadingPolytech />;
+  }
+  if (isError) {
+    return navigate("/") as any;
+  }
+  return (
+    <Box py="6">
+      <ListCardCompare items={items} />
+      <ListTableCompare products={products} />
+    </Box>
+  );
 };
 
 export default CompareView;

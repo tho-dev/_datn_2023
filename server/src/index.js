@@ -7,7 +7,6 @@ import cookieParser from "cookie-parser";
 import initRouter from "./router/index.router.js";
 import createError from "http-errors";
 import { connect } from "./config/database.config.js";
-import { connectRedis } from "./config/redis.config.js";
 import { checkStatusOrder } from "./config/checkStatusOrder.js";
 import path from "path";
 
@@ -24,23 +23,16 @@ const io = new Server(server, {
 
 // connect db
 connect();
-//conect redis
-// connectRedis();
+
 // using middlewares
 app.use(
   cors({
-    origin: [
-      process.env.FE_URL,
-      process.env.BE_URL,
-      process.env.MOMO_URL,
-      "http://localhost:3000",
-      "http://192.168.1.10:3000",
-    ],
+    origin: true,
     credentials: true,
   })
 );
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -63,26 +55,7 @@ app.use((err, req, res, next) => {
     data: null,
   });
 });
-const userRooms = {};
-// socket
-io.on("connection", (socket) => {
-  socket.on("joinRoom", (roomName, userId, role) => {
-    socket.join(roomName);
-    userRooms[socket.id] = { roomName, userId, role };
-  });
 
-  socket.on("sendNotification", (data) => {
-    const { roomName, role } = userRooms[socket.id];
-    if (role === "customer") {
-      io.to(roomName).emit("notification", data);
-    }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-    delete userRooms[socket.id];
-  });
-});
 checkStatusOrder();
 // listen
 server.listen(port, () => {

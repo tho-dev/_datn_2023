@@ -65,7 +65,7 @@ const ProfileView = () => {
                     p="1"
                     rounded="full"
                     boxSize="64px"
-                    src={data?.data?.avatar?.url}
+                    src={data?.data?.avatar?.url || user?.avatar}
                     objectFit="cover"
                     alt="Dan Abramov"
                     border="1px solid #eef1f6"

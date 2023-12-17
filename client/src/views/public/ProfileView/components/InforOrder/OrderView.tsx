@@ -82,20 +82,6 @@ const OrderView = () => {
   };
 
   const handleCancel = () => {
-    // check thời gian
-    // const currentDate = new Date();
-    // const targetTime = new Date(orderDetail.created_at);
-    // targetTime.setMinutes(targetTime.getMinutes() + 15);
-    // if (currentDate > targetTime) {
-    //   return toast({
-    //     title: "Không thể huỷ đơn hàng",
-    //     description: "Liên hệ với bộ phận CSKH để được xử lý",
-    //     status: "error",
-    //     duration: 2000,
-    //     isClosable: true,
-    //     position: "top-right",
-    //   });
-    // }
     if (orderDetail?.status !== "processing") {
       return toast({
         title: "Bạn không thể huỷ đơn hàng",

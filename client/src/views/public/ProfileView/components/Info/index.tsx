@@ -49,8 +49,7 @@ const Info = ({ user }: Props) => {
 
     if (result.data?.status === 200) {
       toast({
-        title: "Thành công",
-        description: "Cập nhật thông tin thành công",
+        title: "Cập nhật thông tin thành công",
         status: "success",
         duration: 2000,
         isClosable: true,
@@ -58,8 +57,7 @@ const Info = ({ user }: Props) => {
       });
     } else {
       toast({
-        title: "Thất bại",
-        description: "Cập nhật thông tin thất bại",
+        title: "Cập nhật thông tin thất bại",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -203,6 +201,7 @@ const Info = ({ user }: Props) => {
                     required: "Vui lòng điền thông tin ",
                   })}
                   borderColor={errors?.phone ? "border.error" : "#e9ebec"}
+                  defaultValue={`0${user?.phone}`}
                 />
                 <FormErrorMessage>
                   {errors?.phone && (errors.phone.message as any)}

@@ -10,6 +10,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tag,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -44,13 +45,11 @@ const GmailView = () => {
     remove(idJob)
       .unwrap()
       .then((data) => {
-        console.log(data);
         toast({
-          title: "Hệ thống",
           duration: 1600,
           position: "bottom-right",
           status: "success",
-          description: data.message,
+          title: data.message,
         });
         onCloseComfirm();
       })
@@ -79,7 +78,17 @@ const GmailView = () => {
     }),
     columnHelper.accessor("email", {
       cell: (info) => {
-        return <Text fontSize="sm">{info.getValue()}</Text>;
+        return (
+          <Flex flexWrap={"wrap"}>
+            {info.getValue().map((value: string) => {
+              return (
+                <Tag key={value} my="0.5">
+                  {value}
+                </Tag>
+              );
+            })}
+          </Flex>
+        );
       },
       header: "Khách hàng",
     }),

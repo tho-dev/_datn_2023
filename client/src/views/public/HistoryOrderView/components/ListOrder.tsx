@@ -209,8 +209,7 @@ const ListOrder = ({
       .then((data) => {
         dispatch(orderApi.util.invalidateTags(["Order"]));
         toast({
-          title: "Hệ thống",
-          description: data.message,
+          title: data.message,
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -219,8 +218,7 @@ const ListOrder = ({
       })
       .catch((error) => {
         toast({
-          title: "Hệ thống",
-          description: error.data.errors.message,
+          title: error.data.errors.message,
           status: "error",
           duration: 2000,
           isClosable: true,

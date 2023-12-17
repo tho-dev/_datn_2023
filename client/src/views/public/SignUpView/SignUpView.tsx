@@ -2,17 +2,17 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { ArrowLeftCirleIcon, CodeIcon } from "~/components/common/Icons";
 import {
-	FormErrorMessage,
-	FormControl,
-	Input,
-	Button,
-	Center,
-	Box,
-	Flex,
-	Link,
-	Stack,
-	Heading,
-	Text,
+  FormErrorMessage,
+  FormControl,
+  Input,
+  Button,
+  Center,
+  Box,
+  Flex,
+  Link,
+  Stack,
+  Heading,
+  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
@@ -22,278 +22,235 @@ import { useSignupMutation } from "~/redux/api/user";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const SignUpView = () => {
-	const navigate = useNavigate();
-	const toast = useToast();
-	const [checkCaptch, setCheckCaptch] = useState(false);
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<any>({
-		resolver: joiResolver(registerSchema),
-	});
-	const onChange = () => {
-		setCheckCaptch(true);
-	};
-	const [signup, { isLoading }] = useSignupMutation();
-	const onSubmit = async (data: any) => {
-		if (!checkCaptch) return;
-		const avatar = {
-			url: "https://res.cloudinary.com/do7pjthoe/image/upload/v1701579842/polytech/avatar/tqqg4vbznsswpxufl8wj.jpg",
-			id: "polytech/avatar/tqqg4vbznsswpxufl8wj",
-		};
+  const navigate = useNavigate();
+  const toast = useToast();
+  const [checkCaptch, setCheckCaptch] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<any>({
+    resolver: joiResolver(registerSchema),
+  });
+  const onChange = () => {
+    setCheckCaptch(true);
+  };
+  const [signup, { isLoading }] = useSignupMutation();
+  const onSubmit = async (data: any) => {
+    if (!checkCaptch) return;
+    const newData = {
+      ...data,
+      avatar: {
+        url: "https://res.cloudinary.com/do7pjthoe/image/upload/v1701579842/polytech/avatar/tqqg4vbznsswpxufl8wj.jpg",
+        id: "polytech/avatar/tqqg4vbznsswpxufl8wj",
+      },
+    };
 
-		const newData = {
-			...data,
-			avatar,
-		};
+    signup(newData)
+      .unwrap()
+      .then((data) => {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+        navigate("/dang-nhap");
+      })
+      .catch((err) => {
+        toast({
+          title: err.data.errors.message,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
+  };
 
-		signup(newData)
-			.unwrap()
-			.then((data) => {
-				toast({
-					title: data.message,
-					status: "success",
-					duration: 5000,
-					isClosable: true,
-					position: "bottom-right",
-				});
-				navigate("/dang-nhap");
-			})
-			.catch((err) => {
-				toast({
-					title: err.data.message,
-					status: "success",
-					duration: 5000,
-					isClosable: true,
-					position: "bottom-right",
-				});
-			});
-	};
+  return (
+    <Center h="full" px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}>
+      <Flex w="460px" h="full" direction="column" pt="8">
+        <Box>
+          <Link as={ReactRouterLink} to="/dang-nhap">
+            <ArrowLeftCirleIcon boxSize="10" />
+          </Link>
+        </Box>
+        <Stack direction="row" gap="0" pt="8" pb="12">
+          <Heading as="h3" color="primary.font" size="lg" fontWeight="semibold">
+            Poly
+          </Heading>
+          <Heading
+            as="h3"
+            size="lg"
+            color="text.200"
+            fontWeight="semibold"
+            position="relative"
+          >
+            Tech
+            <CodeIcon boxSize="5" position="absolute" color="primary.font" />
+          </Heading>
+        </Stack>
+        <Stack direction="column" gap="0" pb="12">
+          <Heading as="h3" size="lg">
+            Đăng Ký
+          </Heading>
+          <Stack direction="row" pt="2">
+            <Text fontSize="sm" fontWeight="medium">
+              Bạn đã có tài khoản?
+            </Text>
+            <Link
+              as={ReactRouterLink}
+              to="/dang-nhap"
+              _hover={{
+                textDecoration: "none",
+              }}
+            >
+              <Text fontSize="sm" fontWeight="medium" color="primary.font">
+                Đăng Nhập
+              </Text>
+            </Link>
+          </Stack>
+        </Stack>
+        <form
+          style={{
+            width: "100%",
+          }}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Flex direction="column" gap="4">
+            <Flex
+              gap="5"
+              flexDirection={{
+                sm: "column",
+                md: "column",
+                lg: "row",
+                xl: "row",
+                "2xl": "row",
+              }}
+            >
+              <FormControl isInvalid={errors.first_name as any}>
+                <Input
+                  id="first_name"
+                  type="text"
+                  placeholder="First Name"
+                  size="lager"
+                  {...register("first_name")}
+                />
+                <FormErrorMessage>
+                  {(errors.first_name as any) &&
+                    (errors?.first_name?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.last_name as any}>
+                <Input
+                  id="last_name"
+                  type="text"
+                  placeholder="Last Name"
+                  size="lager"
+                  {...register("last_name")}
+                />
+                <FormErrorMessage>
+                  {(errors.last_name as any) &&
+                    (errors?.last_name?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+            </Flex>
+            <FormControl isInvalid={errors.email as any}>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Email"
+                size="lager"
+                {...register("email")}
+              />
+              <FormErrorMessage>
+                {(errors.email as any) && (errors?.email?.message as any)}
+              </FormErrorMessage>
+            </FormControl>
+            <Flex
+              gap="5"
+              flexDirection={{
+                sm: "column",
+                md: "column",
+                lg: "row",
+                xl: "row",
+                "2xl": "row",
+              }}
+            >
+              <FormControl isInvalid={errors.phone as any}>
+                <Input
+                  id="phone"
+                  type="text"
+                  placeholder="SĐT"
+                  size="lager"
+                  {...register("phone")}
+                />
+                <FormErrorMessage>
+                  {(errors.phone as any) && (errors?.phone?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.location as any}>
+                <Input
+                  id="location"
+                  type="text"
+                  placeholder="Location"
+                  size="lager"
+                  {...register("location")}
+                />
+                <FormErrorMessage>
+                  {(errors.location as any) &&
+                    (errors?.location?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+            </Flex>
 
-	return (
-		<Center
-			h="full"
-			px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}
-		>
-			<Flex
-				w="460px"
-				h="full"
-				direction="column"
-				pt="8"
-			>
-				<Box>
-					<Link
-						as={ReactRouterLink}
-						to="/dang-nhap"
-					>
-						<ArrowLeftCirleIcon boxSize="10" />
-					</Link>
-				</Box>
-				<Stack
-					direction="row"
-					gap="0"
-					pt="8"
-					pb="12"
-				>
-					<Heading
-						as="h3"
-						color="primary.font"
-						size="lg"
-						fontWeight="semibold"
-					>
-						Poly
-					</Heading>
-					<Heading
-						as="h3"
-						size="lg"
-						color="text.200"
-						fontWeight="semibold"
-						position="relative"
-					>
-						Tech
-						<CodeIcon
-							boxSize="5"
-							position="absolute"
-							color="primary.font"
-						/>
-					</Heading>
-				</Stack>
-				<Stack
-					direction="column"
-					gap="0"
-					pb="12"
-				>
-					<Heading
-						as="h3"
-						size="lg"
-					>
-						Đăng Ký
-					</Heading>
-					<Stack
-						direction="row"
-						pt="2"
-					>
-						<Text
-							fontSize="sm"
-							fontWeight="medium"
-						>
-							Bạn đã có tài khoản?
-						</Text>
-						<Link
-							as={ReactRouterLink}
-							to="/dang-nhap"
-							_hover={{
-								textDecoration: "none",
-							}}
-						>
-							<Text
-								fontSize="sm"
-								fontWeight="medium"
-								color="primary.font"
-							>
-								Đăng Nhập
-							</Text>
-						</Link>
-					</Stack>
-				</Stack>
-				<form
-					style={{
-						width: "100%",
-					}}
-					onSubmit={handleSubmit(onSubmit)}
-				>
-					<Flex
-						direction="column"
-						gap="4"
-					>
-						<Flex
-							gap="5"
-							flexDirection={{
-								sm: "column",
-								md: "column",
-								lg: "row",
-								xl: "row",
-								"2xl": "row",
-							}}
-						>
-							<FormControl isInvalid={errors.first_name as any}>
-								<Input
-									id="first_name"
-									type="text"
-									placeholder="First Name"
-									size="lager"
-									{...register("first_name")}
-								/>
-								<FormErrorMessage>
-									{(errors.first_name as any) && (errors?.first_name?.message as any)}
-								</FormErrorMessage>
-							</FormControl>
-							<FormControl isInvalid={errors.last_name as any}>
-								<Input
-									id="last_name"
-									type="text"
-									placeholder="Last Name"
-									size="lager"
-									{...register("last_name")}
-								/>
-								<FormErrorMessage>
-									{(errors.last_name as any) && (errors?.last_name?.message as any)}
-								</FormErrorMessage>
-							</FormControl>
-						</Flex>
-						<FormControl isInvalid={errors.email as any}>
-							<Input
-								id="email"
-								type="email"
-								placeholder="Email"
-								size="lager"
-								{...register("email")}
-							/>
-							<FormErrorMessage>
-								{(errors.email as any) && (errors?.email?.message as any)}
-							</FormErrorMessage>
-						</FormControl>
-						<Flex
-							gap="5"
-							flexDirection={{
-								sm: "column",
-								md: "column",
-								lg: "row",
-								xl: "row",
-								"2xl": "row",
-							}}
-						>
-							<FormControl isInvalid={errors.phone as any}>
-								<Input
-									id="phone"
-									type="text"
-									placeholder="SĐT"
-									size="lager"
-									{...register("phone")}
-								/>
-								<FormErrorMessage>
-									{(errors.phone as any) && (errors?.phone?.message as any)}
-								</FormErrorMessage>
-							</FormControl>
-							<FormControl isInvalid={errors.location as any}>
-								<Input
-									id="location"
-									type="text"
-									placeholder="Location"
-									size="lager"
-									{...register("location")}
-								/>
-								<FormErrorMessage>
-									{(errors.location as any) && (errors?.location?.message as any)}
-								</FormErrorMessage>
-							</FormControl>
-						</Flex>
-
-						<FormControl isInvalid={errors.password as any}>
-							<Input
-								id="password"
-								type="password"
-								placeholder="Mật Khẩu"
-								size="lager"
-								{...register("password")}
-							/>
-							<FormErrorMessage>
-								{(errors.password as any) && (errors?.password?.message as any)}
-							</FormErrorMessage>
-						</FormControl>
-						<FormControl isInvalid={errors.confirm_password as any}>
-							<Input
-								id="confirm_password"
-								type="password"
-								placeholder="Nhập Lại Mật Khẩu"
-								size="lager"
-								{...register("confirm_password")}
-							/>
-							<FormErrorMessage>
-								{(errors.confirm_password as unknown) && (errors?.confirm_password?.message as any)}
-							</FormErrorMessage>
-						</FormControl>
-						<ReCAPTCHA
-							sitekey={process.env.GOOGLE_SITE_KEY as string}
-							onChange={onChange}
-						/>
-						<Button
-							size="lager"
-							type="submit"
-							w="full"
-							mt="4"
-							rounded="full"
-							loadingText="Đang tải..."
-							isLoading={isLoading}
-						>
-							Đăng Ký
-						</Button>
-					</Flex>
-				</form>
-			</Flex>
-		</Center>
-	);
+            <FormControl isInvalid={errors.password as any}>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Mật Khẩu"
+                size="lager"
+                {...register("password")}
+              />
+              <FormErrorMessage>
+                {(errors.password as any) && (errors?.password?.message as any)}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors.confirm_password as any}>
+              <Input
+                id="confirm_password"
+                type="password"
+                placeholder="Nhập Lại Mật Khẩu"
+                size="lager"
+                {...register("confirm_password")}
+              />
+              <FormErrorMessage>
+                {(errors.confirm_password as unknown) &&
+                  (errors?.confirm_password?.message as any)}
+              </FormErrorMessage>
+            </FormControl>
+            <ReCAPTCHA
+              sitekey={process.env.GOOGLE_SITE_KEY as string}
+              onChange={onChange}
+            />
+            <Button
+              size="lager"
+              type="submit"
+              w="full"
+              mt="4"
+              rounded="full"
+              loadingText="Đang tải..."
+              isLoading={isLoading}
+            >
+              Đăng Ký
+            </Button>
+          </Flex>
+        </form>
+      </Flex>
+    </Center>
+  );
 };
 
 export default SignUpView;

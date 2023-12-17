@@ -39,7 +39,7 @@ const UpdateOrder = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetOneQuery(id);
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
@@ -73,35 +73,33 @@ const UpdateOrder = () => {
     };
     if (data?.data.status !== "processing") {
       return toast({
-        title: "Hệ thống thông báo",
         duration: 1600,
         position: "top-right",
         status: "error",
-        description: `Không thể cập nhật đơn hàng đã ${data?.data?.status}`,
+        title: `Không thể cập nhật đơn hàng đã ${data?.data?.status}`,
       });
     }
     setDataUser(new_data);
     onOpenUpdate();
   };
+
   const handleUpdateCustomer = () => {
     updateinfoCustomer(dataUser)
       .unwrap()
       .then((data) => {
         toast({
-          title: "Thành công",
           duration: 1600,
           position: "top-right",
           status: "success",
-          description: data.message,
+          title: data.message,
         });
       })
       .catch((error) => {
         toast({
-          title: "Thất bại",
           duration: 1600,
           position: "top-right",
           status: "error",
-          description: error.data.errors.message,
+          title: error.data.errors.message,
         });
       })
       .finally(() => {
@@ -181,6 +179,11 @@ const UpdateOrder = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (data) {
+      reset(data);
+    }
+  }, [data]);
   if (isLoading) {
     return <LoadingPolytech />;
   }

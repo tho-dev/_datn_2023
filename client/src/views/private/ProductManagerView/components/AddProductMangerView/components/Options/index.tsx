@@ -190,7 +190,7 @@ const Options = ({ control, register, errors, setValue, getValues, watch }: Prop
 	const handleDrag = ({ source, destination }: any) => {
 		if (destination) {
 			move(source.index, destination.index);
-			fields.map((item: any, index: number) => {
+			fields.map((_item: any, index: number) => {
 				setValue(`variants.${[index]}.position`, index);
 			});
 		}

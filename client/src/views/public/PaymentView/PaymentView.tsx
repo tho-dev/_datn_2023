@@ -21,20 +21,19 @@ import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { socket } from "~/App";
+import momo from "~/assets/images/momo.png";
+import vnpay from "~/assets/images/vnpay.png";
+import LoadingPolytech from "~/components/LoadingPolytech";
 import { ArrowRightUpIcon, NavArrowRightIcon } from "~/components/common/Icons";
 import { useGetCartQuery } from "~/redux/api/cart";
 import { useGetValueCouponMutation } from "~/redux/api/coupon";
 import { useAppSelector } from "~/redux/hook/hook";
-import { chuyenDoiSoDienThoai, chuyenDoiSoDienThoaiVe0 } from "~/utils/fc";
+import { chuyenDoiSoDienThoai } from "~/utils/fc";
+import CommonBox from "./components/CommonBox";
 import PaySummary from "./components/PaySummary";
 import PopupCheckOtp from "./components/PopupCheckOtp";
 import ProductPay from "./components/ProductPay";
 import Transport from "./components/Transport";
-import LoadingPolytech from "~/components/LoadingPolytech";
-import CommonBox from "./components/CommonBox";
-import momo from "~/assets/images/momo.webp";
-import vnpay from "~/assets/images/vnpay.webp";
 
 const Payment = () => {
   const [dataOrder, setDataOrder] = useState({} as any);
@@ -57,14 +56,6 @@ const Payment = () => {
   );
   const { data, isLoading } = useGetCartQuery(cart_id);
   const [getValueCoupon] = useGetValueCouponMutation();
-  useEffect(() => {
-    socket.emit(
-      "joinRoom",
-      "don-hang",
-      user._id ?? "123",
-      user.role ?? "customer"
-    );
-  }, []);
   const shopAdress =
     "13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội, Việt Nam";
   const {
@@ -85,7 +76,7 @@ const Payment = () => {
     const new_data = {
       ...order_infor,
       cart_id: cart_id,
-      total_amount: data.data.total_money + transportFee,
+      total_amount: data?.data.total_money + transportFee - voucher_value,
       phone_number: compare_phone_number,
       transportation_fee: transportFee,
     };
@@ -222,13 +213,7 @@ const Payment = () => {
                         required: "Trường bắt buộc nhập",
                       })}
                       isDisabled={data.data.products.length === 0}
-                      defaultValue={
-                        (isLogin &&
-                          `${chuyenDoiSoDienThoaiVe0(
-                            user.phone.toString()
-                          )}`) ||
-                        ""
-                      }
+                      defaultValue={(isLogin && `0${user.phone}`) || 0}
                     />
                     <FormErrorMessage>
                       {(errors.phone_number as any) &&
@@ -489,7 +474,12 @@ const Payment = () => {
                           </Radio>
                         </Box>
                         <Box flex="1" px="6" bgColor="#F6F9FC" rounded="lg">
-                          <Radio value="VNPAY" size="sm" fontSize={"12px"}>
+                          <Radio
+                            value="VNPAY"
+                            size="sm"
+                            fontSize={"12px"}
+                            isReadOnly
+                          >
                             <Flex
                               w="full"
                               px="3"
@@ -577,6 +567,7 @@ const Payment = () => {
         onOpenOtp={onOpenOtp}
         onCloseOtp={onCloseOtp}
         dataOrder={dataOrder}
+        payment={payment}
       />
       <Transport
         isOpen={isOpen}

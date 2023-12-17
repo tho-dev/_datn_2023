@@ -36,7 +36,6 @@ import { SettingView } from "~/views/private/SettingView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
-import { CompareView } from "~/views/public/CompareView";
 import { CreatePasswordView } from "~/views/public/CreatePasswordView";
 import { HistoryOrderView } from "~/views/public/HistoryOrderView";
 import { Payment } from "~/views/public/PaymentView";
@@ -51,222 +50,223 @@ import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
 import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
 import UpdateOrder from "~/views/private/OrderManagementView/updateOrder/UpdateOrder";
 import ReturedOrder from "~/views/private/OrderManagementView/childrenViews/ReturedOrder";
+import { CompareView } from "~/views/public/CompareView";
 import PrivateLayout from "~/layouts/PrivateLayout";
 
 const routes: RouteObject[] = [
-	{
-		path: "/",
-		children: [
-			{
-				element: <MainLayout />,
-				children: [
-					{
-						index: true,
-						element: <HomeView />,
-					},
-					{
-						path: "gio-hang",
-						element: <CartView />,
-					},
-					{
-						path: "thanh-toan",
-						element: <Payment />,
-					},
-					{
-						path: "so-sanh/:slug",
-						element: <CompareView />,
-					},
-					{
-						path: "thong-tin",
-						element: <ProfileView />,
-					},
-					{
-						path: "tin-tuc",
-						element: <NewsView />,
-					},
-					{
-						path: "noi-dung/:slug",
-						element: <ContentView />,
-					},
-					{
-						path: "tim-kiem",
-						element: <SearchView />,
-					},
-					{
-						path: "lich-su-mua-hang",
-						element: <HistoryOrderView />,
-					},
-					{
-						path: "khuyen-mai/:slug",
-						element: <PromotionView />,
-					},
-					{
-						path: "thanks",
-						element: <ThankView />,
-					},
-					{
-						path: ":slug",
-						element: <SlugView />,
-					},
-					{
-						path: ":slug/:slug",
-						element: <ProductDetailView />,
-					},
-				],
-			},
-			{
-				element: <DefaultLayout />,
-				children: [
-					{
-						element: <AuthLayout />,
-						children: [
-							{
-								path: "dang-nhap",
-								element: <SignInView />,
-							},
-							{
-								path: "dang-ky",
-								element: <SignUpView />,
-							},
-							{
-								path: "thiet-lap-mat-khau",
-								element: <ResetPasswordView />,
-							},
-							{
-								path: "quen-mat-khau",
-								element: <CreatePasswordView />,
-							},
-						],
-					},
-					{
-						path: "*",
-						element: <NotFoundView />,
-					},
-				],
-			},
-			{
-				path: "/admin",
-				element: (
-					<PrivateLayout>
-						<AdminLayout />
-					</PrivateLayout>
-				),
-				children: [
-					{
-						index: true,
-						element: <DashboardView />,
-					},
-					{
-						path: "khuyen-mai",
-						element: <PromotionManageView />,
-					},
-					{
-						path: "khuyen-mai/gmail/add",
-						element: <AddGmailView />,
-					},
-					{
-						path: "khuyen-mai/gmail",
-						element: <GmailView />,
-					},
-					{
-						path: "coupon",
-						element: <CouponView />,
-					},
-					{
-						path: "san-pham",
-						element: <ProductManagerView />,
-					},
-					{
-						path: "san-pham/add",
-						element: <AddProductManagerView />,
-					},
-					{
-						path: "san-pham/:id/update",
-						element: <UpdateProductManagerView />,
-					},
-					{
-						path: "san-pham/:product_id/bien-the/:sku_id",
-						element: <VariantMangerView />,
-					},
-					{
-						path: "danh-muc",
-						element: <CategoryManagerView />,
-					},
-					{
-						path: "danh-muc-bai-viet",
-						element: <PostCategoryView />,
-					},
-					{
-						path: "bai-viet",
-						element: <PostManagementView />,
-					},
-					{
-						path: "bai-viet/add",
-						element: (
-							<AddPostMangerView
-								onClose={function (): void {
-									throw new Error("Function not implemented.");
-								}}
-								parents={undefined}
-							/>
-						),
-					},
-					{
-						path: "don-hang",
-						element: <OrderManagementView />,
-					},
-					{
-						path: "don-hang/:id",
-						element: <OrderDetailView />,
-					},
-					{
-						path: "don-hang/cap-nhat/:id",
-						element: <UpdateOrder />,
-					},
-					{
-						path: "don-hang/hang-hoan",
-						element: <ReturedOrder />,
-					},
-					{
-						path: "tai-khoan",
-						element: <UserListManagerView />,
-					},
-					{
-						path: "tai-khoan/add",
-						element: <AddUserListManagerView />,
-					},
-					{
-						path: "tai-khoan/:id/update",
-						element: <UpdateUserListManagerView />,
-					},
-					{
-						path: "cau-hinh",
-						element: <SettingView />,
-					},
-					{
-						path: "profile",
-						element: <ProfileManagerView />,
-					},
-					{
-						path: "thuong-hieu",
-						element: <BrandView />,
-					},
-					{
-						path: "nhu-cau",
-						element: <DemandView />,
-					},
-				],
-			},
-			{
-				path: "404",
-				element: <NotFoundView />,
-			},
-			{
-				path: "*",
-				element: <NotFoundView />,
-			},
-		],
-	},
+  {
+    path: "/",
+    children: [
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: <HomeView />,
+          },
+          {
+            path: "gio-hang",
+            element: <CartView />,
+          },
+          {
+            path: "thanh-toan",
+            element: <Payment />,
+          },
+          {
+            path: "so-sanh/:slug",
+            element: <CompareView />,
+          },
+          {
+            path: "thong-tin",
+            element: <ProfileView />,
+          },
+          {
+            path: "tin-tuc",
+            element: <NewsView />,
+          },
+          {
+            path: "noi-dung/:slug",
+            element: <ContentView />,
+          },
+          {
+            path: "tim-kiem",
+            element: <SearchView />,
+          },
+          {
+            path: "lich-su-mua-hang",
+            element: <HistoryOrderView />,
+          },
+          {
+            path: "khuyen-mai/:slug",
+            element: <PromotionView />,
+          },
+          {
+            path: "thanks",
+            element: <ThankView />,
+          },
+          {
+            path: ":slug",
+            element: <SlugView />,
+          },
+          {
+            path: ":slug/:slug",
+            element: <ProductDetailView />,
+          },
+        ],
+      },
+      {
+        element: <DefaultLayout />,
+        children: [
+          {
+            element: <AuthLayout />,
+            children: [
+              {
+                path: "dang-nhap",
+                element: <SignInView />,
+              },
+              {
+                path: "dang-ky",
+                element: <SignUpView />,
+              },
+              {
+                path: "thiet-lap-mat-khau",
+                element: <ResetPasswordView />,
+              },
+              {
+                path: "quen-mat-khau",
+                element: <CreatePasswordView />,
+              },
+            ],
+          },
+          {
+            path: "*",
+            element: <NotFoundView />,
+          },
+        ],
+      },
+      {
+        path: "/admin",
+        element: (
+          <PrivateLayout>
+            <AdminLayout />
+          </PrivateLayout>
+        ),
+        children: [
+          {
+            index: true,
+            element: <DashboardView />,
+          },
+          {
+            path: "khuyen-mai",
+            element: <PromotionManageView />,
+          },
+          {
+            path: "khuyen-mai/gmail/add",
+            element: <AddGmailView />,
+          },
+          {
+            path: "khuyen-mai/gmail",
+            element: <GmailView />,
+          },
+          {
+            path: "coupon",
+            element: <CouponView />,
+          },
+          {
+            path: "san-pham",
+            element: <ProductManagerView />,
+          },
+          {
+            path: "san-pham/add",
+            element: <AddProductManagerView />,
+          },
+          {
+            path: "san-pham/:id/update",
+            element: <UpdateProductManagerView />,
+          },
+          {
+            path: "san-pham/:product_id/bien-the/:sku_id",
+            element: <VariantMangerView />,
+          },
+          {
+            path: "danh-muc",
+            element: <CategoryManagerView />,
+          },
+          {
+            path: "danh-muc-bai-viet",
+            element: <PostCategoryView />,
+          },
+          {
+            path: "bai-viet",
+            element: <PostManagementView />,
+          },
+          {
+            path: "bai-viet/add",
+            element: (
+              <AddPostMangerView
+                onClose={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+                parents={undefined}
+              />
+            ),
+          },
+          {
+            path: "don-hang",
+            element: <OrderManagementView />,
+          },
+          {
+            path: "don-hang/:id",
+            element: <OrderDetailView />,
+          },
+          {
+            path: "don-hang/cap-nhat/:id",
+            element: <UpdateOrder />,
+          },
+          {
+            path: "don-hang/hang-hoan",
+            element: <ReturedOrder />,
+          },
+          {
+            path: "tai-khoan",
+            element: <UserListManagerView />,
+          },
+          {
+            path: "tai-khoan/add",
+            element: <AddUserListManagerView />,
+          },
+          {
+            path: "tai-khoan/:id/update",
+            element: <UpdateUserListManagerView />,
+          },
+          {
+            path: "cau-hinh",
+            element: <SettingView />,
+          },
+          {
+            path: "profile",
+            element: <ProfileManagerView />,
+          },
+          {
+            path: "thuong-hieu",
+            element: <BrandView />,
+          },
+          {
+            path: "nhu-cau",
+            element: <DemandView />,
+          },
+        ],
+      },
+      {
+        path: "404",
+        element: <NotFoundView />,
+      },
+      {
+        path: "*",
+        element: <NotFoundView />,
+      },
+    ],
+  },
 ];
 
 export default routes;
