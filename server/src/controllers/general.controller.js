@@ -260,9 +260,9 @@ export async function getDashboard(req, res, next) {
             quantity:
               doc.length > 0
                 ? doc[0]?.comparisons?.reduce(
-                    (acc, cur) => (acc += cur.count),
-                    0
-                  )
+                  (acc, cur) => (acc += cur.count),
+                  0
+                )
                 : 0,
           });
         }
@@ -643,7 +643,7 @@ export async function homeSettings(req, res, next) {
         },
         category: {
           title: "Danh mục",
-          items: category,
+          items: category.filter((item) => item.slug != 'khong-xac-dinh'),
           type: "slide",
         },
         suggestion: {

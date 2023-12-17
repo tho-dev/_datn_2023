@@ -128,7 +128,7 @@ const SlugView = () => {
 		dispatch(setIsCompare(e.target.checked as any));
 	};
 
-	if (isFetching) return <LoadingPolytech />;
+	// if (isFetching) return <LoadingPolytech />;
 
 	if (isError) navigate("/404");
 

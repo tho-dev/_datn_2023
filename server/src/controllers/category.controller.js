@@ -1,5 +1,7 @@
 import moment from "moment/moment";
 import Category from "../models/category.model";
+import { Product } from "../models/product.model"
+import Brand from "../models/brand.model"
 import { categorySchema } from "../validations/category.validations";
 import createError from "http-errors";
 
@@ -116,6 +118,29 @@ export async function removeCategory(req, res, next) {
     await category.delete();
     category.deleted_at = moment(new Date()).toISOString();
     await category.save();
+
+    const products = await Product.find({
+      category_id: id
+    })
+
+    const brands = await Brand.find({
+      category_id: id
+    })
+
+    // danh mục không xác định
+    const not = await Category.findOne({
+      slug: 'khong-xac-dinh'
+    })
+
+    await Promise.all(products.map(async (product) => {
+      product.category_id = not._id
+      await product.save()
+    }))
+
+    await Promise.all(brands.map(async (brand) => {
+      brand.category_id = not._id
+      await brand.save()
+    }))
 
     return res.json({
       status: 200,
