@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', getAllCategory);
 router.get('/:id', getOneCategory);
 
-router.post('/', [verifyAccessToken, checkPermission], createCategory);
+router.post('/', createCategory);
 router.delete('/:id', [verifyAccessToken, checkPermission], removeCategory);
 router.put('/:id', [verifyAccessToken, checkPermission], updateCategory);
 

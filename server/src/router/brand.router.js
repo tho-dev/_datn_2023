@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.get('/', getAllBrand)
 router.get("/:id", getOneBrand)
-router.post('/', [verifyAccessToken, checkPermission], createBrand)
+router.post('/', createBrand)
 router.put('/:id', [verifyAccessToken, checkPermission], updateBrand)
 router.delete('/:id', [verifyAccessToken, checkPermission], removeBrand)
 

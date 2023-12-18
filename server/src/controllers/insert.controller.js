@@ -1,6 +1,6 @@
 import Category from "../models/category.model"
 import Brand from "../models/brand.model"
-import polytech from "../data/polytech.json"
+import polytech from "../data/polytech_2.json"
 import fetch from "node-fetch"
 import { Demand, DemandValue } from "../models/demand.model"
 import { Product, Option, OptionValue, Sku, Variant } from "../models/product.model"
