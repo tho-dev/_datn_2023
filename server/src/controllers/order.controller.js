@@ -2,7 +2,7 @@ import createError from "http-errors";
 import { Order, Shipping, Order_Detail } from "../models/order.model";
 import Coupon from "../models/coupon.model";
 import { Cart } from "../models/cart.model";
-import { Sku, Variant } from "../models/product.model";
+import { Product, Sku, Variant } from "../models/product.model";
 import Returned from "../models/return.model";
 import Axios from "axios";
 import mongoose from "mongoose";
@@ -512,6 +512,7 @@ export const cancelOrder = async (req, res, next) => {
 
 export const updateStatus = async (req, res, next) => {
   try {
+    let checkDeleted = false;
     const id = req.params.id;
     const { status } = req.body;
     const array_status = [
@@ -538,6 +539,20 @@ export const updateStatus = async (req, res, next) => {
     const check_status = ordered.status_detail.find((item) => {
       return item.status === status;
     });
+    await Promise.all(
+      order_details.map(async (item) => {
+        const sku = await Sku.findOne({ _id: item.sku_id });
+        const product = await Product.findOneDeleted({ _id: sku.product_id });
+        if (product) {
+          checkDeleted = true;
+        }
+      })
+    );
+    if (checkDeleted) {
+      throw createError.BadRequest(
+        "Đã có sản phẩm không tồn tại trong đơn hàng"
+      );
+    }
     if (ordered.status === "cancelled") {
       throw createError.BadRequest("Đơn hàng đã được huỷ");
     }
@@ -555,14 +570,17 @@ export const updateStatus = async (req, res, next) => {
     if (status === "returned") {
       throw createError.BadRequest("Không thể huỷ đơn hàng đã hoàn");
     }
+
     if (!ordered) {
       throw createError.NotFound("Không tìm thấy đơn hàng");
     }
+
     if (status === "delivered") {
       throw createError.BadRequest(
         "Đợi xác nhận từ khách hàng để hoàn thành đơn"
       );
     }
+
     if (status === "confirmed" && ordered.shipping_method === "shipped") {
       const shipping = await Shipping.findOne({ _id: ordered.shipping_info });
       const new_order_details = await Promise.all(
