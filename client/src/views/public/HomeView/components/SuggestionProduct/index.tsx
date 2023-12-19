@@ -27,7 +27,7 @@ const SuggestionProduct = ({ title, items }: Props) => {
     );
 
   useEffect(() => {
-    setActive(items?.[0]);
+    setActive(items?.[1]);
   }, []);
 
   return (

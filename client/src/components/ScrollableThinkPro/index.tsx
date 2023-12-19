@@ -24,7 +24,7 @@ const ScrollableThinkPro = ({
   prevEl,
   handleClick,
 }: Props) => {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(1);
 
   return (
     <Flex mt={mt} gap="4">
@@ -45,22 +45,24 @@ const ScrollableThinkPro = ({
                 width: "auto",
               }}
             >
-              <Button
-                h="auto"
-                px="4"
-                py="3"
-                size="small"
-                lineHeight="150%"
-                rounded="lg"
-                color={active == index ? "text.textEdit" : "text.black"}
-                backgroundColor={active == index ? "bg.bgEdit" : "bg.white"}
-                onClick={() => {
-                  setActive(index);
-                  handleClick(item);
-                }}
-              >
-                {item?.name}
-              </Button>
+              {item.value !== "khong-xac-dinh" && (
+                <Button
+                  h="auto"
+                  px="4"
+                  py="3"
+                  size="small"
+                  lineHeight="150%"
+                  rounded="lg"
+                  color={active == index ? "text.textEdit" : "text.black"}
+                  backgroundColor={active == index ? "bg.bgEdit" : "bg.white"}
+                  onClick={() => {
+                    setActive(index);
+                    handleClick(item);
+                  }}
+                >
+                  {item?.name}
+                </Button>
+              )}
             </SwiperSlide>
           );
         })}
