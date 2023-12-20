@@ -200,13 +200,16 @@ export const addOneProduct = async (req, res, next) => {
     const cart = await Cart.findOne({ cart_id }).select(
       "-deleted_at -deleted -created_at -updated_at -createdAt -__v"
     );
+
     if (!cart) {
       throw createError.NotFound("Giỏ hàng đã được xoá");
     }
+    const sku_check = await Sku.findById(sku_id);
+
     const sku = cart.products.findIndex((item) => {
       return item.sku_id == sku_id;
     });
-    if (cart.products[sku].quantity === cart.stock) {
+    if (cart.products[sku].quantity == sku_check.stock) {
       throw createError.BadRequest("sản phẩm đã đạt tối đa");
     }
     cart.products[sku].quantity++;
@@ -247,6 +250,41 @@ export const deleteAllCart = async (req, res, next) => {
     return res.json({
       status: 200,
       message: "xoá giỏ hàng thành công",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const checkStockSku = async (req, res, next) => {
+  try {
+    const cart_id = req.params.cart_id;
+
+    const cart = await Cart.findOne({ cart_id }).select(
+      "-deleted_at -deleted -created_at -updated_at -createdAt -__v"
+    );
+    if (!cart) {
+      throw createError.NotFound("Giỏ hàng đã được xoá");
+    }
+    if (cart?.products.length === 0) {
+      throw createError.BadRequest("Không có sản phẩm nào trong giỏ hàng");
+    }
+    const result = await Promise.all(
+      cart?.products.map(async (product) => {
+        const sku = await Sku.findById(product.sku_id);
+        if (sku.stock < product.quantity || sku.stock == 0) {
+          return false;
+        }
+        return true;
+      })
+    );
+    if (result.includes(false)) {
+      throw createError.BadRequest("Đã có sản phẩm hết hàng");
+    }
+    return res.json({
+      status: 200,
+      message: "thành công",
+      data: result,
     });
   } catch (error) {
     next(error);

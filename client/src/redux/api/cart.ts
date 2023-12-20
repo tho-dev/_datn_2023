@@ -54,6 +54,14 @@ const cartApi = createApi({
 			}),
 			providesTags: ["Cart"],
 		}),
+		checkStock: builder.mutation<any, any>({
+			query: (cart_id) => ({
+				url: `/cart/check_stock/${cart_id}`,
+				method: "POST",
+				body: [],
+			}),
+			invalidatesTags: ["Cart"],
+		}),
 		getCartByUserId: builder.mutation<any, any>({
 			query: (user_id) => ({
 				url: `/cart/user/${user_id}`,
@@ -88,6 +96,7 @@ export const {
 	useCreateCartMutation,
 	useDeleteCartMutation,
 	useByNowMutation,
+	useCheckStockMutation
 } = cartApi;
 
 export const productReducer = cartApi.reducer;

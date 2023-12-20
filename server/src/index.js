@@ -52,7 +52,7 @@ app.use((err, req, res, next) => {
       status: err.status || 500,
       message: err.message || "internal server",
     },
-    data: err.response.data.message || null,
+    data: err?.response?.data?.message || null,
   });
 });
 

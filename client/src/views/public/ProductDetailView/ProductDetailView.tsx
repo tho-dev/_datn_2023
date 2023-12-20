@@ -214,17 +214,18 @@ const ProductDetailView = () => {
         position: "top-right",
       });
     }
-    if (quantity == product.stock) return;
-    if (quantity > 1) {
+    if (quantity >= product?.data.stock) {
       return toast({
-        title: `Tối đa 2 sản phẩm`,
+        title: `Tối đa ${product?.data.stock} sản phẩm`,
         status: "warning",
         duration: 2000,
         isClosable: true,
         position: "top-right",
       });
     }
-    setQuantity(quantity + 1);
+    setQuantity((prev) => {
+      return (prev += 1);
+    });
   };
 
   if (loadingProduct) {

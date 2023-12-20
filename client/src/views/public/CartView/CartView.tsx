@@ -12,6 +12,7 @@ import {
   useGetCartQuery,
   useIncrementMutation,
   useRemoveMutation,
+  useCheckStockMutation,
 } from "~/redux/api/cart";
 import { Skeleton, useToast } from "@chakra-ui/react";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -24,24 +25,13 @@ const CartView = () => {
   const [decrement] = useDecrementMutation();
   const [increment] = useIncrementMutation();
   const [remove] = useRemoveMutation();
-
+  const [checkStock] = useCheckStockMutation();
   const [checkCaptch, setCheckCaptch] = useState(false);
+
   const toast = useToast();
   const navigate = useNavigate();
 
   const handlePayment = () => {
-    const checkQuatity = data?.data.products.every(
-      (item: any) => item.quantity < 3
-    );
-    if (!checkQuatity) {
-      return toast({
-        title: "Tối đa 2 sản phẩm",
-        status: "warning",
-        duration: 2000,
-        isClosable: true,
-        position: "top-right",
-      });
-    }
     if (data?.data?.products?.length <= 0)
       return toast({
         title: "Không có sản phẩm nào trong giỏ hàng",
@@ -58,7 +48,20 @@ const CartView = () => {
         isClosable: true,
         position: "top-right",
       });
-    navigate("/thanh-toan");
+    checkStock(cart_id)
+      .unwrap()
+      .then(() => {
+        navigate("/thanh-toan");
+      })
+      .catch((err) => {
+        return toast({
+          title: err?.data?.errors.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
   };
 
   const onChange = () => {
@@ -73,10 +76,16 @@ const CartView = () => {
     decrement(data)
       .unwrap()
       .then((data) => {
-        console.log(data);
+        console.log(data?.message);
       })
       .catch((err) => {
-        console.log(err);
+        toast({
+          title: err?.data?.errors?.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
       });
   };
 
@@ -106,7 +115,13 @@ const CartView = () => {
         console.log(data);
       })
       .catch((err) => {
-        console.log(err);
+        toast({
+          title: err?.data?.errors?.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top-right",
+        });
       });
   };
 

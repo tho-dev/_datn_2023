@@ -66,7 +66,7 @@ export const createOrder = async (req, res, next) => {
     const check_sku_stock = async (product) => {
       try {
         const sku = await Sku.findById(product.sku_id);
-        if (sku.stock < product.quantity) {
+        if (sku.stock < product.quantity || sku.stock == 0) {
           return {
             status: false,
             message: `Sản phẩm ${sku.name} vượt quá số lượng hàng còn trong kho`,
