@@ -32,10 +32,14 @@ const globalSlice = createSlice({
 	name: "global",
 	initialState,
 	reducers: {
-		login: (state, action: PayloadAction<{ data: any; accessToken: string }>) => {
-			state.user = action.payload.data;
+		login: (state, action: PayloadAction<{ userId: string, userName: string; token: string }>) => {
 			state.isLogin = true;
-			state.accessToken = action.payload.accessToken;
+			state.accessToken = action.payload.token;
+			state.user = {
+				userName: action.payload.userName,
+				userId: action.payload.userId
+			}
+
 		},
 		logout: (state) => {
 			state.user = {};

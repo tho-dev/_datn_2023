@@ -14,27 +14,27 @@ const promotionApi = createApi({
 	tagTypes: ["PromotionTag", "PromotionSingleTag"],
 	endpoints: (build) => ({
 		getAllPromotion: build.query({
-			query: (query: TQuery) => `/promotions?${objectToUrlParams(query)}`,
+			query: (query: TQuery) => `/User/List?${objectToUrlParams(query)}`,
 			providesTags: ["PromotionTag"],
 		}),
 		getSinglePromotion: build.query({
-			query: ({ slug }) => `/promotions/detail?slug=${slug}`,
+			query: ({ id }) => `/User/${id}/Info`,
 			providesTags: ["PromotionSingleTag"],
 			transformResponse: (res: any) => res?.data,
 		}),
 		createPromotion: build.mutation({
 			query: (body) => ({
-				url: `/promotions`,
+				url: `/User/Add`,
 				method: "POST",
 				body,
 			}),
 			invalidatesTags: ["PromotionTag"],
 		}),
-		updatePromotion: build.mutation<any, { _id: number }>({
-			query: ({ _id, ...patch }) => ({
-				url: `/promotions/${_id}`,
-				method: "PUT",
-				body: patch,
+		updatePromotion: build.mutation<any>({
+			query: (data) => ({
+				url: `/User/Update`,
+				method: "POST",
+				body: data,
 			}),
 			invalidatesTags: ["PromotionTag", "PromotionSingleTag"],
 		}),

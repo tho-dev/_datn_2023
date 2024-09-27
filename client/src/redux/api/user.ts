@@ -16,21 +16,21 @@ const authApi = createApi({
 		}),
 		getOne: builder.query({
 			query: (id) => ({
-				url: `/user/${id}`,
+				url: `/Acc/Info?id=${id}`,
 				method: "GET",
 			}),
 			providesTags: ["Auth"],
 		}),
-		signin: builder.mutation<any, { email: string; password: string }>({
+		signin: builder.mutation<any, { username: string; password: string }>({
 			query: (credentials) => ({
-				url: `/user/login`,
+				url: `/Acc/Login`,
 				method: "POST",
 				body: credentials,
 			}),
 		}),
-		signup: builder.mutation<{ status: number; message: string }, IUser>({
+		signup: builder.mutation<any, IUser>({
 			query: (credentials) => ({
-				url: `/user`,
+				url: `/Acc/Create`,
 				method: "POST",
 				body: credentials,
 			}),
@@ -49,13 +49,6 @@ const authApi = createApi({
 				method: "PUT",
 				body: data,
 			}),
-		}),
-		logoutUser: builder.mutation<any, any>({
-			query: () => ({
-				url: `/user/logout`,
-				method: "POST",
-			}),
-			invalidatesTags: ["Auth"],
 		}),
 		deleteUser: builder.mutation<any, string>({
 			query: (id) => ({
@@ -87,7 +80,6 @@ export const {
 	useSignupMutation,
 	useUpdateMutation,
 	useUpdatePassWordMutation,
-	useLogoutUserMutation,
 	useDeleteUserMutation,
 	useGetOneQuery,
 	useResetPasswordMutation,

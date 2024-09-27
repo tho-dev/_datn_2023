@@ -1,15 +1,19 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Flex, Grid } from "@chakra-ui/react";
 import Information from "./components/Information";
-import Accounts from "./components/Accounts";
-import Email from "./components/Email";
 import Password from "./components/Password";
 import { useAppSelector } from "~/redux/hook/hook";
 import { useGetOneQuery } from "~/redux/api/user";
+import { useGetSinglePromotionQuery } from "~/redux/api/promotion";
 
 const ProfileManagerView = () => {
   const { user } = useAppSelector((state) => state.persistedReducer.global);
-  const id = user._id;
+  const id = user.userId;
   const { data, isLoading, isError } = useGetOneQuery(id);
+  const { data: dataUser } = useGetSinglePromotionQuery({
+    id: id,
+  });
+  console.log(dataUser);
+
   if (isLoading) {
     return <Box>Loading....</Box>;
   }
@@ -19,13 +23,9 @@ const ProfileManagerView = () => {
   return (
     <Box>
       {/* Information */}
-      <Information data={data.data} />
-      {/* Email */}
-      <Email data={data.data} />
+      <Information dataUser={dataUser} />
       {/* Change your password */}
       <Password data={data.data} />
-      {/* Accounts */}
-      <Accounts />
     </Box>
   );
 };

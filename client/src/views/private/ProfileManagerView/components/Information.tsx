@@ -17,78 +17,38 @@ import {
   Select,
   Checkbox,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { useUpdateMutation } from "~/redux/api/user";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 type Props = {
-  data: any;
+  dataUser: any;
 };
 
-const Information = ({ data }: Props) => {
+const Information = ({ dataUser }: Props) => {
   const [loading, setLoading] = useState(false);
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     handleSubmit,
-  } = useForm();
+    reset,
+  } = useForm({
+    defaultValues: {},
+  });
   const toast = useToast();
-  const [update] = useUpdateMutation();
+
+  useEffect(() => {
+    if (dataUser) {
+      reset(dataUser); // Reset form với dữ liệu từ props
+    }
+  }, [dataUser, reset]);
 
   const onSubmit = (data_form: any) => {
-    setLoading(true);
-    update({ data: data_form, id: data._id })
-      .unwrap()
-      .then((data) => {
-        toast({
-          title: "Thành công",
-          duration: 1600,
-          position: "bottom-right",
-          status: "success",
-          description: "Cập nhật thành công",
-        });
-        setLoading(false);
-      })
-      .catch((err) => {
-        toast({
-          title: "Thất bại",
-          duration: 1600,
-          position: "bottom-right",
-          status: "error",
-          description: err.data.errors.message,
-        });
-      });
+    console.log(data_form);
   };
 
   return (
     <Box>
-      <Box
-        w={"100%"}
-        h={40}
-        bg={"#b3e7ff"}
-        borderRadius={"6px"}
-        position={"relative"}
-      >
-        <Box position={"absolute"} top="50%" left="40%" w="300px">
-          <Flex justifyContent="center">
-            <Image
-              borderRadius="full"
-              boxSize="150px"
-              src={data?.avatar}
-              alt="Dan Abramov"
-            />
-          </Flex>
-          <Box>
-            <Text textAlign="center" mt={4} fontSize="18" fontWeight="bold">
-              {data?.first_name + " " + data?.last_name}
-            </Text>
-            <Text textAlign="center" mt={4} fontSize="14" fontWeight="bold">
-              {data?.email}
-            </Text>
-          </Box>
-        </Box>
-      </Box>
-      <Box w={"100%"} h={"52"} bg={"#ffff"} borderBottomRadius={"6px"}></Box>
       <Box
         mt={7}
         w={"100%"}
@@ -119,82 +79,27 @@ const Information = ({ data }: Props) => {
                 templateColumns={{
                   sm: "repeat(1, 1fr)",
                   md: "repeat(1, 1fr)",
-                  xl: "repeat(31, 1fr)",
+                  xl: "repeat(1, 1fr)",
                 }}
               >
-                <GridItem colSpan={15}>
-                  <FormControl isInvalid={errors.first_name as any}>
-                    <Input
-                      fontSize={14}
-                      id="firstName"
-                      placeholder="firstName"
-                      size="lager"
-                      defaultValue={data?.first_name}
-                      {...register("first_name", {
-                        required: "Không được để trống !!!",
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {(errors.first_name as any) &&
-                        errors?.first_name?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </GridItem>
-                <Spacer />
-                <GridItem colSpan={15}>
-                  <FormControl isInvalid={errors.last_name as any}>
-                    <Input
-                      fontSize={14}
-                      id="lastName"
-                      placeholder="lastName"
-                      size="lager"
-                      defaultValue={data?.last_name}
-                      {...register("last_name", {
-                        required: "Không được để trống !!!",
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {(errors.last_name as any) && errors?.last_name?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </GridItem>
+                <FormControl isInvalid={errors.name as any}>
+                  <Input
+                    fontSize={14}
+                    id="name"
+                    placeholder="Tên đầy đủ"
+                    size="lager"
+                    {...register("name", {
+                      required: "Không được để trống !!!",
+                    })}
+                  />
+                  <FormErrorMessage>
+                    {(errors.name as any) && errors?.name?.message}
+                  </FormErrorMessage>
+                </FormControl>
               </Grid>
             </GridItem>
           </Grid>
 
-          {/* Email */}
-          <Grid
-            mt={5}
-            templateColumns={{
-              sm: "repeat(1, 1fr)",
-              md: "repeat(1, 1fr)",
-              xl: "repeat(4, 1fr)",
-            }}
-          >
-            <GridItem fontWeight={600} color={"#797a7b"} colSpan={1}>
-              Email
-            </GridItem>
-            <GridItem colSpan={3}>
-              <FormControl isInvalid={errors.email as any}>
-                <Input
-                  fontSize={14}
-                  id="email"
-                  placeholder="abc@gmail.com"
-                  size="lager"
-                  defaultValue={data?.email}
-                  value={data?.email}
-                  {...register("email", {
-                    required: "Không được để trống !!!",
-                  })}
-                  readOnly
-                  bg="bg.gray"
-                />
-                <FormErrorMessage>
-                  {(errors.email as any) && errors?.email?.message}
-                </FormErrorMessage>
-              </FormControl>
-            </GridItem>
-          </Grid>
           {/* Phone */}
           <Grid
             mt={5}
@@ -216,9 +121,8 @@ const Information = ({ data }: Props) => {
                 <Input
                   fontSize={14}
                   id="phone"
-                  placeholder="(+84)XXX XXX XXX"
+                  placeholder="Số điện thoại"
                   size="lager"
-                  defaultValue={`+84${data?.phone}`}
                   {...register("phone", {
                     required: "Không được để trống !!!",
                   })}
@@ -229,8 +133,42 @@ const Information = ({ data }: Props) => {
               </FormControl>
             </GridItem>
           </Grid>
-          {/* Department */}
+          {/* Cccd */}
+
           <Grid
+            mt={5}
+            templateColumns={{
+              sm: "repeat(1, 1fr)",
+              md: "repeat(1, 1fr)",
+              xl: "repeat(4, 1fr)",
+            }}
+          >
+            <GridItem colSpan={1}>
+              <Flex>
+                <Text fontWeight={600} color={"#797a7b"} mr={2}>
+                  Căn cước công dân
+                </Text>
+              </Flex>
+            </GridItem>
+            <GridItem colSpan={3}>
+              <FormControl isInvalid={errors.cccd as any}>
+                <Input
+                  fontSize={14}
+                  id="cccd"
+                  placeholder="Căn cước công dân"
+                  size="lager"
+                  {...register("cccd", {
+                    required: "Không được để trống !!!",
+                  })}
+                />
+                <FormErrorMessage>
+                  {(errors.cccd as any) && errors?.cccd?.message}
+                </FormErrorMessage>
+              </FormControl>
+            </GridItem>
+          </Grid>
+          {/* Department */}
+          {/* <Grid
             mt={5}
             templateColumns={{
               sm: "repeat(1, 1fr)",
@@ -248,8 +186,6 @@ const Information = ({ data }: Props) => {
                   id="department"
                   placeholder="Admin"
                   size="lager"
-                  defaultValue={data?.role}
-                  value={data?.role}
                   {...register("department", {
                     required: "Không được để trống !!!",
                   })}
@@ -261,7 +197,7 @@ const Information = ({ data }: Props) => {
                 </FormErrorMessage>
               </FormControl>
             </GridItem>
-          </Grid>
+          </Grid> */}
 
           <Grid
             mt={5}
@@ -276,19 +212,76 @@ const Information = ({ data }: Props) => {
             </GridItem>
             <GridItem colSpan={3}>
               {/* state */}
-              <FormControl isInvalid={errors.state as any}>
+              <FormControl isInvalid={errors.address as any}>
                 <Input
                   fontSize={14}
-                  id="state"
+                  id="address"
                   placeholder="Địa chỉ"
                   size="lager"
-                  defaultValue={data?.location}
-                  {...register("state", {
+                  {...register("address", {
                     required: "Không được để trống !!!",
                   })}
                 />
                 <FormErrorMessage>
-                  {(errors.state as any) && errors?.state?.message}
+                  {(errors.address as any) && errors?.address?.message}
+                </FormErrorMessage>
+              </FormControl>
+            </GridItem>
+          </Grid>
+          {/* date */}
+          <Grid
+            mt={5}
+            templateColumns={{
+              sm: "repeat(1, 1fr)",
+              md: "repeat(1, 1fr)",
+              xl: "repeat(4, 1fr)",
+            }}
+          >
+            <GridItem fontWeight={600} color={"#797a7b"} colSpan={1}>
+              Ngày tháng năm sinh
+            </GridItem>
+            <GridItem colSpan={3}>
+              <FormControl isInvalid={errors.dob as any}>
+                <Input
+                  id="dob"
+                  type="date"
+                  {...register("dob", {
+                    required: "Không được để trống !!!",
+                  })}
+                />
+                <FormErrorMessage>
+                  {(errors.dob as any) && errors?.dob?.message}
+                </FormErrorMessage>
+              </FormControl>
+            </GridItem>
+          </Grid>
+          {/* note */}
+          <Grid
+            mt={5}
+            templateColumns={{
+              sm: "repeat(1, 1fr)",
+              md: "repeat(1, 1fr)",
+              xl: "repeat(4, 1fr)",
+            }}
+          >
+            <GridItem fontWeight={600} color={"#797a7b"} colSpan={1}>
+              Ghi chú
+            </GridItem>
+            <GridItem colSpan={3}>
+              <FormControl isInvalid={errors.note as any}>
+                <Textarea
+                  id="note"
+                  size="lager"
+                  p="4"
+                  fontSize="sm"
+                  boxShadow="none"
+                  placeholder="Mô tả"
+                  {...register("note", {
+                    required: "Không được để trống !!!",
+                  })}
+                />
+                <FormErrorMessage>
+                  {(errors.note as any) && errors?.note?.message}
                 </FormErrorMessage>
               </FormControl>
             </GridItem>

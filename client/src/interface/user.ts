@@ -1,12 +1,7 @@
 export interface IUser {
-  first_name: string;
-  last_name: string;
-  email: string;
+  username: string;
   password: string;
-  confirm_password: string;
-  phone: number;
-  location: string;
-  avatar: string;
+  userId: string;
 }
 export interface IEmail {
   email: string;

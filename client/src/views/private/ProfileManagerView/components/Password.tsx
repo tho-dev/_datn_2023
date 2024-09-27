@@ -23,6 +23,8 @@ type Props = {
 };
 
 const Password = ({ data }: Props) => {
+  console.log(data);
+
   const [loading, setLoading] = useState(false);
   const {
     register,

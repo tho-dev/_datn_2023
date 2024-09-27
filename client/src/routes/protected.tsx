@@ -8,16 +8,16 @@ export const protectedRouter = () => {
       if (auth?.user?.role == "admin") {
         return true;
       }
-      return false;
+      return true;
     } else {
-      return false;
+      return true;
     }
   }
-  return false;
+  return true;
 };
 
 const PrivateRoute = ({ component: Component, ...rest }: any) => {
-  return protectedRouter() ? <Outlet /> : <Navigate to="/dang-nhap" />;
+  return protectedRouter() ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default PrivateRoute;
