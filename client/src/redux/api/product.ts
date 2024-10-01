@@ -41,8 +41,9 @@ const productApi = createApi({
 		getAllProductManager: builder.query({
 			query: (query: TQuery) => `/product?${objectToUrlParams(query)}`,
 		}),
-		getAllProduct: builder.query({
-			query: (query: TQuery) => `/product/manager?${objectToUrlParams(query)}`,
+		getAllProject: builder.query({
+			query: (query: TQuery) => `/Project/List?${objectToUrlParams(query)}`,
+			providesTags: ["ProductTag"],
 		}),
 		getProductById: builder.query({
 			query: ({ id }: { id: string }) => ({
@@ -58,12 +59,13 @@ const productApi = createApi({
 			}),
 			providesTags: ["VariantSingleTag"],
 		}),
-		createProduct: builder.mutation({
+		createProject: builder.mutation({
 			query: (body) => ({
-				url: "/product",
+				url: "/Project/Add",
 				method: "POST",
 				body,
 			}),
+			invalidatesTags: ["ProductTag"],
 		}),
 		updateProduct: builder.mutation({
 			query: ({ _id, ...body }) => ({
@@ -103,8 +105,8 @@ const productApi = createApi({
 
 export const {
 	useGetBySlugQuery,
-	useGetAllProductQuery,
-	useCreateProductMutation,
+	useGetAllProjectQuery,
+	useCreateProjectMutation,
 	useSaveVariantsMutation,
 	useGetProductByIdQuery,
 	useGetAllVariantQuery,

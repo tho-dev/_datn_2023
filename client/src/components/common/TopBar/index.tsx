@@ -241,7 +241,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
               lineHeight="1.2"
               textTransform="capitalize"
             >
-              Admin
+              Vai trò: {user.role}
             </Text>
           </Box>
           <Flex flexDir="column" alignItems="center" justifyContent="center">

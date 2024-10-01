@@ -1,7 +1,6 @@
 import React from "react";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import banner from "~/assets/images/email.png";
 import { Image } from "@chakra-ui/react";
 

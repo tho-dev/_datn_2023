@@ -17,22 +17,16 @@ import OrderManagementView from "~/views/private/OrderManagementView";
 import OrderDetailView from "~/views/private/OrderManagementView/childrenViews/OrderDetailView";
 import PostCategoryView from "~/views/private/PostCategoryView";
 import { PostManagementView } from "~/views/private/PostManagementView";
-import { ProductManagerView } from "~/views/private/ProductManagerView";
-import { AddProductManagerView } from "~/views/private/ProductManagerView/components/AddProductMangerView";
-import { UpdateProductManagerView } from "~/views/private/ProductManagerView/components/UpdateProductMangerView";
-import { VariantMangerView } from "~/views/private/ProductManagerView/components/VariantMangerView";
+import { QuanLyDuAnView } from "~/views/private/QuanLyDuAnView";
 import { ProfileManagerView } from "~/views/private/ProfileManagerView";
-import { SettingView } from "~/views/private/SettingView";
 import { UserListManagerView } from "~/views/private/UserListManagerView";
 import { AddUserListManagerView } from "~/views/private/UserListManagerView/components/AddUserListManagerView";
 import { UpdateUserListManagerView } from "~/views/private/UserListManagerView/components/UpdateUserManagerView";
-import { PromotionView as PromotionManageView } from "~/views/private/PromotionView";
 import { AddPostMangerView } from "~/views/private/PostManagementView/components/AddPostMangerView";
-import CouponView from "~/views/private/CouponView";
-import AddGmailView from "~/views/private/PromotionView/Gmail/AddGmail";
-import GmailView from "~/views/private/PromotionView/Gmail/Gmail";
 import UpdateOrder from "~/views/private/OrderManagementView/updateOrder/UpdateOrder";
 import ReturedOrder from "~/views/private/OrderManagementView/childrenViews/ReturedOrder";
+import { QuanLyNguoiDungView } from "~/views/private/QuanLyNguoiDung";
+import QuanLyTaiKhoanView from "~/views/private/QuanLyTaiKhoan";
 
 const routes: RouteObject[] = [
   {
@@ -57,27 +51,15 @@ const routes: RouteObject[] = [
           },
           {
             path: "qlnd",
-            element: <PromotionManageView />,
+            element: <QuanLyNguoiDungView />,
           },
           {
-            path: "coupon",
-            element: <CouponView />,
+            path: "qltk",
+            element: <QuanLyTaiKhoanView />,
           },
           {
-            path: "san-pham",
-            element: <ProductManagerView />,
-          },
-          {
-            path: "san-pham/add",
-            element: <AddProductManagerView />,
-          },
-          {
-            path: "san-pham/:id/update",
-            element: <UpdateProductManagerView />,
-          },
-          {
-            path: "san-pham/:product_id/bien-the/:sku_id",
-            element: <VariantMangerView />,
+            path: "qlda",
+            element: <QuanLyDuAnView />,
           },
           {
             path: "danh-muc",
@@ -129,10 +111,6 @@ const routes: RouteObject[] = [
           {
             path: "tai-khoan/:id/update",
             element: <UpdateUserListManagerView />,
-          },
-          {
-            path: "cau-hinh",
-            element: <SettingView />,
           },
           {
             path: "profile",

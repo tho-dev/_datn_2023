@@ -40,9 +40,9 @@ const MENU = [
     icon: NewsFeedIcon,
     children: [
       { title: "Quản Lý Người Dùng", to: "/admin/qlnd" },
+      { title: "Quản Lý Tài Khoản", to: "/admin/qltk" },
       { title: "Quản Lý Nhóm Người Dùng", to: "/admin/qlnnd" },
-      { title: "Quản Lý Danh Mục", to: "/admin/qldm" },
-      { title: "Quản Lý Loại Hồ Sơ", to: "/admin/qllhs" },
+      { title: "Quản Lý Dự Án", to: "/admin/qlda" },
       { title: "Cấu Hình Quy Trình", to: "/admin/chqt" },
       { title: "Tiến Độ Chất Lượng", to: "/admin/tdcl" },
     ],

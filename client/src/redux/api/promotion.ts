@@ -22,6 +22,14 @@ const promotionApi = createApi({
 			providesTags: ["PromotionSingleTag"],
 			transformResponse: (res: any) => res?.data,
 		}),
+		getRole: build.query({
+			query: () => ({
+				url: `/Role/List`,
+				method: "GET",
+			}),
+			providesTags: ["PromotionSingleTag"],
+			transformResponse: (res: any) => res?.data,
+		}),
 		createPromotion: build.mutation({
 			query: (body) => ({
 				url: `/User/Add`,
@@ -38,9 +46,17 @@ const promotionApi = createApi({
 			}),
 			invalidatesTags: ["PromotionTag", "PromotionSingleTag"],
 		}),
-		deletePromotion: build.mutation({
+		assignRole: build.mutation({
+			query: (data) => ({
+				url: `/User/AssignRole`,
+				method: "POST",
+				body: data,
+			}),
+			invalidatesTags: ["PromotionTag"],
+		}),
+		deleteUser: build.mutation({
 			query: (id) => ({
-				url: `/promotions/${id}`,
+				url: `/User/${id}/delete`,
 				method: "DELETE",
 			}),
 			invalidatesTags: ["PromotionTag"],
@@ -53,7 +69,9 @@ export const {
 	useGetSinglePromotionQuery,
 	useCreatePromotionMutation,
 	useUpdatePromotionMutation,
-	useDeletePromotionMutation,
+	useAssignRoleMutation,
+	useDeleteUserMutation,
+	useGetRoleQuery
 } = promotionApi;
 
 export default promotionApi;

@@ -13,12 +13,12 @@ const couponApi = createApi({
 	baseQuery: baseQuery,
 	tagTypes: ["CouponTag", "CouponSingleTag"],
 	endpoints: (build) => ({
-		getAllCoupon: build.query({
-			query: (query: TQuery) => `/coupon?${objectToUrlParams(query)}`,
+		getAllAcc: build.query({
+			query: (query: TQuery) => `Acc/List?${objectToUrlParams(query)}`,
 			providesTags: ["CouponTag"],
 		}),
-		getSingleCoupon: build.query({
-			query: ({ id }) => `/coupon/${id}`,
+		getSingleAcc: build.query({
+			query: ({ id }) => `Acc/${id}/Info`,
 			providesTags: ["CouponTag"],
 			transformResponse: (res: any) => res?.data,
 		}),
@@ -29,17 +29,17 @@ const couponApi = createApi({
 				body: data
 			}),
 		}),
-		createCoupon: build.mutation({
+		resetPassword: build.mutation({
 			query: (body) => ({
-				url: `/coupon`,
+				url: `/Acc/ResetPwd`,
 				method: "POST",
 				body,
 			}),
 			invalidatesTags: ["CouponSingleTag", "CouponTag"],
 		}),
-		updateCoupon: build.mutation<any, { _id: number }>({
-			query: ({ _id, ...patch }) => ({
-				url: `/coupon/${_id}`,
+		updateAcc: build.mutation<any, { id: number }>({
+			query: ({ id, ...patch }) => ({
+				url: `/Acc/${id}/Edit`,
 				method: "PUT",
 				body: patch,
 			}),
@@ -56,11 +56,11 @@ const couponApi = createApi({
 });
 
 export const {
-	useGetAllCouponQuery,
-	useGetSingleCouponQuery,
-	useCreateCouponMutation,
+	useGetAllAccQuery,
+	useGetSingleAccQuery,
+	useResetPasswordMutation,
 	useDeleteCounponMutation,
-	useUpdateCouponMutation,
+	useUpdateAccMutation,
 	useGetValueCouponMutation
 } = couponApi;
 

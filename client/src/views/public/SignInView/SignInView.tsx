@@ -62,7 +62,7 @@ const SignInView = (props: Props) => {
       } else {
         toast({
           title: "Đăng nhập thất bại",
-          description: result.error.data.errors.message,
+          description: result.error.data.message,
           status: "error",
           duration: 2000,
           isClosable: true,

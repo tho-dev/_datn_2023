@@ -21,19 +21,21 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import React, { useEffect, useState } from "react";
+import { useUpdatePromotionMutation } from "~/redux/api/promotion";
 type Props = {
   dataUser: any;
 };
 
 const Information = ({ dataUser }: Props) => {
   const [loading, setLoading] = useState(false);
+  const [updatePromotion] = useUpdatePromotionMutation();
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
   } = useForm({
-    defaultValues: {},
+    defaultValues: {} as any,
   });
   const toast = useToast();
 
@@ -43,8 +45,27 @@ const Information = ({ dataUser }: Props) => {
     }
   }, [dataUser, reset]);
 
-  const onSubmit = (data_form: any) => {
+  const onSubmit = async (data_form: any) => {
     console.log(data_form);
+    try {
+      await updatePromotion(data_form).unwrap();
+      toast({
+        title: "Thành công",
+        duration: 1600,
+        position: "top-right",
+        status: "success",
+        description: "Cập nhật người dùng thành công",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Có lỗi",
+        duration: 1600,
+        position: "top-right",
+        status: "error",
+        description: JSON.stringify(error?.data?.errors),
+      });
+    }
+    reset();
   };
 
   return (
@@ -99,7 +120,44 @@ const Information = ({ dataUser }: Props) => {
               </Grid>
             </GridItem>
           </Grid>
-
+          <Grid
+            mt={5}
+            templateColumns={{
+              sm: "repeat(1, 1fr)",
+              md: "repeat(1, 1fr)",
+              xl: "repeat(4, 1fr)",
+            }}
+          >
+            <GridItem fontWeight={600} color={"#797a7b"} colSpan={1}>
+              UserName
+            </GridItem>
+            <GridItem colSpan={3}>
+              <Grid
+                templateColumns={{
+                  sm: "repeat(1, 1fr)",
+                  md: "repeat(1, 1fr)",
+                  xl: "repeat(1, 1fr)",
+                }}
+              >
+                <FormControl isInvalid={errors.username as any}>
+                  <Input
+                    fontSize={14}
+                    id="username"
+                    placeholder="username"
+                    size="lager"
+                    {...register("username", {
+                      required: "Không được để trống !!!",
+                    })}
+                    readOnly
+                    bg="gray.100"
+                  />
+                  <FormErrorMessage>
+                    {(errors.username as any) && errors?.username?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </Grid>
+            </GridItem>
+          </Grid>
           {/* Phone */}
           <Grid
             mt={5}

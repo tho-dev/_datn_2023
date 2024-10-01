@@ -1,4 +1,4 @@
-import { Box, Flex, Grid } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Information from "./components/Information";
 import Password from "./components/Password";
 import { useAppSelector } from "~/redux/hook/hook";
@@ -12,7 +12,6 @@ const ProfileManagerView = () => {
   const { data: dataUser } = useGetSinglePromotionQuery({
     id: id,
   });
-  console.log(dataUser);
 
   if (isLoading) {
     return <Box>Loading....</Box>;

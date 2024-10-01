@@ -27,6 +27,7 @@ export type TableThinkProProps<Data extends object> = {
   useData?: any;
   query?: any;
   defaultPageSize?: number;
+  defautFunctions?: any;
 };
 
 export default function TableThinkPro<Data extends object>({
@@ -34,12 +35,14 @@ export default function TableThinkPro<Data extends object>({
   useData,
   query,
   defaultPageSize = 10,
+  defautFunctions,
 }: TableThinkProProps<Data>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [controlledPageCount, setPageCount] = useState(0);
   const [recordsPerPage, setRecordsPerPage] = useState(defaultPageSize);
+  const [activeRow, setActiveRow] = useState(null);
 
   const table = useReactTable({
     columns,
@@ -70,6 +73,11 @@ export default function TableThinkPro<Data extends object>({
     ...query,
     _page: table.getState().pagination.pageIndex + 1,
   });
+  // Hàm xử lý khi nhấp vào hàng
+  const handleRowClick = (rowIndex: any, rowId: any) => {
+    setActiveRow(rowIndex);
+    defautFunctions(rowId); // Lưu chỉ số hàng được nhấp
+  };
 
   useEffect(() => {
     setLoading(isLoading || isFetching);
@@ -158,9 +166,22 @@ export default function TableThinkPro<Data extends object>({
         </Thead>
         <Tbody h={loading ? "9" : "auto"} position="relative">
           {!loading ? (
-            table.getRowModel()?.rows?.map((row) => (
-              <Tr key={row?.id}>
-                {row.getVisibleCells().map((cell) => {
+            table.getRowModel()?.rows?.map((row: any) => (
+              <Tr
+                key={row?.id}
+                onClick={() => handleRowClick(row?.id, row.original?.id)}
+                // _hover={{
+                //   background: "gray.200",
+                //   color: "teal.500",
+                // }}
+                _active={{
+                  transform: "scale(0.98)", // Hiệu ứng thu nhỏ khi nhấn
+                }}
+                cursor={"pointer"}
+                bg={activeRow === row?.id ? "gray.300" : "white"} // Nền đen khi nhấp
+                color={activeRow === row?.id ? "white" : "black"} // Chữ trắng khi nhấp
+              >
+                {row.getVisibleCells().map((cell: any) => {
                   const meta: any = cell.column.columnDef.meta;
                   return (
                     <Td

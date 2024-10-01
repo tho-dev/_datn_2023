@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -8,21 +8,19 @@ import {
   Grid,
   GridItem,
   Divider,
-  Flex,
   Button,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { useUpdatePassWordMutation } from "~/redux/api/user";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "~/redux/hook/hook";
-import { logout } from "~/redux/slices/globalSlice";
-
+import { useAssignRoleMutation } from "~/redux/api/promotion";
 type Props = {
   data: any;
+  dataRole: any;
+  onClose: () => void;
 };
 
-const Password = ({ data }: Props) => {
+const ActionChangeRole = ({ data, dataRole, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -31,22 +29,19 @@ const Password = ({ data }: Props) => {
     reset,
   } = useForm();
   const toast = useToast();
-  const [updatePassword] = useUpdatePassWordMutation();
-
-  const handleUpdatePassword = async (dataPassword: any) => {
+  const [assignRole] = useAssignRoleMutation();
+  const handleUpdateRole = async (dataRoleForm: any) => {
     setLoading(true);
-    const newDataPassWord = {
-      ...dataPassword,
-      userId: data.userId,
-    };
+    const { roleId, ...rest } = dataRoleForm;
+
     try {
-      await updatePassword(newDataPassWord).unwrap();
+      await assignRole({ userId: data.id, roleId });
       toast({
         title: "Thành công",
         duration: 1600,
         position: "top-right",
         status: "success",
-        description: "Cập nhật mật khẩu thành công",
+        description: "Cập nhật vai trò thành công",
       });
     } catch (error: any) {
       toast({
@@ -59,7 +54,13 @@ const Password = ({ data }: Props) => {
     }
     reset();
     setLoading(false);
+    onClose();
   };
+  useEffect(() => {
+    if (data) {
+      reset(data); // Reset form với dữ liệu từ props
+    }
+  }, [data, reset]);
   return (
     <Box
       mt={7}
@@ -69,11 +70,7 @@ const Password = ({ data }: Props) => {
       p={5}
       fontSize={14}
     >
-      <Text fontSize={16} fontWeight={700} mb={5}>
-        Thay đổi mật khẩu
-      </Text>
-      <Divider />
-      <form onSubmit={handleSubmit(handleUpdatePassword)}>
+      <form onSubmit={handleSubmit(handleUpdateRole)}>
         <Grid
           mt={5}
           templateColumns={{
@@ -83,21 +80,22 @@ const Password = ({ data }: Props) => {
           }}
         >
           <GridItem fontWeight={600} color={"#797a7b"} colSpan={1}>
-            Mật khẩu hiện tại
+            User Name
           </GridItem>
           <GridItem colSpan={3}>
-            <FormControl isInvalid={errors.oldPassword as any}>
+            <FormControl isInvalid={errors.username as any}>
               <Input
-                type="password"
-                // id="password"
+                type="text"
                 placeholder="Enter current address"
                 size="lager"
-                {...register("oldPassword", {
+                {...register("username", {
                   required: "Không được để trống !!!",
                 })}
+                readOnly
+                defaultValue={data?.username}
               />
               <FormErrorMessage>
-                {(errors.oldPassword as any) && errors?.oldPassword?.message}
+                {(errors.username as any) && errors?.username?.message}
               </FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -111,50 +109,32 @@ const Password = ({ data }: Props) => {
           }}
         >
           <GridItem fontWeight={600} color={"#797a7b"} colSpan={1}>
-            Mật khẩu mới
+            Vai Trò
           </GridItem>
           <GridItem colSpan={3}>
             <FormControl isInvalid={errors.password as any}>
-              <Input
-                type="password"
-                // id="password"
-                placeholder="Enter new password"
+              <Select
+                placeholder="Chọn vai trò "
+                borderRadius="5px"
                 size="lager"
-                {...register("password", {
+                {...register("roleId", {
                   required: "Không được để trống !!!",
                 })}
-              />
+              >
+                {dataRole?.map((item: any) => {
+                  return (
+                    <option
+                      key={item.id}
+                      value={item.id}
+                      selected={item.name === data?.roleName}
+                    >
+                      {item.description}
+                    </option>
+                  );
+                })}
+              </Select>
               <FormErrorMessage>
                 {(errors.password as any) && errors?.password?.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-        </Grid>
-        <Grid
-          mt={5}
-          templateColumns={{
-            sm: "repeat(1, 1fr)",
-            md: "repeat(1, 1fr)",
-            xl: "repeat(4, 1fr)",
-          }}
-        >
-          <GridItem fontWeight={600} color={"#797a7b"} colSpan={1}>
-            Xác nhận mật khẩu mới
-          </GridItem>
-          <GridItem colSpan={3}>
-            <FormControl isInvalid={errors.confirmPassword as any}>
-              <Input
-                type="password"
-                // id="password"
-                placeholder="Confirm your new password"
-                size="lager"
-                {...register("confirmPassword", {
-                  required: "Không được để trống !!!",
-                })}
-              />
-              <FormErrorMessage>
-                {(errors.confirmPassword as any) &&
-                  errors?.confirmPassword?.message}
               </FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -174,4 +154,4 @@ const Password = ({ data }: Props) => {
   );
 };
 
-export default Password;
+export default ActionChangeRole;

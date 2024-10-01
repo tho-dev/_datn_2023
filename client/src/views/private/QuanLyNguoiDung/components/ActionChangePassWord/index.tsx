@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Text,
@@ -8,28 +8,27 @@ import {
   Grid,
   GridItem,
   Divider,
-  Flex,
   Button,
   useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useUpdatePassWordMutation } from "~/redux/api/user";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "~/redux/hook/hook";
-import { logout } from "~/redux/slices/globalSlice";
-
 type Props = {
   data: any;
+  onClose: () => void;
 };
 
-const Password = ({ data }: Props) => {
+const ActionChangPassword = ({ data, onClose }: Props) => {
   const [loading, setLoading] = useState(false);
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
+    watch,
   } = useForm();
+  // Lấy giá trị mật khẩu để so sánh với Confirm Password
+  const password = watch("password", "");
   const toast = useToast();
   const [updatePassword] = useUpdatePassWordMutation();
 
@@ -37,7 +36,7 @@ const Password = ({ data }: Props) => {
     setLoading(true);
     const newDataPassWord = {
       ...dataPassword,
-      userId: data.userId,
+      userId: data.id,
     };
     try {
       await updatePassword(newDataPassWord).unwrap();
@@ -69,10 +68,6 @@ const Password = ({ data }: Props) => {
       p={5}
       fontSize={14}
     >
-      <Text fontSize={16} fontWeight={700} mb={5}>
-        Thay đổi mật khẩu
-      </Text>
-      <Divider />
       <form onSubmit={handleSubmit(handleUpdatePassword)}>
         <Grid
           mt={5}
@@ -122,6 +117,10 @@ const Password = ({ data }: Props) => {
                 size="lager"
                 {...register("password", {
                   required: "Không được để trống !!!",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
                 })}
               />
               <FormErrorMessage>
@@ -150,6 +149,8 @@ const Password = ({ data }: Props) => {
                 size="lager"
                 {...register("confirmPassword", {
                   required: "Không được để trống !!!",
+                  validate: (value) =>
+                    value === password || "Mật khẩu không trùng khớp",
                 })}
               />
               <FormErrorMessage>
@@ -174,4 +175,4 @@ const Password = ({ data }: Props) => {
   );
 };
 
-export default Password;
+export default ActionChangPassword;

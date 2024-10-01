@@ -16,7 +16,7 @@ const authApi = createApi({
 		}),
 		getOne: builder.query({
 			query: (id) => ({
-				url: `/Acc/Info?id=${id}`,
+				url: `/Acc/${id}/Info`,
 				method: "GET",
 			}),
 			providesTags: ["Auth"],
@@ -44,9 +44,9 @@ const authApi = createApi({
 			invalidatesTags: ["Auth"],
 		}),
 		updatePassWord: builder.mutation<any, any>({
-			query: ({ data, id }) => ({
-				url: `/user/updatePassword/${id}`,
-				method: "PUT",
+			query: (data) => ({
+				url: `/Acc/ChangePwd`,
+				method: "POST",
 				body: data,
 			}),
 		}),
