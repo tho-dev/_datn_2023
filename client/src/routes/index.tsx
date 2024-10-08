@@ -10,7 +10,7 @@ import { SignInView } from "~/views/public/SignInView";
 
 // view admin
 import { BrandView } from "~/views/private/BrandView";
-import { CategoryManagerView } from "~/views/private/CategoryManagerView";
+import { QuanLyHoSoView } from "~/views/private/QuanLyHoSoView";
 import { DashboardView } from "~/views/private/DashboardView";
 import { DemandView } from "~/views/private/DemandView";
 import OrderManagementView from "~/views/private/OrderManagementView";
@@ -62,8 +62,8 @@ const routes: RouteObject[] = [
             element: <QuanLyDuAnView />,
           },
           {
-            path: "danh-muc",
-            element: <CategoryManagerView />,
+            path: "qlhs",
+            element: <QuanLyHoSoView />,
           },
           {
             path: "danh-muc-bai-viet",

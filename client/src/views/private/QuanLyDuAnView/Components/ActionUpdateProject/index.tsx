@@ -1,28 +1,25 @@
 import {
-  Box,
   Button,
   Checkbox,
-  CheckboxGroup,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
-  Text,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { PlusIcon } from "~/components/common/Icons";
-import { useCreateProjectMutation } from "~/redux/api/product";
+import { useUpdateProjectMutation } from "~/redux/api/product";
 
 type Props = {
   onClose: () => void;
+  dataProject: any;
 };
 
-const ActionUpdateProject = ({ onClose }: Props) => {
+const ActionUpdateProject = ({ onClose, dataProject }: Props) => {
   const toast = useToast();
 
   const {
@@ -31,7 +28,8 @@ const ActionUpdateProject = ({ onClose }: Props) => {
     reset,
     formState: { errors },
   } = useForm();
-  const [createProject] = useCreateProjectMutation();
+
+  const [updateProject] = useUpdateProjectMutation();
   const onSubmit = async (values: any) => {
     const data = {
       ...values,
@@ -39,15 +37,13 @@ const ActionUpdateProject = ({ onClose }: Props) => {
       statusId: 1,
     };
     try {
-      const result = await createProject(data).unwrap();
-      console.log(result);
-
+      await updateProject(data).unwrap();
       toast({
         title: "Thành công",
         duration: 1600,
         position: "top-right",
         status: "success",
-        description: "Tạo Tài khoản thành công",
+        description: "cập nhật dự án thành công",
       });
     } catch (error) {
       toast({
@@ -55,13 +51,17 @@ const ActionUpdateProject = ({ onClose }: Props) => {
         duration: 1600,
         position: "top-right",
         status: "error",
-        description: JSON.stringify(error?.data?.errors),
+        description: "cập nhật thất bại",
       });
     }
     reset();
     onClose();
   };
-
+  useEffect(() => {
+    if (dataProject) {
+      reset(dataProject); // Reset form với dữ liệu từ props
+    }
+  }, [dataProject, reset]);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Flex flexDir="column" gap="4">
@@ -145,6 +145,22 @@ const ActionUpdateProject = ({ onClose }: Props) => {
               />
               <FormErrorMessage>
                 {(errors.fieldAmount as any) && errors?.fieldAmount?.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors.isHidden as any}>
+              <Flex alignItems="center">
+                <FormLabel
+                  htmlFor="isHidden"
+                  fontSize="15"
+                  fontWeight="semibold"
+                  my="4"
+                >
+                  Ẩn dự án
+                </FormLabel>
+                <Checkbox id="isHidden" {...register("isHidden")} />
+              </Flex>
+              <FormErrorMessage>
+                {(errors.isHidden as any) && errors?.isHidden?.message}
               </FormErrorMessage>
             </FormControl>
           </Flex>
@@ -236,7 +252,7 @@ const ActionUpdateProject = ({ onClose }: Props) => {
           leftIcon={<PlusIcon size={4} />}
           px="4"
         >
-          Tạo mới
+          Cập nhật
         </Button>
       </Flex>
     </form>

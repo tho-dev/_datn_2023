@@ -31,33 +31,41 @@ const productApi = createApi({
 				body,
 			}),
 		}),
-		getAllVariant: builder.query({
-			query: ({ id }: { id: string }) => ({
-				url: `/product/${id}/variants`,
+		getAllStatusProject: builder.query({
+			query: () => ({
+				url: `/ProjectStatus/List`,
 				method: "GET",
 			}),
 			providesTags: ["ProductVariantTag"],
 		}),
-		getAllProductManager: builder.query({
-			query: (query: TQuery) => `/product?${objectToUrlParams(query)}`,
+		getAllProjectHidden: builder.query({
+			query: (query: TQuery) => `/Project/Hidden?${objectToUrlParams(query)}`,
+			providesTags: ["ProductTag"],
 		}),
 		getAllProject: builder.query({
 			query: (query: TQuery) => `/Project/List?${objectToUrlParams(query)}`,
 			providesTags: ["ProductTag"],
 		}),
-		getProductById: builder.query({
-			query: ({ id }: { id: string }) => ({
-				url: `/product/manager/${id}`,
+		getProjectById: builder.query({
+			query: (idProject: string) => ({
+				url: `/Project/${idProject}`,
 				method: "GET",
 			}),
-			providesTags: ["ProductSingleTag"],
+			providesTags: ["ProductSingleTag", "ProductTag"],
 		}),
-		getSku: builder.query({
-			query: ({ product_id, sku_id }: any) => ({
-				url: `/product/${product_id}/variants/${sku_id}`,
+		getStorageById: builder.query({
+			query: (id: string) => ({
+				url: `/StorageOrgan/${id}`,
 				method: "GET",
 			}),
-			providesTags: ["VariantSingleTag"],
+			providesTags: ["ProductSingleTag", "ProductTag"],
+		}),
+		getStorageByIdProject: builder.query({
+			query: (idProject: any) => ({
+				url: `/StorageOrgan/ByProject/${idProject}`,
+				method: "GET",
+			}),
+			providesTags: ["VariantSingleTag", "ProductTag"],
 		}),
 		createProject: builder.mutation({
 			query: (body) => ({
@@ -67,38 +75,59 @@ const productApi = createApi({
 			}),
 			invalidatesTags: ["ProductTag"],
 		}),
-		updateProduct: builder.mutation({
-			query: ({ _id, ...body }) => ({
-				url: `/product/${_id}`,
+		createStorage: builder.mutation({
+			query: (body) => ({
+				url: "/StorageOrgan/Add",
+				method: "POST",
+				body,
+			}),
+			invalidatesTags: ["ProductTag", "VariantSingleTag"],
+		}),
+		updateProject: builder.mutation({
+			query: ({ id, ...body }) => ({
+				url: `/Project/${id}`,
 				method: "PUT",
 				body: body,
 			}),
-			invalidatesTags: ["ProductSingleTag"],
+			invalidatesTags: ["ProductSingleTag", "ProductTag"],
 		}),
-		updateVariant: builder.mutation({
-			query: ({ _id, product_id, ...body }) => ({
-				url: `/product/${product_id}/variants/${_id}`,
+		updateStatusProject: builder.mutation({
+			query: ({ id, ...data }) => ({
+				url: `/Project/${id}/UpdateStatus`,
 				method: "PUT",
-				body: {
-					...body,
-					product_id: product_id,
-				},
+				body: data,
 			}),
-			invalidatesTags: ["ProductVariantTag", "VariantSingleTag"],
+			invalidatesTags: ["ProductVariantTag", "VariantSingleTag", "ProductTag"],
 		}),
-		deleteOptionProduct: builder.mutation<any, number>({
-			query: ({ product_id, option_id }: any) => ({
-				url: `/product/${product_id}/options/${option_id}`,
+		unHideProject: builder.mutation({
+			query: ({ id, ...data }) => ({
+				url: `/Project/${id}/Unhide`,
+				method: "PUT",
+				body: data,
+			}),
+			invalidatesTags: ["ProductVariantTag", "VariantSingleTag", "ProductTag"],
+		}),
+		deleteProject: builder.mutation<any, number>({
+			query: (id) => ({
+				url: `/Project/${id}`,
 				method: "DELETE",
 			}),
+			invalidatesTags: ["ProductTag"],
 		}),
-		saveVariants: builder.mutation({
-			query: ({ product_id }) => ({
-				url: `/product/${product_id}/variants`,
-				method: "POST",
-				body: {},
+		deleteStorage: builder.mutation<any, number>({
+			query: (id) => ({
+				url: `/StorageOrgan/${id}`,
+				method: "DELETE",
 			}),
-			invalidatesTags: ["ProductVariantTag"],
+			invalidatesTags: ["ProductTag"],
+		}),
+		updateStorage: builder.mutation({
+			query: ({ id, ...data }) => ({
+				url: `/StorageOrgan/${id}`,
+				method: "PUT",
+				body: data,
+			}),
+			invalidatesTags: ["VariantSingleTag", "ProductSingleTag"],
 		}),
 	}),
 });
@@ -107,16 +136,20 @@ export const {
 	useGetBySlugQuery,
 	useGetAllProjectQuery,
 	useCreateProjectMutation,
-	useSaveVariantsMutation,
-	useGetProductByIdQuery,
-	useGetAllVariantQuery,
-	useDeleteOptionProductMutation,
-	useUpdateProductMutation,
-	useGetSkuQuery,
-	useUpdateVariantMutation,
+	useUpdateStorageMutation,
+	useGetProjectByIdQuery,
+	useGetAllStatusProjectQuery,
+	useDeleteProjectMutation,
+	useUpdateProjectMutation,
+	useGetStorageByIdProjectQuery,
+	useUpdateStatusProjectMutation,
 	useCompareProductMutation,
 	useGetSearchQuery,
-	useGetAllProductManagerQuery,
+	useCreateStorageMutation,
+	useGetStorageByIdQuery,
+	useDeleteStorageMutation,
+	useGetAllProjectHiddenQuery,
+	useUnHideProjectMutation
 } = productApi;
 export const productReducer = productApi.reducer;
 export default productApi;

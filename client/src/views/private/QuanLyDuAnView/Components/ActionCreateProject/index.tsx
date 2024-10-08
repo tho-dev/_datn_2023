@@ -29,7 +29,9 @@ const ActionCreateProject = ({ onClose }: Props) => {
     reset,
     formState: { errors },
   } = useForm();
+  //call api
   const [createProject] = useCreateProjectMutation();
+
   const onSubmit = async (values: any) => {
     const data = {
       ...values,
@@ -53,7 +55,6 @@ const ActionCreateProject = ({ onClose }: Props) => {
         duration: 1600,
         position: "top-right",
         status: "error",
-        description: JSON.stringify(error?.data?.errors),
       });
     }
     reset();

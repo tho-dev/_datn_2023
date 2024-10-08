@@ -24,18 +24,16 @@ import { ArrowDownAdminIcon, ArrowRightIcon } from "../common/Icons";
 
 export type TableThinkProProps<Data extends object> = {
   columns: ColumnDef<Data, any>[];
-  useData?: any;
-  query?: any;
   defaultPageSize?: number;
   defautFunctions?: any;
+  dataUser?: any;
 };
 
-export default function TableThinkPro<Data extends object>({
+export default function TableProject<Data extends object>({
   columns,
-  useData,
-  query,
   defaultPageSize = 10,
   defautFunctions,
+  dataUser,
 }: TableThinkProProps<Data>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [data, setData] = useState<any>([]);
@@ -64,36 +62,21 @@ export default function TableThinkPro<Data extends object>({
     manualPagination: true,
     pageCount: controlledPageCount,
   });
-
-  const {
-    data: result,
-    isLoading,
-    isFetching,
-  } = useData({
-    ...query,
-    _page: table.getState().pagination.pageIndex + 1,
-  });
+  useEffect(() => {
+    setData(dataUser);
+    setLoading(false);
+  }, [dataUser]);
   // Hàm xử lý khi nhấp vào hàng
   const handleRowClick = (rowIndex: any, rowId: any) => {
     setActiveRow(rowIndex);
     defautFunctions(rowId); // Lưu chỉ số hàng được nhấp
   };
-
-  useEffect(() => {
-    setLoading(isLoading || isFetching);
-    setData(!(isLoading || isFetching) ? result?.data : []);
-    setPageCount(result?.data?.paginate?.totalPages);
-    setRecordsPerPage(result?.data?.paginate?.limit);
-  }, [
-    result,
-    table.getState().pagination.pageIndex,
-    table.getState().pagination.pageSize,
-  ]);
   return (
     <Box
       borderWidth="1px"
       borderColor="border.primary"
       rounded="xl"
+      w="full"
       overflow="hidden"
     >
       <Table>
@@ -174,6 +157,10 @@ export default function TableThinkPro<Data extends object>({
               <Tr
                 key={row?.id}
                 onClick={() => handleRowClick(row?.id, row.original?.id)}
+                // _hover={{
+                //   background: "gray.200",
+                //   color: "teal.500",
+                // }}
                 _active={{
                   transform: "scale(0.98)", // Hiệu ứng thu nhỏ khi nhấn
                 }}
@@ -242,7 +229,7 @@ export default function TableThinkPro<Data extends object>({
           )}
         </Tbody>
       </Table>
-      {!loading && (
+      {loading && (
         <Flex
           py="4"
           px="0"

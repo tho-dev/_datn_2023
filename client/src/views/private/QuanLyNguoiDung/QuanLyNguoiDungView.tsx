@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
+import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/layout";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,6 +10,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -21,6 +22,7 @@ import ConfirmThinkPro from "~/components/ConfirmThinkPro";
 import DialogThinkPro from "~/components/DialogThinkPro";
 import TableThinkPro from "~/components/TableThinkPro";
 import {
+  AirplayIcon,
   EditIcon,
   PlusCircleIcon,
   SearchIcon,
@@ -184,60 +186,59 @@ const QuanLyNguoiDungView = (props: Props) => {
       cell: ({ row }) => {
         const doc = row?.original;
         return (
-          <Menu>
-            <MenuButton textAlign="center">
-              <Text
-                fontSize="18"
-                fontWeight="semibold"
-                textAlign="center"
-                ml={3}
-              >
-                ...
-              </Text>
-            </MenuButton>
-            <MenuList w="100px">
-              <MenuItem
-                py="2"
-                icon={<TraskIcon size={4} />}
-                onClick={() => {
+          <Grid templateColumns="repeat(2, 1fr)" gap="1">
+            <Tooltip label="Xoá">
+              <Button
+                size="xs"
+                onClick={(e: any) => {
+                  e.stopPropagation();
                   setId(doc?.id);
                   onOpenConfirm();
                 }}
               >
-                Xóa
-              </MenuItem>
-              <MenuItem
-                py="2"
-                icon={<EditIcon size={4} />}
-                onClick={() => {
+                <TraskIcon size={4} />
+              </Button>
+            </Tooltip>
+            <Tooltip label="Cập nhật">
+              <Button
+                size="xs"
+                bg="green.200"
+                onClick={(e: any) => {
+                  e.stopPropagation();
                   setSlug(doc?.id);
                   onOpenActionUpdatePromtion();
                 }}
               >
-                Cập Nhật
-              </MenuItem>
-              <MenuItem
-                py="2"
-                icon={<EditIcon size={4} />}
-                onClick={() => {
+                <AirplayIcon size={4} />
+              </Button>
+            </Tooltip>
+            <Tooltip label="Đổi mật khẩu">
+              <Button
+                size="xs"
+                bg="blue.200"
+                onClick={(e: any) => {
+                  e.stopPropagation();
                   setSlug(doc?.id);
                   onOpenActionChangePassword();
                 }}
               >
-                Đổi mật khẩu
-              </MenuItem>
-              <MenuItem
-                py="2"
-                icon={<EditIcon size={4} />}
-                onClick={() => {
+                <EditIcon size={4} />
+              </Button>
+            </Tooltip>
+            <Tooltip label="Cập nhật vai trò">
+              <Button
+                size="xs"
+                bg="green.200"
+                onClick={(e: any) => {
+                  e.stopPropagation();
                   setSlug(doc?.id);
                   onOpenActionChangeRole();
                 }}
               >
-                Cập nhật vai trò
-              </MenuItem>
-            </MenuList>
-          </Menu>
+                <EditIcon size={4} />
+              </Button>
+            </Tooltip>
+          </Grid>
         );
       },
       header: "Hành Động",
