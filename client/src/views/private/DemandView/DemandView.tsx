@@ -11,6 +11,7 @@ import ActionBoxOld from "./ActionBoxOld";
 import SideBarItem from "./components/SideBarItem";
 import DetailScan from "./components/DetailScan";
 import DefaultSetting from "./components/DefaultSetting";
+import ScanView from "./components/ScanView";
 
 type Props = {};
 
@@ -95,12 +96,9 @@ const DemandView = (props: Props) => {
   return (
     <>
       <Flex p="2" mb="8" rounded="xl" h="100vh" flexDirection="column" gap="4">
-        <Flex bgColor="bg.white" p="4" borderRadius="6">
-          header
-        </Flex>
         <Flex w="100%" gap="2" h="100%">
           <Flex w="75%" bgColor="bg.white " borderRadius="6">
-            file pdf
+            <ScanView />
           </Flex>
           <Flex
             w="25%"
