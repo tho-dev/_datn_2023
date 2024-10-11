@@ -42,6 +42,14 @@ const categoryApi = createApi({
 			}),
 			invalidatesTags: ["CategoryTag"],
 		}),
+		updateDocument: build.mutation({
+			query: ({ id, data }) => ({
+				url: `/Document/${id}`,
+				method: "PUT",
+				body: data,
+			}),
+			invalidatesTags: ["CategoryTag"],
+		}),
 		updateCategory: build.mutation({
 			query: ({ _id, ...patch }) => ({
 				url: `/category/${_id}`,
@@ -82,7 +90,8 @@ export const {
 	useGetAllScanModeListQuery,
 	useCreateDocumentMutation,
 	useDeleteDocumentMutation,
-	useGetDocumentByIdQuery
+	useGetDocumentByIdQuery,
+	useUpdateDocumentMutation
 } = categoryApi;
 
 export default categoryApi;

@@ -121,7 +121,7 @@ const routes: RouteObject[] = [
             element: <BrandView />,
           },
           {
-            path: "nhu-cau",
+            path: "quet-tai-lieu",
             element: <DemandView />,
           },
         ],

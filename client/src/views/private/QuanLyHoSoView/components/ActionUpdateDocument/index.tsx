@@ -9,6 +9,7 @@ import {
   Textarea,
   Box,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { CloseSmallIcon } from "~/components/common/Icons";
 import SelectThinkPro from "~/components/SelectThinkPro";
@@ -18,6 +19,7 @@ import {
   useCreateDocumentMutation,
   useGetAllPdfFormatListQuery,
   useGetAllScanModeListQuery,
+  useUpdateDocumentMutation,
 } from "~/redux/api/category";
 
 type Props = {
@@ -118,7 +120,7 @@ const ActionUpdateDocument = ({
   });
   const { data: dataPdfFormatList } = useGetAllPdfFormatListQuery("");
   const { data: dataScanModeList } = useGetAllScanModeListQuery("");
-  const [createDocument] = useCreateDocumentMutation();
+  const [updateDocument] = useUpdateDocumentMutation();
 
   const documentName = watch("documentName") || "";
   // Hàm loại bỏ dấu tiếng Việt
@@ -131,21 +133,6 @@ const ActionUpdateDocument = ({
   };
 
   const onSubmit = async (data: any) => {
-    // Kiểm tra định dạng file
-    if (
-      data.sampleExcelFile &&
-      data.sampleExcelFile[0].type !==
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    ) {
-      toast({
-        title: "Có lỗi",
-        duration: 2000,
-        position: "top-right",
-        status: "error",
-        description: "Vui lòng chọn file có đuôi .xlsx",
-      });
-      return;
-    }
     const formData = new FormData();
     formData.append("SampleExcelFile", data.sampleExcelFile[0]);
     formData.append("DocumentName", data.documentName);
@@ -157,20 +144,19 @@ const ActionUpdateDocument = ({
     formData.append("Complete", "false");
     formData.append("HiddenOnTyping", "false");
     formData.append("HiddenOnScan", "false");
-    formData.append("PdfFormatId", data.pdfFormatId.value);
-    formData.append("ScanModeId", data.scanModeId.value);
+    formData.append("PdfFormatId", data.pdfFormat.value);
+    formData.append("ScanModeId", data.scanMode.value);
     formData.append("StorageOrganId", data.storageOrgan?.value);
     formData.append("PdfVersion", data.pdfVersion.value);
     formData.append("PdfQuality", data.pdfQuality.value);
-
     try {
-      await createDocument(formData).unwrap();
+      await updateDocument({ id: dataDocument.id, data: formData }).unwrap();
       toast({
         title: "Thành công",
         duration: 2000,
         position: "top-right",
         status: "success",
-        description: "Tạo danh mục thành công",
+        description: "Cập nhật hồ sơ thành công",
       });
     } catch (error: any) {
       toast({
@@ -178,7 +164,7 @@ const ActionUpdateDocument = ({
         duration: 2000,
         position: "top-right",
         status: "error",
-        description: JSON.stringify(error?.data?.errors),
+        description: error?.data?.message || "",
       });
     }
 
@@ -186,8 +172,6 @@ const ActionUpdateDocument = ({
     onClose();
   };
   useEffect(() => {
-    console.log(dataStorageApi?.data);
-
     if (dataStorageApi) {
       const storageFilter = dataStorageApi?.data?.map((item: any) => {
         return {
@@ -275,9 +259,37 @@ const ActionUpdateDocument = ({
 
   useEffect(() => {
     if (dataDocument) {
-      reset(dataDocument);
+      const newDocument = {
+        ...dataDocument,
+        pdfFormat: {
+          label: dataDocument.pdfFormat.name,
+          value: dataDocument.pdfFormat.pdfFormatId,
+        },
+        scanMode: {
+          label: dataDocument.scanMode.description,
+          value: dataDocument.scanMode.scanModeId,
+        },
+        pdfQuality: {
+          label: dataDocument.pdfQuality,
+          value: dataDocument.pdfQuality,
+        },
+        pdfVersion: {
+          label: dataDocument.pdfVersion,
+          value: dataDocument.pdfVersion,
+        },
+        project: {
+          label: dataDocument.project.projectName,
+          value: dataDocument.project.id,
+        },
+        storageOrgan: {
+          label: dataDocument.storageOrgan.name,
+          value: dataDocument.storageOrgan.storageOrganId,
+        },
+      };
+      reset(newDocument);
     }
   }, [dataDocument, reset]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Flex gap="4">
@@ -409,7 +421,12 @@ const ActionUpdateDocument = ({
             >
               Tải file excel mẫu
             </FormLabel>
-            <Flex justifyContent="center" alignItems="center">
+            <Flex
+              justifyContent="center"
+              alignItems="start"
+              flexDir="column"
+              gap="2"
+            >
               <Input
                 type="file"
                 id="sampleExcelFile"
@@ -418,7 +435,13 @@ const ActionUpdateDocument = ({
                 h="full"
                 p="2.5"
                 cursor="pointer"
+                accept=".xlsx"
               />
+              {dataDocument?.sampleExcelFile && (
+                <Text fontWeight="semibold" fontSize="sm" p="2">
+                  File của bạn: {dataDocument?.sampleExcelFile}
+                </Text>
+              )}
             </Flex>
 
             <FormErrorMessage>
@@ -427,7 +450,7 @@ const ActionUpdateDocument = ({
           </FormControl>
           <SelectThinkPro
             control={control}
-            name="pdfFormatId"
+            name="pdfFormat"
             title="Định dạng Pdf"
             placeholder="-- Định dạng --"
             data={pdfFormatList}
@@ -448,7 +471,7 @@ const ActionUpdateDocument = ({
           />
           <SelectThinkPro
             control={control}
-            name="scanModeId"
+            name="scanMode"
             title="Chế độ scan"
             placeholder="-- Chế độ --"
             data={scanModeList}

@@ -21,9 +21,20 @@ const demandApi = createApi({
 		getSingleDemand: build.query({
 			query: (id) => `/demand/${id}`,
 		}),
+		getBoxByIdDocument: build.query({
+			query: (id) => `/Box/ByDocument/${id}`,
+		}),
 		createDemand: build.mutation<any, IDemand>({
 			query: (body) => ({
 				url: `/demand`,
+				method: "POST",
+				body,
+			}),
+			invalidatesTags: ["DemandTag"],
+		}),
+		createBox: build.mutation({
+			query: (body) => ({
+				url: `/Box`,
 				method: "POST",
 				body,
 			}),
@@ -53,6 +64,8 @@ export const {
 	useCreateDemandMutation,
 	useDeleteDemandMutation,
 	useUpdateDemandMutation,
+	useCreateBoxMutation,
+	useGetBoxByIdDocumentQuery
 } = demandApi;
 
 export default demandApi;

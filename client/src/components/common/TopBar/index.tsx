@@ -25,6 +25,7 @@ import {
 } from "~/components/common/Icons";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { logout } from "~/redux/slices/globalSlice";
+import { openModal } from "~/redux/slices/scanSlice";
 
 type Props = {
   data_notification: any;
@@ -41,6 +42,7 @@ const TopBar = ({ data_notification, handleChangeStatusNoti }: Props) => {
 
   const handleLogoutUser = () => {
     dispatch(logout());
+    dispatch(openModal());
     navigate("/");
     toast({
       title: "Thành công",

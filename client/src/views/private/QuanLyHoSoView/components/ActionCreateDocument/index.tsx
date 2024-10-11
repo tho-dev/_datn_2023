@@ -29,6 +29,7 @@ type Props = {
 const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
   const toast = useToast();
   const [storageOrgan, setStorageOrgan] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [idProject, setIdProject] = useState<any>(null);
   const [pdfFormatList, setpdfFormatList] = useState<any>(null);
   const [scanModeList, setScanModeList] = useState<any>(null);
@@ -126,6 +127,7 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
   };
 
   const onSubmit = async (data: any) => {
+    setIsLoading(true);
     // Kiểm tra định dạng file
     if (
       data.sampleExcelFile &&
@@ -160,6 +162,7 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
 
     try {
       await createDocument(formData).unwrap();
+
       toast({
         title: "Thành công",
         duration: 2000,
@@ -176,13 +179,11 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
         description: JSON.stringify(error?.data?.errors),
       });
     }
-
+    setIsLoading(false);
     reset();
     onClose();
   };
   useEffect(() => {
-    console.log(dataStorageApi?.data);
-
     if (dataStorageApi) {
       const storageFilter = dataStorageApi?.data?.map((item: any) => {
         return {
@@ -216,23 +217,23 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
         setValue("fileName", formattedName + "-<counter>");
         if (storageForm) {
           const dataScanFolder =
-            `${formattedName}` +
-            "\\" +
             `${
               dataStorageApi.data.filter(
                 (item: any) => item.id == storageForm.value
               )[0].shortName
             }` +
+            "\\" +
+            `${formattedName}` +
             "\\" +
             "Scan";
           const dataTypingFolder =
-            `${formattedName}` +
-            "\\" +
             `${
               dataStorageApi.data.filter(
                 (item: any) => item.id == storageForm.value
               )[0].shortName
             }` +
+            "\\" +
+            `${formattedName}` +
             "\\" +
             "Nhaplieu";
 
@@ -391,7 +392,7 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
               {(errors.typingFolder as any) && errors?.typingFolder?.message}
             </FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors.file as any}>
+          <FormControl isInvalid={errors.sampleExcelFile as any}>
             <FormLabel
               htmlFor="sampleExcelFile"
               fontSize="15"
@@ -403,16 +404,20 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
               <Input
                 type="file"
                 id="sampleExcelFile"
-                {...register("sampleExcelFile")}
+                {...register("sampleExcelFile", {
+                  required: "Không được bỏ trống",
+                })}
                 w="full"
                 h="full"
                 p="2.5"
                 cursor="pointer"
+                accept=".xlsx"
               />
             </Flex>
 
             <FormErrorMessage>
-              {(errors.thumbnail as any) && errors?.thumbnail?.message}
+              {(errors.sampleExcelFile as any) &&
+                errors?.sampleExcelFile?.message}
             </FormErrorMessage>
           </FormControl>
           <SelectThinkPro
@@ -466,6 +471,7 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
           textColor="text.white"
           fontWeight="bold"
           px="4"
+          isLoading={isLoading}
         >
           Tạo mới
         </Button>
