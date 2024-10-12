@@ -40,6 +40,7 @@
 		"leaflet": "^1.9.4",
 		"lodash.debounce": "^4.0.8",
 		"moment": "^2.29.4",
+		"pdf-lib": "^1.17.1",
 		"pdfjs-dist": "^3.4.120",
 		"react": "^18.2.0",
 		"react-beautiful-dnd": "^13.1.1",
