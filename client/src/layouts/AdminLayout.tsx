@@ -37,31 +37,10 @@ const AdminLayout = (props: Props) => {
       </Helmet>
       <Flex w="full" h="full">
         {/* Sidebar */}
-        <Sidebar />
-        <Flex
-          w="full"
-          h="full"
-          ml={{
-            sm: "86px",
-            md: "86px",
-            lg: "86px",
-            xl: "260px",
-            "2xl": "260px",
-          }}
-          mt={{
-            sm: "64px",
-            md: "64px",
-            lg: "86px",
-            xl: "86px",
-            "2xl": "86px",
-          }}
-          flexDir="column"
-        >
-          {/* Top bar */}
-          <TopBar
-            data_notification={dataNotification}
-            handleChangeStatusNoti={handleChangeStatusNoti}
-          />
+        <Box w="15%">
+          <Sidebar />
+        </Box>
+        <Flex w="full" h="full">
           <Box w="full" minH="100vh" pl="6" pr="8" pt="6" bgColor="bg.admin1">
             <PrivateRoute component={AdminLayout} />
           </Box>

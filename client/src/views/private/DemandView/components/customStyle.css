@@ -1,66 +1,37 @@
-.rpv-default-layout__container {
-  border: none;
-  border-radius: 5px; /* Bo góc thanh công cụ */
-  overflow: hidden;
-}
-/* Tùy chỉnh vùng hiển thị PDF với khung bo tròn và bóng đổ */
-.rpv-core__viewer {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Tạo chiều sâu */
+/* Thanh cuộn tổng quát */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
 }
 
-/* Tùy chỉnh văn bản PDF */
-.rpv-core__text-layer {
-  font-family: "Helvetica Neue", Arial, sans-serif; /* Kiểu chữ hiện đại */
-  color: #333; /* Màu chữ dịu nhẹ */
-}
-
-/* Tạo hiệu ứng hover chuyên nghiệp cho canvas */
-.rpv-core__canvas-layer {
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng chuyển động */
-}
-
-.rpv-core__canvas-layer:hover {
-  transform: scale(1.02); /* Phóng to nhẹ khi hover */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng đổ đậm hơn */
-}
-/* Khung PDF với bo góc và bóng mềm */
-.rpv-core__viewer {
+/* Đường dẫn của thanh cuộn */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-}
-/* Cân đối khoảng cách giữa các phần tử */
-.rpv-core__viewer {
-  margin: 0 auto; /* Căn giữa khung PDF */
 }
 
-.rpv-core__canvas-layer {
-  margin-bottom: 20px; /* Khoảng cách giữa các trang PDF */
+/* Tay cầm thanh cuộn */
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
 }
 
-/* Tùy chỉnh thanh công cụ */
-.rpv-default-layout__toolbar {
-  background-color: #dce3f0; /* Màu nền tối hơn */
-  padding: 10px;
+/* Khi hover lên thanh cuộn */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
-/* Tùy chỉnh nút trong thanh công cụ */
-.rpv-default-layout__toolbar-button {
-  color: white; /* Màu chữ trắng */
-  background-color: #4a5568; /* Màu nút nhạt hơn */
-  border-radius: 4px;
-  padding: 6px 12px;
-  transition: background-color 0.3s ease;
+/* Áp dụng cho vùng PDF Viewer */
+.pdf-viewer-container {
+  width: 100%;
 }
 
-/* Hiệu ứng hover cho nút */
-.rpv-default-layout__toolbar-button:hover {
-  background-color: #2c5282; /* Đổi màu khi hover */
-}
-/* Sử dụng font chữ hiện đại và căn chỉnh văn bản */
-.rpv-core__text-layer {
-  font-family: "Roboto", sans-serif;
-  line-height: 1.6; /* Tăng khoảng cách giữa các dòng */
-  letter-spacing: 0.5px; /* Tăng khoảng cách giữa các chữ */
-  color: #1a202c; /* Màu chữ dễ nhìn, không quá tối */
+/* Tùy chỉnh cho toàn bộ body hoặc div chứa viewer */
+body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }

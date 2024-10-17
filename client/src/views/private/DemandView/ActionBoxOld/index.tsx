@@ -9,7 +9,7 @@ import {
   useToast,
   Select,
 } from "@chakra-ui/react";
-import { CloseSmallIcon } from "~/components/common/Icons";
+import { CloseSmallIcon, NavArrowLeflIcon } from "~/components/common/Icons";
 import {
   useGetBoxByIdDocumentQuery,
   useUpdateDemandMutation,
@@ -17,14 +17,19 @@ import {
 import { useGetDocumentByStorageQuery } from "~/redux/api/category";
 import { useEffect } from "react";
 import { useAppDispatch } from "~/redux/hook/hook";
-import { createDocument } from "~/redux/slices/scanSlice";
+import {
+  closeModal,
+  createDocument,
+  openModal,
+} from "~/redux/slices/scanSlice";
 
 type Props = {
   onClose: () => void;
   dataStorage: any;
+  handleReturnBox: () => void;
 };
 
-const ActionBoxOld = ({ onClose, dataStorage }: Props) => {
+const ActionBoxOld = ({ onClose, dataStorage, handleReturnBox }: Props) => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const {
@@ -35,10 +40,10 @@ const ActionBoxOld = ({ onClose, dataStorage }: Props) => {
     watch,
     setValue,
   } = useForm();
+
   const IdStorage = watch("storageId");
   const IdDocument = watch("documentId");
   const boxId = watch("boxId");
-
   //   call api
   const { data: dataDocumentByIdStorage } =
     useGetDocumentByStorageQuery(IdStorage);
@@ -153,10 +158,14 @@ const ActionBoxOld = ({ onClose, dataStorage }: Props) => {
           _hover={{
             bgColor: "bg.bgDelete",
           }}
-          leftIcon={<CloseSmallIcon size={4} />}
-          onClick={onClose}
+          leftIcon={<NavArrowLeflIcon size={4} />}
+          onClick={() => {
+            handleReturnBox();
+            reset();
+            onClose();
+          }}
         >
-          Đóng
+          Quay lại
         </Button>
         <Button
           type="submit"

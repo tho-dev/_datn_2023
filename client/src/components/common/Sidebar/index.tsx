@@ -10,6 +10,7 @@ import {
   WalletIcon,
 } from "~/components/common/Icons";
 import NavItem from "./components/NavItem";
+import TopBar from "../TopBar";
 
 type Props = {};
 
@@ -81,13 +82,6 @@ const Sidebar = (props: Props) => {
     <Flex
       w="full"
       h="full"
-      maxWidth={{
-        sm: "86px",
-        md: "86px",
-        lg: "260px",
-        xl: "260px",
-        "2xl": "260px",
-      }}
       maxH="100vh"
       overflowY="auto"
       transition="all 0.25s ease"
@@ -95,9 +89,6 @@ const Sidebar = (props: Props) => {
       justifyContent="space-between"
       borderRightWidth="1px"
       borderColor="bg.admin1"
-      position="fixed"
-      zIndex="999"
-      overflow="hidden"
     >
       <Box w="full" h="full">
         <Flex
@@ -132,6 +123,9 @@ const Sidebar = (props: Props) => {
           >
             QLHT
           </Heading>
+        </Flex>
+        <Flex gap="1" flexDir="column" mx="4" mt="12" mb="8">
+          <TopBar />
         </Flex>
         <Flex gap="1" flexDir="column" mx="4" mt="12" mb="8">
           {MENU?.map((item: any, index: number) => (

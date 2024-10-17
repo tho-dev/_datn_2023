@@ -48,7 +48,7 @@ export const ArrowRightUpIcon = ({
 
 export const ArrowUpIcon = ({
   size = 33,
-  strokeWidth = 1.5,
+  strokeWidth = 1,
   color = "currentColor",
   ...props
 }) => (
@@ -64,6 +64,94 @@ export const ArrowUpIcon = ({
     xmlns="http://www.w3.org/2000/svg"
   >
     <path d="m6 9 6 6 6-6"></path>
+  </Icon>
+);
+export const ZoomInIcon = ({
+  size = 33,
+  strokeWidth = 1,
+  color = "currentColor",
+  ...props
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"></path>
+    <path d="M7 10h6"></path>
+    <path d="M10 7v6"></path>
+    <path d="m21 21-6-6"></path>
+  </Icon>
+);
+export const ZoomOutIcon = ({
+  size = 33,
+  strokeWidth = 1,
+  color = "currentColor",
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"></path>
+    <path d="M7 10h6"></path>
+    <path d="m21 21-6-6"></path>
+  </Icon>
+);
+export const SaveFileIcon = ({
+  size = 33,
+  strokeWidth = 1,
+  color = "currentColor",
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path>
+    <path d="M13 3h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0-4Z"></path>
+    <path d="m9 14 2 2 4-4"></path>
+  </Icon>
+);
+export const ScanIcon = ({
+  size = 33,
+  strokeWidth = 1,
+  color = "currentColor",
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M4 7V6a2 2 0 0 1 2-2h2"></path>
+    <path d="M4 17v1a2 2 0 0 0 2 2h2"></path>
+    <path d="M16 4h2a2 2 0 0 1 2 2v1"></path>
+    <path d="M16 20h2a2 2 0 0 0 2-2v-1"></path>
+    <path d="M5 12h14"></path>
   </Icon>
 );
 export const ArrowRightIcon = ({
@@ -1283,7 +1371,7 @@ export const ArrowUpAdminIcon = ({
 
 export const ArrowDownIcon = ({
   size = 35,
-  strokeWidth = 1.5,
+  strokeWidth = 1,
   color = "currentColor",
   ...props
 }) => (
@@ -1557,6 +1645,29 @@ export const PlusCircleIcon = ({
     />
     <path d="M6.857 12.571H16" />
     <path d="M11.429 17.207V8v9.207Z" clipRule="evenodd" />
+  </Icon>
+);
+export const PlusFileIcon = ({
+  size = 35,
+  strokeWidth = 1,
+  color = "currentColor",
+  ...props
+}) => (
+  <Icon
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+    <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"></path>
+    <path d="M12 11v6"></path>
+    <path d="M9 14h6"></path>
   </Icon>
 );
 
@@ -2235,14 +2346,27 @@ export const UploadImageIcon = ({
 );
 
 export const TrashIcon = ({
-  size = 40,
+  size = 30,
   strokeWidth = 1,
   color = "#000000",
-  ...props
 }) => (
-  <Icon width={size} height={size} fill={color} viewBox="0 0 24 24" {...props}>
-    <path d="M15.36 4.2v1.2h4.2a.6.6 0 0 1 0 1.2h-.645L17.89 19.392a2.4 2.4 0 0 1-2.393 2.208H8.022a2.4 2.4 0 0 1-2.392-2.208L4.606 6.6H3.96a.6.6 0 0 1 0-1.2h4.2V4.2a1.8 1.8 0 0 1 1.8-1.8h3.6a1.8 1.8 0 0 1 1.8 1.8Zm-6 0v1.2h4.8V4.2a.6.6 0 0 0-.6-.6h-3.6a.6.6 0 0 0-.6.6Zm-1.8 4.235.6 10.2a.6.6 0 1 0 1.198-.072l-.6-10.2a.6.6 0 1 0-1.198.072Zm7.836-.633a.6.6 0 0 0-.633.564l-.6 10.2a.6.6 0 0 0 1.197.07l.6-10.2a.6.6 0 0 0-.564-.634ZM11.76 7.8a.6.6 0 0 0-.6.6v10.2a.6.6 0 1 0 1.2 0V8.4a.6.6 0 0 0-.6-.6Z" />
-  </Icon>
+  <svg
+    width={size}
+    height={size}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={strokeWidth}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M4 7h16"></path>
+    <path d="M10 11v6"></path>
+    <path d="M14 11v6"></path>
+    <path d="m5 7 1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"></path>
+    <path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"></path>
+  </svg>
 );
 
 export const AppOptionIcon = ({ size = 40, color = "#000000", ...props }) => (
@@ -2310,29 +2434,41 @@ export const RotateLeftIcon = ({
   <Icon
     width={size}
     height={size}
-    fill={color}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="1"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="m7.075 10.065-1.41-1.42c-.9 1.16-1.46 2.5-1.63 3.89h2.02c.14-.87.49-1.72 1.02-2.47Zm-1.02 4.47h-2.02c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.87-1.59-1.01-2.47Zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61v-2.03c-.87-.15-1.71-.49-2.46-1.03l-1.44 1.45Zm5.9-14.25v-3.07l-4.55 4.55 4.55 4.45v-3.91c2.84.48 5 2.94 5 5.91s-2.16 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93s-3.05-7.44-7-7.93Z"></path>
+    <path d="M15 4.55a8.031 8.031 0 0 0-6 14.9"></path>
+    <path d="M18.37 7.156v.01"></path>
+    <path d="M13 19.938v.01"></path>
+    <path d="M16.84 18.367v.01"></path>
+    <path d="M19.37 15.102v.01"></path>
+    <path d="M19.94 11v.01"></path>
+    <path d="M9 15v5H4"></path>
   </Icon>
 );
-export const RotateRightIcon = ({
-  size = 46,
-  color = "currentColor",
-  ...props
-}) => (
+export const RotateRightIcon = ({ size = 46, color = "currentColor" }) => (
   <Icon
     width={size}
     height={size}
-    fill={color}
+    fill="none"
+    stroke={color}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="1"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path
-      fill-rule="evenodd"
-      d="m11 1 4.55 4.55L11 10V6.09C8.16 6.57 6 9.03 6 12s2.16 5.43 5 5.91v2.02c-3.95-.49-7-3.85-7-7.93s3.06-7.44 7-7.93V1Zm7.31 6.11c.9 1.16 1.45 2.5 1.62 3.89h-2.02c-.14-.87-.48-1.72-1.02-2.47l1.42-1.42ZM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03Zm5.31-1.01-1.42-1.41c.54-.76.88-1.61 1.02-2.48h2.02a7.908 7.908 0 0 1-1.62 3.89Z"
-      clip-rule="evenodd"
-    ></path>
+    <path d="M9 4.55a8.031 8.031 0 1 1 6 14.9"></path>
+    <path d="M5.63 7.156v.01"></path>
+    <path d="M4.06 11v.01"></path>
+    <path d="M4.63 15.102v.01"></path>
+    <path d="M7.16 18.367v.01"></path>
+    <path d="M11 19.938v.01"></path>
+    <path d="M15 15v5h5"></path>
   </Icon>
 );

@@ -10,7 +10,7 @@ import {
   Textarea,
   Select,
 } from "@chakra-ui/react";
-import { CloseSmallIcon } from "~/components/common/Icons";
+import { CloseSmallIcon, NavArrowLeflIcon } from "~/components/common/Icons";
 import {
   useCreateBoxMutation,
   useCreateDemandMutation,
@@ -20,10 +20,13 @@ import { useAppDispatch } from "~/redux/hook/hook";
 
 type Props = {
   onClose: () => void;
+  handleReturnBox: () => void;
   dataDocument: any;
 };
 
-const CreateBoxView = ({ onClose, dataDocument }: Props) => {
+const CreateBoxView = ({ onClose, dataDocument, handleReturnBox }: Props) => {
+  console.log(dataDocument);
+
   const toast = useToast();
   const dispatch = useAppDispatch();
   const {
@@ -145,10 +148,14 @@ const CreateBoxView = ({ onClose, dataDocument }: Props) => {
           _hover={{
             bgColor: "bg.bgDelete",
           }}
-          leftIcon={<CloseSmallIcon size={4} />}
-          onClick={onClose}
+          leftIcon={<NavArrowLeflIcon size={4} />}
+          onClick={() => {
+            onClose();
+            handleReturnBox();
+            reset();
+          }}
         >
-          Đóng
+          Quay lại
         </Button>
         <Button
           type="submit"

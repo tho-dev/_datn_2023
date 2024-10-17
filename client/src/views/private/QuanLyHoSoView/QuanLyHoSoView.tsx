@@ -107,6 +107,8 @@ const QuanLyHoSoView = (props: Props) => {
   const { data: documents } = useGetAllDocumentQuery(debounceQuery);
   const { data: dataProjectApi, isLoading } =
     useGetAllProjectQuery(debounceQuery);
+  console.log(dataProjectApi);
+
   const { data: dataStorageApi } = useGetStorageByIdProjectQuery(idProject, {
     skip: !idProject, // Chỉ gọi API khi idProject không phải null
   });
@@ -122,7 +124,6 @@ const QuanLyHoSoView = (props: Props) => {
   const { data: dataOneDocument } = useGetDocumentByIdQuery(idDocument, {
     skip: !idDocument,
   });
-  console.log(dataOneDocument);
 
   useEffect(() => {
     if (dataProjectApi) {
@@ -253,7 +254,7 @@ const QuanLyHoSoView = (props: Props) => {
     columnHelper.accessor("storageOrgan", {
       cell: ({ getValue }) => (
         <Text fontWeight="medium" fontSize="13px">
-          {getValue()}
+          {getValue()?.shortName}
         </Text>
       ),
       header: "Đơn vị lưu trữ",
@@ -261,7 +262,7 @@ const QuanLyHoSoView = (props: Props) => {
     columnHelper.accessor("project", {
       cell: ({ getValue }) => (
         <Text fontWeight="medium" fontSize="13px">
-          {getValue()}
+          {getValue()?.projectName}
         </Text>
       ),
       header: "Dự án",

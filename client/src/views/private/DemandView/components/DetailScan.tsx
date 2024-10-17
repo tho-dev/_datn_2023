@@ -90,7 +90,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
             <Select
               placeholder="Select option"
               rounded="lg"
-              size="lg"
+              size="md"
               {...register("documentId", {
                 required: "Không được để trống !!!",
               })}
@@ -118,6 +118,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
               {...register("nameFile", {
                 required: "Không được để trống !!!",
               })}
+              size={"md"}
             />
             <FormErrorMessage>
               {(errors.nameFile as any) && errors?.nameFile?.message}
@@ -137,6 +138,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
               {...register("numberFile", {
                 required: "Không được để trống !!!",
               })}
+              size={"md"}
             />
             <FormErrorMessage>
               {(errors.numberFile as any) && errors?.numberFile?.message}
@@ -156,6 +158,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
               {...register("minimumDigits", {
                 required: "Không được để trống !!!",
               })}
+              size={"md"}
             />
             <FormErrorMessage>
               {(errors.minimumDigits as any) && errors?.minimumDigits?.message}
@@ -170,7 +173,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
             </FormLabel>
             <Select
               rounded="lg"
-              size="lg"
+              size="md"
               {...register("scanMode", {
                 required: "Không được để trống !!!",
               })}
@@ -189,7 +192,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
             </FormLabel>
             <Select
               rounded="lg"
-              size="lg"
+              size="md"
               {...register("pdfQuality", {
                 required: "Không được để trống !!!",
               })}
@@ -209,7 +212,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
             </FormLabel>
             <Select
               rounded="lg"
-              size="lg"
+              size="md"
               {...register("pdfVersion", {
                 required: "Không được để trống !!!",
               })}
@@ -228,7 +231,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
             </FormLabel>
             <Select
               rounded="lg"
-              size="lg"
+              size="md"
               {...register("pdfFormat", {
                 required: "Không được để trống !!!",
               })}

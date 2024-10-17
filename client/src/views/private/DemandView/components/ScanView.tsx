@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // Import the main component
 import { SpecialZoomLevel, Viewer, Worker } from "@react-pdf-viewer/core";
 import { PDFDocument } from "pdf-lib";
@@ -7,113 +7,82 @@ import { RotateDirection } from "@react-pdf-viewer/core";
 import type { RenderThumbnailItemProps } from "@react-pdf-viewer/thumbnail";
 
 import { thumbnailPlugin } from "@react-pdf-viewer/thumbnail";
+import { RenderRotatePageProps, rotatePlugin } from "@react-pdf-viewer/rotate";
+import {
+  RenderCurrentScaleProps,
+  RenderZoomInProps,
+  zoomPlugin,
+} from "@react-pdf-viewer/zoom";
+import { RenderZoomOutProps } from "@react-pdf-viewer/zoom";
 
 import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Button, Tooltip, useToast } from "@chakra-ui/react";
+
 import pdftesst from "../../../../assets/images/DAY-LA-FILE-MAU-PDF.pdf";
 // them thu viện css
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/thumbnail/lib/styles/index.css";
+import "./customStyle.css";
+
 import {
-  PlusCircleIcon,
+  ArrowDownIcon,
+  ArrowUpAdminIcon,
+  PlusFileIcon,
   RotateLeftIcon,
   RotateRightIcon,
   TrashIcon,
+  ZoomOutIcon,
+  ZoomInIcon,
+  SaveFileIcon,
+  ScanIcon,
 } from "~/components/common/Icons";
-import { IconButton, Input } from "@chakra-ui/react";
+import { IconButton, Input, Link } from "@chakra-ui/react";
 
 const renderThumbnailItem = (
   props: RenderThumbnailItemProps,
-  deletePage: any,
-  insertPage: any,
-  fileInputRef: any,
-  handleClick: any
+  setPageIndex: any
 ) => {
   return (
-    <Flex key={props.key} flexDir={"column"} alignItems={"start"}>
-      <Flex>
-        <Flex alignItems="center" justifyContent="center" flexDir="column">
-          <IconButton
-            size={"md"}
-            icon={<RotateLeftIcon size={7} color="black" />}
-            aria-label="rotate"
-            bgColor={"none"}
-            _hover={{ bgColor: "gray.400" }}
-          />
-          <IconButton
-            size={"md"}
-            icon={<RotateRightIcon size={7} color="black" />}
-            aria-label="rotate"
-            bgColor={"none"}
-            _hover={{ bgColor: "gray.400" }}
-          />
-        </Flex>
+    <Flex key={props.key} gap="4" alignItems={"center"} w="100%">
+      <Flex
+        flexDir={"column"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        border={`${props.currentPage === props.pageIndex && "4px solid gray"}`}
+        mb="1"
+        w="full"
+        cursor={"pointer"}
+        rounded={"md"}
+      >
         <Box
-          style={{ marginBottom: "0.5rem" }}
-          onClick={props.onJumpToPage}
-          border={`${
-            props.currentPage === props.pageIndex && "4px solid gray"
-          }`}
+          onClick={() => {
+            props.onJumpToPage();
+            setPageIndex(props.pageIndex);
+          }}
         >
           {props.renderPageThumbnail}
         </Box>
-        <Flex alignItems="center" justifyContent="center" flexDir="column">
-          <IconButton
-            size={"md"}
-            onClick={() => props.onRotatePage(RotateDirection.Forward)}
-            icon={<RotateLeftIcon size={7} color="black" />}
-            aria-label="rotate"
-            bgColor={"none"}
-            _hover={{ bgColor: "gray.400" }}
-          />
-          <IconButton
-            size={"md"}
-            onClick={() => props.onRotatePage(RotateDirection.Backward)}
-            icon={<RotateRightIcon size={7} color="black" />}
-            aria-label="rotate"
-            bgColor={"none"}
-            _hover={{ bgColor: "gray.400" }}
-          />
-        </Flex>
-      </Flex>
-      <Flex justifyContent={"center"} alignItems="center" w="100%">
-        <Box>
-          <IconButton
-            size={"md"}
-            icon={<PlusCircleIcon size={7} color="black" />}
-            aria-label="rotate"
-            bgColor={"none"}
-            _hover={{ bgColor: "gray.200" }}
-            onClick={() => handleClick(props.pageIndex)}
-          />
-          <Input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={(e) => insertPage(e)}
-          />
-        </Box>
-        <Text fontSize={"md"}>{props.renderPageLabel}</Text>
-        <IconButton
-          size={"md"}
-          icon={<TrashIcon size={7} color="black" strokeWidth={1} />}
-          aria-label="rotate"
-          bgColor={"none"}
-          _hover={{ bgColor: "gray.200" }}
-          onClick={() => {
-            deletePage(props.pageIndex);
-          }}
-        />
+        <Text fontSize={"md"}>Page {props.renderPageLabel}</Text>
       </Flex>
     </Flex>
   );
 };
-
-const ScanView = () => {
+type Props = {
+  dataPdf: any;
+  handleScan: any;
+};
+const ScanView = ({ dataPdf, handleScan }: Props) => {
+  const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [pdfFile, setPdfFile] = useState(pdftesst);
-  const [pageIndex, setPageIndex] = useState<null | number>(null);
+  const [pdfFile, setPdfFile] = useState<any>();
+  const [pageIndex, setPageIndex] = useState<null | number>(0);
+
   const thumbnailPluginInstance = thumbnailPlugin();
+  const rotatePluginInstance = rotatePlugin();
+  const zoomPluginInstance = zoomPlugin();
+  const { RotatePage } = rotatePluginInstance;
+  const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
 
   const insertPage = async (e: any) => {
     if (fileInputRef.current) {
@@ -151,8 +120,8 @@ const ScanView = () => {
       console.error("fileInputRef.current is null");
     }
   };
-  const handleClick = (pageIndex: number) => {
-    if (fileInputRef.current) {
+  const handleOpenInsertFile = () => {
+    if (fileInputRef.current && pageIndex) {
       setPageIndex(pageIndex + 1);
       fileInputRef.current.click();
     } else {
@@ -160,8 +129,9 @@ const ScanView = () => {
     }
   };
   // Hàm để xóa trang
-  const deletePage = async (pageIndex: any) => {
+  const deletePage = async () => {
     if (!pdfFile) return;
+    if (pageIndex === null) return;
     const pdfDoc = await PDFDocument.load(
       await fetch(pdfFile).then((res) => res.arrayBuffer())
     );
@@ -173,33 +143,270 @@ const ScanView = () => {
 
     setPdfFile(updatedPdfUrl);
   };
+
+  const movePage = async (direction: string) => {
+    if (!pdfFile) return;
+    if (pageIndex === null) return;
+
+    const pdfDoc = await PDFDocument.load(
+      await fetch(pdfFile).then((res) => res.arrayBuffer())
+    );
+    const totalPages = pdfDoc.getPageCount();
+    // Tính toán vị trí mới
+    let newIndex;
+
+    if (direction === "up" && pageIndex > 0) {
+      newIndex = pageIndex - 1;
+    } else if (direction === "down" && pageIndex < totalPages - 1) {
+      newIndex = pageIndex + 1;
+    } else {
+      toast({
+        title: "Thất bại",
+        duration: 1600,
+        position: "top-right",
+        status: "error",
+        description: "Không thể di chuyển trang theo hướng đã cho",
+      });
+      return;
+    }
+    // Sao chép trang cần di chuyển
+    const [movedPage] = await pdfDoc.copyPages(pdfDoc, [pageIndex]);
+    // Xóa trang cũ
+    pdfDoc.removePage(pageIndex);
+
+    // Chèn trang vào vị trí mới
+    pdfDoc.insertPage(newIndex, movedPage);
+
+    // Lưu lại PDF
+    const pdfBytes = await pdfDoc.save();
+    const updatedPdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
+    const updatedPdfUrl = URL.createObjectURL(updatedPdfBlob);
+
+    // Cập nhật trạng thái PDF và chỉ số trang
+    setPdfFile(updatedPdfUrl);
+    setPageIndex(newIndex);
+  };
   const { Thumbnails } = thumbnailPluginInstance;
   // Đặt mức zoom mặc định là 130% khi component mount
+  useEffect(() => {
+    if (!pdfFile) setPdfFile(dataPdf);
+  }, [dataPdf]);
+
+  if (!pdfFile) {
+    return (
+      <Flex w="full" h="full" justifyContent={"center"} alignItems={"center"}>
+        <Link href="sc://">
+          <Button>Scan</Button>
+        </Link>
+      </Flex>
+    );
+  }
   return (
-    <Flex h="full" w="full" rounded="md">
-      <Box style={{ width: "30%", borderRight: "1px solid #ccc" }}>
-        <Thumbnails
-          renderThumbnailItem={(props) =>
-            renderThumbnailItem(
-              props,
-              deletePage,
-              insertPage,
-              fileInputRef,
-              handleClick
-            )
-          }
-        />
-      </Box>
-      <Worker
-        workerUrl={`https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`}
+    <Flex w="full" flexDir={"column"} gap="2" h="full">
+      <Flex
+        w="full"
+        p="2"
+        rounded={"md"}
+        bgColor={"white"}
+        justifyContent={"space-between"}
       >
-        <Viewer
-          fileUrl={pdfFile}
-          plugins={[thumbnailPluginInstance]}
-          defaultScale={SpecialZoomLevel.PageFit}
-        />
-        ;
-      </Worker>
+        <Flex gap="2.5">
+          <Box>
+            <Tooltip label="Scan">
+              <IconButton
+                size={"md"}
+                icon={<ScanIcon size={7} color="gray.400" />}
+                aria-label="rotate"
+                bgColor={"gray.100"}
+                _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+                onClick={handleOpenInsertFile}
+              />
+            </Tooltip>
+            <Input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={(e) => insertPage(e)}
+            />
+          </Box>
+          <Tooltip label="Thêm">
+            <IconButton
+              size={"md"}
+              icon={<PlusFileIcon size={7} color="gray" />}
+              aria-label="rotate"
+              bgColor={"gray.100"}
+              _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+            />
+          </Tooltip>
+          <RotatePage>
+            {(props: RenderRotatePageProps) => (
+              <Tooltip label="Xoay trái">
+                <IconButton
+                  size={"md"}
+                  icon={<RotateLeftIcon size={7} color="gray" />}
+                  aria-label="rotate"
+                  bgColor={"gray.100"}
+                  _hover={{
+                    bgColor: "text.textSuccess ",
+                    color: "text.white",
+                  }}
+                  onClick={() =>
+                    props.onRotatePage(
+                      pageIndex as number,
+                      RotateDirection.Forward
+                    )
+                  }
+                />
+              </Tooltip>
+            )}
+          </RotatePage>
+          <RotatePage>
+            {(props: RenderRotatePageProps) => (
+              <Tooltip label="Xoay phải">
+                <IconButton
+                  size={"md"}
+                  icon={<RotateRightIcon size={7} color="gray" />}
+                  aria-label="rotate"
+                  bgColor={"gray.100"}
+                  _hover={{
+                    bgColor: "text.textSuccess ",
+                    color: "text.white",
+                  }}
+                  onClick={() =>
+                    props.onRotatePage(
+                      pageIndex as number,
+                      RotateDirection.Backward
+                    )
+                  }
+                />
+              </Tooltip>
+            )}
+          </RotatePage>
+
+          <Tooltip label="Trang sau">
+            <IconButton
+              size={"md"}
+              icon={<ArrowDownIcon size={7} color="gray" />}
+              aria-label="rotate"
+              bgColor={"gray.100"}
+              _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+              onClick={() => movePage("down")}
+            />
+          </Tooltip>
+          <Tooltip label="Trang trước">
+            <IconButton
+              size={"md"}
+              icon={<ArrowUpAdminIcon size={7} color="gray" />}
+              aria-label="rotate"
+              bgColor={"gray.100"}
+              _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+              onClick={() => movePage("up")}
+            />
+          </Tooltip>
+
+          <Tooltip label="Xoá trang">
+            <IconButton
+              size={"md"}
+              icon={<TrashIcon color="gray" />}
+              aria-label="rotate"
+              bgColor={"gray.100"}
+              _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+              onClick={deletePage}
+            />
+          </Tooltip>
+        </Flex>
+        <Flex alignItems={"center"} gap="2">
+          <ZoomIn>
+            {(props: RenderZoomInProps) => (
+              <Tooltip label="Phóng to">
+                <IconButton
+                  size={"md"}
+                  icon={<ZoomInIcon color="gray" />}
+                  aria-label="rotate"
+                  bgColor={"gray.100"}
+                  _hover={{
+                    bgColor: "text.textSuccess ",
+                    color: "text.white",
+                  }}
+                  onClick={props.onClick}
+                />
+              </Tooltip>
+            )}
+          </ZoomIn>
+
+          <CurrentScale>
+            {(props: RenderCurrentScaleProps) => (
+              <Text>{`${Math.round(props.scale * 100)}%`}</Text>
+            )}
+          </CurrentScale>
+          <ZoomOut>
+            {(props: RenderZoomOutProps) => (
+              <Tooltip label="Thu nhỏ">
+                <IconButton
+                  size={"md"}
+                  icon={<ZoomOutIcon color="gray" />}
+                  aria-label="rotate"
+                  bgColor={"gray.100"}
+                  _hover={{
+                    bgColor: "text.textSuccess ",
+                    color: "text.white",
+                  }}
+                  onClick={props.onClick}
+                />
+              </Tooltip>
+            )}
+          </ZoomOut>
+        </Flex>
+        <Flex>
+          <Tooltip label="Lưu File">
+            <IconButton
+              size={"md"}
+              icon={<SaveFileIcon color="text.white" />}
+              aria-label="rotate"
+              bgColor={"gray.200"}
+              _hover={{ bgColor: "text.textSuccess" }}
+            />
+          </Tooltip>
+        </Flex>
+      </Flex>
+
+      <Flex height={"815px"} w="full" gap="2">
+        <Flex
+          bgColor="bg.white"
+          w="20%"
+          rounded="md"
+          justifyContent={"center"}
+          alignItems={"center"}
+          p="2"
+        >
+          <Thumbnails
+            renderThumbnailItem={(props) =>
+              renderThumbnailItem(props, setPageIndex)
+            }
+          />
+        </Flex>
+        <Box
+          w="80%"
+          h="screen"
+          bgColor="bg.white"
+          rounded="md"
+          className="pdf-viewer-container"
+        >
+          <Worker
+            workerUrl={`https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`}
+          >
+            <Viewer
+              fileUrl={pdfFile}
+              plugins={[
+                thumbnailPluginInstance,
+                rotatePluginInstance,
+                zoomPluginInstance,
+              ]}
+              defaultScale={SpecialZoomLevel.PageFit}
+            />
+          </Worker>
+        </Box>
+      </Flex>
     </Flex>
   );
 };

@@ -183,6 +183,7 @@ const ActionCreateDocument = ({ onClose, dataProject }: Props) => {
     reset();
     onClose();
   };
+
   useEffect(() => {
     if (dataStorageApi) {
       const storageFilter = dataStorageApi?.data?.map((item: any) => {
