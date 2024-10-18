@@ -36,43 +36,23 @@ import {
   ZoomInIcon,
   SaveFileIcon,
   ScanIcon,
+  CheckedIcon,
+  CloseIcon,
 } from "~/components/common/Icons";
-import { IconButton, Input, Link } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
+import RenderThumbnailItem from "./SideBarItem";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { changeStatus, openModal } from "~/redux/slices/scanSlice";
 
-const renderThumbnailItem = (
-  props: RenderThumbnailItemProps,
-  setPageIndex: any
-) => {
-  return (
-    <Flex key={props.key} gap="4" alignItems={"center"} w="100%">
-      <Flex
-        flexDir={"column"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        border={`${props.currentPage === props.pageIndex && "4px solid gray"}`}
-        mb="1"
-        w="full"
-        cursor={"pointer"}
-        rounded={"md"}
-      >
-        <Box
-          onClick={() => {
-            props.onJumpToPage();
-            setPageIndex(props.pageIndex);
-          }}
-        >
-          {props.renderPageThumbnail}
-        </Box>
-        <Text fontSize={"md"}>Page {props.renderPageLabel}</Text>
-      </Flex>
-    </Flex>
-  );
-};
 type Props = {
-  dataPdf: any;
-  handleScan: any;
+  socket: any;
+  handleChangeSocket: (value: any) => void;
 };
-const ScanView = ({ dataPdf, handleScan }: Props) => {
+
+const ScanView = ({ socket, handleChangeSocket }: Props) => {
+  const { status } = useAppSelector((state) => state.persistedReducer.scan);
+  const dispatch = useAppDispatch();
+
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [pdfFile, setPdfFile] = useState<any>();
@@ -83,51 +63,6 @@ const ScanView = ({ dataPdf, handleScan }: Props) => {
   const zoomPluginInstance = zoomPlugin();
   const { RotatePage } = rotatePluginInstance;
   const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
-
-  const insertPage = async (e: any) => {
-    if (fileInputRef.current) {
-      const file = e.target.files?.[0];
-
-      if (!file) {
-        console.error("No file selected");
-        return;
-      }
-
-      try {
-        const fileData = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(
-          await fetch(pdfFile).then((res) => res.arrayBuffer())
-        );
-        const insertDoc = await PDFDocument.load(fileData);
-
-        const [insertedPage] = await pdfDoc.copyPages(insertDoc, [0]); // Sao chép trang đầu tiên của tệp chèn
-        pdfDoc.insertPage(pageIndex as number, insertedPage);
-
-        const pdfBytes = await pdfDoc.save();
-        console.log(pdfBytes);
-
-        const updatedPdfBlob = new Blob([pdfBytes], {
-          type: "application/pdf",
-        });
-        const updatedPdfUrl = URL.createObjectURL(updatedPdfBlob);
-
-        // Assuming setPdfFile is a state update function within a React component
-        setPdfFile(updatedPdfUrl);
-      } catch (error) {
-        console.error("Error fetching or loading PDFs:", error);
-      }
-    } else {
-      console.error("fileInputRef.current is null");
-    }
-  };
-  const handleOpenInsertFile = () => {
-    if (fileInputRef.current && pageIndex) {
-      setPageIndex(pageIndex + 1);
-      fileInputRef.current.click();
-    } else {
-      console.error("fileInputRef.current is null");
-    }
-  };
   // Hàm để xóa trang
   const deletePage = async () => {
     if (!pdfFile) return;
@@ -188,19 +123,71 @@ const ScanView = ({ dataPdf, handleScan }: Props) => {
   };
   const { Thumbnails } = thumbnailPluginInstance;
   // Đặt mức zoom mặc định là 130% khi component mount
-  useEffect(() => {
-    if (!pdfFile) setPdfFile(dataPdf);
-  }, [dataPdf]);
 
-  if (!pdfFile) {
-    return (
-      <Flex w="full" h="full" justifyContent={"center"} alignItems={"center"}>
-        <Link href="sc://">
-          <Button>Scan</Button>
-        </Link>
-      </Flex>
-    );
-  }
+  const base64toBlob = (data: string) => {
+    const bytes = atob(data);
+    let length = bytes.length;
+    const out = new Uint8Array(length);
+    while (length--) {
+      out[length] = bytes.charCodeAt(length);
+    }
+    return new Blob([out], { type: "application/pdf" });
+  };
+  const handleWebSocketMessage = (event: any) => {
+    const blob = base64toBlob(event.data);
+    const url = URL.createObjectURL(blob);
+    setPdfFile(url);
+  };
+  if (!pdfFile) window.location.href = "sc://";
+  const ws = new WebSocket("ws://127.0.0.1:56789");
+
+  useEffect(() => {
+    return () => {
+      socket?.send("exit");
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    ws.onopen = () => {
+      toast({
+        duration: 2000,
+        position: "top-right",
+        status: "success",
+        description: "Đã kết nối máy scan",
+      });
+      dispatch(changeStatus(true));
+    };
+
+    ws.onmessage = handleWebSocketMessage;
+
+    ws.onerror = (error: any) => {
+      toast({
+        duration: 2000,
+        position: "top-right",
+        status: "error",
+        description: "Kết nối thất bại",
+      });
+      dispatch(changeStatus(false));
+    };
+    handleChangeSocket(ws);
+    return () => {
+      dispatch(openModal());
+      ws.close();
+      toast({
+        title: "Đã ngắt kết nối máy scan",
+        duration: 2000,
+        position: "top-right",
+        status: "error",
+      });
+    };
+  }, []);
+
+  const handleScan = () => {
+    if (socket) {
+      socket?.send("scan");
+    }
+  };
+
   return (
     <Flex w="full" flexDir={"column"} gap="2" h="full">
       <Flex
@@ -211,24 +198,16 @@ const ScanView = ({ dataPdf, handleScan }: Props) => {
         justifyContent={"space-between"}
       >
         <Flex gap="2.5">
-          <Box>
-            <Tooltip label="Scan">
-              <IconButton
-                size={"md"}
-                icon={<ScanIcon size={7} color="gray.400" />}
-                aria-label="rotate"
-                bgColor={"gray.100"}
-                _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
-                onClick={handleOpenInsertFile}
-              />
-            </Tooltip>
-            <Input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={(e) => insertPage(e)}
+          <Tooltip label="Scan">
+            <IconButton
+              size={"md"}
+              icon={<ScanIcon size={7} color="gray.400" />}
+              aria-label="rotate"
+              bgColor={"gray.100"}
+              _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+              onClick={handleScan}
             />
-          </Box>
+          </Tooltip>
           <Tooltip label="Thêm">
             <IconButton
               size={"md"}
@@ -357,7 +336,7 @@ const ScanView = ({ dataPdf, handleScan }: Props) => {
             )}
           </ZoomOut>
         </Flex>
-        <Flex>
+        <Flex gap="2">
           <Tooltip label="Lưu File">
             <IconButton
               size={"md"}
@@ -367,46 +346,109 @@ const ScanView = ({ dataPdf, handleScan }: Props) => {
               _hover={{ bgColor: "text.textSuccess" }}
             />
           </Tooltip>
+          {status && (
+            <Tooltip label="Trạng thái: Đã kết nối">
+              <IconButton
+                size={"md"}
+                icon={<CheckedIcon size={7} color="gray.400" />}
+                aria-label="rotate"
+                bgColor={"gray.100"}
+                _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+              />
+            </Tooltip>
+          )}
+          {!status && (
+            <Tooltip label="Trạng thái: Chưa kết nối">
+              <IconButton
+                size={"md"}
+                icon={<CloseIcon size={7} color="gray.400" />}
+                aria-label="rotate"
+                bgColor={"gray.100"}
+                _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+              />
+            </Tooltip>
+          )}
         </Flex>
       </Flex>
-
-      <Flex height={"815px"} w="full" gap="2">
-        <Flex
-          bgColor="bg.white"
-          w="20%"
-          rounded="md"
-          justifyContent={"center"}
-          alignItems={"center"}
-          p="2"
-        >
-          <Thumbnails
-            renderThumbnailItem={(props) =>
-              renderThumbnailItem(props, setPageIndex)
-            }
-          />
-        </Flex>
-        <Box
-          w="80%"
-          h="screen"
-          bgColor="bg.white"
-          rounded="md"
-          className="pdf-viewer-container"
-        >
-          <Worker
-            workerUrl={`https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`}
+      {pdfFile && (
+        <Flex height={"815px"} w="full" gap="2">
+          <Flex
+            bgColor="bg.white"
+            w="20%"
+            rounded="md"
+            justifyContent={"center"}
+            alignItems={"center"}
+            p="2"
           >
-            <Viewer
-              fileUrl={pdfFile}
-              plugins={[
-                thumbnailPluginInstance,
-                rotatePluginInstance,
-                zoomPluginInstance,
-              ]}
-              defaultScale={SpecialZoomLevel.PageFit}
+            <Thumbnails
+              renderThumbnailItem={(props) =>
+                RenderThumbnailItem(props, setPageIndex)
+              }
             />
-          </Worker>
-        </Box>
-      </Flex>
+          </Flex>
+          <Box
+            w="80%"
+            h="screen"
+            bgColor="bg.white"
+            rounded="md"
+            className="pdf-viewer-container"
+          >
+            <Worker
+              workerUrl={`https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`}
+            >
+              <Viewer
+                fileUrl={pdfFile}
+                plugins={[
+                  thumbnailPluginInstance,
+                  rotatePluginInstance,
+                  zoomPluginInstance,
+                ]}
+                defaultScale={SpecialZoomLevel.PageFit}
+              />
+            </Worker>
+          </Box>
+        </Flex>
+      )}
+      {!pdfFile && (
+        <Flex height={"815px"} w="full" gap="2">
+          <Flex
+            bgColor="bg.white"
+            w="20%"
+            rounded="md"
+            justifyContent={"center"}
+            alignItems={"center"}
+            p="2"
+          ></Flex>
+          <Flex
+            w="80%"
+            h="screen"
+            bgColor="bg.white"
+            rounded="md"
+            className="pdf-viewer-container"
+            justifyContent={"center"}
+            alignItems={"center"}
+            flexDir={"column"}
+            gap="2"
+          >
+            <Text fontWeight={"bold"} fontSize="lg">
+              Hãy tiến hành Scan
+            </Text>
+            <Flex alignItems={"center"} gap="4">
+              <Text fontWeight={"semibold"} fontSize="lg">
+                Nhấn vào đây
+              </Text>
+              <IconButton
+                size={"md"}
+                icon={<ScanIcon size={7} color="gray.400" />}
+                aria-label="rotate"
+                bgColor={"gray.100"}
+                _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+                onClick={handleScan}
+              />
+            </Flex>
+          </Flex>
+        </Flex>
+      )}
     </Flex>
   );
 };

@@ -1,82 +1,33 @@
-import React, { useState } from "react";
-import { NavLink as ReactRouterLink, useLocation } from "react-router-dom";
-import { Link, Image, Collapse, useDisclosure, Icon } from "@chakra-ui/react";
-import { Flex, Box, Text } from "@chakra-ui/layout";
-import { ChevronDownIcon } from "~/components/common/Icons";
+import { Box, Flex, Text } from "@chakra-ui/layout";
+import { RenderThumbnailItemProps } from "@react-pdf-viewer/thumbnail";
 
-type Props = {
-  title?: any;
-  index?: number;
-  isCheck?: boolean;
-  handleClick?: any;
-  children: any;
-};
-
-const SideBarItem = ({
-  title,
-  index,
-  isCheck,
-  handleClick,
-  children,
-}: Props) => {
-  const { isOpen, onToggle } = useDisclosure();
-
+const RenderThumbnailItem = (
+  props: RenderThumbnailItemProps,
+  setPageIndex: any
+) => {
   return (
-    <>
-      <Box
-        my="2"
-        py="2"
-        display="flex"
-        alignItems="center"
-        transition="all 0.25s ease"
-        cursor="pointer"
-        justifyContent="space-between"
-        bgColor={isCheck ? "#12AFF033" : "transparent"}
-        _hover={{
-          textDecor: "none",
-          backgroundColor: "#12AFF033",
-        }}
-        onClick={() => {
-          handleClick(index as any);
-          onToggle();
-        }}
-        borderBottom="2px solid gray"
+    <Flex key={props.key} gap="4" alignItems={"center"} w="100%">
+      <Flex
+        flexDir={"column"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        border={`${props.currentPage === props.pageIndex && "4px solid gray"}`}
+        mb="1"
+        w="full"
+        cursor={"pointer"}
+        rounded={"md"}
       >
-        <Flex
-          gap="3"
-          alignItems="center"
-          display="flex"
-          justifyContent="space-between"
+        <Box
+          onClick={() => {
+            props.onJumpToPage();
+            setPageIndex(props.pageIndex);
+          }}
         >
-          <Text
-            fontSize="md"
-            lineHeight="0.5"
-            fontWeight="bold"
-            color={"black"}
-          >
-            {title}
-          </Text>
-        </Flex>
-        <Flex
-          as="span"
-          alignItems="center"
-          justifyContent="center"
-          cursor="pointer"
-          transition="all 0.25s ease"
-          transform={isOpen ? "rotateZ(360deg)" : "rotateZ(270deg)"}
-          display="flex"
-        >
-          <ChevronDownIcon size={6} strokeWidth={0.5} color={"black"} />
-        </Flex>
-      </Box>
-
-      <Collapse in={isOpen} animateOpacity>
-        <Flex gap="1" flexDir="column">
-          {children}
-        </Flex>
-      </Collapse>
-    </>
+          {props.renderPageThumbnail}
+        </Box>
+        <Text fontSize={"md"}>Page {props.renderPageLabel}</Text>
+      </Flex>
+    </Flex>
   );
 };
-
-export default SideBarItem;
+export default RenderThumbnailItem;

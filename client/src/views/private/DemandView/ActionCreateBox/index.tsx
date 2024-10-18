@@ -15,7 +15,11 @@ import {
   useCreateBoxMutation,
   useCreateDemandMutation,
 } from "~/redux/api/demand";
-import { openModal } from "~/redux/slices/scanSlice";
+import {
+  closeModal,
+  createDocument,
+  openModal,
+} from "~/redux/slices/scanSlice";
 import { useAppDispatch } from "~/redux/hook/hook";
 
 type Props = {
@@ -25,8 +29,6 @@ type Props = {
 };
 
 const CreateBoxView = ({ onClose, dataDocument, handleReturnBox }: Props) => {
-  console.log(dataDocument);
-
   const toast = useToast();
   const dispatch = useAppDispatch();
   const {
@@ -43,8 +45,20 @@ const CreateBoxView = ({ onClose, dataDocument, handleReturnBox }: Props) => {
       ...data,
       documentId: Number(data.documentId),
     };
+
+    const documents = dataDocument.find((item: any) => {
+      return item.id == data.documentId;
+    });
+
     try {
-      await createBox(dataBox).unwrap();
+      const resultBox = await createBox(dataBox).unwrap();
+      const dataScan = {
+        ...documents,
+        boxId: resultBox.id,
+        boxName: dataBox.name,
+        boxYear: dataBox.year,
+      };
+      dispatch(createDocument(dataScan));
       toast({
         title: "Thành công",
         duration: 1600,
@@ -64,6 +78,7 @@ const CreateBoxView = ({ onClose, dataDocument, handleReturnBox }: Props) => {
     }
     reset();
     onClose();
+    dispatch(closeModal());
   };
 
   return (
@@ -86,12 +101,11 @@ const CreateBoxView = ({ onClose, dataDocument, handleReturnBox }: Props) => {
         </FormControl>
         <FormControl isInvalid={errors.year as any}>
           <FormLabel htmlFor="year" fontSize="15" fontWeight="semibold">
-            Đơn vị lưu trữ
+            Loại tài liệu
           </FormLabel>
           <Select
-            placeholder="Select option"
+            placeholder="Chọn loại tài liệu"
             borderRadius="6"
-            size="lg"
             {...register("documentId", {
               required: "Không được để trống !!!",
             })}

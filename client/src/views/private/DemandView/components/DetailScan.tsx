@@ -12,22 +12,25 @@ import {
   Select,
   Divider,
 } from "@chakra-ui/react";
-import { CloseSmallIcon } from "~/components/common/Icons";
-import SideBarItem from "./SideBarItem";
+import { useAppSelector } from "~/redux/hook/hook";
 
-type Props = {
-  dataDocument: any;
-  dataDocumentByIdStorage: any;
-};
+type Props = {};
 
-const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
+const DetailScan = () => {
+  const { document }: any = useAppSelector(
+    (state) => state.persistedReducer.scan
+  );
+  console.log(document);
+
   const {
     handleSubmit,
     register,
     formState: { errors },
     reset,
   } = useForm();
-  const onSubmit = async (data: any) => {};
+  const onSubmit = async (data: any) => {
+    console.log(data);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -44,13 +47,9 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
               required: "Không được để trống !!!",
             })}
           >
-            {dataDocument?.map((item: any) => {
-              return (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              );
-            })}
+            <option value={document?.storageOrgan.id} selected>
+              {document?.storageOrgan.shortName}
+            </option>
           </Select>
           <FormErrorMessage>
             {(errors.year as any) && errors?.year?.message}
@@ -69,13 +68,9 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
               required: "Không được để trống !!!",
             })}
           >
-            {dataDocumentByIdStorage?.map((item: any) => {
-              return (
-                <option key={item.id} value={item.id}>
-                  {item.documentName}
-                </option>
-              );
-            })}
+            <option value={document?.documentName} selected>
+              {document?.documentName}
+            </option>
           </Select>
           <FormErrorMessage>
             {(errors.year as any) && errors?.year?.message}
@@ -83,27 +78,19 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
         </FormControl>
         <Divider borderColor="gray" />
         <Flex gap="2">
-          <FormControl isInvalid={errors.year as any}>
-            <FormLabel htmlFor="year" fontSize="15" fontWeight="semibold">
+          <FormControl isInvalid={errors.boxid as any}>
+            <FormLabel htmlFor="boxid" fontSize="15" fontWeight="semibold">
               Hộp số
             </FormLabel>
-            <Select
-              placeholder="Select option"
-              rounded="lg"
-              size="md"
-              {...register("documentId", {
+            <Input
+              id="boxid"
+              placeholder="VD: LS01"
+              {...register("boxId", {
                 required: "Không được để trống !!!",
               })}
-              fontSize="md"
-            >
-              {dataDocumentByIdStorage?.map((item: any) => {
-                return (
-                  <option key={item.id} value={item.id}>
-                    {item.documentName}
-                  </option>
-                );
-              })}
-            </Select>
+              size={"md"}
+              defaultValue={document?.boxName}
+            />
             <FormErrorMessage>
               {(errors.year as any) && errors?.year?.message}
             </FormErrorMessage>
@@ -119,6 +106,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
                 required: "Không được để trống !!!",
               })}
               size={"md"}
+              defaultValue={document?.fileName}
             />
             <FormErrorMessage>
               {(errors.nameFile as any) && errors?.nameFile?.message}
@@ -132,12 +120,13 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
               Số đếm
             </FormLabel>
             <Input
-              type="number"
+              type="text"
               id="numberFile"
               placeholder="VD: 0001"
               {...register("numberFile", {
                 required: "Không được để trống !!!",
               })}
+              defaultValue={`0001`}
               size={"md"}
             />
             <FormErrorMessage>
@@ -159,6 +148,7 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
                 required: "Không được để trống !!!",
               })}
               size={"md"}
+              defaultValue={document?.minimumDigits}
             />
             <FormErrorMessage>
               {(errors.minimumDigits as any) && errors?.minimumDigits?.message}
@@ -244,17 +234,6 @@ const DetailScan = ({ dataDocument, dataDocumentByIdStorage }: Props) => {
             </FormErrorMessage>
           </FormControl>
         </Flex>
-      </Flex>
-      <Flex gap="3" justifyContent="flex-end" mt="6">
-        <Button
-          type="submit"
-          bgColor="text.textSuccess"
-          textColor="text.white"
-          fontWeight="bold"
-          px="4"
-        >
-          Lưu thay đổi
-        </Button>
       </Flex>
     </form>
   );

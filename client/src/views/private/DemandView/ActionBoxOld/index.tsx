@@ -14,7 +14,6 @@ import {
   useGetBoxByIdDocumentQuery,
   useUpdateDemandMutation,
 } from "~/redux/api/demand";
-import { useGetDocumentByStorageQuery } from "~/redux/api/category";
 import { useEffect } from "react";
 import { useAppDispatch } from "~/redux/hook/hook";
 import {
@@ -25,11 +24,11 @@ import {
 
 type Props = {
   onClose: () => void;
-  dataStorage: any;
+  dataDocuments: any;
   handleReturnBox: () => void;
 };
 
-const ActionBoxOld = ({ onClose, dataStorage, handleReturnBox }: Props) => {
+const ActionBoxOld = ({ onClose, dataDocuments, handleReturnBox }: Props) => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const {
@@ -38,67 +37,33 @@ const ActionBoxOld = ({ onClose, dataStorage, handleReturnBox }: Props) => {
     formState: { errors },
     reset,
     watch,
-    setValue,
   } = useForm();
 
-  const IdStorage = watch("storageId");
   const IdDocument = watch("documentId");
-  const boxId = watch("boxId");
-  //   call api
-  const { data: dataDocumentByIdStorage } =
-    useGetDocumentByStorageQuery(IdStorage);
-  const { data: dataBoxByIdDocument } = useGetBoxByIdDocumentQuery(IdDocument);
-
-  const onSubmit = async (data: any) => {};
-
-  useEffect(() => {
-    if (IdDocument && IdStorage) {
-      const dataDocument = dataDocumentByIdStorage?.data?.filter(
-        (item: any) => {
-          return item.id == IdDocument;
-        }
-      );
-      dispatch(createDocument(dataDocument?.[0]));
-    } else {
-      dispatch(createDocument({}));
-    }
-  }, [IdDocument, IdStorage, dataDocumentByIdStorage]);
-
-  useEffect(() => {
-    if (!IdStorage) {
-      setValue("boxId", "");
-      setValue("documentId", "");
-    }
-  }, [IdStorage]);
+  // call api
+  const { data: dataBox } = useGetBoxByIdDocumentQuery(IdDocument);
+  const onSubmit = async (data: any) => {
+    const documnets = dataDocuments?.find((item: any) => {
+      return item.id == data.documentId;
+    });
+    const box = dataBox?.data.find((item: any) => {
+      return item.id == data.boxId;
+    });
+    const dataScan = {
+      ...documnets,
+      boxId: box.id,
+      boxName: box.name,
+      boxYear: box.year,
+    };
+    dispatch(createDocument(dataScan));
+    dispatch(closeModal());
+    reset();
+    onClose();
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Flex flexDir="column" gap="4">
-        <FormControl isInvalid={errors.year as any}>
-          <FormLabel htmlFor="year" fontSize="15" fontWeight="semibold">
-            Đơn vị lưu trữ
-          </FormLabel>
-          <Select
-            fontSize="sm"
-            placeholder="Chọn đơn vị lưu trữ"
-            borderRadius="6"
-            size="lg"
-            {...register("storageId", {
-              required: "Không được để trống !!!",
-            })}
-          >
-            {dataStorage?.map((item: any) => {
-              return (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              );
-            })}
-          </Select>
-          <FormErrorMessage>
-            {(errors.year as any) && errors?.year?.message}
-          </FormErrorMessage>
-        </FormControl>
         <FormControl isInvalid={errors.year as any}>
           <FormLabel htmlFor="year" fontSize="15" fontWeight="semibold">
             Loại tài liệu
@@ -112,7 +77,7 @@ const ActionBoxOld = ({ onClose, dataStorage, handleReturnBox }: Props) => {
               required: "Không được để trống !!!",
             })}
           >
-            {dataDocumentByIdStorage?.data?.map((item: any) => {
+            {dataDocuments?.map((item: any) => {
               return (
                 <option key={item.id} value={item.id}>
                   {item.documentName}
@@ -135,8 +100,9 @@ const ActionBoxOld = ({ onClose, dataStorage, handleReturnBox }: Props) => {
             {...register("boxId", {
               required: "Không được để trống !!!",
             })}
+            placeholder="Chọn hộp"
           >
-            {dataBoxByIdDocument?.data?.map((item: any) => {
+            {dataBox?.data?.map((item: any) => {
               return (
                 <option key={item.id} value={item.id}>
                   {item.name}

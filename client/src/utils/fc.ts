@@ -1,4 +1,8 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
+
+
 
 export function sortJSON(data: any[]) {
 	// Lọc ra các đối tượng có "name" là "specs" và "type"
