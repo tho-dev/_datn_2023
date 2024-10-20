@@ -126,10 +126,10 @@ const Sidebar = (props: Props) => {
             DCMS
           </Heading>
         </Flex>
-        <Flex gap="1" flexDir="column" mx="4" mt="12" mb="8">
+        <Flex gap="1" flexDir="column" mx="4" mt="6">
           <TopBar />
         </Flex>
-        <Flex gap="1" flexDir="column" mx="4" mt="12" mb="8">
+        <Flex gap="1" flexDir="column" mx="4" mt="6" mb="8">
           {MENU?.map((item: any, index: number) => (
             <NavItem
               item={item}
@@ -140,19 +140,19 @@ const Sidebar = (props: Props) => {
             />
           ))}
         </Flex>
-        <Flex
-          justifyContent={"center"}
-          alignItems="center"
-          my="4"
-          flexDirection={"column"}
-          mx="4"
-        >
-          <Image src={logo} alt="Logo VanViet" objectFit="cover" w="200px" />
-          <Text fontSize={"sm"} fontWeight="semibold" textAlign="center">
-            Phần mềm quản lý thi công chỉnh lý, số hoá tài liệu
-          </Text>
-        </Flex>
       </Box>
+      <Flex
+        justifyContent={"center"}
+        alignItems="center"
+        my="4"
+        flexDirection={"column"}
+        mx="4"
+      >
+        <Image src={logo} alt="Logo VanViet" objectFit="cover" w="100px" />
+        <Text fontSize={"sm"} fontWeight="semibold" textAlign="center">
+          Phần mềm quản lý thi công chỉnh lý, số hoá tài liệu
+        </Text>
+      </Flex>
     </Flex>
   );
 };

@@ -80,65 +80,96 @@ const SignInView = (props: Props) => {
 
   return (
     <Center h="full" px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}>
-      <Flex w="460px" h="full" direction="column" pt="8">
-        <Stack direction="row" gap="0" pt="8">
-          <Heading as="h3" color="primary.font" size="lg" fontWeight="semibold">
-            Phần mềm quản lý thi công chỉnh lý, số hoá tài liệu
-          </Heading>
-        </Stack>
-        <Flex justifyContent={"center"} alignItems="center" my="4">
-          <Image src={logo} alt="Logo VanViet" objectFit="cover" w="200px" />
-        </Flex>
-        <Stack direction="column" gap="0" pb="12">
-          <Heading as="h3" size="lg">
-            Đăng Nhập
-          </Heading>
-        </Stack>
-        <form
-          style={{
-            width: "100%",
-          }}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <Flex direction="column" gap="4">
-            <FormControl isInvalid={errors.username as any}>
-              <Input
-                id="userName"
-                type="text"
-                placeholder="Username"
-                size="lager"
-                {...register("userName")}
-              />
-              <FormErrorMessage>
-                {(errors.userName as any) && (errors?.userName?.message as any)}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={errors.password as any}>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                size="lager"
-                {...register("password")}
-              />
-              <FormErrorMessage>
-                {(errors.password as any) && (errors?.password?.message as any)}
-              </FormErrorMessage>
-            </FormControl>
-
-            <Button
-              size="lager"
-              type="submit"
-              w="full"
-              mt="4"
-              rounded="full"
-              isLoading={loading}
-              _hover={{ bg: "red" }}
+      <Flex justifyContent={"space-between"} h="full" direction="column">
+        <Flex w="460px" h="full" direction="column" pt="8">
+          <Flex
+            gap="4"
+            direction="column"
+            justifyContent={"center"}
+            w="full"
+            alignContent={"center"}
+          >
+            <Image
+              src={logo}
+              alt="Logo VanViet"
+              objectFit="contain"
+              w="200px"
+              mx="auto"
+            />
+            <Heading
+              as="h3"
+              color="primary.font"
+              size="lg"
+              fontWeight="semibold"
+              textAlign="center"
             >
-              Đăng Nhập
-            </Button>
+              Phần mềm quản lý thi công chỉnh lý, số hoá tài liệu
+            </Heading>
           </Flex>
-        </form>
+          <Stack direction="column" gap="0" py="12">
+            <Heading as="h3" size="lg">
+              Đăng Nhập
+            </Heading>
+          </Stack>
+          <form
+            style={{
+              width: "100%",
+            }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Flex direction="column" gap="4">
+              <FormControl isInvalid={errors.username as any}>
+                <Input
+                  id="userName"
+                  type="text"
+                  placeholder="Username"
+                  size="lager"
+                  {...register("userName")}
+                />
+                <FormErrorMessage>
+                  {(errors.userName as any) &&
+                    (errors?.userName?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.password as any}>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Password"
+                  size="lager"
+                  {...register("password")}
+                />
+                <FormErrorMessage>
+                  {(errors.password as any) &&
+                    (errors?.password?.message as any)}
+                </FormErrorMessage>
+              </FormControl>
+
+              <Button
+                size="lager"
+                type="submit"
+                w="full"
+                mt="4"
+                rounded="full"
+                isLoading={loading}
+                _hover={{ bg: "red" }}
+              >
+                Đăng Nhập
+              </Button>
+            </Flex>
+          </form>
+        </Flex>
+        <Flex
+          justifyContent={"center"}
+          alignItems="center"
+          my="4"
+          flexDirection={"column"}
+          mx="4"
+        >
+          <Text fontSize={"sm"} fontWeight="semibold" textAlign="center">
+            © Phát triển bởi Công ty Công nghệ số V2S
+          </Text>
+        </Flex>
       </Flex>
     </Center>
   );
