@@ -17,12 +17,14 @@ import {
   Divider,
   AbsoluteCenter,
   useToast,
+  Image,
 } from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { loginSchema } from "~/validate/user";
 import { useSigninMutation } from "~/redux/api/user";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { login } from "~/redux/slices/globalSlice";
+import logo from "../../../../public/LOGO V2s 348px.png";
 
 type Props = {};
 
@@ -79,12 +81,14 @@ const SignInView = (props: Props) => {
   return (
     <Center h="full" px={{ sm: 5, md: 5, lg: 0, xl: 0, "2xl": 0 }}>
       <Flex w="460px" h="full" direction="column" pt="8">
-        <Stack direction="row" gap="0" pt="8" pb="12">
+        <Stack direction="row" gap="0" pt="8">
           <Heading as="h3" color="primary.font" size="lg" fontWeight="semibold">
-            Quản Lý Hệ Thống
-            <CodeIcon boxSize="5" position="absolute" color="primary.font" />
+            Phần mềm quản lý thi công chỉnh lý, số hoá tài liệu
           </Heading>
         </Stack>
+        <Flex justifyContent={"center"} alignItems="center" my="4">
+          <Image src={logo} alt="Logo VanViet" objectFit="cover" w="200px" />
+        </Flex>
         <Stack direction="column" gap="0" pb="12">
           <Heading as="h3" size="lg">
             Đăng Nhập

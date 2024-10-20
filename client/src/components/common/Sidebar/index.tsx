@@ -1,4 +1,4 @@
-import { Box, Flex, Heading } from "@chakra-ui/layout";
+import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import { useState } from "react";
 import {
   AddIcon,
@@ -11,6 +11,8 @@ import {
 } from "~/components/common/Icons";
 import NavItem from "./components/NavItem";
 import TopBar from "../TopBar";
+import logo from "../../../../public/LOGO V2s 348px.png";
+import { Image } from "@chakra-ui/react";
 
 type Props = {};
 
@@ -121,7 +123,7 @@ const Sidebar = (props: Props) => {
             color="white"
             fontWeight="bold"
           >
-            QLHT
+            DCMS
           </Heading>
         </Flex>
         <Flex gap="1" flexDir="column" mx="4" mt="12" mb="8">
@@ -137,6 +139,18 @@ const Sidebar = (props: Props) => {
               handleClick={(value: any) => setActive(value)}
             />
           ))}
+        </Flex>
+        <Flex
+          justifyContent={"center"}
+          alignItems="center"
+          my="4"
+          flexDirection={"column"}
+          mx="4"
+        >
+          <Image src={logo} alt="Logo VanViet" objectFit="cover" w="200px" />
+          <Text fontSize={"sm"} fontWeight="semibold" textAlign="center">
+            Phần mềm quản lý thi công chỉnh lý, số hoá tài liệu
+          </Text>
         </Flex>
       </Box>
     </Flex>
