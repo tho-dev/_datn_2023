@@ -1,25 +1,14 @@
-import { Box, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/layout";
+import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/layout";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
-  FormControl,
-  FormErrorMessage,
-  Image,
-  Input,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Select,
   useDisclosure,
   useToast,
-  FormLabel,
   Tooltip,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import moment from "moment/moment";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Link as ReactRouterLink } from "react-router-dom";
@@ -29,7 +18,6 @@ import {
   AirplayIcon,
   EditIcon,
   PlusCircleIcon,
-  SearchIcon,
   TraskIcon,
 } from "~/components/common/Icons";
 import SelectThinkPro from "~/components/SelectThinkPro";
@@ -271,10 +259,10 @@ const QuanLyHoSoView = (props: Props) => {
       cell: ({ row }) => {
         const doc = row?.original;
         return (
-          <Grid templateColumns="repeat(2, 1fr)" gap="1">
+          <Grid templateColumns="repeat(2, 1fr)" gap="1" w="75%">
             <Tooltip label="Cập nhật tài liệu">
               <Button
-                size="xs"
+                size="sm"
                 bg="blue.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
@@ -282,30 +270,30 @@ const QuanLyHoSoView = (props: Props) => {
                   onOpenUpdateDocument();
                 }}
               >
-                <AirplayIcon size={4} />
+                <AirplayIcon size={5} />
               </Button>
             </Tooltip>
             <Tooltip label="Cập nhật trạng thái dự án">
               <Button
-                size="xs"
+                size="sm"
                 bg="green.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
                 }}
               >
-                <EditIcon size={4} />
+                <EditIcon size={5} />
               </Button>
             </Tooltip>
             <Tooltip label="Xoá">
               <Button
-                size="xs"
+                size="sm"
                 onClick={(e: any) => {
                   e.stopPropagation();
                   setIdDocument(doc.id);
                   onOpenConfirm();
                 }}
               >
-                <TraskIcon size={4} />
+                <TraskIcon size={5} />
               </Button>
             </Tooltip>
           </Grid>

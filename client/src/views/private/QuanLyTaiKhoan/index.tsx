@@ -28,6 +28,7 @@ import {
   EditIcon,
   PlusCircleIcon,
   SearchIcon,
+  SettingsIcon,
   TraskIcon,
 } from "~/components/common/Icons";
 import { useDebounce } from "@uidotdev/usehooks";
@@ -163,10 +164,10 @@ const QuanLyTaiKhoanView = (props: Props) => {
       cell: ({ row }) => {
         const doc = row?.original;
         return (
-          <Grid templateColumns="repeat(2, 1fr)" gap="1">
+          <Grid templateColumns="repeat(2, 1fr)" gap="1" w="50%">
             <Tooltip label="Cập Nhật tài khoản">
               <Button
-                size="xs"
+                size="sm"
                 bg="blue.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
@@ -174,12 +175,12 @@ const QuanLyTaiKhoanView = (props: Props) => {
                   onOpenActionUpdateAcc();
                 }}
               >
-                <AirplayIcon size={4} />
+                <AirplayIcon size={5} />
               </Button>
             </Tooltip>
             <Tooltip label="Đổi mật khẩu">
               <Button
-                size="xs"
+                size="sm"
                 bg="green.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
@@ -187,12 +188,12 @@ const QuanLyTaiKhoanView = (props: Props) => {
                   onOpenActionChangeAcc();
                 }}
               >
-                <EditIcon size={4} />
+                <EditIcon size={5} />
               </Button>
             </Tooltip>
             <Tooltip label="Đặt lại mật khẩu">
               <Button
-                size="xs"
+                size="sm"
                 bg="green.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
@@ -200,19 +201,19 @@ const QuanLyTaiKhoanView = (props: Props) => {
                   onOpenActionResetAcc();
                 }}
               >
-                <EditIcon size={4} />
+                <SettingsIcon size={5} color="white" />
               </Button>
             </Tooltip>
             <Tooltip label="Xoá">
               <Button
-                size="xs"
+                size="sm"
                 onClick={(e: any) => {
                   e.stopPropagation();
                   setId(doc?._id);
                   onOpenConfirm();
                 }}
               >
-                <TraskIcon size={4} />
+                <TraskIcon size={5} />
               </Button>
             </Tooltip>
           </Grid>

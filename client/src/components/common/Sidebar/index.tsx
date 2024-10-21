@@ -6,6 +6,7 @@ import {
   NewsFeedIcon,
   OrderIcon,
   ProfileIcon,
+  ScanIcon,
   SettingsIcon,
   WalletIcon,
 } from "~/components/common/Icons";
@@ -25,7 +26,7 @@ const MENU = [
   {
     title: "Quét tài liệu",
     to: "/admin/quet-tai-lieu",
-    icon: WalletIcon,
+    icon: ScanIcon,
   },
   {
     title: "Nhập Liệu",

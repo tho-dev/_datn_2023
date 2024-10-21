@@ -4,6 +4,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  IconButton,
   Image,
   Input,
   Menu,
@@ -27,6 +28,7 @@ import {
   PlusCircleIcon,
   SearchIcon,
   TraskIcon,
+  UserIcon,
 } from "~/components/common/Icons";
 import {
   useDeleteUserMutation,
@@ -186,22 +188,22 @@ const QuanLyNguoiDungView = (props: Props) => {
       cell: ({ row }) => {
         const doc = row?.original;
         return (
-          <Grid templateColumns="repeat(2, 1fr)" gap="1">
+          <Grid templateColumns="repeat(2, 1fr)" gap="1" w="75%">
             <Tooltip label="Xoá">
               <Button
-                size="xs"
+                size="sm"
                 onClick={(e: any) => {
                   e.stopPropagation();
                   setId(doc?.id);
                   onOpenConfirm();
                 }}
               >
-                <TraskIcon size={4} />
+                <TraskIcon size={5} />
               </Button>
             </Tooltip>
             <Tooltip label="Cập nhật">
               <Button
-                size="xs"
+                size="sm"
                 bg="green.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
@@ -209,12 +211,12 @@ const QuanLyNguoiDungView = (props: Props) => {
                   onOpenActionUpdatePromtion();
                 }}
               >
-                <AirplayIcon size={4} />
+                <AirplayIcon size={5} />
               </Button>
             </Tooltip>
             <Tooltip label="Đổi mật khẩu">
               <Button
-                size="xs"
+                size="sm"
                 bg="blue.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
@@ -222,21 +224,21 @@ const QuanLyNguoiDungView = (props: Props) => {
                   onOpenActionChangePassword();
                 }}
               >
-                <EditIcon size={4} />
+                <EditIcon size={5} />
               </Button>
             </Tooltip>
             <Tooltip label="Cập nhật vai trò">
-              <Button
-                size="xs"
+              <IconButton
+                size="sm"
                 bg="green.200"
                 onClick={(e: any) => {
                   e.stopPropagation();
                   setSlug(doc?.id);
                   onOpenActionChangeRole();
                 }}
-              >
-                <EditIcon size={4} />
-              </Button>
+                icon={<UserIcon size={5} />}
+                aria-label="updateuser"
+              ></IconButton>
             </Tooltip>
           </Grid>
         );
