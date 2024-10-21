@@ -134,9 +134,9 @@ const TopBar = ({}: Props) => {
             >
               Trang cá nhân
             </Button>
-            <Button
+            {/* <Button
               as={ReactRouterLink}
-              to="/"
+              to="#"
               fontSize="sm"
               fontWeight="semibold"
               display="flex"
@@ -151,7 +151,7 @@ const TopBar = ({}: Props) => {
               leftIcon={<ShoppingCartIcon size={4} />}
             >
               Trang người dùng
-            </Button>
+            </Button> */}
             <Button
               bg="none"
               color="black"

@@ -1808,7 +1808,7 @@ export const Chat = ({
 
 export const EditIcon = ({
   size = 35,
-  strokeWidth = 1.5,
+  strokeWidth = 2,
   color = "currentColor",
   ...props
 }) => (

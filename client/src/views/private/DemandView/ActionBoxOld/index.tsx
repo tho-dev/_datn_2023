@@ -39,9 +39,11 @@ const ActionBoxOld = ({ onClose, dataDocuments, handleReturnBox }: Props) => {
     watch,
   } = useForm();
 
-  const IdDocument = watch("documentId");
+  const IdDocument = watch("documentId") || null;
   // call api
-  const { data: dataBox } = useGetBoxByIdDocumentQuery(IdDocument);
+  const { data: dataBox } = useGetBoxByIdDocumentQuery(IdDocument, {
+    skip: !IdDocument,
+  });
   const onSubmit = async (data: any) => {
     const documnets = dataDocuments?.find((item: any) => {
       return item.id == data.documentId;

@@ -84,20 +84,16 @@ const Sidebar = (props: Props) => {
   return (
     <Flex
       w="full"
-      h="full"
-      maxH="100vh"
-      overflowY="auto"
+      minH="100vh"
       transition="all 0.25s ease"
       flexDir="column"
       justifyContent="space-between"
-      borderRightWidth="1px"
       borderColor="bg.admin1"
     >
       <Box w="full" h="full">
         <Flex
           w="full"
-          h="full"
-          maxH={{
+          minH={{
             sm: "64px",
             md: "64px",
             lg: "86px",
@@ -109,7 +105,6 @@ const Sidebar = (props: Props) => {
           borderBottomWidth="1px"
           borderColor="bg.admin1"
           backgroundColor="rgb(11 203 224)"
-          //   bgGradient="linear-gradient(to left, rgb(11 203 224), #fff)"
         >
           <Heading
             as="h3"

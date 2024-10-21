@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 // Import the main component
 import { SpecialZoomLevel, Viewer, Worker } from "@react-pdf-viewer/core";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, degrees } from "pdf-lib";
 // thêm pubgin
 import { RotateDirection } from "@react-pdf-viewer/core";
 import type { RenderThumbnailItemProps } from "@react-pdf-viewer/thumbnail";
 
 import { thumbnailPlugin } from "@react-pdf-viewer/thumbnail";
-import { RenderRotatePageProps, rotatePlugin } from "@react-pdf-viewer/rotate";
+import { rotatePlugin } from "@react-pdf-viewer/rotate";
 import {
   RenderCurrentScaleProps,
   RenderZoomInProps,
@@ -16,7 +16,7 @@ import {
 import { RenderZoomOutProps } from "@react-pdf-viewer/zoom";
 
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { Button, Tooltip, useToast } from "@chakra-ui/react";
+import { Tooltip, useToast } from "@chakra-ui/react";
 
 import pdftesst from "../../../../assets/images/DAY-LA-FILE-MAU-PDF.pdf";
 // them thu viện css
@@ -43,7 +43,7 @@ import { IconButton } from "@chakra-ui/react";
 import RenderThumbnailItem from "./SideBarItem";
 import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
 import { changeStatus, openModal } from "~/redux/slices/scanSlice";
-
+import { useLocation } from "react-router-dom";
 type Props = {
   socket: any;
   handleChangeSocket: (value: any) => void;
@@ -52,16 +52,15 @@ type Props = {
 const ScanView = ({ socket, handleChangeSocket }: Props) => {
   const { status } = useAppSelector((state) => state.persistedReducer.scan);
   const dispatch = useAppDispatch();
-
+  const location = useLocation();
   const toast = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [pdfFile, setPdfFile] = useState<any>();
+  const [pdfFile, setPdfFile] = useState<any>(null);
+  const [pdfFileInsert, setPdfFileInsert] = useState<any>(null);
   const [pageIndex, setPageIndex] = useState<null | number>(0);
 
   const thumbnailPluginInstance = thumbnailPlugin();
   const rotatePluginInstance = rotatePlugin();
   const zoomPluginInstance = zoomPlugin();
-  const { RotatePage } = rotatePluginInstance;
   const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
   // Hàm để xóa trang
   const deletePage = async () => {
@@ -78,7 +77,7 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
 
     setPdfFile(updatedPdfUrl);
   };
-
+  // hàm di chuyển trang
   const movePage = async (direction: string) => {
     if (!pdfFile) return;
     if (pageIndex === null) return;
@@ -96,7 +95,6 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
       newIndex = pageIndex + 1;
     } else {
       toast({
-        title: "Thất bại",
         duration: 1600,
         position: "top-right",
         status: "error",
@@ -121,6 +119,83 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
     setPdfFile(updatedPdfUrl);
     setPageIndex(newIndex);
   };
+  // hàm xoay trang
+  const handleRotatePage = async (direction: string) => {
+    if (!pdfFile) return;
+    if (pageIndex === null) return;
+
+    const pdfDoc = await PDFDocument.load(
+      await fetch(pdfFile).then((res) => res.arrayBuffer())
+    );
+    // Kiểm tra index có hợp lệ không
+    const pages = pdfDoc.getPages();
+    if (pageIndex >= 0 && pageIndex < pages.length) {
+      const page = pages[pageIndex];
+      // Xoay trang theo hướng
+      const currentRotation = page.getRotation().angle;
+      const newRotation: any =
+        direction === "clockwise"
+          ? (currentRotation + 90) % 360 // Xoay theo chiều kim đồng hồ
+          : (currentRotation - 90 + 360) % 360; // Xoay ngược chiều kim đồng hồ
+
+      // Sử dụng phương thức 'rotateDegrees()' để xoay trang
+      page.setRotation(degrees(newRotation));
+    }
+    // Lưu PDF sau khi xoay
+    const rotatedPdfBytes = await pdfDoc.save();
+    const updatedPdfBlob = new Blob([rotatedPdfBytes], {
+      type: "application/pdf",
+    });
+    const updatedPdfUrl = URL.createObjectURL(updatedPdfBlob);
+    setPdfFile(updatedPdfUrl);
+  };
+  // hàm chèn trang
+  const handleInsertPage = async () => {
+    if (!pdfFile || !pdfFileInsert || pageIndex === null) return;
+
+    try {
+      const pdfDoc = await PDFDocument.load(
+        await fetch(pdfFile).then((res) => res.arrayBuffer())
+      );
+      const pdfDocInsert = await PDFDocument.load(
+        await fetch(pdfFileInsert).then((res) => res.arrayBuffer())
+      );
+
+      // Sao chép tất cả các trang từ pdfDocInsert
+      const pagesToInsert = await pdfDoc.copyPages(
+        pdfDocInsert,
+        pdfDocInsert.getPageIndices()
+      );
+
+      // Lấy các trang hiện tại của pdfDoc
+      const pages = pdfDoc.getPages();
+
+      // Kiểm tra nếu pageIndex hợp lệ
+      if (pageIndex >= 0 && pageIndex <= pages.length) {
+        // Chèn tất cả các trang từ pdfDocInsert vào vị trí pageIndex
+        pagesToInsert.forEach((page, i) => {
+          pdfDoc.insertPage(pageIndex + i, page); // Chèn từng trang tại vị trí tương ứng
+        });
+
+        const updatedPdfBytes = await pdfDoc.save();
+        const updatedPdfBlob = new Blob([updatedPdfBytes], {
+          type: "application/pdf",
+        });
+        const updatedPdfUrl = URL.createObjectURL(updatedPdfBlob);
+
+        setPdfFile(updatedPdfUrl);
+        setPdfFileInsert(null);
+      } else {
+        console.error("pageIndex không hợp lệ");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xử lý tệp PDF", error);
+    }
+  };
+  // hàm lưu
+  const handleSubmit = () => {
+    console.log("abc");
+  };
   const { Thumbnails } = thumbnailPluginInstance;
   // Đặt mức zoom mặc định là 130% khi component mount
 
@@ -134,20 +209,34 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
     return new Blob([out], { type: "application/pdf" });
   };
   const handleWebSocketMessage = (event: any) => {
-    const blob = base64toBlob(event.data);
+    const msg = JSON.parse(event.data);
+    const blob = base64toBlob(msg.base64);
     const url = URL.createObjectURL(blob);
-    setPdfFile(url);
+    switch (msg.type) {
+      case "scan":
+        setPdfFile(url);
+        break;
+      case "insert":
+        setPdfFileInsert(url);
+        break;
+    }
   };
-  if (!pdfFile) window.location.href = "sc://";
-  const ws = new WebSocket("ws://127.0.0.1:56789");
 
+  const ws = new WebSocket("ws://127.0.0.1:56789");
   useEffect(() => {
     return () => {
-      socket?.send("exit");
+      ws.send("exit");
     };
-  }, [socket]);
+  }, [location]);
+  // tự động chạy hàm insert nếu có insertPage
+  useEffect(() => {
+    if (pdfFileInsert) {
+      handleInsertPage();
+    }
+  }, [pdfFileInsert]);
 
   useEffect(() => {
+    window.location.href = "sc://";
     ws.onopen = () => {
       toast({
         duration: 2000,
@@ -157,7 +246,6 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
       });
       dispatch(changeStatus(true));
     };
-
     ws.onmessage = handleWebSocketMessage;
 
     ws.onerror = (error: any) => {
@@ -172,6 +260,7 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
     handleChangeSocket(ws);
     return () => {
       dispatch(openModal());
+      setPdfFile(null);
       ws.close();
       toast({
         title: "Đã ngắt kết nối máy scan",
@@ -182,12 +271,11 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
     };
   }, []);
 
-  const handleScan = () => {
+  const handleScan = (action: string) => {
     if (socket) {
-      socket?.send("scan");
+      ws?.send(action);
     }
   };
-
   return (
     <Flex w="full" flexDir={"column"} gap="2" h="full">
       <Flex
@@ -205,63 +293,45 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
               aria-label="rotate"
               bgColor={"gray.100"}
               _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
-              onClick={handleScan}
+              onClick={() => handleScan("scan")}
             />
           </Tooltip>
-          <Tooltip label="Thêm">
+          <Tooltip label="Chèn trang">
             <IconButton
               size={"md"}
               icon={<PlusFileIcon size={7} color="gray" />}
               aria-label="rotate"
               bgColor={"gray.100"}
               _hover={{ bgColor: "text.textSuccess ", color: "text.white" }}
+              onClick={() => handleScan("insert")}
             />
           </Tooltip>
-          <RotatePage>
-            {(props: RenderRotatePageProps) => (
-              <Tooltip label="Xoay trái">
-                <IconButton
-                  size={"md"}
-                  icon={<RotateLeftIcon size={7} color="gray" />}
-                  aria-label="rotate"
-                  bgColor={"gray.100"}
-                  _hover={{
-                    bgColor: "text.textSuccess ",
-                    color: "text.white",
-                  }}
-                  onClick={() =>
-                    props.onRotatePage(
-                      pageIndex as number,
-                      RotateDirection.Forward
-                    )
-                  }
-                />
-              </Tooltip>
-            )}
-          </RotatePage>
-          <RotatePage>
-            {(props: RenderRotatePageProps) => (
-              <Tooltip label="Xoay phải">
-                <IconButton
-                  size={"md"}
-                  icon={<RotateRightIcon size={7} color="gray" />}
-                  aria-label="rotate"
-                  bgColor={"gray.100"}
-                  _hover={{
-                    bgColor: "text.textSuccess ",
-                    color: "text.white",
-                  }}
-                  onClick={() =>
-                    props.onRotatePage(
-                      pageIndex as number,
-                      RotateDirection.Backward
-                    )
-                  }
-                />
-              </Tooltip>
-            )}
-          </RotatePage>
-
+          <Tooltip label="Xoay trái">
+            <IconButton
+              size={"md"}
+              icon={<RotateLeftIcon size={7} color="gray" />}
+              aria-label="rotate"
+              bgColor={"gray.100"}
+              _hover={{
+                bgColor: "text.textSuccess ",
+                color: "text.white",
+              }}
+              onClick={() => handleRotatePage("clockwise")}
+            />
+          </Tooltip>
+          <Tooltip label="Xoay phải">
+            <IconButton
+              size={"md"}
+              icon={<RotateRightIcon size={7} color="gray" />}
+              aria-label="rotate"
+              bgColor={"gray.100"}
+              _hover={{
+                bgColor: "text.textSuccess ",
+                color: "text.white",
+              }}
+              onClick={() => handleRotatePage("counterclockwise")}
+            />
+          </Tooltip>
           <Tooltip label="Trang sau">
             <IconButton
               size={"md"}
@@ -344,6 +414,7 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
               aria-label="rotate"
               bgColor={"gray.200"}
               _hover={{ bgColor: "text.textSuccess" }}
+              onClick={handleSubmit}
             />
           </Tooltip>
           {status && (
@@ -403,7 +474,11 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
                   rotatePluginInstance,
                   zoomPluginInstance,
                 ]}
-                defaultScale={SpecialZoomLevel.PageFit}
+                defaultScale={1}
+                onDocumentLoad={() => {
+                  // Thiết lập zoom "Page Fit" ngay sau khi tài liệu được tải
+                  zoomPluginInstance.zoomTo(0.9);
+                }}
               />
             </Worker>
           </Box>
@@ -452,5 +527,4 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
     </Flex>
   );
 };
-
 export default ScanView;
