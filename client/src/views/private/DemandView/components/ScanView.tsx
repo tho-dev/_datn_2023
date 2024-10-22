@@ -47,12 +47,12 @@ import { useLocation } from "react-router-dom";
 type Props = {
   socket: any;
   handleChangeSocket: (value: any) => void;
+  handleSubmit: (pdfFile: any) => void;
 };
 
-const ScanView = ({ socket, handleChangeSocket }: Props) => {
+const ScanView = ({ socket, handleChangeSocket, handleSubmit }: Props) => {
   const { status } = useAppSelector((state) => state.persistedReducer.scan);
   const dispatch = useAppDispatch();
-  const location = useLocation();
   const toast = useToast();
   const [pdfFile, setPdfFile] = useState<any>(null);
   const [pdfFileInsert, setPdfFileInsert] = useState<any>(null);
@@ -62,6 +62,9 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
   const rotatePluginInstance = rotatePlugin();
   const zoomPluginInstance = zoomPlugin();
   const { CurrentScale, ZoomIn, ZoomOut } = zoomPluginInstance;
+  const { document }: any = useAppSelector(
+    (state) => state.persistedReducer.scan
+  );
   // Hàm để xóa trang
   const deletePage = async () => {
     if (!pdfFile) return;
@@ -193,9 +196,7 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
     }
   };
   // hàm lưu
-  const handleSubmit = () => {
-    console.log("abc");
-  };
+
   const { Thumbnails } = thumbnailPluginInstance;
   // Đặt mức zoom mặc định là 130% khi component mount
 
@@ -222,12 +223,11 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
     }
   };
 
-  const ws = new WebSocket("ws://127.0.0.1:56789");
   useEffect(() => {
     return () => {
-      ws.send("exit");
+      socket?.send("exit");
     };
-  }, [location]);
+  }, []);
   // tự động chạy hàm insert nếu có insertPage
   useEffect(() => {
     if (pdfFileInsert) {
@@ -236,7 +236,12 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
   }, [pdfFileInsert]);
 
   useEffect(() => {
+    if (socket) {
+      socket.send("exit");
+      socket.close();
+    }
     window.location.href = "sc://";
+    const ws = new WebSocket("ws://127.0.0.1:56789");
     ws.onopen = () => {
       toast({
         duration: 2000,
@@ -258,6 +263,16 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
       dispatch(changeStatus(false));
     };
     handleChangeSocket(ws);
+    // Xử lý sự kiện onclose
+    ws.onclose = () => {
+      toast({
+        duration: 2000,
+        position: "top-right",
+        status: "warning",
+        description: "Đã ngắt kết nối WebSocket",
+      });
+      dispatch(changeStatus(false));
+    };
     return () => {
       dispatch(openModal());
       setPdfFile(null);
@@ -273,9 +288,12 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
 
   const handleScan = (action: string) => {
     if (socket) {
-      ws?.send(action);
+      socket?.send(
+        JSON.stringify({ type: action, dpi: document?.pdfQuality || 200 })
+      );
     }
   };
+
   return (
     <Flex w="full" flexDir={"column"} gap="2" h="full">
       <Flex
@@ -414,7 +432,7 @@ const ScanView = ({ socket, handleChangeSocket }: Props) => {
               aria-label="rotate"
               bgColor={"gray.200"}
               _hover={{ bgColor: "text.textSuccess" }}
-              onClick={handleSubmit}
+              onClick={() => handleSubmit(pdfFile)}
             />
           </Tooltip>
           {status && (

@@ -18,17 +18,26 @@ import { useEffect } from "react";
 import { useAppDispatch } from "~/redux/hook/hook";
 import {
   closeModal,
+  createBox,
   createDocument,
+  createDocumentView,
   openModal,
 } from "~/redux/slices/scanSlice";
+import { replaceCounter } from "~/utils/fc";
 
 type Props = {
   onClose: () => void;
   dataDocuments: any;
   handleReturnBox: () => void;
+  handleChangeIdDocument: (value: any) => void;
 };
 
-const ActionBoxOld = ({ onClose, dataDocuments, handleReturnBox }: Props) => {
+const ActionBoxOld = ({
+  onClose,
+  dataDocuments,
+  handleReturnBox,
+  handleChangeIdDocument,
+}: Props) => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const {
@@ -45,19 +54,11 @@ const ActionBoxOld = ({ onClose, dataDocuments, handleReturnBox }: Props) => {
     skip: !IdDocument,
   });
   const onSubmit = async (data: any) => {
-    const documnets = dataDocuments?.find((item: any) => {
-      return item.id == data.documentId;
-    });
     const box = dataBox?.data.find((item: any) => {
       return item.id == data.boxId;
     });
-    const dataScan = {
-      ...documnets,
-      boxId: box.id,
-      boxName: box.name,
-      boxYear: box.year,
-    };
-    dispatch(createDocument(dataScan));
+    handleChangeIdDocument(data.documentId);
+    dispatch(createBox(box));
     dispatch(closeModal());
     reset();
     onClose();

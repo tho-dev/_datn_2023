@@ -11,231 +11,225 @@ import {
   Textarea,
   Select,
   Divider,
+  Box,
+  IconButton,
 } from "@chakra-ui/react";
-import { useAppSelector } from "~/redux/hook/hook";
+import { useAppDispatch, useAppSelector } from "~/redux/hook/hook";
+import { replaceCounter } from "~/utils/fc";
+import {
+  changeNumberFile,
+  changeMinimumDigits,
+  changeNameFile,
+  countNumberFileReduce,
+  countNumberFile,
+} from "~/redux/slices/scanSlice";
+import { CheveronUpIcon, ChevronDownIcon } from "~/components/common/Icons";
 
 type Props = {};
 
 const DetailScan = () => {
-  const { document }: any = useAppSelector(
+  const toast = useToast();
+  const dispatch = useAppDispatch();
+  const { document, documentView, box }: any = useAppSelector(
     (state) => state.persistedReducer.scan
   );
-  console.log(document);
-
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-    reset,
-  } = useForm();
-  const onSubmit = async (data: any) => {
-    console.log(data);
+  const handleChangeNumberFile = (e: any) => {
+    if (Number(e.target.value) < 1) {
+      return toast({
+        duration: 1600,
+        position: "top-right",
+        status: "error",
+        description: "Giá trị phải lớn hơn hoặc bằng 1",
+      });
+    }
+    dispatch(changeNumberFile(Number(e.target.value)));
   };
-
+  const handleChangeMinimumDigits = (e: any) => {
+    dispatch(changeMinimumDigits(Number(e.target.value)));
+  };
+  const handleChangeFileName = (e: any) => {
+    dispatch(changeNameFile(e.target.value));
+  };
+  const handleDecrement = () => {
+    if (documentView?.numberFile == 1) {
+      return toast({
+        duration: 1600,
+        position: "top-right",
+        status: "error",
+        description: "Giá trị phải lớn hơn hoặc bằng 1",
+      });
+    }
+    dispatch(countNumberFileReduce());
+  };
+  const handleIncrement = (e: any) => {
+    dispatch(countNumberFile());
+  };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex flexDir="column" gap="4">
-        <FormControl isInvalid={errors.year as any}>
-          <FormLabel htmlFor="year" fontSize="15" fontWeight="semibold">
-            Đơn vị lưu trữ
-          </FormLabel>
-          <Select
-            placeholder="Select option"
-            borderRadius="6"
-            size="md"
-            {...register("storageId", {
-              required: "Không được để trống !!!",
-            })}
-          >
-            <option value={document?.storageOrgan.id} selected>
-              {document?.storageOrgan.shortName}
-            </option>
-          </Select>
-          <FormErrorMessage>
-            {(errors.year as any) && errors?.year?.message}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={errors.year as any}>
+    <Flex flexDir="column" gap="4">
+      <Flex gap="2">
+        <Box>
           <FormLabel htmlFor="year" fontSize="15" fontWeight="semibold">
             Loại tài liệu
           </FormLabel>
-          <Select
-            placeholder="Select option"
-            borderRadius="6"
-            size="md"
-            {...register("documentId", {
-              required: "Không được để trống !!!",
-            })}
-          >
-            <option value={document?.documentName} selected>
-              {document?.documentName}
-            </option>
-          </Select>
-          <FormErrorMessage>
-            {(errors.year as any) && errors?.year?.message}
-          </FormErrorMessage>
-        </FormControl>
-        <Divider borderColor="gray" />
-        <Flex gap="2">
-          <FormControl isInvalid={errors.boxid as any}>
-            <FormLabel htmlFor="boxid" fontSize="15" fontWeight="semibold">
-              Hộp số
-            </FormLabel>
-            <Input
-              id="boxid"
-              placeholder="VD: LS01"
-              {...register("boxId", {
-                required: "Không được để trống !!!",
-              })}
-              size={"md"}
-              defaultValue={document?.boxName}
-            />
-            <FormErrorMessage>
-              {(errors.year as any) && errors?.year?.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={errors.nameFile as any}>
-            <FormLabel htmlFor="nameFile" fontSize="15" fontWeight="semibold">
-              Tên File
-            </FormLabel>
-            <Input
-              id="nameFile"
-              placeholder="VD: HE-KC"
-              {...register("nameFile", {
-                required: "Không được để trống !!!",
-              })}
-              size={"md"}
-              defaultValue={document?.fileName}
-            />
-            <FormErrorMessage>
-              {(errors.nameFile as any) && errors?.nameFile?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Flex>
+          <Input
+            id="documentName"
+            placeholder="VD: LS01"
+            size={"md"}
+            value={document?.documentName || 1}
+            readOnly
+            bgColor={"gray.100"}
+          />
+        </Box>
+        <Box>
+          <FormLabel htmlFor="boxid" fontSize="15" fontWeight="semibold">
+            Hộp số
+          </FormLabel>
+          <Input
+            id="boxid"
+            placeholder="VD: LS01"
+            size={"md"}
+            value={box?.name || 1}
+            readOnly
+            bgColor={"gray.100"}
+          />
+        </Box>
+      </Flex>
+      <Box>
+        <FormLabel htmlFor="nameFile" fontSize="15" fontWeight="semibold">
+          Tên đầy đủ
+        </FormLabel>
+        <Input
+          id="nameFile"
+          placeholder="VD: HE-KC"
+          size={"md"}
+          value={documentView?.fullName}
+          readOnly
+          bgColor={"gray.100"}
+        />
+      </Box>
+      <Box>
+        <FormLabel htmlFor="fileName" fontSize="15" fontWeight="semibold">
+          Tên File
+        </FormLabel>
+        <Input
+          id="fileName"
+          placeholder="VD: HE-KC"
+          size={"md"}
+          value={document?.fileName}
+          onChange={handleChangeFileName}
+        />
+      </Box>
 
-        <Flex gap="2">
-          <FormControl isInvalid={errors.numberFile as any}>
-            <FormLabel htmlFor="numberFile" fontSize="15" fontWeight="semibold">
-              Số đếm
-            </FormLabel>
+      <Flex gap="2">
+        <Box>
+          <FormLabel htmlFor="numberFile" fontSize="15" fontWeight="semibold">
+            Số đếm
+          </FormLabel>
+          <Flex w="full" gap="2">
+            <Flex w="50%" gap="2">
+              <IconButton
+                aria-label="+"
+                icon={<CheveronUpIcon size={6} />}
+                size={"md"}
+                bgColor={"gray.500"}
+                onClick={handleIncrement}
+              />
+              <IconButton
+                aria-label="-"
+                icon={<ChevronDownIcon size={6} />}
+                size={"md"}
+                bgColor={"gray.500"}
+                onClick={handleDecrement}
+              />
+            </Flex>
             <Input
-              type="text"
+              type="number"
               id="numberFile"
               placeholder="VD: 0001"
-              {...register("numberFile", {
-                required: "Không được để trống !!!",
-              })}
-              defaultValue={`0001`}
+              value={documentView?.numberFile || 1}
               size={"md"}
+              onChange={handleChangeNumberFile}
+              w="50%"
             />
-            <FormErrorMessage>
-              {(errors.numberFile as any) && errors?.numberFile?.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={errors.minimumDigits as any}>
-            <FormLabel
-              htmlFor="minimumDigits"
-              fontSize="15"
-              fontWeight="semibold"
-            >
-              Số chữ số tối thiểu
-            </FormLabel>
-            <Input
-              id="minimumDigits"
-              placeholder="VD: 4"
-              {...register("minimumDigits", {
-                required: "Không được để trống !!!",
-              })}
-              size={"md"}
-              defaultValue={document?.minimumDigits}
-            />
-            <FormErrorMessage>
-              {(errors.minimumDigits as any) && errors?.minimumDigits?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Flex>
-        <Divider borderColor="gray" />
-        <Flex gap="2">
-          <FormControl isInvalid={errors.scanMode as any}>
-            <FormLabel htmlFor="scanMode" fontSize="15" fontWeight="semibold">
-              Chế độ scan
-            </FormLabel>
-            <Select
-              rounded="lg"
-              size="md"
-              {...register("scanMode", {
-                required: "Không được để trống !!!",
-              })}
-              fontSize="md"
-            >
-              <option value="1">Scan màu</option>
-            </Select>
-            <FormErrorMessage>
-              {(errors.scanMode as any) && errors?.scanMode?.message}
-            </FormErrorMessage>
-          </FormControl>
-
-          <FormControl isInvalid={errors.pdfQuality as any}>
-            <FormLabel htmlFor="pdfQuality" fontSize="15" fontWeight="semibold">
-              Chất lượng PDF
-            </FormLabel>
-            <Select
-              rounded="lg"
-              size="md"
-              {...register("pdfQuality", {
-                required: "Không được để trống !!!",
-              })}
-              fontSize="md"
-            >
-              <option value="200">200</option>
-            </Select>
-            <FormErrorMessage>
-              {(errors.pdfQuality as any) && errors?.pdfQuality?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Flex>
-        <Flex gap="2">
-          <FormControl isInvalid={errors.pdfVersion as any}>
-            <FormLabel htmlFor="pdfVersion" fontSize="15" fontWeight="semibold">
-              Phiên bản PDF
-            </FormLabel>
-            <Select
-              rounded="lg"
-              size="md"
-              {...register("pdfVersion", {
-                required: "Không được để trống !!!",
-              })}
-              fontSize="md"
-            >
-              <option value="1.4">1.4</option>
-            </Select>
-            <FormErrorMessage>
-              {(errors.pdfVersion as any) && errors?.pdfVersion?.message}
-            </FormErrorMessage>
-          </FormControl>
-
-          <FormControl isInvalid={errors.pdfFormat as any}>
-            <FormLabel htmlFor="pdfFormat" fontSize="15" fontWeight="semibold">
-              Định dạng PDF
-            </FormLabel>
-            <Select
-              rounded="lg"
-              size="md"
-              {...register("pdfFormat", {
-                required: "Không được để trống !!!",
-              })}
-              fontSize="md"
-            >
-              <option value="PDF">PDF</option>
-            </Select>
-            <FormErrorMessage>
-              {(errors.pdfFormat as any) && errors?.pdfFormat?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Flex>
+          </Flex>
+        </Box>
+        <Box>
+          <FormLabel
+            htmlFor="minimumDigits"
+            fontSize="15"
+            fontWeight="semibold"
+          >
+            Số chữ số tối thiểu
+          </FormLabel>
+          <Input
+            id="minimumDigits"
+            placeholder="VD: 4"
+            size={"md"}
+            value={document?.minimumDigits}
+            onChange={handleChangeMinimumDigits}
+          />
+        </Box>
       </Flex>
-    </form>
+      <Divider borderColor="gray" />
+      <Flex gap="2" w="full">
+        <Box w="50%">
+          <FormLabel htmlFor="scanMode" fontSize="15" fontWeight="semibold">
+            Chế độ scan
+          </FormLabel>
+          <Input
+            id="scanMode"
+            placeholder="VD: 4"
+            size={"md"}
+            value={document?.scanMode?.description || ""}
+            readOnly
+            bgColor={"gray.100"}
+          />
+        </Box>
+
+        <Box w="50%">
+          <FormLabel htmlFor="pdfQuality" fontSize="15" fontWeight="semibold">
+            Chất lượng PDF
+          </FormLabel>
+          <Input
+            id="pdfQuality"
+            placeholder="VD: 4"
+            size={"md"}
+            value={document?.pdfQuality || ""}
+            readOnly
+            bgColor={"gray.100"}
+          />
+        </Box>
+      </Flex>
+
+      <Flex gap="2" w="full">
+        <Box w="50%">
+          <FormLabel htmlFor="pdfVersion" fontSize="15" fontWeight="semibold">
+            Phiên bản PDF
+          </FormLabel>
+          <Input
+            id="pdfVersion"
+            placeholder="VD: 4"
+            size={"md"}
+            value={document?.pdfVersion || ""}
+            readOnly
+            bgColor={"gray.100"}
+          />
+        </Box>
+        <Box w="50%">
+          <FormLabel htmlFor="pdfFormat" fontSize="15" fontWeight="semibold">
+            Định dạng PDF
+          </FormLabel>
+          <Input
+            id="pdfFormat"
+            placeholder="VD: 4"
+            size={"md"}
+            value={document?.pdfFormat?.name || ""}
+            readOnly
+            bgColor={"gray.100"}
+          />
+        </Box>
+      </Flex>
+    </Flex>
   );
 };
 

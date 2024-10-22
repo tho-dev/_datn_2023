@@ -40,6 +40,13 @@ const demandApi = createApi({
 			}),
 			invalidatesTags: ["DemandTag"],
 		}),
+		createFile: build.mutation({
+			query: (body) => ({
+				url: `/File`,
+				method: "POST",
+				body,
+			}),
+		}),
 		updateDemand: build.mutation<any, { _id: number }>({
 			query: ({ _id, ...patch }) => ({
 				url: `/demand/${_id}`,
@@ -65,7 +72,8 @@ export const {
 	useDeleteDemandMutation,
 	useUpdateDemandMutation,
 	useCreateBoxMutation,
-	useGetBoxByIdDocumentQuery
+	useGetBoxByIdDocumentQuery,
+	useCreateFileMutation
 } = demandApi;
 
 export default demandApi;

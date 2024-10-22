@@ -1,4 +1,5 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/dist/query";
+import { PDFDocument } from "pdf-lib";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 
@@ -18,7 +19,32 @@ export function sortJSON(data: any[]) {
 
 	return data;
 }
+export function replaceCounter(str: string, counter: any, counterLength: any) {
+	if (!(str && counter && counterLength)) {
+		return "No data"
+	}
+	// Loại bỏ phần counter hiện tại
+	const parts = str.split("-");
+	const baseStr = parts.slice(0, -1).join("-");
 
+	// Chuyển số đếm thành chuỗi và thêm số 0 vào đầu nếu cần, với chiều dài xác định
+	const formattedCounter = String(counter).padStart(counterLength, '0');
+
+	// Kết hợp chuỗi base với số đếm mới
+	return `${baseStr}-${formattedCounter}`;
+}
+
+export const countPdfPages = async (pdfBytes: any) => {
+	// Tải PDF từ buffer/byte array
+	const pdfDoc = await PDFDocument.load(
+		await fetch(pdfBytes).then((res) => res.arrayBuffer())
+	);
+
+	// Lấy số trang của PDF
+	const numberOfPages = pdfDoc.getPageCount();
+
+	return numberOfPages;
+};
 export function chuyenDoiSoDienThoai(soDienThoai: any) {
 	// Sử dụng biểu thức chính quy để tìm và thay thế số điện thoại
 	// từ định dạng Việt Nam sang định dạng quốc tế
@@ -30,6 +56,21 @@ export function chuyenDoiSoDienThoai(soDienThoai: any) {
 		// Nếu số điện thoại không hợp lệ
 		return false;
 	}
+}
+export const convertBlobUrlToBase64 = async (blobUrl: string) => {
+	// Tải blob từ URL
+	const response = await fetch(blobUrl);
+	const blob = await response.blob();
+
+	// Chuyển blob thành Base64
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			resolve(reader.result);  // Trả về toàn bộ chuỗi Base64 bao gồm định dạng
+		};
+		reader.onerror = reject;
+		reader.readAsDataURL(blob);
+	});
 }
 export function chuyenDoiSoDienThoaiVe0(soDienThoai: any) {
 	soDienThoai = soDienThoai.toString();
